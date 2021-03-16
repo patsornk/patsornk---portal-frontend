@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <logo />
-      <h1 class="title">{{ $t('home.title') }}</h1>
+      <h1 class="title">{{ $t('home.title') }} {{ env }}</h1>
       <div class="links">
         <a
           href="https://nuxtjs.org/"
@@ -63,16 +62,16 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import Logo from '@/components/Logo.vue'
 
-@Component({
-  components: {
-    Logo
-  }
-})
+@Component
 export default class Main extends Vue {
   private products = []
   $i18n: any
+
+  get env() {
+    return process.env.TEST
+  }
+
   get todos() {
     return this.$store.state.todos.list
   }
