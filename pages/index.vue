@@ -1,7 +1,9 @@
 <template>
-  <div class="container">
+  <div class="main-container">
     <div>
-      <h1 class="title">{{ $t('home.title') }} {{ env }}</h1>
+      <h1 class="title">
+        {{ $t('home.title') }} {{ env }}
+      </h1>
       <div class="links">
         <a
           href="https://nuxtjs.org/"
@@ -22,7 +24,11 @@
         <button
           href="#"
           class="button--grey"
-          @click.prevent="$i18n.setLocale($i18n.locale === 'en' ? 'th' : 'en')"
+          @click.prevent="
+            $i18n.setLocale(
+              $i18n.locale === 'en' ? 'th' : 'en'
+            )
+          "
         >
           change lang
         </button>
@@ -30,13 +36,18 @@
       <div class="flex">
         <div class="flex w-full justify-center">
           <ul>
-            <li v-for="(todo, index) in todos" :key="todo.text + index">
+            <li
+              v-for="(todo, index) in todos"
+              :key="todo.text + index"
+            >
               <input
                 :checked="todo.done"
                 @change="toggle(todo)"
                 type="checkbox"
               />
-              <span :class="{ done: todo.done }">{{ todo.text }}</span>
+              <span :class="{ done: todo.done }">{{
+                todo.text
+              }}</span>
             </li>
             <li>
               <input
@@ -61,7 +72,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+import {
+  Component,
+  Vue,
+  Prop,
+  Emit
+} from 'vue-property-decorator'
 
 @Component
 export default class Main extends Vue {
@@ -86,7 +102,9 @@ export default class Main extends Vue {
   }
 
   async fetchData(): Promise<void> {
-    const resp = await this.$axios.$get('https://reqres.in/api/products')
+    const resp = await this.$axios.$get(
+      'https://reqres.in/api/products'
+    )
     this.products = resp.data
   }
 
@@ -104,9 +122,7 @@ export default class Main extends Vue {
 */
 @import '@/assets/scss/_variables.scss';
 
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
+.main-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,8 +130,9 @@ export default class Main extends Vue {
 }
 
 .title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
