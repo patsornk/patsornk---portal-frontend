@@ -74,12 +74,12 @@
 <script lang="ts">
 import {
   Component,
-  Vue,
-  Prop,
-  Emit
+  Vue
 } from 'vue-property-decorator'
 
-@Component
+@Component({
+  components: {}
+})
 export default class Main extends Vue {
   private products = []
   $i18n: any
