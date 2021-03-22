@@ -18,7 +18,7 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class ProfileNav extends Vue {}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .profile-nav {
   display: flex;
   padding: 50px 23px;

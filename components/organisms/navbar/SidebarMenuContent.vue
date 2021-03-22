@@ -31,7 +31,7 @@ import ProfileNav from '~/components/molecules/navbar/ProfileNav.vue'
 export default class SidebarMenuContent extends Vue {}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
 .sidebar-content {

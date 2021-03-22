@@ -44,7 +44,7 @@ export default class NavMenuGroup extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
 .nav-menu-group {
