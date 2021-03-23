@@ -1,27 +1,24 @@
 <template>
-  <div class="t1-button" :class="type" @click="$emit('clickButton')">
-    {{ text }}
+  <div class="t1-button" :class="type">
+    <slot></slot>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Prop, Component } from 'vue-property-decorator'
+import {
+  Vue,
+  Prop,
+  Component
+} from 'vue-property-decorator'
 
 @Component({})
 export default class T1Button extends Vue {
-  @Prop({
-    required: true,
-    type: String
-  })
-  readonly text!: string
-
   @Prop({
     type: String
   })
   readonly type!: string
 
-  mounted(): void {
-  }
+  mounted(): void {}
 }
 </script>
 
@@ -33,9 +30,11 @@ export default class T1Button extends Vue {
   border: 2px solid $primary;
   border-radius: 6px;
   font-size: 14px;
+  font-weight: 700;
   color: $white;
   background: $primary;
-  justify-items: center;
+  display: flex;
+  justify-content: center;
 
   &:focus,
   &:hover {
@@ -62,7 +61,7 @@ export default class T1Button extends Vue {
   background: $black-gray;
 }
 
-.transparent-disable{
+.transparent-disable {
   border: 2px solid $gray;
   background: transparent;
   color: $gray;
@@ -74,7 +73,7 @@ export default class T1Button extends Vue {
   }
 }
 
-.disable{
+.disable {
   border: 2px solid $gray;
   background: $gray;
   color: $white;

@@ -13,17 +13,33 @@ export default {
     },
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1'
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        content: ''
+      }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon.ico'
+      }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['@/assets/scss/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '@/plugins/vSelect',
+    '@/plugins/vuetify'
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -34,8 +50,9 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/fontawesome',
     '@nuxtjs/dotenv',
+    '@nuxtjs/vuetify',
+    '@nuxtjs/fontawesome'
   ],
   fontawesome: {
     icons: {
@@ -56,11 +73,14 @@ export default {
   axios: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['vee-validate/dist/rules']
+  },
   tailwindcss: {
     viewer: false
   },
   i18n: {
+    strategy: 'prefix',
     locales: [
       {
         code: 'en',
@@ -79,7 +99,20 @@ export default {
       messages: {
         en: require('./locales/en.js'),
         th: require('./locales/th.js')
-      },
+      }
     }
+  },
+  vuex: {
+    // Module namespace
+    moduleName: 'i18n',
+
+    // If enabled, current app's locale is synced with nuxt-i18n store module
+    syncLocale: false,
+
+    // If enabled, current translation messages are synced with nuxt-i18n store module
+    syncMessages: false,
+
+    // Mutation to commit to set route parameters translations
+    syncRouteParams: false
   }
 }

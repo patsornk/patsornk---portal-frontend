@@ -82,7 +82,6 @@ import {
 })
 export default class Main extends Vue {
   private products = []
-  $i18n: any
 
   get env() {
     return process.env.TEST

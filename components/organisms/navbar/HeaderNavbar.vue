@@ -112,7 +112,7 @@ export default class HeaderNav extends Vue {
 
     padding: 20px;
     background-color: $white;
-    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.1);
+    box-shadow: $box-shadow-black;
     border-radius: 9px;
 
     .menu-apps-icon {

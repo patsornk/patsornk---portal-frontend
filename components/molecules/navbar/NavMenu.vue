@@ -74,12 +74,12 @@ export default class NavMenu extends Vue {
 
     .nav-menu-item {
       .content-active {
-        border: 4px solid $red;
+        border: 4px solid $primary;
         border-image: linear-gradient(
           to bottom,
           rgba(108, 219, 141, 0) 25%,
-          $red 25%,
-          $red 75%,
+          $primary 25%,
+          $primary 75%,
           rgba(108, 219, 141, 0) 75%
         ) !important;
         border-image-slice: 1 !important;
