@@ -51,20 +51,20 @@ export default class T1Button extends Vue {
 }
 
 .black-transparent {
-  border: 2px solid $black-gray;
+  border: 2px solid $black-grey;
   background: transparent;
-  color: $black-gray;
+  color: $black-grey;
 }
 
 .black {
-  border: 2px solid $black-gray;
-  background: $black-gray;
+  border: 2px solid $black-grey;
+  background: $black-grey;
 }
 
 .transparent-disable {
-  border: 2px solid $gray;
+  border: 2px solid $grey;
   background: transparent;
-  color: $gray;
+  color: $grey;
 
   &:focus,
   &:hover {
@@ -74,8 +74,8 @@ export default class T1Button extends Vue {
 }
 
 .disable {
-  border: 2px solid $gray;
-  background: $gray;
+  border: 2px solid $grey;
+  background: $grey;
   color: $white;
 
   &:focus,

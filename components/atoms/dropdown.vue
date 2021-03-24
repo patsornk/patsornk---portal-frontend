@@ -20,13 +20,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Prop, Component, Emit } from 'vue-property-decorator'
+import {
+  Vue,
+  Prop,
+  Component,
+  Emit
+} from 'vue-property-decorator'
 
 @Component({})
 export default class T1Dropdown extends Vue {
   @Prop({
     type: String,
-    required: true,
+    required: true
   })
   value!: string
 
@@ -69,7 +74,7 @@ export default class T1Dropdown extends Vue {
 .dropdown {
   position: relative;
   padding: 9px 16px;
-  border: 1px solid $ligth-gray;
+  border: 1px solid $ligth-grey;
   border-radius: 6px;
   width: 100%;
 

@@ -9,8 +9,9 @@
     </div>
 
     <div class="app-links">
+      <change-lang />
       <img
-        class="cursor-pointer"
+        class="ml-8 cursor-pointer"
         src="@/assets/images/navbar/menu-group.png"
         @click="onClickMenuApps"
       />
@@ -34,9 +35,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import ChangeLang from '~/components/atoms/dropdown-lang/ChangeLang.vue'
 import { Organization } from '~/constants'
 
-@Component
+@Component({
+  components: {
+    ChangeLang
+  }
+})
 export default class HeaderNav extends Vue {
   private toggleShowMenuApps: boolean = false
 
@@ -74,7 +80,9 @@ export default class HeaderNav extends Vue {
 
 .header-bar {
   .app-links {
-    justify-self: end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     position: relative;
   }
 
@@ -153,7 +161,7 @@ header {
   }
   .header-bar {
     .app-links {
-      display: block;
+      display: flex;
     }
     .drawer-toggle {
       display: none;

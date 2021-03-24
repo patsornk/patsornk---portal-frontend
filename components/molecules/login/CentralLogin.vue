@@ -51,7 +51,7 @@ import {
   ErrorUserFormData,
   UserFormData
 } from '~/constants'
-import { isRequiredEmpty } from '~/helper'
+import { isRequiredEmpty, validateError } from '~/helper'
 import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '~/components/atoms/button.vue'
 
@@ -120,6 +120,10 @@ export default class CentarlLogin extends Vue {
   private submit() {
     this.validateUsername()
     this.validatePassword()
+
+    if (validateError(this.error)) {
+      this.$router.push('/landing')
+    }
   }
 }
 </script>

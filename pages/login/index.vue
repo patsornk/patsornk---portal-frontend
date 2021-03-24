@@ -15,7 +15,7 @@ import LoginSection from '~/components/molecules/login/LoginSection.vue'
     LoginSection
   }
 })
-export default class Login extends Vue {}
+export default class Example extends Vue {}
 </script>
 
 <style lang="scss" scoped>

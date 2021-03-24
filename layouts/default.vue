@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full">
+  <div class="flex w-full min-h-screen">
     <div class="sidebar">
       <sidebar-nav />
     </div>
@@ -51,13 +51,6 @@ export default class Default extends Vue {
       this.$store.dispatch('nav/toggleSidebar')
     }
   }
-
-  mounted() {
-    this.$store.dispatch(
-      'nav/setOrganization',
-      Organization.FEATURE
-    )
-  }
 }
 </script>
 
@@ -72,7 +65,7 @@ html {
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: greyscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }

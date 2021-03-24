@@ -6,3 +6,12 @@ export function isRequiredEmpty(value) {
     value === undefined
   )
 }
+
+export function validateError(error) {
+  let result = true
+  for (const [key, value] of Object.entries(error)) {
+    if (value) result = false
+  }
+
+  return result
+}

@@ -41,7 +41,7 @@ export const getters = {
       case 'REQUEST':
         return 'By request'
       default:
-        return 'Menu'
+        return ''
     }
   },
   organizNavbarMenu: (state) => {
