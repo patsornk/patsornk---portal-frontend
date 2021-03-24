@@ -38,7 +38,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/vSelect',
-    '@/plugins/vuetify'
+    '@/plugins/vuetify',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -80,7 +80,7 @@ export default {
     viewer: false
   },
   i18n: {
-    strategy: 'prefix',
+    strategy: 'no_prefix',
     locales: [
       {
         code: 'en',

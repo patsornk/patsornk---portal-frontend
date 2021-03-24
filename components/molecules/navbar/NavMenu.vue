@@ -71,23 +71,21 @@ export default class NavMenu extends Vue {
 .nav-menu {
   .sub-menu {
     padding-left: 36px;
-
-    .nav-menu-item {
-      .content-active {
-        border: 4px solid $primary;
-        border-image: linear-gradient(
-          to bottom,
-          rgba(108, 219, 141, 0) 25%,
-          $primary 25%,
-          $primary 75%,
-          rgba(108, 219, 141, 0) 75%
-        ) !important;
-        border-image-slice: 1 !important;
-        border-right: none;
-        border-bottom: none;
-        border-top: none;
-        background-color: $white;
-      }
+    
+    ::v-deep .content-active {
+      border: 4px solid $primary;
+      border-image: linear-gradient(
+        to bottom,
+        rgba(108, 219, 141, 0) 25%,
+        $primary 25%,
+        $primary 75%,
+        rgba(108, 219, 141, 0) 75%
+      ) !important;
+      border-image-slice: 1 !important;
+      border-right: none;
+      border-bottom: none;
+      border-top: none;
+      background-color: $white;
     }
   }
 }

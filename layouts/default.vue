@@ -6,6 +6,8 @@
     <div class="flex flex-col w-full">
       <header-nav />
       <div class="main w-full">
+        <breadcrumb />
+        <span class="page-title">{{ pageTitle }}</span>
         <Nuxt class="content" />
       </div>
     </div>
@@ -20,17 +22,27 @@ import {
 } from 'vue-property-decorator'
 import HeaderNav from '~/components/organisms/navbar/HeaderNavbar.vue'
 import SidebarNav from '~/components/organisms/navbar/SidebarNavbar.vue'
-import { Organization } from '~/constants'
+import Breadcrumb from '~/components/atoms/Breadcrumb.vue'
+import { BreadcrumbType, Organization } from '~/constants'
 
 @Component({
   components: {
     HeaderNav,
-    SidebarNav
+    SidebarNav,
+    Breadcrumb
   }
 })
 export default class Default extends Vue {
   get isSidebar() {
     return this.$store.getters['nav/toggleSidebar']
+  }
+
+  get breadcrumbs(): BreadcrumbType[] {
+    return this.$store.getters['breadcrumb/breadcrumbs']
+  }
+
+  get pageTitle(): string {
+    return this.$store.getters['breadcrumb/pageTitle']
   }
 
   @Watch('$route')
@@ -66,13 +78,22 @@ html {
 }
 
 .main {
+  display: flex;
+  flex-direction: column;
   padding: 24px;
-  background-color: $grey2;
+  background-color: $grey-2;
 
   .content {
     background-color: $white;
-    min-height: calc(100vh - 112px);
+    min-height: calc(100vh - 206px);
     width: 100%;
+  }
+
+  .page-title {
+    margin-bottom: 1rem;
+    font-size: 36px;
+    font-weight: 700;
+    color: $black;
   }
 }
 </style>

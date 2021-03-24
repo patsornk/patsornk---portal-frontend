@@ -72,10 +72,8 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue
-} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
+import { BreadcrumbType } from '~/constants'
 
 @Component({
   components: {}
@@ -107,7 +105,32 @@ export default class Main extends Vue {
     this.products = resp.data
   }
 
+  private setupBreadcrumb(): void {
+    const breadcrumb: BreadcrumbType[] = [
+      {
+        title: 'Company list',
+        url: '/'
+      },
+      {
+        title: 'Create new company',
+        url: '/',
+        active: true
+      }
+    ]
+    this.$store.dispatch(
+      'breadcrumb/setBreadcrumb',
+      breadcrumb
+    )
+
+    //set Page title
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      'Create new company'
+    )
+  }
+
   mounted(): void {
+    this.setupBreadcrumb()
     this.fetchData()
   }
 }

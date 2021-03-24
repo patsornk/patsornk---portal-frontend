@@ -50,8 +50,10 @@ export default class SidebarMenuContent extends Vue {}
     font-weight: 700;
   }
 
-  .logout > .content > .icon-text > .title {
-    color: $black;
+  .logout {
+    ::v-deep .title {
+      color: $black;
+    }
   }
 }
 </style>

@@ -116,7 +116,7 @@ export default class HeaderNav extends Vue {
     border-radius: 9px;
 
     .menu-apps-icon {
-      background-color: $grey3;
+      background-color: $grey-3;
       border-radius: 9px;
       width: 60px;
       height: 60px;
