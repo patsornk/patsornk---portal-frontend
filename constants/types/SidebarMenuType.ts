@@ -12,5 +12,6 @@ export interface SidebarMenu extends SidebarSubMenu {
 export enum Organization {
   FEATURE = 'FEATURE',
   MAMBER = 'MEMBER',
-  REQUEST = 'REQUEST'
+  REQUEST = 'REQUEST',
+  ACCOUNTMANAGEMENT = 'ACCOUNTMANAGEMENT'
 }

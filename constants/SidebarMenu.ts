@@ -10,9 +10,6 @@ export const feature: SidebarMenu[] = [
     ]
   },
   {
-    title: 'Account Management'
-  },
-  {
     title: 'Loyalty '
   },
   {
@@ -33,9 +30,6 @@ export const feature: SidebarMenu[] = [
 ]
 
 export const member: SidebarMenu[] = [
-  {
-    title: 'Account Management'
-  },
   {
     title: 'Loyalty '
   },
@@ -70,3 +64,5 @@ export const request: SidebarMenu[] = [
     title: 'Marketing'
   }
 ]
+
+export const accountManagement: SidebarMenu[] = []

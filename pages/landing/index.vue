@@ -39,13 +39,17 @@ export default class Landing extends Vue {
       {
         title: 'By request',
         value: Organization.REQUEST
+      },
+      {
+        title: 'Organization Management',
+        value: Organization.ACCOUNTMANAGEMENT
       }
     ]
   }
 
   private onClickMode(value: Organization): void {
     this.$store.dispatch('nav/setOrganization', value)
-    this.$router.push('/example')
+    value === 'ACCOUNTMANAGEMENT' ? this.$router.push('/accountManagement') : this.$router.push('/example')
   }
 
   mounted() {
@@ -109,6 +113,7 @@ export default class Landing extends Vue {
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 20%;
 
         color: $white;
         font-size: 36px;

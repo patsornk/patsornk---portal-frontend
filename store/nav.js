@@ -1,4 +1,4 @@
-import { feature, member, request } from '~/constants'
+import { feature, member, request, accountManagement } from '~/constants'
 
 // States
 export const state = () => ({
@@ -40,6 +40,8 @@ export const getters = {
         return 'By member'
       case 'REQUEST':
         return 'By request'
+      case 'ACCOUNTMANAGEMENT':
+        return 'Account Management'
       default:
         return ''
     }
@@ -52,6 +54,8 @@ export const getters = {
         return member
       case 'REQUEST':
         return request
+      case 'ACCOUNTMANAGEMENT':
+        return accountManagement
       default:
         return []
     }
