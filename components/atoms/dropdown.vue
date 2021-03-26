@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown" style="float: left">
     <button class="dropbtn">
-      <span>{{ value ? value : 'Please select...' }}</span>
+      <span>{{ value ? value : placeholder }}</span>
       <font-awesome-icon
         class="dropdown-icon"
         :icon="['fas', 'chevron-down']"
@@ -43,7 +43,8 @@ export default class T1Dropdown extends Vue {
   readonly lists!: Array<object>
 
   @Prop({
-    type: String
+    type: String,
+    default: 'Please select...'
   })
   readonly placeholder!: string
 
@@ -74,7 +75,7 @@ export default class T1Dropdown extends Vue {
 .dropdown {
   position: relative;
   padding: 9px 16px;
-  border: 1px solid $ligth-grey;
+  border: 1px solid $gray-disable;
   border-radius: 6px;
   width: 100%;
 

@@ -61,7 +61,7 @@ export default class Landing extends Vue {
 @import '@/assets/scss/_variables.scss';
 
 .landing-page {
-  background-color: $grey-2 !important;
+  background-color: $gray-bg-fade !important;
 
   .welcome {
     display: flex;
@@ -98,7 +98,7 @@ export default class Landing extends Vue {
       border-right: none;
       border-left: none;
       border-top: none;
-      background-color: $grey-2;
+      background-color: $gray-bg-fade;
     }
 
     .slide {
@@ -114,7 +114,7 @@ export default class Landing extends Vue {
         font-size: 36px;
         font-weight: 700;
 
-        background-color: $grey;
+        background-color: $gray-disable;
         box-shadow: $box-shadow-black;
         border-radius: 11px;
         padding: 110px 140px;

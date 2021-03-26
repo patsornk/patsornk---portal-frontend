@@ -74,7 +74,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['vee-validate/dist/rules']
+    transpile: [
+      'ag-grid-vue',
+      'vue-smart-pagination',
+      'vee-validate/dist/rules'
+    ]
   },
   tailwindcss: {
     viewer: false

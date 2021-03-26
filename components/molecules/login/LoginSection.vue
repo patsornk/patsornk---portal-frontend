@@ -60,9 +60,9 @@ export default class LoginSection extends Vue {
       width: 100%;
       padding: 13px;
       margin-right: 1rem;
-      color: $black-3;
+      color: grey-text;
       font-weight: 700;
-      background-color: $grey-bg-fade;
+      background-color: $gray-bg-fade;
       box-shadow: $box-shadow-black;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;

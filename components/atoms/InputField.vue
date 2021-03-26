@@ -150,7 +150,7 @@ export default class InputField extends Vue {
   .input-field-input {
     font-size: 16px;
     padding: 9px;
-    border: 1px solid $ligth-grey;
+    border: 1px solid $gray-disable;
     border-radius: 4px;
     width: 100%;
   }

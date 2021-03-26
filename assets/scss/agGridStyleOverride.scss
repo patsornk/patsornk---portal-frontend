@@ -1,0 +1,306 @@
+/*=========================================================================================
+    File Name: agGridStyleOverride.scss
+    Description: Override ag-grid table style/SASS vars
+    ----------------------------------------------------------------------------------------
+    Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+    Author: Pixinvent
+    Author URL: http://www.themeforest.net/user/pixinvent
+==========================================================================================*/
+
+@import '~ag-grid-community/src/styles/ag-grid.scss';
+@import '~ag-grid-community/src/styles/ag-theme-material/sass/ag-theme-material.scss';
+
+@import './_variables.scss';
+
+.ag-grid-table {
+  color: inherit !important;
+
+  height: 480px;
+  .ag-header-cell {
+    .ag-cell-label-container {
+      .ag-header-icon.ag-filter-icon {
+        display: none;
+      }
+    }
+  }
+
+  .ag-center-cols-viewport {
+    overflow-x: hidden;
+  }
+
+  // style select of column header filter
+  .ag-filter-select {
+    padding: 0.3rem;
+    background: transparent;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  // style input of column header filter input
+  .ag-filter-filter {
+    padding-bottom: 0 !important;
+    height: 25px !important;
+    margin-top: 14px !important;
+  }
+
+  // remove extra padding of input in inline edit
+  .ag-input-text-wrapper {
+    input {
+      padding-bottom: 0 !important;
+    }
+  }
+
+  // Make input border bottom visible
+  .ag-floating-filter-body {
+    height: unset;
+  }
+
+  .ag-cell-inline-editing {
+    height: 40px !important;
+  }
+
+  .ag-grid-table-actions-left {
+    @media screen and (max-width: 614px) and (min-width: 443px) {
+      display: flex;
+      flex-grow: 1;
+      justify-content: flex-end;
+    }
+  }
+
+  // remove horizontal scroolbar from pinned columns
+  .ag-horizontal-left-spacer,
+  .ag-horizontal-right-spacer {
+    overflow-x: auto;
+  }
+
+  .ag-icon-checkbox-checked,
+  .ag-icon-checkbox-indeterminate {
+    font-size: 22px;
+    color: $primary !important;
+  }
+
+  .ag-icon-checkbox-unchecked {
+    color: $gray-disable !important;
+    font-size: 22px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: $gray-disable;
+    border-radius: 20px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: grey-text;
+    border-radius: 20px;
+  }
+}
+
+// Can not use vuexy admin variables
+// agGrid vars and imported vars may conflict
+.theme-dark {
+  .ag-grid-table {
+    &.ag-theme-material {
+      background: transparent;
+      color: grey-text;
+
+      .ag-header {
+        background: transparent;
+        color: $white;
+        border-bottom-color: grey-text;
+      }
+
+      .ag-cell-last-left-pinned {
+        border-right-color: grey-text !important;
+      }
+
+      .ag-floating-filter-input {
+        color: grey-text;
+        border-bottom-color: grey-text;
+      }
+
+      .ag-row-hover,
+      .ag-header-cell:hover {
+        background-color: $gray-disable;
+      }
+
+      .ag-row-selected {
+        background: $gray-disable;
+      }
+
+      .ag-row,
+      .ag-header-cell,
+      .ag-header-group-cell,
+      .ag-row,
+      .ag-pinned-left-header,
+      .ag-horizontal-left-spacer,
+      .ag-horizontal-right-spacer {
+        border-color: grey-text;
+      }
+    }
+
+    .ag-icon-checkbox-unchecked,
+    .ag-icon-filter,
+    .ag-icon-asc,
+    .ag-icon-desc {
+      color: grey-text !important;
+    }
+
+    .ag-filter-body-wrapper {
+      background-color: $gray-disable;
+    }
+
+    .ag-filter-select {
+      border-color: grey-text;
+      color: grey-text;
+    }
+
+    option {
+      background-color: grey-text;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: $primary;
+      border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: $gray-disable;
+      border-radius: 20px;
+    }
+  }
+}
+
+// Custom Fixes
+.ag-grid-cell-chip {
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+}
+
+.ag-center-cols-container,
+.ag-pinned-left-cols-container {
+  cursor: pointer;
+}
+
+.ag-center-cols-container {
+  width: 100% !important;
+  div[role='row'] {
+    height: 40px !important;
+  }
+}
+
+.ag-cell-focus {
+  border: none !important;
+}
+
+div[role='row'] {
+  background: $gray-bg-fade;
+  width: 100% !important;
+}
+
+.ag-cell-with-height {
+  height: auto !important;
+}
+
+.ag-theme-material .ag-header {
+  border-bottom: none;
+  height: 52px !important;
+  min-height: 52px !important;
+}
+
+.ag-theme-material .ag-row{
+  border-color: #e2e2e2;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.table-search {
+  width: 100%;
+
+  > .vs-con-input > .vs-icon {
+    top: auto !important;
+  }
+}
+
+.ag-header-container {
+  width: 100% !important;
+}
+
+.table-header {
+  color: #37394c;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 20px;
+  margin: 0px 0px 15px 16px;
+  display: flex;
+
+
+  .title{
+    display: inline;
+    margin-right: 20px;
+  }
+
+  .icon-list{
+    display: inline;
+  }
+
+  .icon-container{
+    margin-right: 15px;
+    cursor: pointer;
+    color: $mid-black;
+  }
+}
+
+.ag-body-horizontal-scroll-viewport {
+  overflow: hidden !important;
+}
+
+.ag-grid-table-actions-right {
+  width: 50%;
+
+  @media screen and (max-width: 614px) {
+    flex-grow: 1;
+  }
+}
+
+.custom-row {
+  text-align: left;
+  text-overflow: ellipsis;
+    width: 100%;
+  
+  .row-status {
+    border-radius: 16px;
+    height: 22px;
+    width: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+
+    &.active{
+      color: $success;
+      border: 2px solid $success;
+      padding: 2px 14px;
+    }
+    &.in-active{
+      color: $gray-disable;
+      border: 2px solid $gray-disable;
+      padding: 2px 7.5px;
+    }
+    &.hold{
+      color: $warning;
+      border: 2px solid $warning;
+      padding: 2px 9px;
+    }
+  }
+}

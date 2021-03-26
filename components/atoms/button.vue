@@ -25,8 +25,9 @@ export default class T1Button extends Vue {
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 .t1-button {
-  padding: 10px 16px;
+  padding: 6px 16px;
   width: 160px;
+  height: 40px;
   border: 2px solid $primary;
   border-radius: 6px;
   font-size: 14px;
@@ -51,20 +52,20 @@ export default class T1Button extends Vue {
 }
 
 .black-transparent {
-  border: 2px solid $black-grey;
+  border: 2px solid grey-text;
   background: transparent;
-  color: $black-grey;
+  color: grey-text;
 }
 
 .black {
-  border: 2px solid $black-grey;
-  background: $black-grey;
+  border: 2px solid grey-text;
+  background: $mid-black;
 }
 
 .transparent-disable {
-  border: 2px solid $grey;
+  border: 2px solid $gray-disable;
   background: transparent;
-  color: $grey;
+  color: $gray-disable;
 
   &:focus,
   &:hover {
@@ -74,8 +75,8 @@ export default class T1Button extends Vue {
 }
 
 .disable {
-  border: 2px solid $grey;
-  background: $grey;
+  border: 2px solid $gray-disable;
+  background: $gray-disable;
   color: $white;
 
   &:focus,

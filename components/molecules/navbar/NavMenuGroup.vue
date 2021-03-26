@@ -49,7 +49,7 @@ export default class NavMenuGroup extends Vue {
 
 .nav-menu-group {
   .menu-title {
-    color: $black;
+    color: $mid-black;
     font-size: 18px;
     font-weight: 700;
     line-height: 20px;

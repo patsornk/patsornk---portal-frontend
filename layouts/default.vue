@@ -74,7 +74,7 @@ html {
   display: flex;
   flex-direction: column;
   padding: 24px;
-  background-color: $grey-2;
+  background-color: $gray-bg-fade;
 
   .content {
     background-color: $white;
@@ -86,7 +86,7 @@ html {
     margin-bottom: 1rem;
     font-size: 36px;
     font-weight: 700;
-    color: $black;
+    color: $mid-black;
   }
 }
 </style>

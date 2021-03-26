@@ -52,7 +52,7 @@ export default class SidebarMenuContent extends Vue {}
 
   .logout {
     ::v-deep .title {
-      color: $black;
+      color: $mid-black;
     }
   }
 }

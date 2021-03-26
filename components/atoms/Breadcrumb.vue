@@ -38,7 +38,7 @@ export default class Breadcrumb extends Vue {
     .title-inactive,
     .title-active {
       font-size: 16px;
-      color: $grey-1;
+      color: $gray-disable;
     }
 
     img {

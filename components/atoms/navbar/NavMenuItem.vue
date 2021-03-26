@@ -74,7 +74,7 @@ export default class NavMenuItem extends Vue {
     }
 
     .title {
-      color: $grey-1;
+      color: $gray-disable;
       font-weight: normal;
     }
 
@@ -85,7 +85,7 @@ export default class NavMenuItem extends Vue {
   }
 
   .content-active {
-    background-color: $grey-2;
+    background-color: $gray-bg-fade;
     border-left: 4px solid $primary;
     padding: 0px 19px;
   }
