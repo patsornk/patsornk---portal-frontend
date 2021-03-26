@@ -68,18 +68,50 @@
         </div>
       </div>
     </div>
+    <t1-button @click.native="changeIsModal">
+      Modal
+    </t1-button>
+    <modal v-show="isModal" @close="changeIsModal">
+      <template v-slot:header>
+        Want to create new company ?
+      </template>
+
+      <template v-slot:body>
+        You have create the company information. Please
+        check the information before click to create partner
+        button.
+      </template>
+
+      <template v-slot:footer>
+        <t1-button
+          class="transparent modal-btn"
+          @click.native="changeIsModal"
+        >
+          Cancel
+        </t1-button>
+        <t1-button
+          class="modal-btn"
+          @click.native="changeIsModal"
+        >
+          Confirm
+        </t1-button>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { BreadcrumbType } from '~/constants'
+import T1Button from '@/components/atoms/button.vue'
+import Modal from '@/components/atoms/Modal.vue'
 
 @Component({
-  components: {}
+  components: { T1Button, Modal }
 })
 export default class Main extends Vue {
   private products = []
+  private isModal = true
 
   get env() {
     return process.env.TEST
@@ -87,6 +119,10 @@ export default class Main extends Vue {
 
   get todos() {
     return this.$store.state.todos.list
+  }
+
+  private changeIsModal(): void {
+    this.isModal = !this.isModal
   }
 
   private toggle(todo: string) {
@@ -172,5 +208,10 @@ export default class Main extends Vue {
 
 .links {
   padding-top: 15px;
+}
+
+.modal-btn {
+  margin-left: 25px;
+  width: 86px;
 }
 </style>
