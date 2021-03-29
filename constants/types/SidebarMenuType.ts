@@ -6,7 +6,7 @@ export interface SidebarSubMenu {
 export interface SidebarMenu extends SidebarSubMenu {
   link?: string
   icon?: string
-  subMenu?: SidebarSubMenu[]
+  subMenu?: SidebarMenu[]
 }
 
 export enum Organization {

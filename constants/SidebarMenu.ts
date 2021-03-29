@@ -5,8 +5,13 @@ export const feature: SidebarMenu[] = [
     title: 'Partner Management',
     subMenu: [
       {
-        title: 'Company List'
-      }
+        title: 'Company List',
+        subMenu: [
+          {
+            title: 'Company Details'
+          }
+        ]
+      },
     ]
   },
   {

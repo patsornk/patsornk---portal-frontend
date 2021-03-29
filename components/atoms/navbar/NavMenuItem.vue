@@ -35,10 +35,11 @@ export default class NavMenuItem extends Vue {
   readonly icon?: string
 
   @Prop({
-    required: true,
-    type: String
+    // required: true,
+    type: String,
+    default: ''
   })
-  readonly label!: String
+  readonly label?: String
 
   @Prop({
     required: true,

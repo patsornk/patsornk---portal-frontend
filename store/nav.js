@@ -57,7 +57,7 @@ export const getters = {
       case 'ACCOUNTMANAGEMENT':
         return accountManagement
       default:
-        return []
+        return {}
     }
   }
 }

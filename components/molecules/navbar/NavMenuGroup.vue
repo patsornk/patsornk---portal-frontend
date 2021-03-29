@@ -3,7 +3,7 @@
     <span class="menu-title w-full px-6">
       {{ menuTitle }}
     </span>
-    <div class="nav-menu-list my-2">
+    <ul class="nav-menu-list my-2">
       <nav-menu
         class="cursor-pointer"
         v-for="(menu, index) in menuItems"
@@ -12,7 +12,7 @@
         :activeMenu="index === activeMenu"
         @click.native="onClickMenu(index)"
       />
-    </div>
+    </ul>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ import { SidebarMenu } from '~/constants'
   }
 })
 export default class NavMenuGroup extends Vue {
-  private activeMenu = 0 //should be computed when path existing
+  private activeMenu = -1 //should be computed when path existing
 
   get menuItems(): SidebarMenu[] {
     return this.$store.getters['nav/organizNavbarMenu']

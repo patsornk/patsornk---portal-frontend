@@ -1,25 +1,30 @@
 <template>
-  <div class="nav-menu">
+  <li class="nav-menu">
     <nav-menu-item
-      :active="activeMenu"
       :label="menu.title"
       :icon="menu.icon"
+      :active="activeMenu"
     >
       <img
         src="@/assets/images/navbar/arrow-right.png"
         v-if="menu.subMenu"
       />
     </nav-menu-item>
-    <div class="sub-menu" v-show="activeMenu">
-      <nav-menu-item
+    <ul
+      class="sub-menu"
+      v-show="
+        activeMenu && menu.subMenu && menu.subMenu.length
+      "
+    >
+      <nav-menu
         v-for="(item, index) in menu.subMenu"
         :key="index"
-        :active="activeSubMenu === index"
-        :label="item.title"
+        :menu="item"
+        :activeMenu="index === activeSubMenu"
         @click.native="onClickMenu(index)"
       />
-    </div>
-  </div>
+    </ul>
+  </li>
 </template>
 
 <script lang="ts">
@@ -32,6 +37,7 @@ import {
 import NavMenuItem from '~/components/atoms/navbar/NavMenuItem.vue'
 
 @Component({
+  name: 'nav-menu',
   components: {
     NavMenuItem
   }
@@ -40,18 +46,17 @@ export default class NavMenu extends Vue {
   private activeSubMenu: number = -1
 
   @Prop({
-    required: true,
     type: Boolean,
     default: false
   })
-  readonly activeMenu!: boolean
+  readonly activeMenu?: false
 
   @Prop({
     required: true,
     type: Object,
-    default: undefined
+    default: {}
   })
-  readonly menu!: object
+  readonly menu!: {}
 
   private onClickMenu(index: number, link: string): void {
     this.activeSubMenu = index
@@ -62,6 +67,10 @@ export default class NavMenu extends Vue {
   onChangedActiveMenu() {
     this.activeSubMenu = -1
   }
+
+  mounted() {
+    console.log(this.menu)
+  }
 }
 </script>
 
@@ -71,7 +80,7 @@ export default class NavMenu extends Vue {
 .nav-menu {
   .sub-menu {
     padding-left: 36px;
-    
+
     ::v-deep .content-active {
       border: 4px solid $primary;
       border-image: linear-gradient(
@@ -86,6 +95,10 @@ export default class NavMenu extends Vue {
       border-bottom: none;
       border-top: none;
       background-color: $white;
+    }
+
+    ::v-deep img {
+      display: none;
     }
   }
 }
