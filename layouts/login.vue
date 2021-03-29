@@ -44,4 +44,12 @@ export default class LoginLayout extends Vue {}
     width: 100%;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .login-container {
+    .position-lang {
+      right: 10px;
+    }
+  }
+}
 </style>

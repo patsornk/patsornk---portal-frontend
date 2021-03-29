@@ -18,7 +18,7 @@
               height: 22px;
             "
           />
-          {{ option.name }}
+          <span>{{ option.name }}</span>
         </div>
       </template>
       <template v-slot:option="option">
@@ -96,6 +96,36 @@ export default class ChangeLang extends Vue {
 
     ::v-deep .vs__dropdown-option > span {
       width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .change-lang {
+    .lang-select {
+      width: auto;
+      .dropdown-option {
+        span {
+          display: none;
+        }
+      }
+
+      ::v-deep .vs__selected-options {
+        flex-basis: auto;
+        flex-grow: 0;
+      }
+
+      ::v-deep .vs__search {
+        display: none;
+      }
+
+      ::v-deep .vs__dropdown-toggle {
+        width: fit-content;
+      }
+
+      ::v-deep .vs__dropdown-menu {
+        left: -90px;
+      }
     }
   }
 }

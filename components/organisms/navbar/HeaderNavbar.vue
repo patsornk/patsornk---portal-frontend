@@ -1,11 +1,33 @@
 <template>
   <header class="header-bar">
-    <div
-      class="drawer-toggle"
-      role="button"
-      @click="$store.dispatch('nav/toggleSidebar')"
-    >
-      <img src="@/assets/images/navbar/hamberger.png" />
+    <div class="drawer-toggle" role="button">
+      <img
+        class="hamberger"
+        src="@/assets/images/navbar/hamberger.png"
+        @click="$store.dispatch('nav/toggleSidebar')"
+      />
+      <div class="flex items-center justify-end">
+        <img
+          class="mr-2 cursor-pointer"
+          src="@/assets/images/navbar/menu-group.png"
+          @click="onClickMenuApps"
+        />
+        <change-lang />
+      </div>
+      <div
+        class="menu-apps grid grid-cols-3 gap-4"
+        v-show="toggleShowMenuApps"
+      >
+        <div
+          class="flex flex-col items-center cursor-pointer"
+          v-for="(app, index) in menuApps"
+          :key="index"
+          @click="onClickMenuAppItem(app.value)"
+        >
+          <div class="menu-apps-icon" />
+          <span>{{ app.title }}</span>
+        </div>
+      </div>
     </div>
 
     <div class="app-links">
@@ -104,13 +126,16 @@ export default class HeaderNav extends Vue {
 
   .drawer-toggle {
     display: flex;
-    justify-self: end;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 50%;
-    width: 35px;
-    padding-right: 16px;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
     cursor: pointer;
+
+    .hamberger {
+      width: 20px;
+      height: 12px;
+    }
   }
 
   .menu-apps {

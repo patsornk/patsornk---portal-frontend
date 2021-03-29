@@ -36,6 +36,7 @@ export default class Modal extends Vue {}
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
 }
 
 .modal {
