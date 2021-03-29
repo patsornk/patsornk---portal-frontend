@@ -2,10 +2,7 @@
   <div class="dropdown" style="float: left">
     <button class="dropbtn">
       <span>{{ value ? value : placeholder }}</span>
-      <font-awesome-icon
-        class="dropdown-icon"
-        :icon="['fas', 'chevron-down']"
-      />
+      <span class="material-icons"> expand_more </span>
     </button>
     <div class="dropdown-content" style="left: 0">
       <a

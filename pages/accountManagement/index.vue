@@ -32,6 +32,24 @@ export default class Main extends Vue {
 
   mounted(): void {
     this.setupBreadcrumb()
+    this.$toast.show('Create company success', {
+      icon: {
+        name: 'check_circle',
+        after: false
+      }
+    })
+    this.$toast.success(`Create company success`, {
+      icon: {
+        name: 'check_circle',
+        after: false
+      }
+    })
+    this.$toast.error(`Create company success`, {
+      icon: {
+        name: 'cancel',
+        after: false
+      }
+    })
   }
 }
 </script>

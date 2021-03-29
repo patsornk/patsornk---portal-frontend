@@ -1,10 +1,11 @@
 <template>
   <div class="pagination-container">
-    <font-awesome-icon
+    <span
+      class="pagination-icon material-icons"
       @click="prevPage()"
-      class="pagination-icon"
-      :icon="['fas', 'chevron-left']"
-    />
+    >
+      chevron_left
+    </span>
     <template v-for="(page, index) in pages">
       <a
         :key="index"
@@ -27,11 +28,12 @@
         >{{ page.content }}
       </a>
     </template>
-    <font-awesome-icon
+    <span
       @click="nextPage()"
-      class="pagination-icon"
-      :icon="['fas', 'chevron-right']"
-    />
+      class="pagination-icon material-icons"
+    >
+      chevron_right
+    </span>
   </div>
 </template>
 
@@ -236,8 +238,8 @@ export default class Pagination extends Vue {
 
   .pagination-icon {
     cursor: pointer;
-    height: 36px;
     margin: 0px 20px;
+    font-size: 36px;
   }
 
   .pagination-page {

@@ -1,1 +1,38 @@
 @import './_variables.scss';
+
+.toasted{
+  width: 440px !important;
+  height: 56px !important;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 4px !important;
+}
+
+.toasted-container .toasted{
+  justify-content: left !important;
+}
+
+.toasted-container.top-right {
+  top: 82px !important;
+  right: 34px !important;
+}
+
+.toasted .primary.success, .toasted.toasted-primary.success{
+  background-color: $success !important;
+
+  .material-icons{
+    color: $white;
+  }
+}
+
+.toasted .primary.error, .toasted.toasted-primary.error{  
+  background-color: $primary !important;
+
+  .material-icons{
+    color: $white;
+  }
+}
+
+.toasted .primary, .toasted.toasted-primary .material-icons{
+  color: $success;
+}

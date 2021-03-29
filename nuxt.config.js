@@ -52,22 +52,22 @@ export default {
     '@nuxtjs/tailwindcss',
     '@nuxtjs/dotenv',
     '@nuxtjs/vuetify',
-    '@nuxtjs/fontawesome'
   ],
-  fontawesome: {
-    icons: {
-      solid: true,
-      brands: true
-    }
-  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     'nuxt-i18n',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/toast',
+    'nuxt-material-design-icons',
   ],
+
+  toast: {
+    position: 'top-right',
+    duration: 4000,
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
