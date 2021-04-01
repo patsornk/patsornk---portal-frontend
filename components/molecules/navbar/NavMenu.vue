@@ -67,10 +67,6 @@ export default class NavMenu extends Vue {
   onChangedActiveMenu() {
     this.activeSubMenu = -1
   }
-
-  mounted() {
-    console.log(this.menu)
-  }
 }
 </script>
 

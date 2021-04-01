@@ -4,35 +4,6 @@
       <h1 class="title">
         {{ $t('home.title') }} {{ env }}
       </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-        <button
-          href="#"
-          class="button--grey"
-          @click.prevent="
-            $i18n.setLocale(
-              $i18n.locale === 'en' ? 'th' : 'en'
-            )
-          "
-        >
-          change lang
-        </button>
-      </div>
       <div class="flex">
         <div class="flex w-full justify-center">
           <ul>
@@ -68,6 +39,14 @@
         </div>
       </div>
     </div>
+
+    <phone-num-input
+      v-model="phone"
+      title="Phone No."
+      :required="true"
+      @prefix="onChangedPrefixNumber"
+    />
+    
     <t1-button @click.native="changeIsModal">
       Modal
     </t1-button>
@@ -101,17 +80,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import {
+  Component,
+  Vue,
+  Watch
+} from 'vue-property-decorator'
 import { BreadcrumbType } from '~/constants'
 import T1Button from '@/components/atoms/button.vue'
 import Modal from '@/components/atoms/Modal.vue'
+import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
 
 @Component({
-  components: { T1Button, Modal }
+  components: {
+    T1Button,
+    Modal,
+    PhoneNumInput
+  }
 })
 export default class Main extends Vue {
   private products = []
   private isModal = true
+  private phone = ''
+  private prefix = ''
 
   get env() {
     return process.env.TEST
@@ -163,6 +153,11 @@ export default class Main extends Vue {
       'breadcrumb/setPageTitle',
       'Create new company'
     )
+  }
+
+  //need to be function to received emit event
+  onChangedPrefixNumber(value: string): void {
+    this.prefix = value
   }
 
   mounted(): void {

@@ -26,6 +26,7 @@
           v-else
           class="input-field-input"
           :class="errorMessage ? 'no-border' : ''"
+          :inputmode="inputmode"
           v-model="dataValue"
           :placeholder="placeholder"
           @blur="$emit('onBlur')"
@@ -113,6 +114,11 @@ export default class InputField extends Vue {
   })
   private placeholder?: string
 
+  @Prop({
+    type: String
+  })
+  private inputmode?: string
+
   get dataValue() {
     return this.value
   }
@@ -136,7 +142,9 @@ export default class InputField extends Vue {
   }
 
   .input-field-required {
+    margin-left: 0.25rem;
     color: $primary;
+    font-weight: 700;
   }
 
   .input-field-input-group {

@@ -1,6 +1,7 @@
 //parameters
 export * from './SidebarMenu'
 export * from './Table'
+export * from './CountryCodes'
 
 //types
 export * from './types/SidebarMenuType'
