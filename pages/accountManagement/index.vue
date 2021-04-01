@@ -1,15 +1,43 @@
 <template>
-  <div>Account Management</div>
+  <div>
+    Account Management
+    <input-field
+      title="lat"
+      v-model="infoData.lat"
+      required
+    /><input-field
+      title="lng"
+      v-model="infoData.lng"
+      required
+    />
+
+    <google-map class="t1-map" :position="mapPosition" />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { BreadcrumbType } from '~/constants'
+import GoogleMap from '~/components/atoms/GoogleMap.vue'
+import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
+import InputField from '~/components/atoms/InputField.vue'
 
 @Component({
-  components: {}
+  components: { GoogleMap, InputField }
 })
 export default class Main extends Vue {
+  private infoData = {
+    lng: 100.5285094,
+    lat: 13.7249499
+  }
+
+  get mapPosition(): MapPosition {
+    return {
+      lng: Number(this.infoData.lng || 100.5285094),
+      lat: Number(this.infoData.lat || 13.7249499)
+    }
+  }
+
   private setupBreadcrumb(): void {
     const breadcrumb: BreadcrumbType[] = [
       {
@@ -32,28 +60,18 @@ export default class Main extends Vue {
 
   mounted(): void {
     this.setupBreadcrumb()
-    this.$toast.show('Create company success', {
-      icon: {
-        name: 'check_circle',
-        after: false
-      }
-    })
-    this.$toast.success(`Create company success`, {
-      icon: {
-        name: 'check_circle',
-        after: false
-      }
-    })
-    this.$toast.error(`Create company success`, {
-      icon: {
-        name: 'cancel',
-        after: false
-      }
-    })
+
+    this.$toast.global.error('error')
+    this.$toast.global.success('Create company success')
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
+
+.t1-map {
+  width: 100%;
+  height: 100%;
+}
 </style>

@@ -39,6 +39,7 @@ export default {
   plugins: [
     '@/plugins/vSelect',
     '@/plugins/vuetify',
+    '@/plugins/google-maps'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -67,6 +68,30 @@ export default {
   toast: {
     position: 'top-right',
     duration: 4000,
+    register: [ // Register custom toasts
+      {
+        name: 'error',
+        message: message => message,
+        options: {
+          type: 'error',
+          icon: {
+            name: 'cancel',
+            after: false
+          }
+        }
+      },
+      {
+        name: 'success',
+        message: message => message,
+        options: {
+          type: 'success',
+          icon: {
+            name: 'check_circle',
+            after: false
+          }
+        }
+      }
+    ]
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -77,7 +102,8 @@ export default {
     transpile: [
       'ag-grid-vue',
       'vue-smart-pagination',
-      'vee-validate/dist/rules'
+      'vee-validate/dist/rules',
+      'vue2-google-maps',
     ]
   },
   tailwindcss: {
