@@ -76,6 +76,7 @@
         </t1-button>
       </template>
     </modal>
+    <upload-image title="Brand Logo" />
   </div>
 </template>
 
@@ -88,18 +89,21 @@ import {
 import { BreadcrumbType } from '~/constants'
 import T1Button from '@/components/atoms/button.vue'
 import Modal from '@/components/atoms/Modal.vue'
+import UploadImage from '@/components/molecules/UploadImage.vue'
 import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
+
 
 @Component({
   components: {
     T1Button,
     Modal,
+    UploadImage,
     PhoneNumInput
   }
 })
 export default class Main extends Vue {
   private products = []
-  private isModal = true
+  private isModal = false
   private phone = ''
   private prefix = ''
 
@@ -177,6 +181,7 @@ export default class Main extends Vue {
 
 .main-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
