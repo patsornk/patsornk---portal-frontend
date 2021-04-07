@@ -8,7 +8,9 @@
       <div class="main w-full">
         <breadcrumb />
         <span class="page-title">{{ pageTitle }}</span>
-        <Nuxt class="content" />
+        <transition name="zoom-fade" mode="out-in">
+          <Nuxt class="content" />
+        </transition>
       </div>
     </div>
   </div>
@@ -87,6 +89,20 @@ html {
     font-size: 36px;
     font-weight: 700;
     color: $mid-black;
+  }
+
+  .zoom-fade-enter-active,
+  .zoom-fade-leave-active {
+    transition: transform 0.35s, opacity 0.28s ease-in-out;
+  }
+  .zoom-fade-enter {
+    transform: scale(0.97);
+    opacity: 0;
+  }
+
+  .zoom-fade-leave-to {
+    transform: scale(1.03);
+    opacity: 0;
   }
 }
 </style>

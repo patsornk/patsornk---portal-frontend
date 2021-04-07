@@ -46,7 +46,7 @@
       :required="true"
       @prefix="onChangedPrefixNumber"
     />
-    
+
     <t1-button @click.native="changeIsModal">
       Modal
     </t1-button>
@@ -81,17 +81,12 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { BreadcrumbType } from '~/constants'
 import T1Button from '@/components/atoms/button.vue'
 import Modal from '@/components/atoms/Modal.vue'
 import UploadImage from '@/components/molecules/UploadImage.vue'
 import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
-
 
 @Component({
   components: {
