@@ -52,7 +52,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/dotenv',
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -62,7 +62,7 @@ export default {
     'nuxt-i18n',
     '@nuxtjs/dotenv',
     '@nuxtjs/toast',
-    'nuxt-material-design-icons',
+    'nuxt-material-design-icons'
   ],
 
   toast: {
@@ -144,5 +144,9 @@ export default {
 
     // Mutation to commit to set route parameters translations
     syncRouteParams: false
+  },
+  
+  router: {
+    middleware: ['guard']
   }
 }

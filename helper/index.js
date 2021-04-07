@@ -1,1 +1,1 @@
-export * from './validate/validate'
+export * from './validate'
