@@ -2,30 +2,31 @@
   <div class="phone-num-input">
     <div class="flex w-full">
       <span class="title">{{ title }}</span>
-      <span class="required" v-show="required"> *</span>
+      <span v-show="required" class="required"> *</span>
     </div>
-    <div class="flex w-full">
+    <div class="input-group flex w-full">
       <div class="prefix">
         <v-select
+          v-model="prefix"
           :searchable="false"
           :options="countryCodes"
-          v-model="prefix"
           :reduce="(codes) => codes.label"
           label="text"
         >
           <template #selected-option="option">
             {{ option.label }}
           </template>
-          <template v-slot:option="option">
+          <template #option="option">
             {{ option.text }}
           </template>
         </v-select>
       </div>
       <input
-        class="input-text"
         v-model="dataValue"
+        class="input-number"
         type="text"
         inputmode="tel"
+        maxlength="13"
       />
     </div>
   </div>
@@ -36,7 +37,6 @@ import {
   Component,
   Vue,
   Prop,
-  Model,
   Watch
 } from 'vue-property-decorator'
 import { countryCodes } from '@/constants'
@@ -97,18 +97,23 @@ export default class PhoneNumInput extends Vue {
     font-weight: 700;
   }
 
-  .input-text,
+  .input-group {
+    padding: 6px 0px;
+  }
+
+  .input-number,
   .prefix {
     font-size: 16px;
     border: 1px solid $gray-disable;
     border-radius: 4px;
   }
 
-  .input-text {
+  .input-number {
+    width: 100%;
     padding: 10px;
   }
 
-  .input-text:focus {
+  .input-number:focus {
     outline: none !important;
   }
 

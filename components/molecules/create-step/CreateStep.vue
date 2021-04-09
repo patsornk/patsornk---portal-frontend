@@ -1,10 +1,11 @@
 <template>
-  <div class="create-company-container">
-    <div class="w-full">
+  <div class="create-step-container">
+    <div class="w-full h-full">
       <stepbar :title="stepTitle" />
-      <slot></slot>
+      <create-company v-show="param === 'company'" />
     </div>
-    <button
+    <!-- for debug stepbar (action is next stepbar)-->
+    <!-- <button
       @click="
         $store.dispatch(
           'stepbar/setNextState',
@@ -13,7 +14,7 @@
       "
     >
       Save
-    </button>
+    </button> -->
     <div class="footer">
       <t-1-button type="black-transparent"
         >Cancel</t-1-button
@@ -26,24 +27,36 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import {
+  Component,
+  Prop,
+  Vue
+} from 'vue-property-decorator'
 import Stepbar from '@/components/molecules/create-step/Stepbar.vue'
 import T1Button from '@/components/atoms/button.vue'
+import CreateCompany from '@/components/organisms/create-company/company.vue'
 import { StepbarContent } from '~/constants'
 
 @Component({
   components: {
     Stepbar,
-    T1Button
+    T1Button,
+    CreateCompany
   }
 })
-export default class CreateCompany extends Vue {
+export default class CreateStep extends Vue {
+  @Prop({
+    required: true,
+    type: String
+  })
+  readonly param!: string
+
   private stepTitle = StepbarContent
 }
 </script>
 
 <style lang="scss" scoped>
-.create-company-container {
+.create-step-container {
   display: flex;
   flex-direction: column;
   align-items: center;

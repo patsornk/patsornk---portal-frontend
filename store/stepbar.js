@@ -1,7 +1,7 @@
 export const state = () => ({
   currentState: 0,
   nextState: 0,
-  maxState: 0
+  maxState: window.sessionStorage.getItem('maxStepbar') || 0
 })
 
 export const mutations = {
@@ -13,10 +13,12 @@ export const mutations = {
     state.currentState = num
     if (num > state.maxState) {
       state.maxState = num
+      window.sessionStorage.setItem('maxStepbar', num)
     }
   },
   SET_MAX_STATE(state, num) {
     state.maxState = num
+    window.sessionStorage.setItem('maxStepbar', num)
   }
 }
 

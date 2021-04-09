@@ -1,20 +1,23 @@
 <template>
   <div class="create-conpany-step-container">
-    <create-company />
+    <create-step :param="param" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import CreateCompany from '@/components/molecules/create-step/CreateCompany.vue'
+import CreateStep from '~/components/molecules/create-step/CreateStep.vue'
 
 @Component({
   components: {
-    CreateCompany
+    CreateStep
   }
 })
-export default class CreateCompanyStep extends Vue {}
+export default class CreateCompanyStep extends Vue {
+  get param() {
+    return this.$route.params.currentStep
+  }
+}
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
