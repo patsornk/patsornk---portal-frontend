@@ -4,6 +4,7 @@
       :label="menu.title"
       :icon="menu.icon"
       :active="activeMenu"
+      @click.native="onClickMenu(menu.link)"
     >
       <img
         src="@/assets/images/navbar/arrow-right.png"
@@ -21,7 +22,7 @@
         :key="index"
         :menu="item"
         :activeMenu="index === activeSubMenu"
-        @click.native="onClickMenu(index)"
+        @click.native="onClickSubMenu(index)"
       />
     </ul>
   </li>
@@ -58,9 +59,12 @@ export default class NavMenu extends Vue {
   })
   readonly menu!: {}
 
-  private onClickMenu(index: number, link: string): void {
+  private onClickSubMenu(index: number): void {
     this.activeSubMenu = index
-    // this.$router.push(link)
+  }
+
+  private onClickMenu(link: string): void {
+    link && this.$router.push(link)
   }
 
   @Watch('activeMenu')

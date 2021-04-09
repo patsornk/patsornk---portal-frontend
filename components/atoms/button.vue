@@ -52,13 +52,13 @@ export default class T1Button extends Vue {
 }
 
 .black-transparent {
-  border: 2px solid grey-text;
+  border: 2px solid $grey-text;
   background: transparent;
-  color: grey-text;
+  color: $grey-text;
 }
 
 .black {
-  border: 2px solid grey-text;
+  border: 2px solid $grey-text;
   background: $mid-black;
 }
 

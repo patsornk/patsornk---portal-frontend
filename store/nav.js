@@ -1,9 +1,15 @@
-import { feature, member, request, accountManagement } from '~/constants'
+import {
+  feature,
+  member,
+  request,
+  accountManagement
+} from '~/constants'
 
 // States
 export const state = () => ({
   toggleSidebar: false,
-  organization: '',
+  organization:
+    window.sessionStorage.getItem('organization') | '',
   organizName: '',
   organizNavbarMenu: []
 })
@@ -15,6 +21,7 @@ export const mutations = {
   },
   SET_ORGANIZATION(state, mode) {
     state.organization = mode
+    window.sessionStorage.setItem('organization', mode)
   }
 }
 
@@ -33,7 +40,9 @@ export const getters = {
   toggleSidebar: (state) => state.toggleSidebar,
   organization: (state) => state.organization,
   organizName: (state) => {
-    switch (state.organization) {
+    // Magic console.log to make it work!
+    console.log(state.organization)
+    switch (window.sessionStorage.getItem('organization')) {
       case 'FEATURE':
         return 'By feature'
       case 'MEMBER':
@@ -47,7 +56,9 @@ export const getters = {
     }
   },
   organizNavbarMenu: (state) => {
-    switch (state.organization) {
+    // Magic console.log to make it work!
+    console.log(state.organization)
+    switch (window.sessionStorage.getItem('organization')) {
       case 'FEATURE':
         return feature
       case 'MEMBER':

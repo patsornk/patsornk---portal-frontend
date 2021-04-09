@@ -7,9 +7,9 @@
       <span class="title-header">Mode</span>
       <div class="slide">
         <div
-          class="slide-item"
           v-for="(item, index) in menuApps"
           :key="index"
+          class="slide-item"
           @click="onClickMode(item.value)"
         >
           {{ item.title }}
@@ -26,7 +26,7 @@ import { Organization } from '~/constants'
 @Component
 export default class Landing extends Vue {
   get menuApps() {
-    //mock data should get by role
+    // mock data should get by role
     return [
       {
         title: 'By feature',
@@ -49,12 +49,14 @@ export default class Landing extends Vue {
 
   private onClickMode(value: Organization): void {
     this.$store.dispatch('nav/setOrganization', value)
-    value === 'ACCOUNTMANAGEMENT' ? this.$router.push('/accountManagement') : this.$router.push('/example')
+    value === 'ACCOUNTMANAGEMENT'
+      ? this.$router.push('/accountManagement')
+      : this.$router.push('/organizManagement')
   }
 
   mounted() {
     this.$store.dispatch('breadcrumb/setBreadcrumb', [])
-    //set Page title
+    // set Page title
     this.$store.dispatch('breadcrumb/setPageTitle', '')
     this.$store.dispatch('nav/setOrganization', '')
   }

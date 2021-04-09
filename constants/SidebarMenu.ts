@@ -2,17 +2,8 @@ import { SidebarMenu } from './types/SidebarMenuType'
 
 export const feature: SidebarMenu[] = [
   {
-    title: 'Partner Management',
-    subMenu: [
-      {
-        title: 'Company List',
-        subMenu: [
-          {
-            title: 'Company Details'
-          }
-        ]
-      },
-    ]
+    title: 'Organization Management',
+    link: '/organizManagement'
   },
   {
     title: 'Loyalty '
