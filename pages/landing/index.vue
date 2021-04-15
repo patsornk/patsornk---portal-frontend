@@ -22,6 +22,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Organization } from '~/constants'
+import { feature } from '~/constants'
 
 @Component
 export default class Landing extends Vue {
@@ -48,10 +49,26 @@ export default class Landing extends Vue {
   }
 
   private onClickMode(value: Organization): void {
+    this.$store.dispatch(
+      'nav/setOrganizNavbarMenu',
+      feature
+    )
     this.$store.dispatch('nav/setOrganization', value)
-    value === 'ACCOUNTMANAGEMENT'
-      ? this.$router.push('/accountManagement')
-      : this.$router.push('/organizManagement')
+
+    switch (value) {
+      case 'FEATURE':
+        this.$router.push('/organizationManagement')
+        break
+      case 'MEMBER':
+        this.$router.push('/example')
+        break
+      case 'REQUEST':
+        this.$router.push('/example')
+        break
+      case 'ACCOUNTMANAGEMENT':
+        this.$router.push('/accountManagement')
+        break
+    }
   }
 
   mounted() {
