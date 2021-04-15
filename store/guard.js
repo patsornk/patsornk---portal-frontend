@@ -6,7 +6,7 @@ export const state = () => ({
     },
     {
       path: 'accountManagement',
-      role: ['admin']
+      role: ['admin', 'bu']
     }
   ],
   permissions: []
