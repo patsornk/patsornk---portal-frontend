@@ -21,24 +21,26 @@
           </template>
         </v-select>
       </div>
-      <input
-        v-model="dataValue"
-        class="input-number"
-        type="text"
-        inputmode="tel"
-        maxlength="13"
-      />
+      <div class="flex flex-col">
+        <input
+          v-model="dataValue"
+          class="input-number"
+          :class="errorMessage !== '' ? 'input-error' : ''"
+          type="text"
+          inputmode="tel"
+          maxlength="13"
+          minlength="9"
+        />
+        <span v-if="errorMessage" class="error-message">{{
+          errorMessage
+        }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Prop,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { countryCodes } from '@/constants'
 
 @Component
@@ -62,6 +64,12 @@ export default class PhoneNumInput extends Vue {
     default: false
   })
   private required?: boolean
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  private errorMessage?: string
 
   get countryCodes() {
     return countryCodes
@@ -113,12 +121,17 @@ export default class PhoneNumInput extends Vue {
     padding: 10px;
   }
 
+  .input-error {
+    border-color: $primary;
+  }
+
   .input-number:focus {
     outline: none !important;
   }
 
   .prefix {
     margin-right: 1rem;
+    height: 46px;
 
     .v-select {
       padding: 5px;
@@ -149,6 +162,12 @@ export default class PhoneNumInput extends Vue {
     ::v-deep .vs__search {
       display: none;
     }
+  }
+
+  .error-message {
+    color: $primary;
+    font-size: 14px;
+    margin-top: 0.4rem;
   }
 }
 </style>

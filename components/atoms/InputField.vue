@@ -2,7 +2,7 @@
   <div class="input-field">
     <div class="w-full">
       <span class="input-title">{{ title }}</span>
-      <span class="input-field-required" v-show="required">
+      <span v-show="required" class="input-field-required">
         *</span
       >
     </div>
@@ -14,28 +14,29 @@
       >
         <v-select
           v-if="type === 'select'"
-          :options="options"
           v-model="dataValue"
+          :options="options"
           :label="optionsLabel"
           :reduce="optionsReduce"
           :placeholder="placeholder"
           @blur="$emit('onBlur')"
         />
         <input
-          :type="type"
           v-else
+          v-model="dataValue"
+          :type="type"
           class="input-field-input"
           :class="errorMessage ? 'no-border' : ''"
           :inputmode="inputmode"
-          v-model="dataValue"
           :placeholder="placeholder"
+          :maxlength="maxlength"
           @blur="$emit('onBlur')"
         />
         <slot />
       </div>
       <span
-        class="text-danger text-sm validation-error-text"
         v-if="errorMessage"
+        class="text-danger text-sm validation-error-text"
       >
         {{ errorMessage }}
       </span>
@@ -80,11 +81,12 @@ export default class InputField extends Vue {
     type: String,
     default: 'text',
     validator(value) {
-      return (
-        ['text', 'number', 'select', 'password'].indexOf(
-          value
-        ) !== -1
-      )
+      return [
+        'text',
+        'number',
+        'select',
+        'password'
+      ].includes(value)
     }
   })
   private type?: string
@@ -118,6 +120,11 @@ export default class InputField extends Vue {
     type: String
   })
   private inputmode?: string
+
+  @Prop({
+    type: Number
+  })
+  private maxlength?: number | undefined
 
   get dataValue() {
     return this.value
