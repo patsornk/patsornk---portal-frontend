@@ -95,7 +95,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: grey-text;
+    background: $grey-text;
     border-radius: 20px;
   }
 }
@@ -106,21 +106,21 @@
   .ag-grid-table {
     &.ag-theme-material {
       background: transparent;
-      color: grey-text;
+      color: $grey-text;
 
       .ag-header {
         background: transparent;
         color: $white;
-        border-bottom-color: grey-text;
+        border-bottom-color: $grey-text;
       }
 
       .ag-cell-last-left-pinned {
-        border-right-color: grey-text !important;
+        border-right-color: $grey-text !important;
       }
 
       .ag-floating-filter-input {
-        color: grey-text;
-        border-bottom-color: grey-text;
+        color: $grey-text;
+        border-bottom-color: $grey-text;
       }
 
       .ag-row-hover,
@@ -139,7 +139,7 @@
       .ag-pinned-left-header,
       .ag-horizontal-left-spacer,
       .ag-horizontal-right-spacer {
-        border-color: grey-text;
+        border-color: $grey-text;
       }
     }
 
@@ -147,7 +147,7 @@
     .ag-icon-filter,
     .ag-icon-asc,
     .ag-icon-desc {
-      color: grey-text !important;
+      color: $grey-text !important;
     }
 
     .ag-filter-body-wrapper {
@@ -155,12 +155,12 @@
     }
 
     .ag-filter-select {
-      border-color: grey-text;
-      color: grey-text;
+      border-color: $grey-text;
+      color: $grey-text;
     }
 
     option {
-      background-color: grey-text;
+      background-color: $grey-text;
     }
 
     ::-webkit-scrollbar {
@@ -245,6 +245,11 @@ div[role='row'] {
 
 .ag-header-container {
   width: 100% !important;
+}
+
+.ag-header-cell-text{
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .table-header {

@@ -2,7 +2,8 @@
   <div class="create-step-container">
     <div class="w-full h-full">
       <stepbar :title="stepTitle" />
-      <create-company v-show="param === 'company'" />
+      <create-company v-show="param === step.COMPANY" />
+      <create-brand v-show="param === step.BRAND" />
     </div>
     <!-- for debug stepbar (action is next stepbar)-->
     <!-- <button
@@ -16,32 +17,26 @@
       Save
     </button> -->
     <div class="footer">
-      <t-1-button type="black-transparent"
-        >Cancel</t-1-button
-      >
-      <t-1-button type="disable"
-        >Create new company</t-1-button
-      >
+      <t-1-button type="black-transparent"> Cancel </t-1-button>
+      <t-1-button type="disable"> Create new company </t-1-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue
-} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import Stepbar from '@/components/molecules/create-step/Stepbar.vue'
 import T1Button from '@/components/atoms/button.vue'
 import CreateCompany from '@/components/organisms/create-company/company.vue'
-import { StepbarContent } from '~/constants'
+import CreateBrand from '@/components/organisms/create-brand/brand.vue'
+import { StepbarContent, CreateStepBar } from '~/constants'
 
 @Component({
   components: {
     Stepbar,
     T1Button,
-    CreateCompany
+    CreateCompany,
+    CreateBrand
   }
 })
 export default class CreateStep extends Vue {
@@ -52,6 +47,7 @@ export default class CreateStep extends Vue {
   readonly param!: string
 
   private stepTitle = StepbarContent
+  private step = CreateStepBar
 }
 </script>
 

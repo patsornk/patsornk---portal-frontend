@@ -60,7 +60,7 @@
       @selection-changed="onSelectionChanged"
     >
     </ag-grid-vue>
-    <div class="footer-container">
+    <div class="footer-container" v-if="isShowPaginate">
       <span>{{ rawData.length }} Items</span>
       <t1-pagination
         class="pagination-container"
@@ -266,9 +266,11 @@ export default class Main extends Vue {
 </script>
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .pagination-container {
   width: 50%;
 }
+
 .icon-list {
   margin-left: 18px;
 
@@ -297,7 +299,6 @@ export default class Main extends Vue {
   font-size: 12px;
   text-align: center;
   border-radius: 6px;
-  // padding: 5px 0;
 
   /* Position the tooltip */
   position: absolute;

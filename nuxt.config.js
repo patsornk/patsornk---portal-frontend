@@ -39,7 +39,8 @@ export default {
   plugins: [
     '@/plugins/vSelect',
     '@/plugins/vuetify',
-    '@/plugins/google-maps'
+    '@/plugins/google-maps',
+    '@/plugins/vuelidate',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -145,7 +146,7 @@ export default {
     // Mutation to commit to set route parameters translations
     syncRouteParams: false
   },
-  
+
   router: {
     middleware: ['guard']
   }

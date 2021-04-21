@@ -109,7 +109,7 @@ export default class UploadImage extends Vue {
     .upload-btn {
       color: $mid-black;
       font-size: 16px;
-      border: 1px solid #b9b9b9;
+      border: 1px solid $grey-text;
       padding: 6px 20px;
       margin-right: 1rem;
       border-radius: 6px;

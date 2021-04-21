@@ -3,6 +3,7 @@ export * from './SidebarMenu'
 export * from './Table'
 export * from './CountryCodes'
 export * from './Stepbar'
+export * from './CreateStep'
 
 //types
 export * from './types/SidebarMenuType'

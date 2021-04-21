@@ -21,6 +21,16 @@
           :placeholder="placeholder"
           @blur="$emit('onBlur')"
         />
+
+        <div v-if="type === 'textarea'">
+          <textarea
+            class="textarea"
+            rows="4"
+            cols="200"
+            :inputmode="inputmode"
+            v-model="dataValue"
+          ></textarea>
+        </div>
         <input
           v-else
           v-model="dataValue"
@@ -156,6 +166,19 @@ export default class InputField extends Vue {
 
   .input-field-input-group {
     margin: 0.5rem 0rem;
+
+    .textarea {
+      width: 100%;
+      border: 1px solid $gray-disable;
+      border-radius: 4px;
+      padding: 10px;
+      :focus {
+        outline: none !important;
+      }
+    }
+    .textarea:focus {
+      outline: none !important;
+    }
   }
 
   .text-error {
