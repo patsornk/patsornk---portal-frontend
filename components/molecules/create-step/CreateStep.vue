@@ -3,6 +3,7 @@
     <div class="w-full h-full">
       <stepbar :title="stepTitle" />
       <create-company v-show="param === step.COMPANY" />
+      <create-partner-code v-show="param === step.PARTNERCODE" />
       <create-brand v-show="param === step.BRAND" />
     </div>
     <!-- for debug stepbar (action is next stepbar)-->
@@ -30,13 +31,15 @@ import T1Button from '@/components/atoms/button.vue'
 import CreateCompany from '@/components/organisms/create-company/company.vue'
 import CreateBrand from '@/components/organisms/create-brand/brand.vue'
 import { StepbarContent, CreateStepBar } from '~/constants'
+import CreatePartnerCode from '@/components/organisms/create-partner-code/partnerCode.vue'
 
 @Component({
   components: {
     Stepbar,
     T1Button,
     CreateCompany,
-    CreateBrand
+    CreateBrand,
+    CreatePartnerCode
   }
 })
 export default class CreateStep extends Vue {

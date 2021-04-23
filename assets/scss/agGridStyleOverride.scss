@@ -15,6 +15,34 @@
 .ag-grid-table {
   color: inherit !important;
 
+
+  &.num-0 {
+    height: 150px !important;
+  }
+  &.num-1 {
+    height: 110px !important;
+  }
+  &.num-2 {
+    height: 155px !important;
+  }
+  &.num-3 {
+    height: 200px !important;
+  }
+  &.num-4 {
+    height: 245px !important;
+  }
+  &.num-5 {
+    height: 290px !important;
+  }
+  &.num-6 {
+    height: 335px !important;
+  }
+  &.num-7 {
+    height: 380px !important;
+  }
+  &.num-8 {
+    height: 425px !important;
+  }
   height: 480px;
   .ag-header-cell {
     .ag-cell-label-container {

@@ -5,38 +5,44 @@
         {{ headerTitle }}
       </h3>
       <div class="icon-list" v-if="selectedRows">
-        <div class="icon-container">
+        <div class="icon-container" v-if="isShowIconHold">
           <img
             class="icon"
             src="@/assets/images/table/hold.png"
+            @click="$emit('clickHHold')"
           />
           <span class="tooltiptext">On hold</span>
         </div>
-        <div class="icon-container">
+        <div class="icon-container" v-if="isShowInactive">
           <img
             class="icon"
             src="@/assets/images/table/inactive.png"
+            @click="$emit('clickInactive')"
           />
           <span class="tooltiptext">Inactive</span>
         </div>
-        <div class="icon-container">
+        <div class="icon-container" v-if="isShowDelete">
           <img
             class="icon"
             src="@/assets/images/table/delete.png"
+            @click="$emit('clickDelete')"
           />
           <span class="tooltiptext">Delete</span>
         </div>
       </div>
       <div class="icon-list" v-else>
         <img
+          v-if="isShowIconHold"
           class="icon-container icon"
           src="@/assets/images/table/hold-disable.png"
         />
         <img
+          v-if="isShowInactive"
           class="icon-container icon"
           src="@/assets/images/table/inactive-disable.png"
         />
         <img
+          v-if="isShowDelete"
           class="icon-container icon"
           src="@/assets/images/table/delete-disable.png"
         />
@@ -44,6 +50,7 @@
     </div>
     <ag-grid-vue
       ref="agGridTable"
+      :class="`num-${rawData.length}`"
       :animateRows="true"
       :columnDefs="columnDefsData"
       :defaultColDef="defaultColDef"
@@ -58,6 +65,7 @@
       colResizeDefault="shift"
       rowSelection="multiple"
       @selection-changed="onSelectionChanged"
+      :frameworkComponents="frameworkComponents"
     >
     </ag-grid-vue>
     <div class="footer-container" v-if="isShowPaginate">
@@ -104,7 +112,7 @@ import '@/assets/scss/agGridStyleOverride.scss'
     T1Pagination
   }
 })
-export default class Main extends Vue {
+export default class TableComponent extends Vue {
   private name = 'table-component'
 
   @Prop({
@@ -121,7 +129,7 @@ export default class Main extends Vue {
 
   @Prop({
     type: Boolean,
-    default: true
+    default: false
   })
   readonly isShowPaginate!: boolean
 
@@ -150,6 +158,24 @@ export default class Main extends Vue {
   readonly isShowHeaderTable!: boolean
 
   @Prop({
+    type: Boolean,
+    default: true
+  })
+  readonly isShowIconHold!: boolean
+
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  readonly isShowInactive!: boolean
+
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  readonly isShowDelete!: boolean
+
+  @Prop({
     type: Array,
     default: []
   })
@@ -160,6 +186,18 @@ export default class Main extends Vue {
     default: () => {}
   })
   readonly onRowClicked!: Function
+
+  @Prop({
+    type: Function,
+    default: () => {}
+  })
+  readonly onCellClicked!: Function
+
+  @Prop({
+    type: Object,
+    default: null
+  })
+  readonly frameworkComponents!: Object
 
   private lists = DataPrePageList
   private selectedRows = 0
@@ -294,13 +332,12 @@ export default class Main extends Vue {
 .icon-container .tooltiptext {
   visibility: hidden;
   width: 50px;
-  background-color: grey-text;
+  background-color: $grey-text;
   color: $white;
   font-size: 12px;
   text-align: center;
   border-radius: 6px;
 
-  /* Position the tooltip */
   position: absolute;
   z-index: 1;
   top: calc(100% + 4px);

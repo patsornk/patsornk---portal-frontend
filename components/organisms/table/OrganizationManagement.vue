@@ -42,7 +42,7 @@
       isShowPaginate
       isShowHeaderTable
       isShowCheckBox
-      headerTitle="Company list"
+      headerTitle="Create New Organization "
       :onRowClicked="onRowClicked"
       v-model="selectData"
     />
@@ -63,6 +63,7 @@ import T1Button from '@/components/atoms/button.vue'
   }
 })
 export default class Table extends Vue {
+  selectData = []
   readonly dataList0 = []
   readonly dataList = [
     {

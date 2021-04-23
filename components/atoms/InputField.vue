@@ -1,6 +1,6 @@
 <template>
   <div class="input-field">
-    <div class="w-full">
+    <div class="w-full" v-if="title">
       <span class="input-title">{{ title }}</span>
       <span v-show="required" class="input-field-required">
         *</span
@@ -70,7 +70,7 @@ export default class InputField extends Vue {
   private value: undefined
 
   @Prop({
-    required: true,
+    default: '',
     type: String
   })
   private title!: string
