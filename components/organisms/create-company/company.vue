@@ -3,43 +3,56 @@
     <span class="header">Company Information</span>
     <div class="input-section">
       <input-field
-        v-model="formData.company_name_th"
+        v-model="formData.companyNameTh"
         title="Company Name (TH)"
         :maxlength="100"
         :required="true"
         :error-message="
-          formError.company_name_th !== ''
-            ? formError.company_name_th
-            : undefined
+          formError.companyNameTh !== '' ? formError.companyNameTh : undefined
         "
         @onBlur="validateNameTH()"
       />
       <input-field
-        v-model="formData.company_name_en"
-        :required="false"
+        v-model="formData.companyNameEn"
+        :required="true"
         title="Company Name (EN)"
         :maxlength="100"
         :error-message="
-          formError.company_name_en !== ''
-            ? formError.company_name_en
-            : undefined
+          formError.companyNameEn !== '' ? formError.companyNameEn : undefined
         "
         @onBlur="validateNameEN()"
       />
       <input-field
-        v-model="formData.company_type_id"
+        v-model="formData.companyTypeId"
         title="Company type"
         :required="true"
+        type="select"
+        :options="companyTypeList"
+        :optionsReduce="(item) => item.companyTypeId"
+        :optionsLabel="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
+        placeholder="Please select..."
       />
       <input-field
-        v-model="formData.company_category_id"
+        v-model="formData.companyCategoryId"
         title="Partner Category"
         :required="true"
+        type="select"
+        :options="companyTypeCategory"
+        :optionsReduce="(item) => item.companyCategoryId"
+        :optionsLabel="
+          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
+        "
+        placeholder="Please select..."
       />
       <input-field
-        v-model="formData.company_size_id"
+        v-model="formData.companySizeId"
         title="Business Size"
         :required="true"
+        type="select"
+        :options="companyTypeSize"
+        :optionsReduce="(item) => item.companySizeId"
+        :optionsLabel="language === 'th' ? 'companySizeTh' : 'companySizeEn'"
+        placeholder="Please select..."
       />
       <input-field
         v-model="formData.assignee"
@@ -47,22 +60,22 @@
         :required="true"
       />
       <input-field
-        v-model="formData.company_email"
+        v-model="formData.companyEmail"
         title="E-mail"
         :maxlength="100"
         :required="true"
         :error-message="
-          formError.company_email !== '' ? formError.company_email : undefined
+          formError.companyEmail !== '' ? formError.companyEmail : undefined
         "
         @onBlur="validateEmail()"
       />
       <phone-num-input
-        v-model="formData.company_phone_number"
+        v-model="formData.companyPhoneNumber"
         title="Phone No."
         :required="true"
         :error-message="
-          formError.company_phone_number !== ''
-            ? formError.company_phone_number
+          formError.companyPhoneNumber !== ''
+            ? formError.companyPhoneNumber
             : undefined
         "
         @prefix="onChangedPrefixNumber"
@@ -77,6 +90,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
+import axios from 'axios'
 import InputField from '@/components/atoms/InputField.vue'
 import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
 import {
@@ -96,81 +110,162 @@ import {
 })
 export default class CreateCompany extends Vue {
   private formData = {
-    company_name_en: '',
-    company_name_th: '',
-    company_type_id: 0,
-    company_category_id: 0,
-    company_size_id: 0,
-    company_phone_prefix: '+66',
-    company_phone_number: '',
-    company_email: '',
+    companyNameEn: '',
+    companyNameTh: '',
+    companyTypeId: 0,
+    companyCategoryId: 0,
+    companySizeId: 0,
+    companyPhonePrefix: '+66',
+    companyPhoneNumber: '',
+    companyEmail: '',
     assignee: ''
   }
 
   private formError = {
-    company_name_en: '',
-    company_name_th: '',
-    company_type_id: '',
-    company_category_id: '',
-    company_size_id: '',
-    company_phone_number: '',
-    company_email: '',
+    companyNameEn: '',
+    companyNameTh: '',
+    companyTypeId: '',
+    companyCategoryId: '',
+    companySizeId: '',
+    companyPhoneNumber: '',
+    companyEmail: '',
     assignee: ''
   }
 
+  private companyTypeList = []
+  private companyTypeSize = []
+  private companyTypeCategory = []
+
+  get language(): any {
+    return this.$i18n.locale
+  }
+
   private validateNameEN() {
-    if (!validateEngCharacters(this.formData.company_name_en)) {
-      this.formError.company_name_en = 'Input invalid information'
+    if (isRequiredEmpty(this.formData.companyNameEn)) {
+      this.formError.companyNameEn = 'Input company name'
+    } else if (!validateEngCharacters(this.formData.companyNameEn)) {
+      this.formError.companyNameEn = 'Input invalid information'
     } else {
-      this.formError.company_name_en = ''
+      this.formError.companyNameEn = ''
     }
   }
 
   private validateNameTH() {
-    if (isRequiredEmpty(this.formData.company_name_th)) {
-      this.formError.company_name_th = 'Input company name'
-    } else if (!validateThaiCharacters(this.formData.company_name_th)) {
-      this.formError.company_name_th = 'Input invalid information'
+    if (isRequiredEmpty(this.formData.companyNameTh)) {
+      this.formError.companyNameTh = 'Input company name'
+    } else if (!validateThaiCharacters(this.formData.companyNameTh)) {
+      this.formError.companyNameTh = 'Input invalid information'
     } else {
-      this.formError.company_name_th = ''
+      this.formError.companyNameTh = ''
     }
   }
 
   private validateEmail() {
-    if (isRequiredEmpty(this.formData.company_email)) {
-      this.formError.company_email = 'Input Email'
-    } else if (!validateEmail(this.formData.company_email)) {
-      this.formError.company_email = 'Input invalid e-mail format information'
+    if (isRequiredEmpty(this.formData.companyEmail)) {
+      this.formError.companyEmail = 'Input Email'
+    } else if (!validateEmail(this.formData.companyEmail)) {
+      this.formError.companyEmail = 'Input invalid e-mail format information'
     } else {
-      this.formError.company_email = ''
+      this.formError.companyEmail = ''
     }
   }
 
   private validatePhoneNumber() {
-    if (isRequiredEmpty(this.formData.company_phone_number)) {
-      this.formError.company_phone_number = 'Input phone No.'
-    } else if (!validateNumber(this.formData.company_phone_number)) {
-      this.formError.company_phone_number =
+    if (isRequiredEmpty(this.formData.companyPhoneNumber)) {
+      this.formError.companyPhoneNumber = 'Input phone No.'
+    } else if (!validateNumber(this.formData.companyPhoneNumber)) {
+      this.formError.companyPhoneNumber =
         'Input invalid Phone No. format information'
     } else {
-      this.formError.company_phone_number = ''
+      this.formError.companyPhoneNumber = ''
     }
   }
 
   private onChangedPrefixNumber(value: string): void {
-    this.formData.company_phone_prefix = value
+    this.formData.companyPhonePrefix = value
   }
 
-  private submit() {
+  async getCpmpanyType(): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.THE_1_PORTAL}/get_company_type`,
+        { data: null }
+      )
+      if (res.successful) {
+        const list = res.data.companyType.filter(
+          (item: any) => item.companyTypeId !== 1
+        )
+        this.companyTypeList = list
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getCpmpanySize(): Promise<any> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.THE_1_PORTAL}/get_company_size`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.companyTypeSize = res.data.companySize
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getCpmpanyCategory(): Promise<any> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.THE_1_PORTAL}/get_company_category`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.companyTypeCategory = res.data.companyCategory
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async mounted(): Promise<void> {
+    this.getCpmpanyType()
+    this.getCpmpanySize()
+    this.getCpmpanyCategory()
+  }
+
+  async submit(): Promise<void> {
     this.validateNameTH()
     this.validateNameEN()
     this.validateEmail()
     this.validatePhoneNumber()
+
     if (validateError(this.formError)) {
-      this.$toast.global.success('Saved successfully')
-      setTimeout(() => {
-        this.$router.push('/organizManagement/create/partnercode')
-      }, 1000)
+      const payload = {
+        companyNameEn: this.formData.companyNameEn,
+        companyNameTh: this.formData.companyNameTh,
+        companyTypeId: this.formData.companyTypeId,
+        companyCategoryId: this.formData.companyCategoryId,
+        companySizeId: this.formData.companySizeId,
+        companyPhonePrefix: this.formData.companyPhonePrefix,
+        companyPhoneNumber: this.formData.companyPhoneNumber,
+        companyEmail: this.formData.companyEmail,
+        assignee: this.formData.assignee
+      }
+
+      try {
+        let response = await this.$axios.$post(
+          `${process.env.THE_1_PORTAL}/create_company`,
+          payload
+        )
+        if (response.successful) {
+          this.$toast.global.success('Saved successfully')
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+      }
     } else {
       this.$toast.global.error(
         'One or more field have an error. Please check and try again.'
@@ -178,22 +273,22 @@ export default class CreateCompany extends Vue {
     }
   }
 
-  @Watch('formData.company_name_th')
+  @Watch('formData.companyNameTh')
   onChangeCompanyNameTH() {
     this.validateNameTH()
   }
 
-  @Watch('formData.company_name_en')
+  @Watch('formData.companyNameEn')
   onChangeCompanyNameEN() {
     this.validateNameEN()
   }
 
-  @Watch('formData.company_email')
+  @Watch('formData.companyEmail')
   onChangeCompanyEmail() {
     this.validateEmail()
   }
 
-  @Watch('formData.company_phone_number')
+  @Watch('formData.companyPhoneNumber')
   onChangeCompanyPhoneNumber() {
     this.validatePhoneNumber()
   }

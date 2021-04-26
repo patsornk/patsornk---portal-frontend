@@ -2,28 +2,24 @@
   <div class="input-field">
     <div class="w-full" v-if="title">
       <span class="input-title">{{ title }}</span>
-      <span v-show="required" class="input-field-required">
-        *</span
-      >
+      <span v-show="required" class="input-field-required"> *</span>
     </div>
     <div class="input-field-input-group w-full">
-      <div
-        :class="
-          errorMessage ? 'input-field-input-error' : ''
-        "
-      >
-        <v-select
-          v-if="type === 'select'"
-          v-model="dataValue"
-          :options="options"
-          :label="optionsLabel"
-          :reduce="optionsReduce"
-          :placeholder="placeholder"
-          @blur="$emit('onBlur')"
-        />
-
-        <div v-if="type === 'textarea'">
+      <div :class="errorMessage ? 'input-field-input-error' : ''">
+        <div v-if="type === 'textarea' || type === 'select'">
+          <v-select
+            class="input-select"
+            v-if="type === 'select'"
+            v-model="dataValue"
+            :options="options"
+            :label="optionsLabel"
+            :reduce="optionsReduce"
+            :placeholder="placeholder"
+            :searchable="false"
+            @blur="$emit('onBlur')"
+          />
           <textarea
+            v-if="type === 'textarea'"
             class="textarea"
             rows="4"
             cols="200"
@@ -55,11 +51,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Prop
-} from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component
 export default class InputField extends Vue {
@@ -91,12 +83,7 @@ export default class InputField extends Vue {
     type: String,
     default: 'text',
     validator(value) {
-      return [
-        'text',
-        'number',
-        'select',
-        'password'
-      ].includes(value)
+      return ['text', 'number', 'select', 'password'].includes(value)
     }
   })
   private type?: string
@@ -178,6 +165,28 @@ export default class InputField extends Vue {
     }
     .textarea:focus {
       outline: none !important;
+    }
+
+    .input-select {
+      height: 44.67px;
+
+      .dropdown-option {
+        display: flex;
+        width: 100%;
+      }
+
+      ::v-deep .vs__clear {
+        display: none;
+      }
+
+      ::v-deep .vs__selected {
+        position: inherit;
+      }
+
+      ::v-deep .vs__dropdown-toggle {
+        height: 100%;
+        border: 1px solid $gray-disable;
+      }
     }
   }
 

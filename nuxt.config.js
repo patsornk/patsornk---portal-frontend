@@ -41,6 +41,7 @@ export default {
     '@/plugins/vuetify',
     '@/plugins/google-maps',
     '@/plugins/vuelidate',
+    '@/plugins/axios',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -96,7 +97,18 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    proxyHeaders: false,
+    headers: {
+      common: {
+        'Accept': 'application/json, text/plain, */*'
+      },
+      get: {
+        'Content-Type': 'application/json'
+      }
+    },
+    baseURL: process.env.THE_1_PORTAL
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
