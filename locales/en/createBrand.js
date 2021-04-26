@@ -1,0 +1,23 @@
+module.exports = {
+  brandInformation: 'Brand Information',
+  brandCode: 'Brand Code',
+  brandNameTh: 'Brand Name (TH)',
+  brandNameEn: 'Brand Name (EN)',
+  email: 'E-mail',
+  phoneNo: 'Phone No.',
+  brandPage: 'Brand Page',
+  display: 'Display on The 1 App',
+  brandLogo: 'Brand Logo',
+  brandBanner: 'Brand Banner',
+  brandInfo: 'Brand Info',
+  limitCharacters: 'characters left',
+  partnerCodeList: 'Partner code list',
+  error: {
+    require: 'require',
+    characterAndNumber: 'a-z, 0-9',
+    thaiAndNumber: 'ก-๛, 0-9',
+    maxLength: 'maxLength',
+  },
+    fieldError: 'One or more field have an error. Please check and try again.',
+    partnerCode: 'Please select partner code.',
+}

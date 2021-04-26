@@ -63,7 +63,7 @@ export default class Modal extends Vue {}
 
 .modal-body {
   position: relative;
-  padding: 20px 0px;
+  padding-top: 20px;
   text-align: left;
   font-size: 14px;
 }

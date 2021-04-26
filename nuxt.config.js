@@ -42,6 +42,7 @@ export default {
     '@/plugins/google-maps',
     '@/plugins/vuelidate',
     '@/plugins/axios',
+    //{src: '~/plugins/vuelidate.js', mode: 'client'}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -69,7 +70,7 @@ export default {
 
   toast: {
     position: 'top-right',
-    duration: 4000,
+    duration: 5000,
     register: [ // Register custom toasts
       {
         name: 'error',

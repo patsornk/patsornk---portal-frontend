@@ -24,6 +24,7 @@
             rows="4"
             cols="200"
             :inputmode="inputmode"
+            :maxlength="maxlength"
             v-model="dataValue"
           ></textarea>
         </div>
@@ -83,7 +84,9 @@ export default class InputField extends Vue {
     type: String,
     default: 'text',
     validator(value) {
-      return ['text', 'number', 'select', 'password'].includes(value)
+      return ['text', 'number', 'select', 'password', 'textarea'].includes(
+        value
+      )
     }
   })
   private type?: string

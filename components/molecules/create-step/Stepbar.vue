@@ -177,7 +177,7 @@ export default class Stepbar extends Vue {
       left: 65px;
       z-index: 0;
 
-      width: 160px;
+      width: 170px;
       height: 4px;
       background-color: $primary;
     }

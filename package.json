@@ -38,6 +38,7 @@
     "@nuxtjs/tailwindcss": "^3.4.2",
     "@nuxtjs/vuetify": "^1.11.3",
     "@types/vue-select": "^3.11.1",
+    "@types/vuelidate": "^0.7.14",
     "@typescript-eslint/parser": "^4.6.1",
     "@vue/test-utils": "^1.1.2",
     "babel-core": "7.0.0-bridge.0",
