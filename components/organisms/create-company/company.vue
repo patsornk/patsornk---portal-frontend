@@ -261,6 +261,9 @@ export default class CreateCompany extends Vue {
           payload
         )
         if (response.successful) {
+          this.$store.dispatch('organizartion/setConpanyId', response.data.companyId)
+          // For memember how to get CompanyId 
+          // console.log(this.$store.getters['organizartion/getCompanyId'])
           this.$toast.global.success('Saved successfully')
         }
       } catch (error) {
