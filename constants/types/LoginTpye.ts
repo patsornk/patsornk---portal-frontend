@@ -4,6 +4,6 @@ export interface UserFormData {
 }
 
 export interface ErrorUserFormData {
-  username: boolean
-  password: boolean
+  username: string
+  password: string
 }

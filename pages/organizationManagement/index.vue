@@ -4,7 +4,7 @@
       class="btn-create"
       @click.native="
         $router.push(
-          '/organizationManagement/createNewCompany'
+          'organizManagement/create/'
         )
       "
     >

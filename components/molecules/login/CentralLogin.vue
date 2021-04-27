@@ -69,8 +69,8 @@ export default class CentarlLogin extends Vue {
     password: ''
   }
   private error: ErrorUserFormData = {
-    username: false,
-    password: false
+    username: '',
+    password: ''
   }
 
   get username(): string {
@@ -88,11 +88,11 @@ export default class CentarlLogin extends Vue {
   }
 
   private validateUsername(): void {
-    this.error.username = isRequiredEmpty(this.username)
+    this.error.username = isRequiredEmpty(this.username) ? 'Username is empty' : ''
   }
 
   private validatePassword(): void {
-    this.error.password = isRequiredEmpty(this.password)
+    this.error.password = isRequiredEmpty(this.password) ? 'Password is empty' : ''
   }
 
   private toggleMagicEye(): void {
