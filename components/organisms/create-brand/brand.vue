@@ -1,131 +1,125 @@
 <template>
-  <v-app id="create-brand">
-    <div class="create-company-container">
-      <span class="header">{{ $t('createBrand.brandInformation') }}</span>
-      <div>
-        <input-field
-          class="input-brand-code"
-          :title="$t('createBrand.brandCode')"
-          :required="true"
-          v-model="$v.brandCode.$model"
-          :errorMessage="error.brandCode"
-        />
-      </div>
-      <div class="input-section">
-        <input-field
-          :title="$t('createBrand.brandNameTh')"
-          :required="true"
-          v-model="$v.brandNameTh.$model"
-          :errorMessage="error.brandNameTh"
-        />
-        <input-field
-          :title="$t('createBrand.brandNameEn')"
-          :required="true"
-          v-model="$v.brandNameEn.$model"
-          :errorMessage="error.brandNameEn"
-        />
-        <input-field
-          :title="$t('createBrand.email')"
-          :required="true"
-          v-model="$v.email.$model"
-          :errorMessage="error.email"
-        />
-        <phone-num-input
-          :title="$t('createBrand.phoneNo')"
-          :required="true"
-          v-model="$v.phoneNo.$model"
-          @prefix="onChangedPrefixNumber"
-          :errorMessage="error.phoneNo"
-        />
-      </div>
-      <div class="brand-page">
-        <div class="brand-head-box">
-          <span class="brand-head">{{ $t('createBrand.brandPage') }}</span>
-          <v-switch
-            fluid
-            class="toggle"
-            inset
-            :label="$t('createBrand.display')"
-            v-model="$v.showDisplay.$model"
-          ></v-switch>
-        </div>
-        <div class="brand-box">
-          <div class="brand-upload-header">
-            {{ $t('createBrand.brandLogo') }}
-          </div>
-          <upload-file
-            id="logo"
-            class="upload-file"
-            v-model="$v.logo.$model"
-            :errorMessage="error.logo"
-            @viewFile="viewFile"
-            @onBlur="onChangedLogo"
-          >
-            <!-- @onBlur="onChangedLogo" -->
-          </upload-file>
-        </div>
-        <div class="brand-box">
-          <div class="brand-upload-header">
-            {{ $t('createBrand.brandBanner') }}
-          </div>
-          <upload-file
-            id="banner"
-            class="upload-file"
-            v-model="$v.banner.$model"
-          >
-          </upload-file>
-        </div>
-
-        <div class="brand-box">
-          <input-field
-            type="textarea"
-            :title="$t('createBrand.brandInfo')"
-            :required="false"
-            :maxlength="256"
-            style="width: 100%"
-            v-model="$v.brandInfo.$model"
-          />
-          <div class="info-description">
-            {{ 256 - $v.brandInfo.$model.length }}
-            {{ $t('createBrand.limitCharacters') }}
-          </div>
-        </div>
-      </div>
-      <div class="partner-code-list">
-        <table-component
-          :rawData="dataList"
-          :columnDefs="columnDefs"
-          :isShowIconHold="false"
-          :isShowInactive="false"
-          :isShowDelete="false"
-          :isShowPaginate="false"
-          isShowHeaderTable
-          isShowCheckBox
-          :headerTitle="$t('createBrand.partnerCodeList')"
-          v-model="$v.partnerCodeList.$model"
-        />
-      </div>
-      <div class="submit-section">
-        <button class="submit" @click="clickSave">Save</button>
-      </div>
-      <modal v-show="isShowImage" class="show-image">
-        <template v-slot:header>
-          <div class="show-image-header">
-            <div>Example File</div>
-            <div>
-              <span class="material-icons close" @click="changeIsModal">
-                close
-              </span>
-            </div>
-          </div>
-        </template>
-
-        <template v-slot:body>
-          <img class="show-image-view" v-if="imageUrl" :src="imageUrl" />
-        </template>
-      </modal>
+  <div class="create-company-container">
+    <span class="header">{{ $t('createBrand.brandInformation') }}</span>
+    <div>
+      <input-field
+        class="input-brand-code"
+        :title="$t('createBrand.brandCode')"
+        :required="true"
+        v-model="$v.brandCode.$model"
+        :errorMessage="error.brandCode"
+      />
     </div>
-  </v-app>
+    <div class="input-section">
+      <input-field
+        :title="$t('createBrand.brandNameTh')"
+        :required="true"
+        v-model="$v.brandNameTh.$model"
+        :errorMessage="error.brandNameTh"
+      />
+      <input-field
+        :title="$t('createBrand.brandNameEn')"
+        :required="true"
+        v-model="$v.brandNameEn.$model"
+        :errorMessage="error.brandNameEn"
+      />
+      <input-field
+        :title="$t('createBrand.email')"
+        :required="true"
+        v-model="$v.email.$model"
+        :errorMessage="error.email"
+      />
+      <phone-num-input
+        :title="$t('createBrand.phoneNo')"
+        :required="true"
+        v-model="$v.phoneNo.$model"
+        @prefix="onChangedPrefixNumber"
+        :errorMessage="error.phoneNo"
+      />
+    </div>
+    <div class="brand-page">
+      <div class="brand-head-box">
+        <span class="brand-head">{{ $t('createBrand.brandPage') }}</span>
+        <!-- <v-switch
+          fluid
+          class="toggle"
+          inset
+          :label="$t('createBrand.display')"
+          v-model="$v.showDisplay.$model"
+        ></v-switch> -->
+      </div>
+      <div class="brand-box">
+        <div class="brand-upload-header">
+          {{ $t('createBrand.brandLogo') }}
+        </div>
+        <upload-file
+          id="logo"
+          class="upload-file"
+          v-model="$v.logo.$model"
+          :errorMessage="error.logo"
+          @viewFile="viewFile"
+          @onBlur="onChangedLogo"
+        >
+          <!-- @onBlur="onChangedLogo" -->
+        </upload-file>
+      </div>
+      <div class="brand-box">
+        <div class="brand-upload-header">
+          {{ $t('createBrand.brandBanner') }}
+        </div>
+        <upload-file id="banner" class="upload-file" v-model="$v.banner.$model">
+        </upload-file>
+      </div>
+
+      <div class="brand-box">
+        <input-field
+          type="textarea"
+          :title="$t('createBrand.brandInfo')"
+          :required="false"
+          :maxlength="256"
+          style="width: 100%"
+          v-model="$v.brandInfo.$model"
+        />
+        <div class="info-description">
+          {{ 256 - $v.brandInfo.$model.length }}
+          {{ $t('createBrand.limitCharacters') }}
+        </div>
+      </div>
+    </div>
+    <div class="partner-code-list">
+      <table-component
+        :rawData="dataList"
+        :columnDefs="columnDefs"
+        :isShowIconHold="false"
+        :isShowInactive="false"
+        :isShowDelete="false"
+        :isShowPaginate="false"
+        isShowHeaderTable
+        isShowCheckBox
+        :headerTitle="$t('createBrand.partnerCodeList')"
+        v-model="$v.partnerCodeList.$model"
+      />
+    </div>
+    <div class="submit-section">
+      <button class="submit" @click="clickSave">Save</button>
+    </div>
+    <modal v-show="isShowImage" class="show-image">
+      <template v-slot:header>
+        <div class="show-image-header">
+          <div>Example File</div>
+          <div>
+            <span class="material-icons close" @click="changeIsModal">
+              close
+            </span>
+          </div>
+        </div>
+      </template>
+
+      <template v-slot:body>
+        <img class="show-image-view" v-if="imageUrl" :src="imageUrl" />
+      </template>
+    </modal>
+  </div>
 </template>
 
 <script lang="ts">
@@ -251,7 +245,9 @@ export default class CreateBrand extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.getListPartnerCode()
+    if (window.sessionStorage.getItem('companyId')) {
+      this.getListPartnerCode()
+    }
   }
 
   async getListPartnerCode(): Promise<void> {
@@ -274,7 +270,9 @@ export default class CreateBrand extends Vue {
         )
       }
     } catch (error) {
-      this.$toast.global.error(error.response.data.message)
+      if (error.response.data.code !== '04') {
+        this.$toast.global.error(error.response.data.message)
+      }
     }
   }
 
@@ -419,8 +417,8 @@ export default class CreateBrand extends Vue {
         brandNameTh: this.$v.brandNameTh.$model,
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
-        brandLogoImg: "getLogoBase64", // Wait for api
-        brandBannerImg: "getbannerBase64", // Wait for api
+        brandLogoImg: 'getLogoBase64', // Wait for api
+        brandBannerImg: 'getbannerBase64', // Wait for api
         brandInfo: this.$v.brandInfo.$model,
         brandLink: this.$v.brandCode.$model,
         brandPhonePrefix: this.phonePrefix,

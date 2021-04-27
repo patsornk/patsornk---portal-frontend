@@ -111,8 +111,10 @@ export default class CreatePartnerCode extends Vue {
     }
   ]
 
-  async mounted() {
-    this.getPartnerList()
+  async activated() {
+    if (this.companyId) {
+      this.getPartnerList()
+    }
   }
 
   async getPartnerList() {
@@ -125,7 +127,9 @@ export default class CreatePartnerCode extends Vue {
         this.dataList = res.data.partner
       }
     } catch (error) {
-      this.$toast.global.error(error.response.data.message)
+      if (error.response.data.code !== "04") {
+        this.$toast.global.error(error.response.data.message)
+      }
     }
   }
 
