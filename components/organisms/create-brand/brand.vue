@@ -34,6 +34,7 @@
           :title="$t('createBrand.phoneNo')"
           :required="true"
           v-model="$v.phoneNo.$model"
+          @prefix="onChangedPrefixNumber"
           :errorMessage="error.phoneNo"
         />
       </div>
@@ -213,6 +214,7 @@ export default class CreateBrand extends Vue {
   brandNameEn = ''
   email = ''
   phoneNo = ''
+  phonePrefix = '+66'
   showDisplay = false
   logo = undefined
   banner = undefined
@@ -239,12 +241,44 @@ export default class CreateBrand extends Vue {
     this.isShowImage = false
   }
 
+  private onChangedPrefixNumber(value: string): void {
+    this.phonePrefix = value
+  }
+
   viewFile(imageUrl: string) {
     this.isShowImage = true
     this.imageUrl = imageUrl
   }
-  
-  onChangedLogo(image: any){
+
+  async mounted(): Promise<void> {
+    this.getListPartnerCode()
+  }
+
+  async getListPartnerCode(): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${
+          process.env.THE_1_PORTAL
+        }/partner_code?companyId=${window.sessionStorage.getItem('companyId')}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.dataList = res.data.partner.map(
+          (item: { partnerId: any; partnerCode: any; partnerName: any }) => {
+            return {
+              id: item.partnerId,
+              siebelPartnerCode: item.partnerCode,
+              siebelPartnerName: item.partnerName
+            }
+          }
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  onChangedLogo(image: any) {
     if (image) {
       this.error.logo = ''
     } else {
@@ -309,16 +343,8 @@ export default class CreateBrand extends Vue {
       : ''
   }
 
-  private dataList = [
-    {
-      siebelPartnerCode: 'abc1234',
-      siebelPartnerName: '0123456789'
-    },
-    {
-      siebelPartnerCode: 'abc1234',
-      siebelPartnerName: '0123456789'
-    }
-  ]
+  private dataList = []
+
   private columnDefs = [
     {
       headerName: 'Siebel Partner code',
@@ -340,8 +366,28 @@ export default class CreateBrand extends Vue {
     }
   ]
 
-  clickSave() {
+  getBase64(file: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve(undefined)
+      } else {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = (error) => {
+          reject(error)
+        }
+      }
+    })
+  }
+
+  async clickSave() {
+    let validationGroup: boolean = false
+    let partnerCodeList: boolean = false
     if (this.$v.validationGroup.$invalid) {
+      validationGroup = false
       this.$toast.global.error(this.$t('createBrand.fieldError'))
       this.onChangedBrandCode()
       this.onChangedBrandNameTh()
@@ -349,9 +395,54 @@ export default class CreateBrand extends Vue {
       this.onChangedEmail()
       this.onChangedPhoneNo()
       this.onChangedLogo(this.$v.logo.$model)
+    } else {
+      validationGroup = true
     }
     if (!this.$v.partnerCodeList.required) {
+      partnerCodeList = false
       this.$toast.global.error(this.$t('createBrand.partnerCode'))
+    } else {
+      partnerCodeList = true
+    }
+    if (validationGroup && partnerCodeList) {
+      const partnerId = this.$v.partnerCodeList.$model.map(
+        (item: { id: any }) => {
+          return item.id
+        }
+      )
+
+      const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+      const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
+
+      const payload = {
+        companyId: window.sessionStorage.getItem('companyId'),
+        brandNameTh: this.$v.brandNameTh.$model,
+        brandNameEn: this.$v.brandNameEn.$model,
+        brandCode: this.$v.brandCode.$model,
+        brandLogoImg: "getLogoBase64", // Wait for api
+        brandBannerImg: "getbannerBase64", // Wait for api
+        brandInfo: this.$v.brandInfo.$model,
+        brandLink: this.$v.brandCode.$model,
+        brandPhonePrefix: this.phonePrefix,
+        brandPhoneNumber: this.$v.phoneNo.$model,
+        brandEmail: this.$v.email.$model,
+        showInApp: this.$v.showDisplay.$model,
+        partnerId: partnerId
+      }
+
+      console.log(payload)
+
+      try {
+        let response = await this.$axios.$post(
+          `${process.env.THE_1_PORTAL}/create_brand`,
+          payload
+        )
+        if (response.successful) {
+          this.$toast.global.success('Saved successfully')
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+      }
     }
   }
 }
