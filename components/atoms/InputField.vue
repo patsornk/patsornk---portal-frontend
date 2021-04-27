@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class InputField extends Vue {
@@ -132,6 +132,11 @@ export default class InputField extends Vue {
 
   set dataValue(value) {
     this.$emit('input', value)
+  }
+
+  @Watch('dataValue')
+  changeDataValue(){
+    this.$emit('onChange')
   }
 }
 </script>

@@ -2,29 +2,33 @@
   <div class="siebel-partner-container">
     <input-field
       class="sp-code"
-      v-model="dataValue.siebelPartnerCode"
+      v-model="dataValue.partnerCode"
       placeholder="Siebel Partner code"
-      :errorMessage="error.siebelPartnerCode ? 'กรุณากรอกข้อมูล' : undefined"
-      @onBlur="validateSiebelPartnerCode()"
+      :errorMessage="
+        error.partnerCode ? error.partnerCode : undefined
+      "
+      @onChange="checkPartnerCode"
       required
     />
 
     <input-field
       class="sp-name"
-      v-model="dataValue.siebelPartnerName"
+      v-model="dataValue.partnerName"
       placeholder="Siebel Partner name"
-      :errorMessage="error.siebelPartnerName ? 'กรุณากรอกข้อมูล' : undefined"
-      @onBlur="validateSiebelPartnerName()"
+      :errorMessage="
+        error.partnerName ? error.partnerName : undefined
+      "
+      @onChange="checkPartnerName"
       required
     />
     <t1-button
       v-if="action === 'add'"
       class="submit"
       :class="
-        error.siebelPartnerCode ||
-        error.siebelPartnerName ||
-        dataValue.siebelPartnerCode === '' ||
-        dataValue.siebelPartnerName === ''
+        error.partnerCode ||
+        error.partnerName ||
+        dataValue.partnerCode === '' ||
+        dataValue.partnerName === ''
           ? 'disable'
           : ''
       "
@@ -41,13 +45,13 @@
     <img
       class="icon"
       src="@/assets/images/table/delete.png"
-      @click="this.$emit('clickDelete')"
+      @click="$emit('clickDelete')"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import {
   ErrorSiebelPartner,
   SiebelPartnerType
@@ -75,10 +79,11 @@ export default class CreatePartnerCode extends Vue {
   })
   private action: string
 
-  private error: ErrorSiebelPartner = {
-    siebelPartnerCode: '',
-    siebelPartnerName: ''
-  }
+  @Prop({
+    default: '',
+    type: String
+  })
+  private partnerCodeError: string | undefined
 
   get dataValue(): SiebelPartnerType | undefined {
     return this.value
@@ -88,31 +93,42 @@ export default class CreatePartnerCode extends Vue {
     this.dataValue = value
   }
 
-  private validateSiebelPartnerCode(): void {
-    if (isRequiredEmpty(this.dataValue?.siebelPartnerCode)) {
-      this.error.siebelPartnerCode = 'Empty'
+  @Watch('partnerCodeError')
+  onChangePartnerCodeError(): void {
+    this.error.partnerCode = this.partnerCodeError
+  }
+
+  private error: ErrorSiebelPartner = {
+    partnerCode: '',
+    partnerName: ''
+  }
+
+  private checkPartnerCode(): void {
+    if (isRequiredEmpty(this.dataValue?.partnerCode)) {
+      this.error.partnerCode = 'Empty'
     } else {
-      this.error.siebelPartnerCode = ''
+      this.$emit('changePartnerCode', this.dataValue)
+      this.error.partnerCode = this.partnerCodeError
     }
   }
 
-  private validateSiebelPartnerName(): void {
-    if (isRequiredEmpty(this.dataValue?.siebelPartnerName)) {
-      this.error.siebelPartnerName = 'Empty'
+  private checkPartnerName(): void {
+    if (isRequiredEmpty(this.dataValue?.partnerName)) {
+      this.error.partnerName = 'Empty'
     } else {
-      this.error.siebelPartnerName = ''
+      this.error.partnerName = ''
     }
   }
 
   private clickAddSiebelPartner() {
     if (
-      this.dataValue?.siebelPartnerCode === '' ||
-      this.dataValue?.siebelPartnerName === ''
+      this.dataValue?.partnerCode === '' ||
+      this.dataValue?.partnerName === ''
     ) {
       return
     }
-    this.validateSiebelPartnerCode()
-    this.validateSiebelPartnerName()
+    this.checkPartnerCode()
+    this.checkPartnerName()
     if (validateError(this.error)) {
       this.$emit('clickAdd', this.dataValue)
     }

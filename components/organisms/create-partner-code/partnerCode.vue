@@ -14,18 +14,20 @@
     />
 
     <siebel-partner
-      v-if="isShowNewForm"
-      v-model="newSiebelPartner"
-      action="add"
-      @clickAdd="clickAddNewSiebelPartner"
-      @clickDelete="clickDeleteSiebelPartner"
-    />
-    <siebel-partner
       v-if="isShowEditForm"
       v-model="editSiebelPartner"
       action="edit"
       @clickAdd="clickAddNewSiebelPartner"
-      @clickDelete="clickDeleteSiebelPartner"
+      @clickDelete="clickDeleteSiebelPartner(editSiebelPartner)"
+    />
+    <siebel-partner
+      v-if="isShowNewForm"
+      v-model="newSiebelPartner"
+      action="add"
+      @clickAdd="clickAddNewSiebelPartner"
+      @clickDelete="clearData"
+      :partnerCodeError="partnerCodeError"
+      @changePartnerCode="changePartnerCode"
     />
 
     <div class="add-container" @click="isShowNewForm = true">
@@ -55,13 +57,16 @@ import { SiebelPartnerType } from '~/constants/types/PartnerCodeType'
   }
 })
 export default class CreatePartnerCode extends Vue {
+  companyId = window.sessionStorage.getItem('companyId')
+
   frameworkComponents = {
     agActionField: AgActionField
   }
   defaultSiebelPartner: SiebelPartnerType = {
-    siebelPartnerCode: '',
-    siebelPartnerName: ''
+    partnerCode: '',
+    partnerName: ''
   }
+  partnerCodeError = ''
   newSiebelPartner: SiebelPartnerType = JSON.parse(
     JSON.stringify(this.defaultSiebelPartner)
   )
@@ -76,25 +81,25 @@ export default class CreatePartnerCode extends Vue {
   columnDefs = [
     {
       headerName: 'Company Code',
-      field: 'siebelPartnerCode',
+      field: 'partnerCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                    ${params.data.siebelPartnerCode}
+                    ${params.data.partnerCode}
                   </div>`
       }
     },
     {
       headerName: 'Company Registration Code',
-      field: 'siebelPartnerName',
+      field: 'partnerName',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                    ${params.data.siebelPartnerName}
+                    ${params.data.partnerName}
                   </div>`
       }
     },
     {
       headerName: '',
-      field: 'siebelPartnerCode',
+      field: 'partnerCode',
       cellRenderer: 'agActionField',
       cellRendererParams: {
         rendererImage: 'rain.png',
@@ -106,11 +111,29 @@ export default class CreatePartnerCode extends Vue {
     }
   ]
 
+  async mounted() {
+    this.getPartnerList()
+  }
+
+  async getPartnerList() {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.THE_1_PORTAL}/partner_code?companyId=${this.companyId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.dataList = res.data.partner
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
   clickEditSiebelPartner(param: string) {
     if (this.isShowEditForm) return false
     this.isShowEditForm = true
     this.dataList.forEach((item) => {
-      if (item.siebelPartnerCode === param) {
+      if (item.partnerCode === param) {
         this.editSiebelPartner = item
       }
     })
@@ -124,13 +147,70 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
-  clickAddNewSiebelPartner(event: any) {
-    this.dataList.push({ ...event })
-    this.clearData()
+  async clickAddNewSiebelPartner(event: SiebelPartnerType) {
+    if (this.checkDuplicate(event)) {
+      this.partnerCodeError = 'Duplicate Siebel Partner code'
+    } else {
+      try {
+        const payload = {
+          partnerCode: this.newSiebelPartner.partnerCode,
+          partnerName: this.newSiebelPartner.partnerName,
+          companyId: this.companyId
+        }
+
+        let res = await this.$axios.$post(
+          `${process.env.THE_1_PORTAL}/create_partner_code`,
+          payload
+        )
+
+        if (res.successful) {
+          this.partnerCodeError = ''
+          this.dataList.push({ ...event })
+          this.clearData()
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+        if (error.response.data.code === '07') {
+          this.partnerCodeError = 'Duplicate Siebel Partner code'
+        }
+      }
+    }
   }
 
-  clickDeleteSiebelPartner() {
-    this.clearData()
+  checkDuplicate(event: SiebelPartnerType): boolean {
+    return (
+      this.dataList.filter(
+        (item: SiebelPartnerType) => item.partnerCode === event.partnerCode
+      ).length > 0
+    )
+  }
+
+  changePartnerCode(event: SiebelPartnerType) {
+    if (this.checkDuplicate(event)) {
+      this.partnerCodeError = 'Duplicate Siebel Partner code'
+    } else {
+      this.partnerCodeError = ''
+    }
+  }
+
+  async clickDeleteSiebelPartner(partner: SiebelPartnerType) {
+    try {
+      const payload = {
+        partnerCode: partner.partnerCode
+      }
+
+      let res = await this.$axios.$delete(
+        `${process.env.THE_1_PORTAL}/delete_partner_code`,
+        { data: payload }
+      )
+
+      if (res.successful) {
+        this.getPartnerList()
+        this.clearData()
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   clearData() {
@@ -145,16 +225,14 @@ export default class CreatePartnerCode extends Vue {
   }
 
   clickDeleteList() {
-    this.selectData.forEach((itemSelect) => {
-      this.dataList.forEach((item) => {
-        if (item.siebelPartnerCode === itemSelect.siebelPartnerCode) {
-          this.deleteItem(item)
-        }
-      })
+    this.selectData.forEach((item) => {
+      this.clickDeleteSiebelPartner(item)
     })
   }
 
-  clickSave() {}
+  clickSave() {
+    this.$router.push('/organizManagement/create/brand')
+  }
 }
 </script>
 

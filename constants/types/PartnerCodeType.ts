@@ -1,9 +1,9 @@
 export interface SiebelPartnerType {
-  siebelPartnerCode: string
-  siebelPartnerName: string
+  partnerCode: string
+  partnerName: string
 }
 
 export interface ErrorSiebelPartner {
-  siebelPartnerCode: string
-  siebelPartnerName: string
+  partnerCode: string | undefined
+  partnerName: string
 }
