@@ -88,7 +88,8 @@ export default class UploadImage extends Vue {
   private filelist: any[] = []
 
   fileSelected() {
-    this.filelist = [...this.$refs.file.files]
+    const file: any = this.$refs.file
+    this.filelist = [...file.files]
     this.fileChange(false)
   }
   viewFile(){
@@ -116,7 +117,8 @@ export default class UploadImage extends Vue {
   }
   drop(event: any) {
     event.preventDefault()
-    this.$refs.file.files = event.dataTransfer.files
+    const file: any = this.$refs.file
+    file.files = event.dataTransfer.files
     this.fileSelected() // Trigger the fileSelected event manually
     // Clean up
     event.currentTarget.classList.add('bg-gray-300')

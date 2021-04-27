@@ -77,7 +77,7 @@ export default class CreatePartnerCode extends Vue {
     required: true,
     type: String
   })
-  private action: string
+  private action?: string
 
   @Prop({
     default: '',
