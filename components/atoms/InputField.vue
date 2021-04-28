@@ -1,12 +1,14 @@
 <template>
   <div class="input-field">
     <div class="w-full" v-if="title">
-      <span class="input-title">{{ title }}</span>
+      <span class="input-title" v-if="type !== 'switch'">{{ title }}</span>
       <span v-show="required" class="input-field-required"> *</span>
     </div>
     <div class="input-field-input-group w-full">
       <div :class="errorMessage ? 'input-field-input-error' : ''">
-        <div v-if="type === 'textarea' || type === 'select'">
+        <div
+          v-if="type === 'textarea' || type === 'select' || type === 'switch'"
+        >
           <v-select
             class="input-select"
             v-if="type === 'select'"
@@ -18,6 +20,17 @@
             :searchable="false"
             @blur="$emit('onBlur')"
           />
+          <div v-if="type === 'switch'" class="switch-container">
+            <label class="switch">
+              <input
+                type="checkbox"
+                :checked="dataValue ? true : false"
+                @click="$emit('input', !dataValue)"
+              />
+              <span class="slider round"></span>
+            </label>
+            <span class="switch-title">{{ title }}</span>
+          </div>
           <textarea
             v-if="type === 'textarea'"
             class="textarea"
@@ -69,7 +82,7 @@ export default class InputField extends Vue {
   private title!: string
 
   @Prop({
-    required: true,
+    default: false,
     type: Boolean
   })
   private required!: boolean
@@ -84,9 +97,14 @@ export default class InputField extends Vue {
     type: String,
     default: 'text',
     validator(value) {
-      return ['text', 'number', 'select', 'password', 'textarea'].includes(
-        value
-      )
+      return [
+        'text',
+        'number',
+        'select',
+        'password',
+        'textarea',
+        'switch'
+      ].includes(value)
     }
   })
   private type?: string
@@ -135,7 +153,7 @@ export default class InputField extends Vue {
   }
 
   @Watch('dataValue')
-  changeDataValue(){
+  changeDataValue() {
     this.$emit('onChange')
   }
 }
@@ -194,6 +212,70 @@ export default class InputField extends Vue {
       ::v-deep .vs__dropdown-toggle {
         height: 100%;
         border: 1px solid $gray-disable;
+      }
+    }
+
+    .switch-container {
+      .switch-title {
+        font-size: 14px;
+        color: $grey-text;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 21px;
+        padding-bottom: 10px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 2px;
+        left: 0;
+        right: 0;
+        bottom: -2px;
+        background-color: #ccc;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: '';
+        height: 17px;
+        width: 17px;
+        top: 2px;
+        left: 2px;
+        background-color: white;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: $success;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(21px);
+        -ms-transform: translateX(21px);
+        transform: translateX(21px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
       }
     }
   }

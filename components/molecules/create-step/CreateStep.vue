@@ -5,6 +5,7 @@
       <create-company v-show="param === step.COMPANY" />
       <create-partner-code v-show="param === step.PARTNERCODE" />
       <create-brand v-show="param === step.BRAND" />
+      <service-selection v-show="param === step.SERVICE" />
     </div>
     <!-- for debug stepbar (action is next stepbar)-->
     <!-- <button
@@ -30,8 +31,9 @@ import Stepbar from '@/components/molecules/create-step/Stepbar.vue'
 import T1Button from '@/components/atoms/button.vue'
 import CreateCompany from '@/components/organisms/create-company/company.vue'
 import CreateBrand from '@/components/organisms/create-brand/brand.vue'
-import { StepbarContent, CreateStepBar } from '~/constants'
 import CreatePartnerCode from '@/components/organisms/create-partner-code/partnerCode.vue'
+import ServiceSelection from '~/components/organisms/services-selection/serviceSelection.vue'
+import { StepbarContent, CreateStepBar } from '~/constants'
 
 @Component({
   components: {
@@ -39,7 +41,8 @@ import CreatePartnerCode from '@/components/organisms/create-partner-code/partne
     T1Button,
     CreateCompany,
     CreateBrand,
-    CreatePartnerCode
+    CreatePartnerCode,
+    ServiceSelection
   }
 })
 export default class CreateStep extends Vue {

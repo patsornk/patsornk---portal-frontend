@@ -40,13 +40,13 @@
     <div class="brand-page">
       <div class="brand-head-box">
         <span class="brand-head">{{ $t('createBrand.brandPage') }}</span>
-        <!-- <v-switch
-          fluid
-          class="toggle"
-          inset
-          :label="$t('createBrand.display')"
+
+        <input-field
+          type="switch"
+          title="Display on The 1 App"
           v-model="$v.showDisplay.$model"
-        ></v-switch> -->
+          :errorMessage="error.showDisplay"
+        />
       </div>
       <div class="brand-box">
         <div class="brand-upload-header">
@@ -222,10 +222,6 @@ export default class CreateBrand extends Vue {
     email: '',
     phoneNo: '',
     logo: ''
-  }
-
-  state = {
-    showDisplay: true
   }
 
   isShowImage = false
@@ -428,8 +424,6 @@ export default class CreateBrand extends Vue {
         partnerId: partnerId
       }
 
-      console.log(payload)
-
       try {
         let response = await this.$axios.$post(
           `${process.env.THE_1_PORTAL}/create_brand`,
@@ -510,12 +504,6 @@ export default class CreateBrand extends Vue {
         font-size: 24px;
         font-weight: 700;
       }
-
-      .display-toggle {
-        font-size: 14px;
-        text-align: right;
-        margin-top: -12px;
-      }
     }
 
     .brand-box {
@@ -580,7 +568,7 @@ export default class CreateBrand extends Vue {
 
 .v-input--switch .v-input--switch__track {
   width: 42px;
-  height: 21px;
+  height: 21px !important;
   margin-top: 5px;
 }
 
@@ -595,7 +583,8 @@ export default class CreateBrand extends Vue {
   display: none;
 }
 .v-input--switch--inset .v-input--switch__track {
-  opacity: 1;
+  opacity: 1 !important;
+  height: 21px !important;
 }
 .v-input--switch .v-input--switch__track {
   color: $gray-disable;

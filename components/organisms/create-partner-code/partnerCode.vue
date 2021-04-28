@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import InputField from '@/components/atoms/InputField.vue'
 import TableComponent from '@/components/molecules/table-component/TableComponent.vue'
 import SiebelPartner from '@/components/molecules/create-partner/SiebelPartner.vue'
@@ -111,8 +111,8 @@ export default class CreatePartnerCode extends Vue {
     }
   ]
 
-  async activated() {
-    if (this.companyId) {
+  async mounted() {
+    if (this.$route.params.currentStep === 'partnercode' && this.companyId) {
       this.getPartnerList()
     }
   }
