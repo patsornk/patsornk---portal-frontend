@@ -71,7 +71,7 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 @Component
 export default class InputField extends Vue {
   @Prop({
-    required: true,
+    required: false,
     type: undefined
   })
   private value: undefined

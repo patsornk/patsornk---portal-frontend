@@ -69,22 +69,25 @@
     >
     </ag-grid-vue>
     <div class="footer-container" v-if="isShowPaginate">
-      <span>{{ rawData.length }} Items</span>
+      <span>{{ totalItem }} Items</span>
       <t1-pagination
         class="pagination-container"
         v-model="currentPage"
-        :pageCount="
-          Math.ceil(this.rawData.length / this.pagination)
-        "
+        @input="onChenagePage"
+        :pageCount="totalPage"
         :marginPages="2"
         :pageRange="5"
       />
       <div class="footer-container">
         <div>Show:</div>
-        <t1-dropdown
+        <v-select
           class="dropdown"
           v-model="pagination"
-          :lists="lists"
+          :options="lists"
+          :label="'value'"
+          :reduce="(item) => item.value"
+          :clearable="false"
+          :searchable="false"
         />
       </div>
     </div>
@@ -92,14 +95,8 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { AgGridVue } from 'ag-grid-vue'
-import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Pagination from '@/components/atoms/pagination.vue'
 import { DataPrePageList } from '~/constants'
 
@@ -107,13 +104,24 @@ import '@/assets/scss/agGridStyleOverride.scss'
 
 @Component({
   components: {
-    T1Dropdown,
     AgGridVue,
     T1Pagination
   }
 })
 export default class TableComponent extends Vue {
   private name = 'table-component'
+
+  @Prop({
+    type: Number,
+    default: 0
+  })
+  readonly totalItem?: string
+
+  @Prop({
+    type: Number,
+    default: 1
+  })
+  readonly totalPage?: string
 
   @Prop({
     type: String,
@@ -202,6 +210,7 @@ export default class TableComponent extends Vue {
   private lists = DataPrePageList
   private selectedRows = 0
   private pagination = 10
+  private currentPage = 1
   private searchQuery = ''
   private gridOptions: any = {
     onRowClicked: this.onRowClicked,
@@ -230,29 +239,34 @@ export default class TableComponent extends Vue {
     })
   }
 
+  @Watch('pagination')
+  private onChangePagination() {
+    this.$emit('pagination', this.pagination)
+  }
+
   private onInnerWidthChanged() {
     this.gridApi.sizeColumnsToFit()
+  }
+
+  onChenagePage(currentPage: number) {
+    this.$emit('onChenagePage', currentPage)
   }
 
   private setSelectedEachNode() {
     this.gridApi.forEachNode((node: any) => {
       node.setSelected(
-        this.value.findIndex(
-          (data: any) => node.data.id === data.id
-        ) !== -1
+        this.value.findIndex((data: any) => node.data.id === data.id) !== -1
       )
     })
   }
 
   get paginationPageSize(): number {
-    if (this.gridApi)
-      return this.gridApi.paginationGetPageSize()
+    if (this.gridApi) return this.gridApi.paginationGetPageSize()
     else return 50
   }
 
   get totalPages(): number {
-    if (this.gridApi)
-      return this.gridApi.paginationGetTotalPages()
+    if (this.gridApi) return this.gridApi.paginationGetTotalPages()
     else return 0
   }
 
@@ -271,15 +285,7 @@ export default class TableComponent extends Vue {
         ]
       : this.columnDefs
   }
-
-  get currentPage(): number {
-    if (this.gridApi)
-      return this.gridApi.paginationGetCurrentPage() + 1
-    else return 1
-  }
-  set currentPage(val: number) {
-    this.gridApi.paginationGoToPage(val - 1)
-  }
+  
 
   @Watch('value')
   async chengeValue(): Promise<void> {
@@ -351,14 +357,35 @@ export default class TableComponent extends Vue {
 
 .footer-container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 0px 23px;
+  padding: 16px 23px;
 
   .dropdown {
     width: 80px;
     height: 30px;
     padding: 2px 10px;
     margin-left: 13px;
+    padding: 0;
+    border: 0px;
+
+    .dropdown-option {
+      display: flex;
+      width: 100%;
+    }
+
+    ::v-deep .vs__clear {
+      display: none;
+    }
+
+    ::v-deep .vs__selected {
+      position: inherit;
+    }
+
+    ::v-deep .vs__dropdown-toggle {
+      height: 100%;
+      border: 1px solid $gray-disable !important;
+    }
 
     .dropbtn {
       font-size: 14px;

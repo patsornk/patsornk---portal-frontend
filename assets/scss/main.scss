@@ -1,5 +1,9 @@
 @import './_variables.scss';
 
+::-webkit-input-placeholder {
+  color: $gray-disable;
+}
+
 .toasted{
   width: 440px !important;
   height: 56px !important;

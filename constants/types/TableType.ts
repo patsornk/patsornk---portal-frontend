@@ -1,4 +1,4 @@
 
 export interface DataPrePage {
-  value?: number
+  value?: String
 }
