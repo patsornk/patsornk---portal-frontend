@@ -17,7 +17,7 @@
       v-if="isShowEditForm"
       v-model="editSiebelPartner"
       action="edit"
-      @clickAdd="clickAddNewSiebelPartner"
+      @clickAdd="clickEditNewSiebelPartner"
       @clickDelete="clickDeleteSiebelPartner(editSiebelPartner)"
     />
     <siebel-partner
@@ -63,6 +63,7 @@ export default class CreatePartnerCode extends Vue {
     agActionField: AgActionField
   }
   defaultSiebelPartner: SiebelPartnerType = {
+    partnerId: 0,
     partnerCode: '',
     partnerName: ''
   }
@@ -148,6 +149,37 @@ export default class CreatePartnerCode extends Vue {
     const index = this.dataList.indexOf(item)
     if (index > -1) {
       this.dataList.splice(index, 1)
+    }
+  }
+
+  async clickEditNewSiebelPartner(event: SiebelPartnerType) {
+    if (this.checkDuplicate(event)) {
+      this.partnerCodeError = 'Duplicate Siebel Partner code'
+    } else {
+      try {
+        const payload = {
+          partnerId: event.partnerId,
+          partnerCode: event.partnerCode,
+          partnerName: event.partnerName,
+          companyId: this.companyId
+        }
+
+        let res = await this.$axios.$post(
+          `${process.env.THE_1_PORTAL}/edit_partner_code`,
+          payload
+        )
+
+        if (res.successful) {
+          this.partnerCodeError = ''
+          this.dataList.push({ ...event })
+          this.clearData()
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+        if (error.response.data.code === '07') {
+          this.partnerCodeError = 'Duplicate Siebel Partner code'
+        }
+      }
     }
   }
 

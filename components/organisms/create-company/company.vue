@@ -322,13 +322,13 @@ export default class CreateCompany extends Vue {
       const payload = {
         companyNameTh: this.$v.companyNameTh.$model,
         companyNameEn: this.$v.companyNameEn.$model,
-        typeId: this.$v.typeId.$model,
-        categoryId: this.$v.categoryId.$model,
-        sizeId: this.$v.sizeId.$model,
+        companyTypeId: this.$v.typeId.$model,
+        companyCategoryId: this.$v.categoryId.$model,
+        companySizeId: this.$v.sizeId.$model,
         assignee: this.$v.assignee.$model,
-        email: this.$v.email.$model,
+        companyEmail: this.$v.email.$model,
         companyPhonePrefix: this.companyPhonePrefix,
-        phoneNumber: this.$v.phoneNumber.$model
+        companyPhoneNumber: this.$v.phoneNumber.$model
       }
 
       try {
