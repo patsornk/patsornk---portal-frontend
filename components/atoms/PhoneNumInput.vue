@@ -6,20 +6,14 @@
     </div>
     <div class="input-group flex w-full">
       <div class="prefix">
-        <v-select
+        <input-field
+          class="input-prefix"
           v-model="prefix"
-          :searchable="false"
+          type="select"
           :options="countryCodes"
-          :reduce="(codes) => codes.label"
-          label="text"
-        >
-          <template #selected-option="option">
-            {{ option.label }}
-          </template>
-          <template #option="option">
-            {{ option.text }}
-          </template>
-        </v-select>
+          :optionsReduce="(item) => item.label"
+          optionsLabel="label"
+        />
       </div>
       <div class="flex flex-col phone">
         <input
@@ -41,9 +35,14 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import InputField from '@/components/atoms/InputField.vue'
 import { countryCodes } from '@/constants'
 
-@Component
+@Component({
+  components: {
+    InputField
+  }
+})
 export default class PhoneNumInput extends Vue {
   private prefix = '+66'
 
@@ -90,7 +89,7 @@ export default class PhoneNumInput extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
 .phone-num-input {
@@ -108,14 +107,15 @@ export default class PhoneNumInput extends Vue {
   .input-group {
     padding: 6px 0px;
 
-    .phone{
+    .phone {
       width: 100%;
+      margin-top: 1px;
     }
   }
 
-  .input-number,
-  .prefix {
+  .input-number {
     font-size: 16px;
+    width: 120px;
     border: 1px solid $gray-disable;
     border-radius: 4px;
   }
@@ -134,37 +134,14 @@ export default class PhoneNumInput extends Vue {
   }
 
   .prefix {
+    width: 145px;
     margin-right: 1rem;
     height: 46px;
 
-    .v-select {
-      padding: 5px;
-    }
-
-    ::v-deep .vs__clear {
-      display: none;
-    }
-
-    ::v-deep .vs__selected {
-      position: inherit;
-    }
-
-    ::v-deep .vs__dropdown-toggle {
-      border: none;
-    }
-
-    ::v-deep .vs__dropdown-menu {
-      box-shadow: $box-shadow-black;
-      border: none;
-      width: auto;
-    }
-
-    ::v-deep .vs__dropdown-option > span {
-      width: 100%;
-    }
-
-    ::v-deep .vs__search {
-      display: none;
+    .input-field.input-prefix {
+      .input-field-input-group {
+        margin: 2px !important;
+      }
     }
   }
 

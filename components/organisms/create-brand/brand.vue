@@ -31,7 +31,7 @@
       />
       <phone-num-input
         :title="$t('createBrand.phoneNo')"
-        :required="true"
+        required
         v-model="$v.phoneNo.$model"
         @prefix="onChangedPrefixNumber"
         :errorMessage="error.phoneNo"
@@ -440,7 +440,7 @@ export default class CreateBrand extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
 .create-company-container {
@@ -564,35 +564,5 @@ export default class CreateBrand extends Vue {
 
 .error {
   color: $primary;
-}
-
-.v-input--switch .v-input--switch__track {
-  width: 42px;
-  height: 21px !important;
-  margin-top: 5px;
-}
-
-.v-input--switch .v-input--switch__thumb {
-  width: 15px;
-  height: 15px;
-  margin-top: 4px;
-  margin-left: -1px;
-}
-
-.v-input--selection-controls__ripple {
-  display: none;
-}
-.v-input--switch--inset .v-input--switch__track {
-  opacity: 1 !important;
-  height: 21px !important;
-}
-.v-input--switch .v-input--switch__track {
-  color: $gray-disable;
-}
-.v-input--switch__track.theme--light.primary--text {
-  color: $success !important;
-}
-.v-input--switch__thumb.theme--light.primary--text {
-  color: $white !important;
 }
 </style>

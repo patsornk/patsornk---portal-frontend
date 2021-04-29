@@ -229,14 +229,14 @@ export default class InputField extends Vue {
       .switch-title {
         font-size: 14px;
         color: $grey-text;
+        margin-left: 17px;
       }
 
       .switch {
         position: relative;
         display: inline-block;
         width: 42px;
-        height: 21px;
-        padding-bottom: 10px;
+        height: 22px;
       }
 
       .switch input {
@@ -249,8 +249,8 @@ export default class InputField extends Vue {
         position: absolute;
         cursor: pointer;
         top: 2px;
-        left: 0;
-        right: 0;
+        left: 2px;
+        right: -2px;
         bottom: -2px;
         background-color: #ccc;
         -webkit-transition: 0.4s;
