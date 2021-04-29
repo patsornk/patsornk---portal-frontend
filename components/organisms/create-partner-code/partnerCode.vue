@@ -128,7 +128,7 @@ export default class CreatePartnerCode extends Vue {
         this.dataList = res.data.partner
       }
     } catch (error) {
-      if (error.response.data.code !== "04") {
+      if (error.response.data.code !== '04') {
         this.$toast.global.error(error.response.data.message)
       }
     }
@@ -171,7 +171,11 @@ export default class CreatePartnerCode extends Vue {
 
         if (res.successful) {
           this.partnerCodeError = ''
-          this.dataList.push({ ...event })
+          this.dataList.push({
+            partnerId: res.data.partnerId,
+            partnerCode: res.data.partnerCode,
+            partnerName: res.data.partnerName
+          })
           this.clearData()
         }
       } catch (error) {
@@ -201,7 +205,11 @@ export default class CreatePartnerCode extends Vue {
 
         if (res.successful) {
           this.partnerCodeError = ''
-          this.dataList.push({ ...event })
+          this.dataList.push({
+            partnerId: res.data.partnerId,
+            partnerCode: res.data.partnerCode,
+            partnerName: res.data.partnerName
+          })
           this.clearData()
         }
       } catch (error) {
