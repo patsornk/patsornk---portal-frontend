@@ -29,7 +29,7 @@ export default class OrganizeCreate extends Vue {
   }
   mounted() {
     this.setupBreadcrumb()
-    this.$router.push('/organizManagement/create/company')
+    this.$router.push('/organizationManagement/create/company')
   }
 }
 </script>

@@ -2,7 +2,7 @@ import {
   feature,
   member,
   request,
-  accountManagement
+  organizationManagement
 } from '~/constants'
 
 // States
@@ -49,7 +49,7 @@ export const getters = {
         return 'By member'
       case 'REQUEST':
         return 'By request'
-      case 'ACCOUNTMANAGEMENT':
+      case 'ORGANIZATIONMANAGEMENT':
         return 'Account Management'
       default:
         return ''
@@ -65,8 +65,8 @@ export const getters = {
         return member
       case 'REQUEST':
         return request
-      case 'ACCOUNTMANAGEMENT':
-        return accountManagement
+      case 'ORGANIZATIONMANAGEMENT':
+        return organizationManagement
       default:
         return {}
     }

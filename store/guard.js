@@ -5,7 +5,7 @@ export const state = () => ({
       role: ['bu']
     },
     {
-      path: 'accountManagement',
+      path: 'organizationManagement',
       role: ['admin', 'bu']
     }
   ],

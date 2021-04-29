@@ -343,7 +343,7 @@ export default class CreateCompany extends Vue {
           )
           window.sessionStorage.setItem('companyId', response.data.companyId)
           this.$toast.global.success('Saved successfully')
-          this.$router.push('/organizManagement/create/partnercode')
+          this.$router.push('/organizationManagement/create/partnercode')
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)

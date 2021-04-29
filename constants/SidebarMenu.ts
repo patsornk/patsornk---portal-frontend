@@ -61,4 +61,4 @@ export const request: SidebarMenu[] = [
   }
 ]
 
-export const accountManagement: SidebarMenu[] = []
+export const organizationManagement: SidebarMenu[] = []

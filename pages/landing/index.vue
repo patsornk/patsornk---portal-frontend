@@ -43,7 +43,7 @@ export default class Landing extends Vue {
       },
       {
         title: 'Organization Management',
-        value: Organization.ACCOUNTMANAGEMENT
+        value: Organization.ORGANIZATIONMANAGEMENT
       }
     ]
   }
@@ -65,8 +65,8 @@ export default class Landing extends Vue {
       case 'REQUEST':
         this.$router.push('/example')
         break
-      case 'ACCOUNTMANAGEMENT':
-        this.$router.push('/accountManagement')
+      case 'ORGANIZATIONMANAGEMENT':
+        this.$router.push('/organizationManagement')
         break
     }
   }

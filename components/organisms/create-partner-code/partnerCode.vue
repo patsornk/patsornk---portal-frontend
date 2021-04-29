@@ -235,7 +235,7 @@ export default class CreatePartnerCode extends Vue {
   }
 
   clickSave() {
-    this.$router.push('/organizManagement/create/brand')
+    this.$router.push('/organizationManagement/create/brand')
   }
 }
 </script>
