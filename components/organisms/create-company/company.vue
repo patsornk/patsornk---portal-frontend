@@ -95,12 +95,12 @@ import {
 const validations = {
   companyNameTh: {
     required,
-    mustBe: (value: any) => /^([ก-๛0-9])*$/g.test(value),
+    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value),
     maxLength: maxLength(50)
   },
   companyNameEn: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
     maxLength: maxLength(50)
   },
   typeId: {
