@@ -103,24 +103,28 @@ export default class ServiceSelection extends Vue {
   }
 
   async clickSave() {
-    // const payload = {
-    //   companyId: window.sessionStorage.getItem('companyId'),
-    //   serviceId: this.appliedServices.map((item: any) => item.serviceId))
-    // }
-    // console.log(payload)
-    // try {
-    //   let response = await this.$axios.$post(
-    //     `${process.env.THE_1_PORTAL}/apply_service`,
-    //     payload
-    //   )
-    //   if (response.successful) {
-    //     this.getAppliedServices()
-    //     this.getAvailableServices()
-    //     this.$toast.global.success('Saved successfully')
-    //   }
-    // } catch (error) {
-    //   this.$toast.global.error(error.response.data.message)
-    // }
+    if (this.appliedServices.length === 0) {
+      this.$toast.global.success('Saved successfully')
+      return
+    }
+    const payload = {
+      companyId: window.sessionStorage.getItem('companyId'),
+      serviceId: this.appliedServices.map((item: any) => item.serviceId)
+    }
+    console.log(payload)
+    try {
+      let response = await this.$axios.$post(
+        `${process.env.THE_1_PORTAL}/apply_service`,
+        payload
+      )
+      if (response.successful) {
+        this.getAppliedServices()
+        this.getAvailableServices()
+        this.$toast.global.success('Saved successfully')
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 }
 </script>
