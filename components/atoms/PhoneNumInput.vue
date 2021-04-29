@@ -21,7 +21,7 @@
           </template>
         </v-select>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col phone">
         <input
           v-model="dataValue"
           class="input-number"
@@ -107,6 +107,10 @@ export default class PhoneNumInput extends Vue {
 
   .input-group {
     padding: 6px 0px;
+
+    .phone{
+      width: 100%;
+    }
   }
 
   .input-number,

@@ -11,6 +11,7 @@
         >
           <v-select
             class="input-select"
+            :class="errorMessage ? 'no-border' : ''"
             v-if="type === 'select'"
             v-model="dataValue"
             :options="options"
@@ -195,6 +196,15 @@ export default class InputField extends Vue {
 
     .input-select {
       height: 44.67px;
+      border: none;
+
+      &.no-border {
+        border: none;
+
+        ::v-deep .vs__dropdown-toggle {
+          border: none !important;
+        }
+      }
 
       .dropdown-option {
         display: flex;

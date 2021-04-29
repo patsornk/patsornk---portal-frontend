@@ -3,39 +3,35 @@
     <span class="header">Company Information</span>
     <div class="input-section">
       <input-field
-        v-model="formData.companyNameTh"
+        v-model="$v.companyNameTh.$model"
         title="Company Name (TH)"
-        :maxlength="100"
-        :required="true"
-        :error-message="
-          formError.companyNameTh !== '' ? formError.companyNameTh : undefined
-        "
-        @onBlur="validateNameTH()"
+        :maxlength="50"
+        required
+        :errorMessage="error.companyNameTh"
       />
       <input-field
-        v-model="formData.companyNameEn"
-        :required="true"
+        v-model="$v.companyNameEn.$model"
+        required
         title="Company Name (EN)"
-        :maxlength="100"
-        :error-message="
-          formError.companyNameEn !== '' ? formError.companyNameEn : undefined
-        "
-        @onBlur="validateNameEN()"
+        :maxlength="50"
+        :errorMessage="error.companyNameEn"
       />
       <input-field
-        v-model="formData.companyTypeId"
+        v-model="$v.typeId.$model"
         title="Company type"
-        :required="true"
+        required
         type="select"
         :options="companyTypeList"
         :optionsReduce="(item) => item.companyTypeId"
         :optionsLabel="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
         placeholder="Please select..."
+        :errorMessage="error.typeId"
+        @onBlur="checkTypeId()"
       />
       <input-field
-        v-model="formData.companyCategoryId"
+        v-model="$v.categoryId.$model"
         title="Partner Category"
-        :required="true"
+        required
         type="select"
         :options="companyTypeCategory"
         :optionsReduce="(item) => item.companyCategoryId"
@@ -43,43 +39,38 @@
           language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
         "
         placeholder="Please select..."
+        :errorMessage="error.categoryId"
       />
       <input-field
-        v-model="formData.companySizeId"
+        v-model="$v.sizeId.$model"
         title="Business Size"
-        :required="true"
+        required
         type="select"
         :options="companyTypeSize"
         :optionsReduce="(item) => item.companySizeId"
         :optionsLabel="language === 'th' ? 'companySizeTh' : 'companySizeEn'"
         placeholder="Please select..."
+        :errorMessage="error.sizeId"
       />
       <input-field
-        v-model="formData.assignee"
+        v-model="$v.assignee.$model"
         title="Assignee"
-        :required="true"
+        required
+        :errorMessage="error.assignee"
       />
       <input-field
-        v-model="formData.companyEmail"
+        v-model="$v.email.$model"
         title="E-mail"
         :maxlength="100"
-        :required="true"
-        :error-message="
-          formError.companyEmail !== '' ? formError.companyEmail : undefined
-        "
-        @onBlur="validateEmail()"
+        required
+        :errorMessage="error.email"
       />
       <phone-num-input
-        v-model="formData.companyPhoneNumber"
+        v-model="$v.phoneNumber.$model"
         title="Phone No."
-        :required="true"
-        :error-message="
-          formError.companyPhoneNumber !== ''
-            ? formError.companyPhoneNumber
-            : undefined
-        "
+        required
+        :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
-        @onBlur="validatePhoneNumber()"
       />
     </div>
     <div class="submit-section">
@@ -90,46 +81,93 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import axios from 'axios'
 import InputField from '@/components/atoms/InputField.vue'
 import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
+import { validationMixin } from 'vuelidate'
 import {
-  isRequiredEmpty,
-  validateEmail,
-  validateEngCharacters,
-  validateError,
-  validateNumber,
-  validateThaiCharacters
-} from '~/helper'
+  required,
+  minLength,
+  maxLength,
+  email,
+  numeric
+} from 'vuelidate/lib/validators'
+
+const validations = {
+  companyNameTh: {
+    required,
+    mustBe: (value: any) => /^([ก-๛0-9])*$/g.test(value),
+    maxLength: maxLength(50)
+  },
+  companyNameEn: {
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value),
+    maxLength: maxLength(50)
+  },
+  typeId: {
+    required
+  },
+  categoryId: {
+    required
+  },
+  sizeId: {
+    required
+  },
+  assignee: { required },
+  email: {
+    required,
+    email,
+    maxLength: maxLength(50)
+  },
+  phoneNumber: {
+    required,
+    numeric,
+    minLength: minLength(9),
+    maxLength: maxLength(13)
+  },
+
+  validationGroup: [
+    'companyNameTh',
+    'companyNameEn',
+    'typeId',
+    'categoryId',
+    'sizeId',
+    'assignee',
+    'email',
+    'phoneNumber'
+  ]
+}
 
 @Component({
+  mixins: [validationMixin],
+  validations: validations,
   components: {
     InputField,
     PhoneNumInput
   }
 })
 export default class CreateCompany extends Vue {
-  private formData = {
-    companyNameEn: '',
-    companyNameTh: '',
-    companyTypeId: 0,
-    companyCategoryId: 0,
-    companySizeId: 0,
-    companyPhonePrefix: '+66',
-    companyPhoneNumber: '',
-    companyEmail: '',
-    assignee: ''
-  }
+  $i18n: any
 
-  private formError = {
+  companyNameTh = ''
+  companyNameEn = ''
+  typeId = ''
+  categoryId = ''
+  sizeId = ''
+  assignee = ''
+  email = ''
+  companyPhonePrefix = '+66'
+  phoneNumber = ''
+
+  private error = {
     companyNameEn: '',
     companyNameTh: '',
-    companyTypeId: '',
-    companyCategoryId: '',
-    companySizeId: '',
-    companyPhoneNumber: '',
-    companyEmail: '',
-    assignee: ''
+    typeId: '',
+    categoryId: '',
+    sizeId: '',
+    assignee: '',
+    email: '',
+    companyPhonePrefix: '',
+    phoneNumber: ''
   }
 
   private companyTypeList = []
@@ -140,49 +178,82 @@ export default class CreateCompany extends Vue {
     return this.$i18n.locale
   }
 
-  private validateNameEN() {
-    if (isRequiredEmpty(this.formData.companyNameEn)) {
-      this.formError.companyNameEn = 'Input company name'
-    } else if (!validateEngCharacters(this.formData.companyNameEn)) {
-      this.formError.companyNameEn = 'Input invalid information'
-    } else {
-      this.formError.companyNameEn = ''
-    }
+  @Watch('companyNameTh')
+  checkCompanyNameTh(): void {
+    this.error.companyNameTh = !this.$v.companyNameTh.required
+      ? this.$t('createCompany.error.require').toString()
+      : !this.$v.companyNameTh.mustBe
+      ? this.$t('createCompany.thaiAndNumber').toString()
+      : !this.$v.companyNameTh.maxLength
+      ? this.$t('createCompany.maxLength').toString()
+      : ''
   }
 
-  private validateNameTH() {
-    if (isRequiredEmpty(this.formData.companyNameTh)) {
-      this.formError.companyNameTh = 'Input company name'
-    } else if (!validateThaiCharacters(this.formData.companyNameTh)) {
-      this.formError.companyNameTh = 'Input invalid information'
-    } else {
-      this.formError.companyNameTh = ''
-    }
+  @Watch('companyNameEn')
+  checkCompanyNameEn(): void {
+    this.error.companyNameEn = !this.$v.companyNameEn.required
+      ? this.$t('createCompany.error.require').toString()
+      : !this.$v.companyNameEn.mustBe
+      ? this.$t('createCompany.characterAndNumber').toString()
+      : !this.$v.companyNameEn.maxLength
+      ? this.$t('createCompany.maxLength').toString()
+      : ''
   }
 
-  private validateEmail() {
-    if (isRequiredEmpty(this.formData.companyEmail)) {
-      this.formError.companyEmail = 'Input Email'
-    } else if (!validateEmail(this.formData.companyEmail)) {
-      this.formError.companyEmail = 'Input invalid e-mail format information'
-    } else {
-      this.formError.companyEmail = ''
-    }
+  @Watch('typeId')
+  checkTypeId(): void {
+    this.error.typeId = !this.$v.typeId.required
+      ? this.$t('createCompany.error.require').toString()
+      : ''
   }
 
-  private validatePhoneNumber() {
-    if (isRequiredEmpty(this.formData.companyPhoneNumber)) {
-      this.formError.companyPhoneNumber = 'Input phone No.'
-    } else if (!validateNumber(this.formData.companyPhoneNumber)) {
-      this.formError.companyPhoneNumber =
-        'Input invalid Phone No. format information'
-    } else {
-      this.formError.companyPhoneNumber = ''
-    }
+  @Watch('categoryId')
+  checkCategoryId(): void {
+    this.error.categoryId = !this.$v.categoryId.required
+      ? this.$t('createCompany.error.require').toString()
+      : ''
+  }
+
+  @Watch('sizeId')
+  checkSizeId(): void {
+    this.error.sizeId = !this.$v.sizeId.required
+      ? this.$t('createCompany.error.require').toString()
+      : ''
+  }
+
+  @Watch('assignee')
+  checkAssignee(): void {
+    this.error.assignee = !this.$v.assignee.required
+      ? this.$t('createCompany.error.require').toString()
+      : ''
+  }
+
+  @Watch('email')
+  checkEmail(): void {
+    this.error.email = !this.$v.email.required
+      ? this.$t('createCompany.error.require').toString()
+      : !this.$v.email.email
+      ? this.$t('createCompany.characterAndNumber').toString()
+      : !this.$v.email.maxLength
+      ? this.$t('createCompany.maxLength').toString()
+      : ''
+  }
+
+  @Watch('phoneNumber')
+  checkPhoneNumber(): void {
+    this.error.phoneNumber = !this.$v.phoneNumber.required
+      ? this.$t('createCompany.error.require').toString()
+      : !this.$v.phoneNumber.numeric
+      ? this.$t('createCompany.number').toString()
+      : !this.$v.phoneNumber.minLength
+      ? this.$t('createCompany.minLength').toString()
+      : !this.$v.phoneNumber.maxLength
+      ? this.$t('createCompany.maxLength').toString()
+      : ''
   }
 
   private onChangedPrefixNumber(value: string): void {
-    this.formData.companyPhonePrefix = value
+    this.companyPhonePrefix = value
   }
 
   async getCpmpanyType(): Promise<void> {
@@ -237,22 +308,27 @@ export default class CreateCompany extends Vue {
   }
 
   async submit(): Promise<void> {
-    this.validateNameTH()
-    this.validateNameEN()
-    this.validateEmail()
-    this.validatePhoneNumber()
-
-    if (validateError(this.formError)) {
+    if (this.$v.validationGroup.$invalid) {
+      this.$toast.global.error(this.$t('createCompany.fieldError'))
+      this.checkCompanyNameEn()
+      this.checkCompanyNameTh()
+      this.checkTypeId()
+      this.checkCategoryId()
+      this.checkSizeId()
+      this.checkAssignee()
+      this.checkEmail()
+      this.checkPhoneNumber()
+    } else {
       const payload = {
-        companyNameEn: this.formData.companyNameEn,
-        companyNameTh: this.formData.companyNameTh,
-        companyTypeId: this.formData.companyTypeId,
-        companyCategoryId: this.formData.companyCategoryId,
-        companySizeId: this.formData.companySizeId,
-        companyPhonePrefix: this.formData.companyPhonePrefix,
-        companyPhoneNumber: this.formData.companyPhoneNumber,
-        companyEmail: this.formData.companyEmail,
-        assignee: this.formData.assignee
+        companyNameTh: this.$v.companyNameTh.$model,
+        companyNameEn: this.$v.companyNameEn.$model,
+        typeId: this.$v.typeId.$model,
+        categoryId: this.$v.categoryId.$model,
+        sizeId: this.$v.sizeId.$model,
+        assignee: this.$v.assignee.$model,
+        email: this.$v.email.$model,
+        companyPhonePrefix: this.companyPhonePrefix,
+        phoneNumber: this.$v.phoneNumber.$model
       }
 
       try {
@@ -266,40 +342,13 @@ export default class CreateCompany extends Vue {
             response.data.companyId
           )
           window.sessionStorage.setItem('companyId', response.data.companyId)
-          // For memember how to get CompanyId
-          // console.log(this.$store.getters['organizartion/getCompanyId'])
-          // window.sessionStorage.getItem('companyId')
           this.$toast.global.success('Saved successfully')
           this.$router.push('/organizManagement/create/partnercode')
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
       }
-    } else {
-      this.$toast.global.error(
-        'One or more field have an error. Please check and try again.'
-      )
     }
-  }
-
-  @Watch('formData.companyNameTh')
-  onChangeCompanyNameTH() {
-    this.validateNameTH()
-  }
-
-  @Watch('formData.companyNameEn')
-  onChangeCompanyNameEN() {
-    this.validateNameEN()
-  }
-
-  @Watch('formData.companyEmail')
-  onChangeCompanyEmail() {
-    this.validateEmail()
-  }
-
-  @Watch('formData.companyPhoneNumber')
-  onChangeCompanyPhoneNumber() {
-    this.validatePhoneNumber()
   }
 }
 </script>
