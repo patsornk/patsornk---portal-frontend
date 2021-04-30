@@ -79,6 +79,12 @@ import InputField from '@/components/atoms/InputField.vue'
   }
 })
 export default class OrganizationTable extends Vue {
+  $i18n: any
+
+  get language(): any {
+    return this.$i18n.locale
+  }
+
   selectData = []
   pageSize = 0
   totalItem = 0
@@ -196,7 +202,8 @@ export default class OrganizationTable extends Vue {
   }
 
   async onRowClicked(row: any) {
-    console.log(row.data)
+    console.log(row.data.companyId)
+    this.$router.push(`/organizationManagement/${row.data.companyId}`)
   }
 
   async mounted(): Promise<void> {
@@ -392,7 +399,7 @@ export default class OrganizationTable extends Vue {
 
         ::-webkit-input-placeholder {
           color: $gray-disable;
-          }
+        }
       }
     }
   }

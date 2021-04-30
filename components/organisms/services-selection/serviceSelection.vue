@@ -33,7 +33,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Service from '@/components/atoms/service/service.vue'
-import { ServiceType } from '~/constants/types/ServiceType'
+import { ServiceType } from '~/constants'
 
 @Component({
   components: {
@@ -145,7 +145,7 @@ export default class ServiceSelection extends Vue {
 
   .list-section {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 30% 30% 30%;
     grid-column-gap: 27px;
     grid-row-gap: 38px;
   }

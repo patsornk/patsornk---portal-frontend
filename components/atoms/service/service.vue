@@ -5,11 +5,12 @@
         <img class="logo" src="@/assets/images/navbar/profile.jpg" />
       </div>
       <img
-        v-if="isApply"
+        v-if="isApply && !isActive"
         class="close"
         src="@/assets/images/service/close.png"
         @click="$emit('unApply')"
       />
+      <div class="active" v-if="isActive">Active</div>
     </div>
     <div class="title-box">
       <div>{{ title }}</div>
@@ -52,6 +53,12 @@ export default class Service extends Vue {
     default: false
   })
   readonly isApply!: boolean
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  readonly isActive!: boolean
 }
 </script>
 
@@ -81,6 +88,17 @@ export default class Service extends Vue {
     .close {
       cursor: pointer;
       object-fit: contain;
+    }
+
+    .active {
+      height: 22px;
+      background: $white;
+      border: 2px solid $success;
+      color: $success;
+      border-radius: 16px;
+      font-size: 12px;
+      padding: 0px 12px;
+      margin-top: 11px;
     }
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="company-detail-container">
+  <div class="company-info-container">
     <div class="header-box">
       <div class="text-header">Company Information</div>
       <img class="edit" src="@/assets/images/company-detail/edit.png" />
@@ -67,7 +67,7 @@ export default class CompanyInformation extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
-.company-detail-container {
+.company-info-container {
   padding: 38px 36px;
   .header-box {
     display: flex;

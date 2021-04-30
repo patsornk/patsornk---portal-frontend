@@ -1,21 +1,30 @@
 <template>
   <div>
     <company-information class="content-box" :company="company" />
+    <service class="content-box" :id="id" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { BreadcrumbType, CompanyType } from '~/constants'
 import CompanyInformation from '@/components/organisms/company-detail/companyInformation.vue'
+import Service from '@/components/organisms/company-detail/service.vue'
 
 @Component({
   components: {
-    CompanyInformation
+    CompanyInformation,
+    Service
   }
 })
 export default class OrganizationManagementDetail extends Vue {
-  company: CompanyType = {
+  $i18n: any
+
+  get language(): any {
+    return this.$i18n.locale
+  }
+
+  private company: CompanyType = {
     assignee: '',
     companyCategory: {
       companyCategoryEn: '',
@@ -50,20 +59,29 @@ export default class OrganizationManagementDetail extends Vue {
     return this.$route.params.id
   }
 
-  private setupBreadcrumb(): void {
+  @Watch('language')
+  setTitleBreadcrumb() {
+    this.setupBreadcrumb(
+      this.language === 'th'
+        ? this.company.companyNameTh
+        : this.company.companyNameEn
+    )
+  }
+
+  private setupBreadcrumb(title: string): void {
     const breadcrumb: BreadcrumbType[] = [
       {
         title: 'Organization Management',
         url: '/'
       },
       {
-        title: 'Central Marketing Group',
+        title,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', 'Central Marketing Group')
+    this.$store.dispatch('breadcrumb/setPageTitle', title)
   }
 
   async getCpmpanyType(): Promise<void> {
@@ -74,6 +92,12 @@ export default class OrganizationManagementDetail extends Vue {
       )
       if (res.successful) {
         this.company = res.data
+
+        this.setupBreadcrumb(
+          this.language === 'th'
+            ? this.company.companyNameTh
+            : this.company.companyNameEn
+        )
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -81,7 +105,6 @@ export default class OrganizationManagementDetail extends Vue {
   }
 
   mounted() {
-    this.setupBreadcrumb()
     this.getCpmpanyType()
   }
 }
