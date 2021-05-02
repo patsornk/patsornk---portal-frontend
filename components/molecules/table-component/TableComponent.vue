@@ -207,6 +207,18 @@ export default class TableComponent extends Vue {
   })
   readonly frameworkComponents!: Object
 
+  @Prop({
+    type: Number,
+    default: 40
+  })
+  readonly rowHeight!: number
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  readonly class!: string
+
   private lists = DataPrePageList
   private selectedRows = 0
   private pagination = 10
@@ -214,7 +226,7 @@ export default class TableComponent extends Vue {
   private searchQuery = ''
   private gridOptions: any = {
     onRowClicked: this.onRowClicked,
-    rowHeight: 40,
+    rowHeight: this.rowHeight,
     headerHeight: this.isShowHeaderTable ? 52 : 0
   }
   private maxPageNumbers = 7

@@ -1,6 +1,7 @@
 <template>
   <div>
     <company-information class="content-box" :company="company" />
+    <tab-detail class="content-box" :id="id" />
     <service class="content-box" :id="id" />
   </div>
 </template>
@@ -9,11 +10,13 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { BreadcrumbType, CompanyType } from '~/constants'
 import CompanyInformation from '@/components/organisms/company-detail/companyInformation.vue'
+import TabDetail from '@/components/organisms/company-detail/tabDetail.vue'
 import Service from '@/components/organisms/company-detail/service.vue'
 
 @Component({
   components: {
     CompanyInformation,
+    TabDetail,
     Service
   }
 })

@@ -493,7 +493,7 @@ export default class CreateBrand extends Vue {
   }
 
   .brand-page {
-    border-top: 1px solid #efefef;
+    border-top: 1px solid $grey3;
     padding: 30px 0px;
 
     .brand-head-box {
@@ -531,7 +531,7 @@ export default class CreateBrand extends Vue {
   }
 
   .partner-code-list {
-    border-top: 1px solid #efefef;
+    border-top: 1px solid $grey3;
     padding: 30px 0px;
     .ag-grid-table {
       height: 200px !important;

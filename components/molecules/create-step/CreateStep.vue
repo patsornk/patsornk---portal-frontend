@@ -61,6 +61,8 @@ export default class CreateStep extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/_variables.scss';
+
 .create-step-container {
   display: flex;
   flex-direction: column;
@@ -73,7 +75,7 @@ export default class CreateStep extends Vue {
     display: flex;
     justify-content: flex-end;
     padding-top: 34px;
-    border-top: 1px solid #efefef;
+    border-top: 1px solid $grey3;
     width: 100%;
 
     .t1-button {
