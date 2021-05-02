@@ -2,7 +2,11 @@
   <div class="company-info-container">
     <div class="header-box">
       <div class="text-header">Company Information</div>
-      <img class="edit" src="@/assets/images/company-detail/edit.png" />
+      <img
+        class="edit"
+        src="@/assets/images/company-detail/edit.png"
+        @click="editCompany"
+      />
     </div>
     <div class="data-box">
       <text-info title="Company Name (TH)" :value="company.companyNameEn" />
@@ -60,6 +64,10 @@ export default class CompanyInformation extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  editCompany() {
+    this.$router.push(`/organizationManagement/edit/company/${this.company?.companyId}`)
   }
 }
 </script>

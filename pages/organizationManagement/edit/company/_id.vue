@@ -1,22 +1,18 @@
 <template>
-  <div>
-    <company-information class="content-box" :company="company" />
-    <tab-detail class="content-box" :id="id" />
-    <service class="content-box" :id="id" />
-  </div>
+  <EditCompany :companyId="id" />
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { BreadcrumbType, CompanyType } from '~/constants'
 import CompanyInformation from '@/components/organisms/company-detail/companyInformation.vue'
-import TabDetail from '@/components/organisms/company-detail/tabDetail.vue'
+import EditCompany from '@/components/organisms/edit-company/company.vue'
 import Service from '@/components/organisms/company-detail/service.vue'
 
 @Component({
   components: {
     CompanyInformation,
-    TabDetail,
+    EditCompany,
     Service
   }
 })
@@ -77,53 +73,25 @@ export default class OrganizationManagementDetail extends Vue {
         title: 'Organization Management',
         url: '/'
       },
-      {
+      { 
         title,
+        url: '/'
+      },
+      {
+        title: 'Edit company Information',
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', title)
-  }
-
-  async getCpmpany(): Promise<void> {
-    try {
-      let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company?companyId=${this.id}`,
-        { data: null }
-      )
-      if (res.successful) {
-        this.company = res.data
-
-        this.setupBreadcrumb(
-          this.language === 'th'
-            ? this.company.companyNameTh
-            : this.company.companyNameEn
-        )
-      }
-    } catch (error) {
-      this.$toast.global.error(error.response.data.message)
-    }
+    this.$store.dispatch('breadcrumb/setPageTitle', 'Edit company Information')
   }
 
   mounted() {
-    this.getCpmpany()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
-
-.content {
-  background: none !important;
-  box-shadow: none !important;
-}
-
-.content-box {
-  background-color: $white;
-  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-}
 </style>
