@@ -322,28 +322,16 @@ export default class OrganizationTable extends Vue {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.company.map((item: any) => {
-      const cat: any = this.companyCategory.filter(
-        (categoryItem: { companyCategoryId: any }) => {
-          return categoryItem.companyCategoryId == item.companyCategoryId
-        }
-      )
-      const type: any = this.companyType.filter(
-        (typeItem: { companyTypeId: any }) => {
-          return typeItem.companyTypeId == item.companyTypeId
-        }
-      )
-      const size: any = this.companySize.filter(
-        (sizeItem: { companySizeId: any }) => {
-          return sizeItem.companySizeId == item.companySizeId
-        }
-      )
+      const cat = item.companyCategory.companyCategoryEn //language === 'th' ? item.companyCategory.companyCategoryTh : item.companyCategory.companyCategoryEn
+      const type = item.companyType.companyTypeEn //language === 'th' ? item.companyType.companyTypeTh : item.companyType.companyTypeEn
+      const size = item.companySize.companySizeEn //language === 'th' ? item.companySize.companySizeTh : item.companySize.companySizeEn
       return {
         companyId: item.companyId,
         regioCompanyNameTh: item.companyNameTh,
         regioCompanyNameEn: item.companyNameEn,
-        companyCategory: cat[0].companyCategoryTh,
-        companyType: type[0].companyTypeTh,
-        businessSize: size[0].companySizeTh,
+        companyCategory: cat,
+        companyType: type,
+        businessSize: size,
         status: item.statusDesc
       }
     })

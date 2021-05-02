@@ -59,6 +59,8 @@
           :errorMessage="error.logo"
           @viewFile="viewFile"
           @onBlur="onChangedLogo"
+          :imageUrl="logourl"
+          @removeUrl="onRemoveLogo"
         >
           <!-- @onBlur="onChangedLogo" -->
         </upload-file>
@@ -67,7 +69,12 @@
         <div class="brand-upload-header">
           {{ $t('createBrand.brandBanner') }}
         </div>
-        <upload-file id="banner" class="upload-file" v-model="$v.banner.$model">
+        <upload-file
+          id="banner"
+          :imageUrl="bannerurl"
+          class="upload-file"
+          v-model="$v.banner.$model"
+        >
         </upload-file>
       </div>
 
@@ -147,12 +154,12 @@ const validations = {
   },
   brandNameTh: {
     required,
-    mustBe: (value: any) => /^([ก-๛0-9])*$/g.test(value),
+    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value),
     maxLength: maxLength(50)
   },
   brandNameEn: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
     maxLength: maxLength(50)
   },
   email: {
@@ -186,6 +193,14 @@ const validations = {
     'phoneNo',
     'showDisplay',
     'logo'
+  ],
+  validationGroupWithoutLogo: [
+    'brandCode',
+    'brandNameTh',
+    'brandNameEn',
+    'email',
+    'phoneNo',
+    'showDisplay'
   ]
 }
 @Component({
@@ -215,6 +230,9 @@ export default class CreateBrand extends Vue {
   brandInfo = ''
   partnerCodeList = []
 
+  logourl? = ''
+  bannerurl? = ''
+
   private error = {
     brandCode: '',
     brandNameTh: '',
@@ -241,7 +259,13 @@ export default class CreateBrand extends Vue {
   }
 
   async mounted(): Promise<void> {
-    if (window.sessionStorage.getItem('companyId')) {
+    if (
+      window.sessionStorage.getItem('createBrandFirstTime') &&
+      window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+    ) {
+      this.getBrand()
+    }
+    if (window.sessionStorage.getItem('createCompanyId')) {
       this.getListPartnerCode()
     }
   }
@@ -251,16 +275,18 @@ export default class CreateBrand extends Vue {
       let res = await this.$axios.$get(
         `${
           process.env.THE_1_PORTAL
-        }/partner_code?companyId=${window.sessionStorage.getItem('companyId')}`,
+        }/partner_code?companyId=${window.sessionStorage.getItem(
+          'createCompanyId'
+        )}`,
         { data: null }
       )
       if (res.successful) {
         this.dataList = res.data.partner.map(
           (item: { partnerId: any; partnerCode: any; partnerName: any }) => {
             return {
-              id: item.partnerId,
-              siebelPartnerCode: item.partnerCode,
-              siebelPartnerName: item.partnerName
+              partnerId: item.partnerId,
+              partnerCode: item.partnerCode,
+              partnerName: item.partnerName
             }
           }
         )
@@ -342,23 +368,27 @@ export default class CreateBrand extends Vue {
   private columnDefs = [
     {
       headerName: 'Siebel Partner code',
-      field: 'siebelPartnerCode',
+      field: 'partnerCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.siebelPartnerCode}
+                  ${params.data.partnerCode}
                 </div>`
       }
     },
     {
       headerName: 'Siebel Partner Name',
-      field: 'siebelPartnerName',
+      field: 'partnerName',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.siebelPartnerName}
+                  ${params.data.partnerName}
                 </div>`
       }
     }
   ]
+
+  onRemoveLogo() {
+    this.logourl = undefined
+  }
 
   getBase64(file: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -377,7 +407,70 @@ export default class CreateBrand extends Vue {
     })
   }
 
+  async getBrand(): Promise<void> {
+    if (window.sessionStorage.getItem('createBrandId')) {
+      try {
+        let res = await this.$axios.$get(
+          `${
+            process.env.THE_1_PORTAL
+          }/get_brand?brandId=${window.sessionStorage.getItem(
+            'createBrandId'
+          )}&brandAdditional=true&partners=true`,
+          { data: null }
+        )
+        if (res.successful) {
+          const data = res.data
+          if (res.data.brandAdditional) {
+            const brandAddidtional = res.data.brandAdditional
+            this.brandCode = res.data.brandCode
+            this.brandNameTh = res.data.brandNameTh
+            this.brandNameEn = res.data.brandNameEn
+            this.email = res.data.brandEmail
+            this.phoneNo = res.data.brandPhoneNumber
+            this.phonePrefix = res.data.brandPhonePrefix
+            this.showDisplay = res.data.showInApp
+            this.logourl = brandAddidtional.additionalLogoImg
+              ? brandAddidtional.additionalLogoImg
+              : undefined
+            this.bannerurl = brandAddidtional.additionalBannerImg
+              ? brandAddidtional.additionalBannerImg
+              : undefined
+            this.brandInfo = brandAddidtional.additionalInfo
+              ? brandAddidtional.additionalInfo
+              : ''
+            this.partnerCodeList = res.data.partners
+          } else {
+            this.brandCode = res.data.brandCode
+            this.brandNameTh = res.data.brandNameTh
+            this.brandNameEn = res.data.brandNameEn
+            this.email = res.data.brandEmail
+            this.phoneNo = res.data.brandPhoneNumber
+            this.phonePrefix = res.data.brandPhonePrefix
+            this.showDisplay = res.data.showInApp
+            this.logo = undefined
+            this.banner = undefined
+            this.brandInfo = ''
+            this.partnerCodeList = res.data.partners
+          }
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+      }
+    }
+  }
+
   async clickSave() {
+    if (
+      window.sessionStorage.getItem('createBrandFirstTime') &&
+      window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+    ) {
+      this.update()
+    } else {
+      this.save()
+    }
+  }
+
+  async save() {
     let validationGroup: boolean = false
     let partnerCodeList: boolean = false
     if (this.$v.validationGroup.$invalid) {
@@ -400,21 +493,20 @@ export default class CreateBrand extends Vue {
     }
     if (validationGroup && partnerCodeList) {
       const partnerId = this.$v.partnerCodeList.$model.map(
-        (item: { id: any }) => {
-          return item.id
+        (item: { partnerId: any }) => {
+          return item.partnerId
         }
       )
 
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
-
       const payload = {
-        companyId: window.sessionStorage.getItem('companyId'),
+        companyId: window.sessionStorage.getItem('createCompanyId'),
         brandNameTh: this.$v.brandNameTh.$model,
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
-        brandLogoImg: 'getLogoBase64', // Wait for api
-        brandBannerImg: 'getbannerBase64', // Wait for api
+        brandLogoImg: getLogoBase64, // Wait for api
+        brandBannerImg: getbannerBase64, // Wait for api
         brandInfo: this.$v.brandInfo.$model,
         brandLink: this.$v.brandCode.$model,
         brandPhonePrefix: this.phonePrefix,
@@ -423,13 +515,95 @@ export default class CreateBrand extends Vue {
         showInApp: this.$v.showDisplay.$model,
         partnerId: partnerId
       }
-
       try {
         let response = await this.$axios.$post(
           `${process.env.THE_1_PORTAL}/create_brand`,
           payload
         )
         if (response.successful) {
+          window.sessionStorage.setItem('createBrandFirstTime', 'no')
+          window.sessionStorage.setItem('createBrandId', response.data.brandId)
+          this.$toast.global.success('Saved successfully')
+          this.$router.push('/organizationManagement/create/branch')
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+      }
+    }
+  }
+
+  async update() {
+    let validationGroup: boolean = false
+    let partnerCodeList: boolean = false
+    if (this.logourl) {
+      if (this.$v.validationGroupWithoutLogo.$invalid) {
+        validationGroup = false
+        this.$toast.global.error(this.$t('createBrand.fieldError'))
+        this.onChangedBrandCode()
+        this.onChangedBrandNameTh()
+        this.onChangedBrandNameEn()
+        this.onChangedEmail()
+        this.onChangedPhoneNo()
+      } else {
+        validationGroup = true
+      }
+    } else {
+      if (this.$v.validationGroup.$invalid) {
+        validationGroup = false
+        this.$toast.global.error(this.$t('createBrand.fieldError'))
+        this.onChangedBrandCode()
+        this.onChangedBrandNameTh()
+        this.onChangedBrandNameEn()
+        this.onChangedEmail()
+        this.onChangedPhoneNo()
+        this.onChangedLogo(this.$v.logo.$model)
+      } else {
+        validationGroup = true
+      }
+    }
+    if (!this.$v.partnerCodeList.required) {
+      partnerCodeList = false
+      this.$toast.global.error(this.$t('createBrand.partnerCode'))
+    } else {
+      partnerCodeList = true
+    }
+    if (validationGroup && partnerCodeList) {
+      const partnerId = this.$v.partnerCodeList.$model.map(
+        (item: { partnerId: any }) => {
+          return item.partnerId
+        }
+      )
+
+      const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+      const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
+
+      const payload = {
+        companyId: window.sessionStorage.getItem('createCompanyId'),
+        brandId: window.sessionStorage.getItem('createBrandId'),
+        brandNameTh: this.$v.brandNameTh.$model,
+        brandNameEn: this.$v.brandNameEn.$model,
+        brandCode: this.$v.brandCode.$model,
+        brandLogoImg: this.logourl ? undefined : getLogoBase64, // Wait for api
+        brandBannerImg: this.bannerurl ? undefined : getbannerBase64, // Wait for api
+        brandInfo: this.$v.brandInfo.$model,
+        brandLink: this.$v.brandCode.$model,
+        brandPhonePrefix: this.phonePrefix,
+        brandPhoneNumber: this.$v.phoneNo.$model,
+        brandEmail: this.$v.email.$model,
+        showInApp: this.$v.showDisplay.$model,
+        partnerId: partnerId
+      }
+      try {
+        let response = await this.$axios.$post(
+          `${process.env.THE_1_PORTAL}/update_brand`,
+          payload
+        )
+        if (response.successful) {
+          window.sessionStorage.setItem('createBrandFirstTime', 'no')
+          window.sessionStorage.setItem(
+            'createCompanyId',
+            response.data.brandId
+          )
           this.$toast.global.success('Saved successfully')
         }
       } catch (error) {

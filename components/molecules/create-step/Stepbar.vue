@@ -1,10 +1,6 @@
 <template>
   <div class="step-bar-container">
-    <div
-      v-for="(item, index) in title"
-      :key="index"
-      class="step-bar"
-    >
+    <div v-for="(item, index) in title" :key="index" class="step-bar">
       <div
         class="step"
         :class="{
@@ -14,8 +10,7 @@
         <div
           class="status"
           :class="{
-            active:
-              index === maxState || index === currentState,
+            active: index === maxState || index === currentState,
             disabled: index > maxState
           }"
           @click="onClickStep(index)"
@@ -44,11 +39,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue
-} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 interface StepData {
   title: string
@@ -76,9 +67,7 @@ export default class Stepbar extends Vue {
   }
 
   private showCompletedIcon(index: number): boolean {
-    return (
-      index < this.maxState && index != this.currentState
-    )
+    return index < this.maxState && index != this.currentState
   }
 
   private onClickStep(index: number): void {

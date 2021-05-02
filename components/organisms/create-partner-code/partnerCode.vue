@@ -57,7 +57,7 @@ import { SiebelPartnerType } from '~/constants/types/PartnerCodeType'
   }
 })
 export default class CreatePartnerCode extends Vue {
-  companyId = window.sessionStorage.getItem('companyId')
+  companyId = window.sessionStorage.getItem('createCompanyId')
 
   frameworkComponents = {
     agActionField: AgActionField

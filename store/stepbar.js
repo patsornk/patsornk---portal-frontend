@@ -22,6 +22,10 @@ export const mutations = {
   }
 }
 
+export const getters = {
+  maxState: (state) => state.maxState,
+}
+
 export const actions = {
   setCurrentState({ commit }, data) {
     commit('SET_CURRENT_STATE', data)

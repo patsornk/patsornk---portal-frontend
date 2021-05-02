@@ -20,7 +20,7 @@
           @change="fileChange"
         />
 
-        <ul class="image-box" v-if="imageUrl && file" v-cloak>
+        <ul class="image-box" v-if="imageUrl" v-cloak>
           <div
             class="show-image"
             :style="{
@@ -72,6 +72,13 @@ export default class UploadImage extends Vue {
   private id: string | undefined
 
   @Prop({
+    type: String,
+    default: ''
+  })
+  private imageUrl?: string | undefined
+
+
+  @Prop({
     required: true,
     type: undefined
   })
@@ -84,7 +91,6 @@ export default class UploadImage extends Vue {
   private errorMessage?: string
 
   private file: any = null
-  private imageUrl: string = ''
   private filelist: any[] = []
 
   fileSelected() {
@@ -101,6 +107,7 @@ export default class UploadImage extends Vue {
     this.file = undefined
     this.$emit('input', this.file)
     this.$emit('onBlur', this.file)
+    this.$emit('removeUrl', this.file)
   }
   dragover(event: any) {
     event.preventDefault()

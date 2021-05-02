@@ -256,7 +256,7 @@ export default class CreateCompany extends Vue {
     this.companyPhonePrefix = value
   }
 
-  async getCpmpanyType(): Promise<void> {
+  async getCompanyType(): Promise<void> {
     try {
       let res = await this.$axios.$get(
         `${process.env.THE_1_PORTAL}/get_company_type`,
@@ -273,7 +273,7 @@ export default class CreateCompany extends Vue {
     }
   }
 
-  async getCpmpanySize(): Promise<any> {
+  async getCompanySize(): Promise<any> {
     try {
       let res = await this.$axios.$get(
         `${process.env.THE_1_PORTAL}/get_company_size`,
@@ -287,7 +287,7 @@ export default class CreateCompany extends Vue {
     }
   }
 
-  async getCpmpanyCategory(): Promise<any> {
+  async getCompanyCategory(): Promise<any> {
     try {
       let res = await this.$axios.$get(
         `${process.env.THE_1_PORTAL}/get_company_category`,
@@ -302,9 +302,44 @@ export default class CreateCompany extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.getCpmpanyType()
-    this.getCpmpanySize()
-    this.getCpmpanyCategory()
+    if (
+      window.sessionStorage.getItem('companyFirstTime') &&
+      window.sessionStorage.getItem('companyFirstTime') === 'no'
+    ) {
+      this.getCompany()
+    }
+    this.getCompanyType()
+    this.getCompanySize()
+    this.getCompanyCategory()
+  }
+
+  async getCompany(): Promise<void> {
+    if (window.sessionStorage.getItem('createCompanyId')) {
+      try {
+        let res = await this.$axios.$get(
+          `${
+            process.env.THE_1_PORTAL
+          }/get_company?companyId=${window.sessionStorage.getItem(
+            'createCompanyId'
+          )}`,
+          { data: null }
+        )
+        if (res.successful) {
+          const data = res.data
+          this.companyNameTh = data.companyNameTh
+          this.companyNameEn = data.companyNameEn
+          this.typeId = data.companyType.companyTypeId
+          this.categoryId = data.companyCategory.companyCategoryId
+          this.sizeId = data.companySize.companySizeId
+          this.assignee = data.assignee
+          this.email = data.companyEmail
+          this.companyPhonePrefix = data.companyPhonePrefix
+          this.phoneNumber = data.companyPhoneNumber
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+      }
+    }
   }
 
   async submit(): Promise<void> {
@@ -330,23 +365,55 @@ export default class CreateCompany extends Vue {
         companyPhonePrefix: this.companyPhonePrefix,
         companyPhoneNumber: this.$v.phoneNumber.$model
       }
-
-      try {
-        let response = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/create_company`,
-          payload
-        )
-        if (response.successful) {
-          this.$store.dispatch(
-            'organizartion/setConpanyId',
-            response.data.companyId
+      if (
+        window.sessionStorage.getItem('companyFirstTime') &&
+        window.sessionStorage.getItem('companyFirstTime') === 'no'
+      ) {
+        try {
+          let response = await this.$axios.$post(
+            `${process.env.THE_1_PORTAL}/update_company`,
+            {
+              companyId: window.sessionStorage.getItem('createCompanyId'),
+              ...payload
+            }
           )
-          window.sessionStorage.setItem('companyId', response.data.companyId)
-          this.$toast.global.success('Saved successfully')
-          this.$router.push('/organizationManagement/create/partnercode')
+          if (response.successful) {
+            this.$store.dispatch(
+              'organizartion/setConpanyId',
+              response.data.companyId
+            )
+            window.sessionStorage.setItem(
+              'createCompanyId',
+              response.data.companyId
+            )
+            this.$toast.global.success('Saved successfully')
+            window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+          }
+        } catch (error) {
+          this.$toast.global.error(error.response.data.message)
         }
-      } catch (error) {
-        this.$toast.global.error(error.response.data.message)
+      } else {
+        try {
+          let response = await this.$axios.$post(
+            `${process.env.THE_1_PORTAL}/create_company`,
+            payload
+          )
+          if (response.successful) {
+            this.$store.dispatch(
+              'organizartion/setConpanyId',
+              response.data.companyId
+            )
+            window.sessionStorage.setItem(
+              'createCompanyId',
+              response.data.companyId
+            )
+            window.sessionStorage.setItem('companyFirstTime', 'no')
+            this.$toast.global.success('Saved successfully')
+            this.$router.push('/organizationManagement/create/partnercode')
+          }
+        } catch (error) {
+          this.$toast.global.error(error.response.data.message)
+        }
       }
     }
   }

@@ -44,7 +44,7 @@ export default class ServiceSelection extends Vue {
   appliedServices: ServiceType[] = []
   availableServices: ServiceType[] = []
 
-  companyId = window.sessionStorage.getItem('companyId')
+  companyId = window.sessionStorage.getItem('createCompanyId')
 
   async mounted() {
     if (this.$route.params.currentStep === 'service' && this.companyId) {
@@ -108,7 +108,7 @@ export default class ServiceSelection extends Vue {
       return
     }
     const payload = {
-      companyId: window.sessionStorage.getItem('companyId'),
+      companyId: window.sessionStorage.getItem('createCompanyId'),
       serviceId: this.appliedServices.map((item: any) => item.serviceId)
     }
     console.log(payload)

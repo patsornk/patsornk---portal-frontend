@@ -20,8 +20,12 @@
       Save
     </button> -->
     <div class="footer">
-      <t-1-button type="black-transparent"> Cancel </t-1-button>
-      <t-1-button type="disable"> Create new company </t-1-button>
+      <t-1-button type="black-transparent" @click.native="cancleOrgHandler">
+        Cancel
+      </t-1-button>
+      <t-1-button :type="btnStatus" @click.native="createOrgHandler">
+        Create new company
+      </t-1-button>
     </div>
   </div>
 </template>
@@ -57,6 +61,33 @@ export default class CreateStep extends Vue {
 
   private stepTitle = StepbarContent
   private step = CreateStepBar
+
+  get btnStatus() {
+    return this.$store.getters['stepbar/maxState'] === 4 ? '' : 'disable'
+  }
+
+  cancleOrgHandler() {
+    this.$router.push('/organizationManagement')
+  }
+
+  async createOrgHandler() {
+    if (window.sessionStorage.getItem('maxStepbar') == '4') {
+      const compId = parseInt(window.sessionStorage.getItem('createCompanyId') ?? '-1')
+      try {
+        if (compId < 0) { throw 'Invalid company id'}
+        let response = await this.$axios.$post(
+          `${process.env.THE_1_PORTAL}/submit_company`,
+          { companyId: compId }
+        )
+        if (response.successful) {
+          this.$router.push('/organizationManagement')
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+      }
+      
+    }
+  }
 }
 </script>
 
