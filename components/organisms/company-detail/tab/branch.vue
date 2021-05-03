@@ -50,7 +50,6 @@
       :totalPage="pageSize"
       @onChenagePage="changePage"
       @pagination="changPageSize"
-      :frameworkComponents="frameworkComponents"
       :rowHeight="80"
     />
   </div>
@@ -297,10 +296,6 @@ export default class TabBranch extends Vue {
   }
 
   clickNewBranch() {
-    console.log('clickNewBranch')
-  }
-
-  clickNewBranch(){
     console.log('clickNewBranch')
   }
 }

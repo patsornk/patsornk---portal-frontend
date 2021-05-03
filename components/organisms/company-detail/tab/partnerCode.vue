@@ -41,7 +41,6 @@
       :totalPage="pageSize"
       @onChenagePage="changePage"
       @pagination="changPageSize"
-      :frameworkComponents="frameworkComponents"
       :rowHeight="80"
       class="row-h-80"
     />
@@ -216,10 +215,8 @@ export default class TabPartnerCode extends Vue {
   }
 
   mappingPartnerCode(data: any) {
-    console.log('data.partner', data.partner)
     this.pageSize = data.totalPage
     this.totalItem = data.total
-    console.log('totalItem', this.totalItem)
     this.dataList = data.partner.map((item: any) => {
       return {
         partnerCode: item.partnerCode,
