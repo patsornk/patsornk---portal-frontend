@@ -64,7 +64,7 @@ import AgBranchButton from '~/components/atoms/AgBranchButton.js'
     T1Button
   }
 })
-export default class OrganizationTable extends Vue {
+export default class TabBrand extends Vue {
   $i18n: any
 
   @Prop({
@@ -333,6 +333,7 @@ export default class OrganizationTable extends Vue {
     margin-top: -10px;
   }
   .view-branch {
+    width: 112px;
     font-size: 14px;
     line-height: 24px;
     font-weight: 700;

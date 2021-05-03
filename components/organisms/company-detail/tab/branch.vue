@@ -62,7 +62,6 @@ import TableComponent from '~/components/molecules/table-component/TableComponen
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
-import AgBranchButton from '~/components/atoms/AgBranchButton.js'
 
 @Component({
   components: {
@@ -120,9 +119,6 @@ export default class TabBranch extends Vue {
     }
   ]
 
-  frameworkComponents = {
-    AgBranchButton: AgBranchButton
-  }
   dataList = []
   brandList = []
   readonly columnDefs = [
@@ -197,10 +193,6 @@ export default class TabBranch extends Vue {
     }
   ]
 
-  viewBranch(param: any) {
-    console.log('param', param)
-  }
-
   private async search() {
     this.clickSearch = true
     this.filterBranches('1', this.pagination)
@@ -216,6 +208,7 @@ export default class TabBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
+    this.getBrands()
     this.getBranches('1', '10')
   }
 
@@ -259,7 +252,6 @@ export default class TabBranch extends Vue {
       // if (res.successful) {
       //   this.mappingBranch(res.data)
       // }
-
       // this.dataList = [{
       //   status: 'Active'
       // }]
@@ -278,6 +270,34 @@ export default class TabBranch extends Vue {
         brandNameEn: item.brandNameEn
       }
     })
+  }
+
+  async getBrands(): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.THE_1_PORTAL}/list_brand?companyId=${this.id}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.mappingBrand(res.data)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  mappingBrand(data: any) {
+    this.brandList = data.brand.map((item: any) => {
+      return {
+        brandId: item.brandId,
+        brandNameTh: item.brandNameTh,
+        brandNameEn: item.brandNameEn
+      }
+    })
+  }
+
+  clickNewBranch() {
+    console.log('clickNewBranch')
   }
 
   clickNewBranch(){

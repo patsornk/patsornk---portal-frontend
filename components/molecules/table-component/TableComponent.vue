@@ -350,9 +350,9 @@ export default class TableComponent extends Vue {
     color: $white;
     border-radius: 6px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-    width: 207px;
     height: 40px;
     margin-right: 24px;
+    padding: 0px 23px;
 
     &:focus{
       outline: none;
