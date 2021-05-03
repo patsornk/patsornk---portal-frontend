@@ -1,51 +1,59 @@
 <template>
   <div>
     <div class="table-header">
-      <h3 v-if="headerTitle != ''">
-        {{ headerTitle }}
-      </h3>
-      <div class="icon-list" v-if="selectedRows">
-        <div class="icon-container" v-if="isShowIconHold">
+      <div>
+        <span v-if="headerTitle != ''">
+          {{ headerTitle }}
+        </span>
+        <span class="icon-list" v-if="selectedRows">
+          <div class="icon-container" v-if="isShowIconHold">
+            <img
+              class="icon"
+              src="@/assets/images/table/hold.png"
+              @click="$emit('clickHHold')"
+            />
+            <span class="tooltiptext">On hold</span>
+          </div>
+          <div class="icon-container" v-if="isShowInactive">
+            <img
+              class="icon"
+              src="@/assets/images/table/inactive.png"
+              @click="$emit('clickInactive')"
+            />
+            <span class="tooltiptext">Inactive</span>
+          </div>
+          <div class="icon-container" v-if="isShowDelete">
+            <img
+              class="icon"
+              src="@/assets/images/table/delete.png"
+              @click="$emit('clickDelete')"
+            />
+            <span class="tooltiptext">Delete</span>
+          </div>
+        </span>
+        <span class="icon-list" v-else>
           <img
-            class="icon"
-            src="@/assets/images/table/hold.png"
-            @click="$emit('clickHHold')"
+            v-if="isShowIconHold"
+            class="icon-container icon"
+            src="@/assets/images/table/hold-disable.png"
           />
-          <span class="tooltiptext">On hold</span>
-        </div>
-        <div class="icon-container" v-if="isShowInactive">
           <img
-            class="icon"
-            src="@/assets/images/table/inactive.png"
-            @click="$emit('clickInactive')"
+            v-if="isShowInactive"
+            class="icon-container icon"
+            src="@/assets/images/table/inactive-disable.png"
           />
-          <span class="tooltiptext">Inactive</span>
-        </div>
-        <div class="icon-container" v-if="isShowDelete">
           <img
-            class="icon"
-            src="@/assets/images/table/delete.png"
-            @click="$emit('clickDelete')"
+            v-if="isShowDelete"
+            class="icon-container icon"
+            src="@/assets/images/table/delete-disable.png"
           />
-          <span class="tooltiptext">Delete</span>
-        </div>
+        </span>
       </div>
-      <div class="icon-list" v-else>
-        <img
-          v-if="isShowIconHold"
-          class="icon-container icon"
-          src="@/assets/images/table/hold-disable.png"
-        />
-        <img
-          v-if="isShowInactive"
-          class="icon-container icon"
-          src="@/assets/images/table/inactive-disable.png"
-        />
-        <img
-          v-if="isShowDelete"
-          class="icon-container icon"
-          src="@/assets/images/table/delete-disable.png"
-        />
+      <div v-if="isCreateNew">
+        <button class="add-new-btn" @click="$emit('clickNew')">
+          <span class="material-icons icon"> add </span>
+          <span class="text">{{ createNewTitle }}</span>
+        </button>
       </div>
     </div>
     <ag-grid-vue
@@ -214,10 +222,16 @@ export default class TableComponent extends Vue {
   readonly rowHeight!: number
 
   @Prop({
+    type: Boolean,
+    default: false
+  })
+  readonly isCreateNew!: boolean
+
+  @Prop({
     type: String,
     default: ''
   })
-  readonly class!: string
+  readonly createNewTitle!: string
 
   private lists = DataPrePageList
   private selectedRows = 0
@@ -297,7 +311,6 @@ export default class TableComponent extends Vue {
         ]
       : this.columnDefs
   }
-  
 
   @Watch('value')
   async chengeValue(): Promise<void> {
@@ -320,51 +333,86 @@ export default class TableComponent extends Vue {
   }
 }
 </script>
+
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.pagination-container {
-  width: 50%;
-}
+.table-header {
+  display: flex;
+  justify-content: space-between;
 
-.icon-list {
-  margin-left: 18px;
+  .add-new-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-  .icon-container {
-    position: relative;
-    display: inline-block;
+    background: $primary;
+    color: $white;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    width: 207px;
+    height: 40px;
+    margin-right: 24px;
 
-    &:hover &.tooltiptext {
-      background: $grey-hover;
-      border-radius: 50%;
+    &:focus{
+      outline: none;
+    }
+
+    .icon {
+      font-size: 13px;
+      margin-right: 6px;
+    }
+
+    .text {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .icon-list {
+    margin-left: 18px;
+
+    .icon-container {
+      position: relative;
+      display: inline-block;
+
+      &:hover &.tooltiptext {
+        background: $grey-hover;
+        border-radius: 50%;
+      }
+
+      &:hover .tooltiptext {
+        visibility: visible;
+      }
+
+      .icon {
+        align-items: center;
+        width: 26px;
+        height: 26px;
+        padding: 5px;
+      }
+      .tooltiptext {
+        visibility: hidden;
+        width: 50px;
+        background-color: $grey-text;
+        color: $white;
+        font-size: 12px;
+        text-align: center;
+        border-radius: 6px;
+
+        position: absolute;
+        z-index: 1;
+        top: calc(100% + 4px);
+        left: 50%;
+        margin-left: -25px;
+      }
     }
   }
 }
-.icon {
-  align-items: center;
-  width: 26px;
-  height: 26px;
-  padding: 5px;
-}
 
-.icon-container .tooltiptext {
-  visibility: hidden;
-  width: 50px;
-  background-color: $grey-text;
-  color: $white;
-  font-size: 12px;
-  text-align: center;
-  border-radius: 6px;
-
-  position: absolute;
-  z-index: 1;
-  top: calc(100% + 4px);
-  left: 50%;
-  margin-left: -25px;
-}
-
-.icon-container:hover .tooltiptext {
-  visibility: visible;
+.pagination-container {
+  width: 50%;
 }
 
 .footer-container {

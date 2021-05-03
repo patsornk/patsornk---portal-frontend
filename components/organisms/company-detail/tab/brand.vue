@@ -31,6 +31,9 @@
       isShowPaginate
       isShowHeaderTable
       isShowCheckBox
+      isCreateNew
+      createNewTitle="Create New Brand"
+      @clickNew="clickNewBrand"
       headerTitle="Brand list"
       :pageCount="pageSize"
       v-model="selectData"
@@ -255,13 +258,17 @@ export default class OrganizationTable extends Vue {
       }
     })
   }
+
+  clickNewBrand(){
+    console.log('clickNewBrand')
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 .filter-container {
-  margin: 24px;
+  margin: 24px 24px 45px 24px;
 
   .input-field-input {
     font-size: 16px;

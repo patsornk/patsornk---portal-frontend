@@ -14,6 +14,10 @@
 
 
 .ag-grid-table {
+  .ag-overlay-no-rows-center{    
+    visibility: hidden;
+  }
+
   color: inherit !important;
 
   &.num-0 {
