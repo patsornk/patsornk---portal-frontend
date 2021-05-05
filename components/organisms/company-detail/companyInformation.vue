@@ -9,8 +9,8 @@
       />
     </div>
     <div class="data-box">
-      <text-info title="Company Name (TH)" :value="company.companyNameEn" />
-      <text-info title="Company Name (EN)" :value="company.companyNameTh" />
+      <text-info title="Company Name (TH)" :value="company.companyNameTh" />
+      <text-info title="Company Name (EN)" :value="company.companyNameEn" />
       <text-info
         title="Company Type"
         :value="
