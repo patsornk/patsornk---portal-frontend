@@ -6,6 +6,7 @@
         class="input-brand-code"
         :title="$t('createBrand.brandCode')"
         :required="true"
+        :maxlength="25"
         v-model="$v.brandCode.$model"
         :errorMessage="error.brandCode"
       />
@@ -14,18 +15,21 @@
       <input-field
         :title="$t('createBrand.brandNameTh')"
         :required="true"
+        :maxlength="50"
         v-model="$v.brandNameTh.$model"
         :errorMessage="error.brandNameTh"
       />
       <input-field
         :title="$t('createBrand.brandNameEn')"
         :required="true"
+        :maxlength="50"
         v-model="$v.brandNameEn.$model"
         :errorMessage="error.brandNameEn"
       />
       <input-field
         :title="$t('createBrand.email')"
         :required="true"
+        :maxlength="50"
         v-model="$v.email.$model"
         :errorMessage="error.email"
       />
