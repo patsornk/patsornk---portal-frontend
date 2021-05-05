@@ -29,14 +29,18 @@
           >
             <div class="icon-box">
               <div class="icon-view">
-                <span class="material-icons view-file" @click="viewFile"> visibility </span>
+                <span class="material-icons view-file" @click="viewFile">
+                  visibility
+                </span>
                 <div class="material-icons delete-file" @click="remove">
                   delete
                 </div>
               </div>
 
               <div class="icon-view">
-                <span class="view-file-text" @click="viewFile"> View File </span>
+                <span class="view-file-text" @click="viewFile">
+                  View File
+                </span>
                 <div class="delete-file-text" @click="remove">Delete File</div>
               </div>
             </div>
@@ -77,7 +81,6 @@ export default class UploadImage extends Vue {
   })
   private imageUrl?: string | undefined
 
-
   @Prop({
     required: true,
     type: undefined
@@ -98,7 +101,7 @@ export default class UploadImage extends Vue {
     this.filelist = [...file.files]
     this.fileChange(false)
   }
-  viewFile(){
+  viewFile() {
     this.$emit('viewFile', this.imageUrl)
   }
   remove() {
@@ -106,7 +109,7 @@ export default class UploadImage extends Vue {
     this.imageUrl = ''
     this.file = undefined
     this.$emit('input', this.file)
-    this.$emit('onBlur', this.file)
+    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
     this.$emit('removeUrl', this.file)
   }
   dragover(event: any) {
@@ -134,9 +137,9 @@ export default class UploadImage extends Vue {
 
   private fileChange(event: any): void {
     const regexFileType = /(\jpg|\jpeg|\png)$/g
-    this.file = event ? event.target.files[0] : this.filelist[0];
-    event.target.value = '';
-    if(!this.file) return;
+    this.file = event ? event.target.files[0] : this.filelist[0]
+    event.target.value = ''
+    if (!this.file) return
     if (this.file.size > 20 * 1024 * 1024) {
       this.file = undefined
       this.$toast.error(`File is too big!`, {
@@ -159,7 +162,7 @@ export default class UploadImage extends Vue {
 
     this.file && (this.imageUrl = URL.createObjectURL(this.file))
     this.$emit('input', this.file)
-    this.$emit('onBlur', this.file)
+    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
   }
 }
 </script>

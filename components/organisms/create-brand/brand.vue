@@ -55,14 +55,13 @@
         <upload-file
           id="logo"
           class="upload-file"
+          :imageUrl="logourl"
           v-model="$v.logo.$model"
           :errorMessage="error.logo"
           @viewFile="viewFile"
           @onBlur="onChangedLogo"
-          :imageUrl="logourl"
           @removeUrl="onRemoveLogo"
         >
-          <!-- @onBlur="onChangedLogo" -->
         </upload-file>
       </div>
       <div class="brand-box">
@@ -71,9 +70,12 @@
         </div>
         <upload-file
           id="banner"
-          :imageUrl="bannerurl"
           class="upload-file"
+          :imageUrl="bannerurl"
           v-model="$v.banner.$model"
+          @viewFile="viewFile"
+          @onBlur="onChangedBanner"
+          @removeUrl="onRemoveBanner"
         >
         </upload-file>
       </div>
@@ -298,12 +300,17 @@ export default class CreateBrand extends Vue {
     }
   }
 
-  onChangedLogo(image: any) {
-    if (image) {
+  onChangedLogo(data: any) {
+    this.logourl = data.imageUrl
+    if (data.file) {
       this.error.logo = ''
     } else {
       this.error.logo = this.$t('createBrand.error.require').toString()
     }
+  }
+
+  onChangedBanner(data: any) {
+    this.bannerurl = data.imageUrl
   }
 
   @Watch('brandCode')
@@ -388,6 +395,10 @@ export default class CreateBrand extends Vue {
 
   onRemoveLogo() {
     this.logourl = undefined
+  }
+
+  onRemoveBanner() {
+    this.bannerurl = undefined
   }
 
   getBase64(file: any): Promise<any> {
