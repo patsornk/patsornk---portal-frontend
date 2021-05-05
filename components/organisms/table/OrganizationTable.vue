@@ -232,7 +232,7 @@ export default class OrganizationTable extends Vue {
     if (this.fillterData.companyCategoryId > 0) {
       path = path + `&companyCategoryId=${this.fillterData.companyCategoryId}`
     }
-    if (this.fillterData.companyTypeId) {
+    if (this.fillterData.companyTypeId && this.fillterData.companyTypeId !== 1) {
       path = path + `&companyTypeId=${this.fillterData.companyTypeId}`
     }
     try {
