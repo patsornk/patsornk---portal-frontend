@@ -50,7 +50,9 @@
       </div>
       <div class="brand-box">
         <div class="brand-upload-header">
-          {{ $t('createBrand.brandLogo') }}
+          <div>
+            {{ $t('createBrand.brandLogo') }} <span class="required"> *</span>
+          </div>
         </div>
         <upload-file
           id="logo"
@@ -66,7 +68,9 @@
       </div>
       <div class="brand-box">
         <div class="brand-upload-header">
-          {{ $t('createBrand.brandBanner') }}
+          <div>
+            {{ $t('createBrand.brandBanner') }}
+          </div>
         </div>
         <upload-file
           id="banner"
@@ -454,7 +458,9 @@ export default class CreateBrand extends Vue {
               : ''
             this.partnerCodeList = res.data.partners
             this.oldLogourl = brandAddidtional.additionalLogoImg ? true : false
-            this.oldBannerurl = brandAddidtional.additionalBannerImg ? true : false
+            this.oldBannerurl = brandAddidtional.additionalBannerImg
+              ? true
+              : false
           } else {
             this.brandCode = res.data.brandCode
             this.brandNameTh = res.data.brandNameTh
@@ -599,8 +605,10 @@ export default class CreateBrand extends Vue {
         brandNameTh: this.$v.brandNameTh.$model,
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
-        brandLogoImg: this.oldLogourl && !this.logourl ? undefined : getLogoBase64, // Wait for api
-        brandBannerImg: this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
+        brandLogoImg:
+          this.oldLogourl && !this.logourl ? undefined : getLogoBase64, // Wait for api
+        brandBannerImg:
+          this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
         brandInfo: this.$v.brandInfo.$model,
         brandLink: this.$v.brandCode.$model,
         brandPhonePrefix: this.phonePrefix,
@@ -703,6 +711,12 @@ export default class CreateBrand extends Vue {
         font-size: 16px;
         font-weight: 700;
         margin-bottom: 8px;
+      }
+
+      .required {
+        margin-left: 0.25rem;
+        color: $primary;
+        font-weight: 700;
       }
 
       .info-description {
