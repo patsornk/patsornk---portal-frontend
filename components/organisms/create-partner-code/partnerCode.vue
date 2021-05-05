@@ -24,6 +24,7 @@
       v-if="isShowNewForm"
       v-model="newSiebelPartner"
       action="add"
+      :deleteAble="deleteAble"
       @clickAdd="clickAddNewSiebelPartner"
       @clickDelete="clearData"
       :partnerCodeError="partnerCodeError"
@@ -58,6 +59,8 @@ import { SiebelPartnerType } from '~/constants/types/PartnerCodeType'
 })
 export default class CreatePartnerCode extends Vue {
   companyId = window.sessionStorage.getItem('createCompanyId')
+
+  deleteAble = false
 
   frameworkComponents = {
     agActionField: AgActionField
@@ -126,6 +129,11 @@ export default class CreatePartnerCode extends Vue {
       )
       if (res.successful) {
         this.dataList = res.data.partner
+        if (this.dataList.length > 0) {
+          this.deleteAble = true
+          this.isShowNewForm = false
+          this.isShowEditForm = false
+        }
       }
     } catch (error) {
       if (error.response.data.code !== '04') {
@@ -276,7 +284,9 @@ export default class CreatePartnerCode extends Vue {
 
   clickSave() {
     if (this.dataList.length === 0) {
-      this.$toast.global.error('One or more field have an error. Please check and try again.')
+      this.$toast.global.error(
+        'One or more field have an error. Please check and try again.'
+      )
       return
     }
     this.$router.push('/organizationManagement/create/brand')
