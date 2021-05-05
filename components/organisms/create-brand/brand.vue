@@ -235,6 +235,9 @@ export default class CreateBrand extends Vue {
   logourl? = ''
   bannerurl? = ''
 
+  oldLogourl = false
+  oldBannerurl = false
+
   private error = {
     brandCode: '',
     brandNameTh: '',
@@ -450,6 +453,8 @@ export default class CreateBrand extends Vue {
               ? brandAddidtional.additionalInfo
               : ''
             this.partnerCodeList = res.data.partners
+            this.oldLogourl = brandAddidtional.additionalLogoImg ? true : false
+            this.oldBannerurl = brandAddidtional.additionalBannerImg ? true : false
           } else {
             this.brandCode = res.data.brandCode
             this.brandNameTh = res.data.brandNameTh
@@ -594,8 +599,8 @@ export default class CreateBrand extends Vue {
         brandNameTh: this.$v.brandNameTh.$model,
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
-        brandLogoImg: this.logourl ? undefined : getLogoBase64, // Wait for api
-        brandBannerImg: this.bannerurl ? undefined : getbannerBase64, // Wait for api
+        brandLogoImg: this.oldLogourl && !this.logourl ? undefined : getLogoBase64, // Wait for api
+        brandBannerImg: this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
         brandInfo: this.$v.brandInfo.$model,
         brandLink: this.$v.brandCode.$model,
         brandPhonePrefix: this.phonePrefix,
