@@ -2,6 +2,7 @@
   <div class="siebel-partner-container">
     <input-field
       class="sp-code"
+      :maxlength="9"
       v-model="dataValue.partnerCode"
       placeholder="Siebel Partner code"
       :errorMessage="error.partnerCode ? error.partnerCode : undefined"
@@ -12,6 +13,7 @@
     <input-field
       class="sp-name"
       v-model="dataValue.partnerName"
+      :maxlength="100"
       placeholder="Siebel Partner name"
       :errorMessage="error.partnerName ? error.partnerName : undefined"
       @onChange="checkPartnerName"
@@ -111,6 +113,8 @@ export default class CreatePartnerCode extends Vue {
   private checkPartnerCode(): void {
     if (isRequiredEmpty(this.dataValue?.partnerCode)) {
       this.error.partnerCode = 'Empty'
+    } else if (this.dataValue?.partnerCode && this.dataValue?.partnerCode.length < 3) {
+      this.error.partnerCode = 'minlength'
     } else {
       this.$emit('changePartnerCode', this.dataValue)
       this.error.partnerCode = this.partnerCodeError
