@@ -38,11 +38,13 @@
       src="@/assets/images/partner-code/save.png"
       @click="clickAddSiebelPartner"
     />
-    <img
-      class="icon"
-      src="@/assets/images/table/delete.png"
-      @click="$emit('clickDelete')"
-    />
+    <div v-if="deleteAble">
+      <img
+        class="icon"
+        src="@/assets/images/table/delete.png"
+        @click="$emit('clickDelete')"
+      />
+    </div>
   </div>
 </template>
 
@@ -74,6 +76,13 @@ export default class CreatePartnerCode extends Vue {
     type: String
   })
   private action?: string
+
+  @Prop({
+    required: false,
+    type: Boolean,
+    default: true
+  })
+  private deleteAble?: string
 
   @Prop({
     default: '',
