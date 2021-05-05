@@ -4,9 +4,7 @@
       class="sp-code"
       v-model="dataValue.partnerCode"
       placeholder="Siebel Partner code"
-      :errorMessage="
-        error.partnerCode ? error.partnerCode : undefined
-      "
+      :errorMessage="error.partnerCode ? error.partnerCode : undefined"
       @onChange="checkPartnerCode"
       required
     />
@@ -15,9 +13,7 @@
       class="sp-name"
       v-model="dataValue.partnerName"
       placeholder="Siebel Partner name"
-      :errorMessage="
-        error.partnerName ? error.partnerName : undefined
-      "
+      :errorMessage="error.partnerName ? error.partnerName : undefined"
       @onChange="checkPartnerName"
       required
     />
@@ -187,7 +183,9 @@ export default class CreatePartnerCode extends Vue {
   }
 
   .icon {
-    margin: 15px;
+    width: 16px;
+    height: 16px;
+    margin: 20px 0px 0px 34px;
     cursor: pointer;
   }
 }

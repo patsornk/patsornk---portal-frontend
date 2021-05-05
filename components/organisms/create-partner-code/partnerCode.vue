@@ -275,6 +275,10 @@ export default class CreatePartnerCode extends Vue {
   }
 
   clickSave() {
+    if (this.dataList.length === 0) {
+      this.$toast.global.error('One or more field have an error. Please check and try again.')
+      return
+    }
     this.$router.push('/organizationManagement/create/brand')
   }
 }
