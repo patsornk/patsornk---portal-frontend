@@ -17,7 +17,7 @@ export const mutations = {
 }
 
 export const actions = {
-  setConpanyId({ commit }, id) {
+  setCompanyId({ commit }, id) {
     commit('SET_COMPANY_ID', id)
   },
   setBrandId({ commit }, id) {

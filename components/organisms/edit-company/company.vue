@@ -417,7 +417,7 @@ export default class EditCompany extends Vue {
         )
         if (response.successful) {
           this.$store.dispatch(
-            'organizartion/setConpanyId',
+            'organizartion/setCompanyId',
             response.data.companyId
           )
           window.sessionStorage.setItem(
