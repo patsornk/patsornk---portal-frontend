@@ -55,6 +55,7 @@
       :onRowClicked="onRowClicked"
       :pageCount="pageSize"
       v-model="selectData"
+      :selectedItem="selectData.length"
       :totalItem="totalItem"
       :totalPage="pageSize"
       @onChenagePage="changePage"

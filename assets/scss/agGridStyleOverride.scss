@@ -280,6 +280,11 @@ div[role='row'] {
     background-color: rgba(255, 0, 0, 0.03);
   }
 
+  .ag-row-hover {
+    /* putting in !important so it overrides the theme's styling as it hovers the row also */
+    background-color: rgba(255, 0, 0, 0.03);
+  }
+
   .ag-checkbox-input-wrapper.ag-checked::after{
     color: $primary !important;
   }

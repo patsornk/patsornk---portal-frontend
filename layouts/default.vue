@@ -7,7 +7,13 @@
       <header-nav />
       <div class="main w-full">
         <breadcrumb />
-        <span class="page-title">{{ pageTitle }}</span>
+        <div v-if="isShowTitleButton" class="title-contriner">
+          <span class="page-title">{{ pageTitle }}</span>
+          <t-1-button @click.native="onClickTitleButton">Create</t-1-button>
+        </div>
+        <div v-else class="title-contriner">
+          <span class="page-title">{{ pageTitle }}</span>
+        </div>
         <transition name="zoom-fade" mode="out-in">
           <Nuxt class="content" />
         </transition>
@@ -17,20 +23,18 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import HeaderNav from '~/components/organisms/navbar/HeaderNavbar.vue'
 import SidebarNav from '~/components/organisms/navbar/SidebarNavbar.vue'
 import Breadcrumb from '~/components/atoms/Breadcrumb.vue'
+import T1Button from '@/components/atoms/button.vue'
 import { BreadcrumbType, Organization } from '~/constants'
 
 @Component({
   components: {
     HeaderNav,
     SidebarNav,
+    T1Button,
     Breadcrumb
   }
 })
@@ -47,6 +51,31 @@ export default class Default extends Vue {
     return this.$store.getters['breadcrumb/pageTitle']
   }
 
+  get isShowTitleButton(): boolean {
+    switch (this.pageTitle) {
+      case 'Organization Management':
+        return true
+      default:
+        return false
+    }
+  }
+
+  onClickTitleButton() {
+    switch (this.pageTitle) {
+      case 'Organization Management':
+        this.$router.push('/organizationManagement/create')
+        window.sessionStorage.removeItem('createCompanyFirstTime')
+        window.sessionStorage.removeItem('companyFirstTime')
+        window.sessionStorage.removeItem('createCompanyId')
+        window.sessionStorage.removeItem('createBrandFirstTime')
+        window.sessionStorage.removeItem('createBrandId')
+        window.sessionStorage.removeItem('maxStepbar')
+        this.$store.dispatch('stepbar/setMaxState', 0)
+      default:
+        return
+    }
+  }
+
   @Watch('$route')
   onRouteChanged() {
     if (this.isSidebar && window.innerWidth <= 768) {
@@ -60,9 +89,8 @@ export default class Default extends Vue {
 @import '@/assets/scss/_variables.scss';
 
 html {
-  font-family: 'Source Sans Pro', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -86,11 +114,17 @@ html {
     border-radius: 4px;
   }
 
-  .page-title {
-    margin-bottom: 1rem;
-    font-size: 36px;
-    font-weight: 700;
-    color: $mid-black;
+  .title-contriner {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .page-title {
+      margin-bottom: 1rem;
+      font-size: 36px;
+      font-weight: 700;
+      color: $mid-black;
+    }
   }
 
   .zoom-fade-enter-active,
