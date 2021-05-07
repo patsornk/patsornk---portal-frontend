@@ -248,7 +248,7 @@ export default class CreatePartnerCode extends Vue {
   async clickDeleteSiebelPartner(partner: SiebelPartnerType) {
     try {
       const payload = {
-        partnerCode: partner.partnerCode
+        partnerCode: [partner.partnerCode]
       }
 
       let res = await this.$axios.$delete(
