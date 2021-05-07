@@ -133,6 +133,7 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Name (TH)',
       field: 'regioCompanyNameTh',
+      sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
                   ${params.data.regioCompanyNameTh}
@@ -142,6 +143,7 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Name (EN)',
       field: 'regioCompanyNameEn',
+      sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
                   ${params.data.regioCompanyNameEn}
@@ -151,6 +153,7 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Category',
       field: 'companyCategory',
+      sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
                   ${params.data.companyCategory}
@@ -160,6 +163,7 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Type',
       field: 'companyType',
+      sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
                   ${params.data.companyType}
@@ -169,6 +173,7 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Business Size',
       field: 'businessSize',
+      sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
                   ${params.data.businessSize}
@@ -178,6 +183,7 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Status',
       field: 'status',
+      sortable: true,
       cellRenderer: (params: any) => {
         let strFormat = ''
         params.data.status === 'Active'
