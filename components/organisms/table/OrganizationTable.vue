@@ -62,6 +62,7 @@
       :totalItem="totalItem"
       :totalPage="pageSize"
       @onChenagePage="changePage"
+      :frameworkComponents="frameworkComponents"
       @pagination="changPageSize"
       itemKey="companyId"
     />
@@ -71,9 +72,19 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import CustomHeader from '~/components/atoms/AgCustomHeader'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+
+enum OrganizationTableCol {
+  NameTh = "companyNameTh",
+  NameEn = "companyNameEn",
+  CompCat = "companyCategoryId",
+  CompType = "companyTypeId",
+  CompSize = "companySizeId",
+  CompStatus = "status"
+}
 
 @Component({
   components: {
@@ -88,6 +99,10 @@ export default class OrganizationTable extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  frameworkComponents = {
+    agColumnHeader: CustomHeader
   }
 
   selectData = []
@@ -133,6 +148,12 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Name (TH)',
       field: 'regioCompanyNameTh',
+      headerComponentParams: {
+        colKey: OrganizationTableCol.NameTh,
+        sortingList: (param: any, order: any) => {
+          this.sortingList(param, order)
+        }
+      },
       sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -143,6 +164,12 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Name (EN)',
       field: 'regioCompanyNameEn',
+      headerComponentParams: {
+        colKey: OrganizationTableCol.NameEn,
+        sortingList: (param: any, order: any) => {
+          this.sortingList(param, order)
+        }
+      },
       sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -153,6 +180,12 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Category',
       field: 'companyCategory',
+      headerComponentParams: {
+        colKey: OrganizationTableCol.CompCat,
+        sortingList: (param: any, order: any) => {
+          this.sortingList(param, order)
+        }
+      },
       sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -163,6 +196,12 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Company Type',
       field: 'companyType',
+      headerComponentParams: {
+        colKey: OrganizationTableCol.CompType,
+        sortingList: (param: any, order: any) => {
+          this.sortingList(param, order)
+        }
+      },
       sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -173,6 +212,12 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Business Size',
       field: 'businessSize',
+      headerComponentParams: {
+        colKey: OrganizationTableCol.CompSize,
+        sortingList: (param: any, order: any) => {
+          this.sortingList(param, order)
+        }
+      },
       sortable: true,
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -183,6 +228,12 @@ export default class OrganizationTable extends Vue {
     {
       headerName: 'Status',
       field: 'status',
+      headerComponentParams: {
+        colKey: OrganizationTableCol.CompStatus,
+        sortingList: (param: any, order: any) => {
+          this.sortingList(param, order)
+        }
+      },
       sortable: true,
       cellRenderer: (params: any) => {
         let strFormat = ''
@@ -197,6 +248,31 @@ export default class OrganizationTable extends Vue {
       }
     }
   ]
+
+  private async sortingList(data: any, order: any) {
+    this.filterCompanies('1',this.pagination,data.colKey,order)
+    // switch(data.colKey) {
+    //   case OrganizationTableCol.NameTh:
+    //   break
+    //   case OrganizationTableCol.NameEn:
+    //     console.log(data, 'sss', order)
+    //   break
+    //   case OrganizationTableCol.CompCat:
+    //     console.log(data, 'sss', order)
+    //   break
+    //   case OrganizationTableCol.CompType:
+    //     console.log(data, 'sss', order)
+    //   break
+    //   case OrganizationTableCol.CompSize:
+    //     console.log(data, 'sss', order)
+    //   break
+    //   case OrganizationTableCol.CompStatus:
+    //     console.log(data, 'sss', order)
+    //   break
+    //   default :
+    //   break
+    // }
+  }
 
   private async search() {
     this.clickSearch = true
@@ -231,8 +307,14 @@ export default class OrganizationTable extends Vue {
     }
   }
 
-  async filterCompanies(page: String, limit: String): Promise<void> {
+  async filterCompanies(page: String, limit: String, sortBy?: String, sortDirection?: String): Promise<void> {
     let path: String = `/list_company?page=${page}&limit=${limit}`
+    if (sortBy) {
+      path = path + `&sortBy=${sortBy}`
+    }
+    if (sortDirection) {
+      path = path + `&sortDirection=${sortDirection}`
+    }
     if (this.fillterData.keyword !== '') {
       path = path + `&keyword=${this.fillterData.keyword}`
     }
@@ -242,7 +324,10 @@ export default class OrganizationTable extends Vue {
     if (this.fillterData.companyCategoryId > 0) {
       path = path + `&companyCategoryId=${this.fillterData.companyCategoryId}`
     }
-    if (this.fillterData.companyTypeId && this.fillterData.companyTypeId !== 1) {
+    if (
+      this.fillterData.companyTypeId &&
+      this.fillterData.companyTypeId !== 1
+    ) {
       path = path + `&companyTypeId=${this.fillterData.companyTypeId}`
     }
     try {
@@ -331,9 +416,18 @@ export default class OrganizationTable extends Vue {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.company.map((item: any) => {
-      const cat = item.companyCategory.companyCategoryEn //language === 'th' ? item.companyCategory.companyCategoryTh : item.companyCategory.companyCategoryEn
-      const type = item.companyType.companyTypeEn //language === 'th' ? item.companyType.companyTypeTh : item.companyType.companyTypeEn
-      const size = item.companySize.companySizeEn //language === 'th' ? item.companySize.companySizeTh : item.companySize.companySizeEn
+      const cat =
+        this.language === 'th'
+          ? item.companyCategory.companyCategoryTh
+          : item.companyCategory.companyCategoryEn
+      const type =
+        this.language === 'th'
+          ? item.companyType.companyTypeTh
+          : item.companyType.companyTypeEn
+      const size =
+        this.language === 'th'
+          ? item.companySize.companySizeTh
+          : item.companySize.companySizeEn
       return {
         companyId: item.companyId,
         regioCompanyNameTh: item.companyNameTh,
