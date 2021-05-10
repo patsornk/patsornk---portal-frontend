@@ -47,7 +47,7 @@ export default class TabDetail extends Vue {
   async getService(): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/list_applied_service?companyId=${this.id}`,
+        `${process.env.PORTAL_ENDPOINT}/list_applied_service?companyId=${this.id}`,
         { data: null }
       )
       if (res.successful) {

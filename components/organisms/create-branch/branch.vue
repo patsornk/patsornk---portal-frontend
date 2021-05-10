@@ -530,7 +530,7 @@ export default class CreateBranch extends Vue {
     // try {
     //   let res = await this.$axios.$get(
     //     `${
-    //       process.env.THE_1_PORTAL
+    //       process.env.PORTAL_ENDPOINT
     //     }/brand?companyId=${window.sessionStorage.getItem(
     //       'createCompanyId'
     //     )}`,
@@ -548,7 +548,7 @@ export default class CreateBranch extends Vue {
     // try {
     //   let res = await this.$axios.$get(
     //     `${
-    //       process.env.THE_1_PORTAL
+    //       process.env.PORTAL_ENDPOINT
     //     }/partner_code?companyId=${window.sessionStorage.getItem(
     //       'createCompanyId'
     //     )}`,
@@ -578,7 +578,7 @@ export default class CreateBranch extends Vue {
       try {
         // let res = await this.$axios.$get(
         //   `${
-        //     process.env.THE_1_PORTAL
+        //     process.env.PORTAL_ENDPOINT
         //   }/get_company?companyId=${window.sessionStorage.getItem(
         //     'createCompanyId'
         //   )}`,
@@ -641,7 +641,7 @@ export default class CreateBranch extends Vue {
       ) {
         try {
           let response = await this.$axios.$post(
-            `${process.env.THE_1_PORTAL}/update_company`,
+            `${process.env.PORTAL_ENDPOINT}/update_company`,
             {
               companyId: window.sessionStorage.getItem('createCompanyId'),
               ...payload
@@ -665,7 +665,7 @@ export default class CreateBranch extends Vue {
       } else {
         try {
           let response = await this.$axios.$post(
-            `${process.env.THE_1_PORTAL}/create_company`,
+            `${process.env.PORTAL_ENDPOINT}/create_company`,
             payload
           )
           if (response.successful) {

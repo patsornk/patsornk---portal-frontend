@@ -56,7 +56,7 @@ export default class ServiceSelection extends Vue {
   async getAppliedServices() {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/list_applied_service?companyId=${this.companyId}`,
+        `${process.env.PORTAL_ENDPOINT}/list_applied_service?companyId=${this.companyId}`,
         { data: null }
       )
       if (res.successful) {
@@ -70,7 +70,7 @@ export default class ServiceSelection extends Vue {
   async getAvailableServices() {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/list_available_service?companyId=${this.companyId}`,
+        `${process.env.PORTAL_ENDPOINT}/list_available_service?companyId=${this.companyId}`,
         { data: null }
       )
       if (res.successful) {
@@ -114,7 +114,7 @@ export default class ServiceSelection extends Vue {
     console.log(payload)
     try {
       let response = await this.$axios.$post(
-        `${process.env.THE_1_PORTAL}/apply_service`,
+        `${process.env.PORTAL_ENDPOINT}/apply_service`,
         payload
       )
       if (response.successful) {

@@ -231,7 +231,7 @@ export default class TabBranch extends Vue {
     //   path = path + `&statusId=${this.fillterData.compantStatus}`
     // }
     // try {
-    //   let res = await this.$axios.$get(`${process.env.THE_1_PORTAL}${path}`, {
+    //   let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
     //     data: null
     //   })
     //   if (res.successful) {
@@ -245,7 +245,7 @@ export default class TabBranch extends Vue {
   async getBranches(page: String, limit: String): Promise<void> {
     try {
       // let res = await this.$axios.$get(
-      //   `${process.env.THE_1_PORTAL}/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`,
+      //   `${process.env.PORTAL_ENDPOINT}/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`,
       //   { data: null }
       // )
       // if (res.successful) {
@@ -274,7 +274,7 @@ export default class TabBranch extends Vue {
   async getBrands(): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/list_brand?companyId=${this.id}`,
+        `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${this.id}`,
         { data: null }
       )
       if (res.successful) {

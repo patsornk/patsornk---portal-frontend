@@ -237,7 +237,7 @@ export default class OrganizationTable extends Vue {
       path = path + `&companyTypeId=${this.fillterData.companyTypeId}`
     }
     try {
-      let res = await this.$axios.$get(`${process.env.THE_1_PORTAL}${path}`, {
+      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
         data: null
       })
       if (res.successful) {
@@ -251,7 +251,7 @@ export default class OrganizationTable extends Vue {
   async getCompanies(page: String, limit: String): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/list_company?page=${page}&limit=${limit}`,
+        `${process.env.PORTAL_ENDPOINT}/list_company?page=${page}&limit=${limit}`,
         { data: null }
       )
       if (res.successful) {
@@ -265,7 +265,7 @@ export default class OrganizationTable extends Vue {
   async getCompanyType(): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company_type`,
+        `${process.env.PORTAL_ENDPOINT}/get_company_type`,
         { data: null }
       )
       if (res.successful) {
@@ -279,7 +279,7 @@ export default class OrganizationTable extends Vue {
   async getCompanySize(): Promise<any> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company_size`,
+        `${process.env.PORTAL_ENDPOINT}/get_company_size`,
         { data: null }
       )
       if (res.successful) {
@@ -300,7 +300,7 @@ export default class OrganizationTable extends Vue {
   async getCompanyCategory(): Promise<any> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company_category`,
+        `${process.env.PORTAL_ENDPOINT}/get_company_category`,
         { data: null }
       )
       if (res.successful) {

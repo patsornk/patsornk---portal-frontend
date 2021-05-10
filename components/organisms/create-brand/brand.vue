@@ -287,7 +287,7 @@ export default class CreateBrand extends Vue {
     try {
       let res = await this.$axios.$get(
         `${
-          process.env.THE_1_PORTAL
+          process.env.PORTAL_ENDPOINT
         }/partner_code?companyId=${window.sessionStorage.getItem(
           'createCompanyId'
         )}`,
@@ -434,7 +434,7 @@ export default class CreateBrand extends Vue {
       try {
         let res = await this.$axios.$get(
           `${
-            process.env.THE_1_PORTAL
+            process.env.PORTAL_ENDPOINT
           }/get_brand?brandId=${window.sessionStorage.getItem(
             'createBrandId'
           )}&brandAdditional=true&partners=true`,
@@ -543,7 +543,7 @@ export default class CreateBrand extends Vue {
       }
       try {
         let response = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/create_brand`,
+          `${process.env.PORTAL_ENDPOINT}/create_brand`,
           payload
         )
         if (response.successful) {
@@ -623,7 +623,7 @@ export default class CreateBrand extends Vue {
       }
       try {
         let response = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/update_brand`,
+          `${process.env.PORTAL_ENDPOINT}/update_brand`,
           payload
         )
         if (response.successful) {

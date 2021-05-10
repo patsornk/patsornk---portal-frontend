@@ -189,7 +189,7 @@ export default class TabPartnerCode extends Vue {
       path = path + `&statusId=${this.fillterData.compantStatus}`
     }
     try {
-      let res = await this.$axios.$get(`${process.env.THE_1_PORTAL}${path}`, {
+      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
         data: null
       })
       if (res.successful) {
@@ -203,7 +203,7 @@ export default class TabPartnerCode extends Vue {
   async getPartnarCode(page: String, limit: String): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`,
+        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`,
         { data: null }
       )
       if (res.successful) {

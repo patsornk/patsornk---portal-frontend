@@ -124,7 +124,7 @@ export default class CreatePartnerCode extends Vue {
   async getPartnerList() {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/partner_code?companyId=${this.companyId}`,
+        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.companyId}`,
         { data: null }
       )
       if (res.successful) {
@@ -173,7 +173,7 @@ export default class CreatePartnerCode extends Vue {
         }
 
         let res = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/edit_partner_code`,
+          `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
           payload
         )
 
@@ -207,7 +207,7 @@ export default class CreatePartnerCode extends Vue {
         }
 
         let res = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/create_partner_code`,
+          `${process.env.PORTAL_ENDPOINT}/create_partner_code`,
           payload
         )
 
@@ -252,7 +252,7 @@ export default class CreatePartnerCode extends Vue {
       }
 
       let res = await this.$axios.$delete(
-        `${process.env.THE_1_PORTAL}/delete_partner_code`,
+        `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
         { data: payload }
       )
 

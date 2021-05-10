@@ -90,7 +90,7 @@ export default class OrganizationManagementDetail extends Vue {
   async getCpmpany(): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company?companyId=${this.id}`,
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.id}`,
         { data: null }
       )
       if (res.successful) {

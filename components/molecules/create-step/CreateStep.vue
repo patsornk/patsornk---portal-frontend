@@ -76,7 +76,7 @@ export default class CreateStep extends Vue {
       try {
         if (compId < 0) { throw 'Invalid company id'}
         let response = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/submit_company`,
+          `${process.env.PORTAL_ENDPOINT}/submit_company`,
           { companyId: compId }
         )
         if (response.successful) {

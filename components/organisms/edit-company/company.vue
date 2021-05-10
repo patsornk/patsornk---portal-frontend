@@ -316,7 +316,7 @@ export default class EditCompany extends Vue {
     try {
         let res = await this.$axios.$get(
           `${
-            process.env.THE_1_PORTAL
+            process.env.PORTAL_ENDPOINT
           }/get_company?companyId=${this.companyId}`,
           { data: null }
         )
@@ -341,7 +341,7 @@ export default class EditCompany extends Vue {
   async getCompanyType(): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company_type`,
+        `${process.env.PORTAL_ENDPOINT}/get_company_type`,
         { data: null }
       )
       if (res.successful) {
@@ -358,7 +358,7 @@ export default class EditCompany extends Vue {
   async getCompanySize(): Promise<any> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company_size`,
+        `${process.env.PORTAL_ENDPOINT}/get_company_size`,
         { data: null }
       )
       if (res.successful) {
@@ -372,7 +372,7 @@ export default class EditCompany extends Vue {
   async getCompanyCategory(): Promise<any> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.THE_1_PORTAL}/get_company_category`,
+        `${process.env.PORTAL_ENDPOINT}/get_company_category`,
         { data: null }
       )
       if (res.successful) {
@@ -409,7 +409,7 @@ export default class EditCompany extends Vue {
       }
       try {
         let response = await this.$axios.$post(
-          `${process.env.THE_1_PORTAL}/update_company`,
+          `${process.env.PORTAL_ENDPOINT}/update_company`,
           {
             companyId: this.companyId,
             ...payload
