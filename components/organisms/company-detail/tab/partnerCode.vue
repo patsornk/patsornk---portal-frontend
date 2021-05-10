@@ -227,7 +227,7 @@ export default class TabPartnerCode extends Vue {
   }
 
   clickNewPartnerCode(){
-    console.log('clickNewPartnerCode')
+    this.$router.push('/organizationManagement/create/partner-code')
   }
 }
 </script>

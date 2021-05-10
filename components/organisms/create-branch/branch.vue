@@ -520,7 +520,6 @@ export default class CreateBranch extends Vue {
 
   private findInMap() {
     if (this.$v.latitude.$model && this.$v.longitude.$model) {
-      console.log('findInMap')
       this.mapPosition.lat = Number(this.$v.latitude.$model)
       this.mapPosition.lng = Number(this.$v.longitude.$model)
     }

@@ -296,7 +296,7 @@ export default class TabBranch extends Vue {
   }
 
   clickNewBranch() {
-    console.log('clickNewBranch')
+    // TO DO
   }
 }
 </script>

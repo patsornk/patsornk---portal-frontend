@@ -111,7 +111,6 @@ export default class ServiceSelection extends Vue {
       companyId: window.sessionStorage.getItem('createCompanyId'),
       serviceId: this.appliedServices.map((item: any) => item.serviceId)
     }
-    console.log(payload)
     try {
       let response = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/apply_service`,

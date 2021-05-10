@@ -181,7 +181,7 @@ export default class TabBrand extends Vue {
   ]
 
   viewBranch(param: any) {
-    console.log('param', param)
+    // TO DO
   }
 
   private async search() {
@@ -260,7 +260,7 @@ export default class TabBrand extends Vue {
   }
 
   clickNewBrand(){
-    console.log('clickNewBrand')
+    // TO DO
   }
 }
 </script>

@@ -203,7 +203,6 @@ export default class OrganizationTable extends Vue {
   }
 
   async onRowClicked(row: any) {
-    console.log(row.data.companyId)
     this.$router.push(`/organizationManagement/${row.data.companyId}`)
   }
 
@@ -319,7 +318,6 @@ export default class OrganizationTable extends Vue {
   }
 
   mappingCompany(data: any) {
-    console.log(data)
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.company.map((item: any) => {
