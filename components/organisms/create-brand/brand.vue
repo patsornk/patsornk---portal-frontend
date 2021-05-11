@@ -59,7 +59,7 @@
           </div>
         </div>
         <upload-file
-          id="logo"
+          id="brandLogo"
           class="upload-file"
           :imageUrl="logourl"
           v-model="$v.logo.$model"
@@ -77,7 +77,7 @@
           </div>
         </div>
         <upload-file
-          id="banner"
+          id="brandBanner"
           class="upload-file"
           :imageUrl="bannerurl"
           v-model="$v.banner.$model"
@@ -312,6 +312,7 @@ export default class CreateBrand extends Vue {
   }
 
   onChangedLogo(data: any) {
+    console.log('onChangedLogo brand', data)
     this.logourl = data.imageUrl
     if (data.file) {
       this.error.logo = ''
@@ -329,9 +330,9 @@ export default class CreateBrand extends Vue {
     this.error.brandCode = !this.$v.brandCode.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.brandCode.mustBe
-      ? this.$t('createBrand.characterAndNumber').toString()
+      ? this.$t('createBrand.error.characterAndNumber').toString()
       : !this.$v.brandCode.maxLength
-      ? this.$t('createBrand.maxLength').toString()
+      ? this.$t('createBrand.error.maxLength').toString()
       : ''
   }
 
@@ -340,9 +341,9 @@ export default class CreateBrand extends Vue {
     this.error.brandNameTh = !this.$v.brandNameTh.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.brandNameTh.mustBe
-      ? this.$t('createBrand.thaiAndNumber').toString()
+      ? this.$t('createBrand.error.thaiAndNumber').toString()
       : !this.$v.brandNameTh.maxLength
-      ? this.$t('createBrand.maxLength').toString()
+      ? this.$t('createBrand.error.maxLength').toString()
       : ''
   }
 
@@ -351,9 +352,9 @@ export default class CreateBrand extends Vue {
     this.error.brandNameEn = !this.$v.brandNameEn.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.brandNameEn.mustBe
-      ? this.$t('createBrand.characterAndNumber').toString()
+      ? this.$t('createBrand.error.characterAndNumber').toString()
       : !this.$v.brandNameEn.maxLength
-      ? this.$t('createBrand.maxLength').toString()
+      ? this.$t('createBrand.error.maxLength').toString()
       : ''
   }
 
@@ -362,9 +363,9 @@ export default class CreateBrand extends Vue {
     this.error.email = !this.$v.email.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.email.email
-      ? 'email'
+      ? this.$t('createBrand.error.email').toString()
       : !this.$v.email.maxLength
-      ? this.$t('createBrand.maxLength').toString()
+      ? this.$t('createBrand.error.maxLength').toString()
       : ''
   }
 
@@ -373,11 +374,11 @@ export default class CreateBrand extends Vue {
     this.error.phoneNo = !this.$v.phoneNo.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.phoneNo.numeric
-      ? 'numeric'
+      ? this.$t('createBrand.error.numeric').toString()
       : !this.$v.phoneNo.minLength
-      ? 'minLength'
+      ? this.$t('createBrand.error.minLength').toString()
       : !this.$v.phoneNo.maxLength
-      ? this.$t('createBrand.maxLength').toString()
+      ? this.$t('createBrand.error.maxLength').toString()
       : ''
   }
 

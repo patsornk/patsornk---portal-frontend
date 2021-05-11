@@ -1,13 +1,22 @@
 <template>
   <div class="input-field">
     <div class="w-full" v-if="title">
-      <span class="input-title" v-if="type !== 'switch'">{{ title }}</span>
+      <span
+        class="input-title"
+        v-if="type !== 'switch' && type !== 'checkbox'"
+        >{{ title }}</span
+      >
       <span v-show="required" class="input-field-required"> *</span>
     </div>
     <div class="input-field-input-group w-full">
       <div :class="errorMessage ? 'input-field-input-error' : ''">
         <div
-          v-if="type === 'textarea' || type === 'select' || type === 'switch'"
+          v-if="
+            type === 'textarea' ||
+            type === 'select' ||
+            type === 'switch' ||
+            type === 'checkbox'
+          "
         >
           <v-select
             class="input-select"
@@ -19,6 +28,7 @@
             :reduce="optionsReduce"
             :placeholder="placeholder"
             :searchable="false"
+            :disabled="disable"
             @blur="$emit('onBlur')"
           />
           <div v-if="type === 'switch'" class="switch-container">
@@ -32,6 +42,22 @@
             </label>
             <span class="switch-title">{{ title }}</span>
           </div>
+
+          <div
+            class="checkbox-container"
+            v-if="type === 'checkbox'"
+            @click="$emit('input', !dataValue)"
+          >
+            <label>
+              <input type="checkbox" :checked="dataValue ? true : false" />
+              <span
+                class="checkmark"
+                @click="$emit('input', !dataValue)"
+              ></span>
+            </label>
+            <span class="checkbox-title">{{ title }}</span>
+          </div>
+
           <textarea
             v-if="type === 'textarea'"
             class="textarea"
@@ -51,7 +77,9 @@
           :inputmode="inputmode"
           :placeholder="placeholder"
           :maxlength="maxlength"
-          @blur="$emit('onBlur')"
+          :disable="disable"
+          @blur="$emit('onBlur', dataValue)"
+          @change="$emit('onChange', dataValue)"
         />
         <slot />
       </div>
@@ -89,6 +117,12 @@ export default class InputField extends Vue {
   private required!: boolean
 
   @Prop({
+    default: false,
+    type: Boolean
+  })
+  private disable!: boolean
+
+  @Prop({
     type: String,
     default: ''
   })
@@ -104,7 +138,8 @@ export default class InputField extends Vue {
         'select',
         'password',
         'textarea',
-        'switch'
+        'switch',
+        'checkbox'
       ].includes(value)
     }
   })
@@ -286,6 +321,70 @@ export default class InputField extends Vue {
 
       .slider.round:before {
         border-radius: 50%;
+      }
+    }
+
+    .checkbox-container {
+      font-size: 14px;
+      margin-right: 14px;
+      cursor: context-menu;
+      display: block;
+      position: relative;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      .checkmark {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 16px;
+        width: 16px;
+        border: 1px solid $gray-disable;
+        border-radius: 3px;
+      }
+
+      .checkmark:after {
+        content: '';
+        position: absolute;
+        display: none;
+      }
+
+      input:checked ~ .checkmark {
+        background-color: $primary;
+        border: none;
+      }
+      input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .checkmark:after {
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 11px;
+        border: solid $white;
+        border-width: 0 2px 2px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+
+      .checkbox-title {
+        font-size: 14px;
+        margin-left: 27px;
       }
     }
   }

@@ -233,7 +233,7 @@ export default class CreateCompany extends Vue {
     this.error.email = !this.$v.email.required
       ? this.$t('createCompany.error.require').toString()
       : !this.$v.email.email
-      ? this.$t('createCompany.characterAndNumber').toString()
+      ? this.$t('createCompany.email').toString()
       : !this.$v.email.maxLength
       ? this.$t('createCompany.maxLength').toString()
       : ''
