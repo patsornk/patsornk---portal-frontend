@@ -7,6 +7,7 @@ export * from './CreateStep'
 export * from './CreateBranch'
 
 //types
+export * from './types/Brandfeature'
 export * from './types/SidebarMenuType'
 export * from './types/LoginTpye'
 export * from './types/Breadcrumb'

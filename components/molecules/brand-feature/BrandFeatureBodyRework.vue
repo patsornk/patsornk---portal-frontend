@@ -87,6 +87,7 @@ import {
   email,
   numeric
 } from 'vuelidate/lib/validators'
+import { BrandFeatureInitialData, BrandFeatureError } from '~/constants/types/Brandfeature'
 import InputField from '~/components/atoms/InputField.vue'
 import UploadImage from '~/components/molecules/UploadImage.vue'
 import UploadFile from '~/components/molecules/UploadFile.vue'
@@ -110,7 +111,7 @@ export default class BrandFeatureBodyRework extends Vue {
   @Prop({
     type: Object
   })
-  readonly initialData!: {}
+  readonly initialData!: BrandFeatureInitialData
 
   @Prop({
     type: Number,
@@ -140,7 +141,7 @@ export default class BrandFeatureBodyRework extends Vue {
   ctaType = this.initialData.ctaType
   ctaFeature = this.initialData.ctaFeature
 
-  private error = {
+  private error: BrandFeatureError = {
     ctaLabel: '',
     ctaType: '',
     ctaFeature: '',

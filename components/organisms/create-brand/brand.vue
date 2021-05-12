@@ -267,7 +267,7 @@ export default class CreateBrand extends Vue {
   brandInfo = ''
   partnerCodeList = []
 
-  brandFeatureError = ''
+  brandFeatureError: any = ''
   currentBrandFeatureKey = 1
   currentBrandFeatureIndex = 1
   brandFeatureList:any = []
