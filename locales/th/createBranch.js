@@ -29,7 +29,7 @@ module.exports = {
   mallPage: {
     display: 'Display on The 1 App',
     mallLogo: 'Mall Logo',
-    mallCover: 'Cover Page',
+    mallCover: 'Mall Cover Page',
     mallShortDescription: 'Mall Short Description ',
   },
   mallInfoHeader: 'Mall Info',

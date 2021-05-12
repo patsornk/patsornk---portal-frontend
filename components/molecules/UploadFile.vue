@@ -2,7 +2,7 @@
   <div>
     <div
       class="upload-container"
-      :class="errorMessage !== '' ? 'error' : ''"
+      :class="{ 'error': errorMessage, 'circle-style': circleStyle }"
       id="app"
     >
       <div
@@ -23,25 +23,31 @@
         <ul class="image-box" v-if="imageUrl" v-cloak>
           <div
             class="show-image"
+            :class="{ 'circle-style': circleStyle }"
             :style="{
               background: `url(${imageUrl}) center / contain no-repeat`
             }"
           >
-            <div class="icon-box">
-              <div class="icon-view">
-                <span class="material-icons view-file" @click="viewFile">
-                  visibility
-                </span>
-                <div class="material-icons delete-file" @click="remove">
-                  delete
+            <div class="icon-box" :class="{ 'circle-style': circleStyle }">
+              <div class="icon-padding" @click="viewFile">
+                <div class="icon-container">
+                  <img
+                    class="view-file"
+                    src="@/assets/images/login/eye-white.png"
+                  />
                 </div>
-              </div>
-
-              <div class="icon-view">
                 <span class="view-file-text" @click="viewFile">
                   View File
                 </span>
-                <div class="delete-file-text" @click="remove">Delete File</div>
+              </div>
+              <div class="icon-padding" @click="remove">
+                <div class="icon-container">
+                  <img
+                    class="delete-file"
+                    src="@/assets/images/table/delete-white.png"
+                  />
+                </div>
+                <div class="delete-file-text">Delete File</div>
               </div>
             </div>
           </div>
@@ -58,7 +64,7 @@
             </div>
           </div>
         </label>
-        <div class="error-message">{{ errorMessage }}</div>
+        <div class="error-message error-circle">{{ errorMessage }}</div>
       </div>
     </div>
   </div>
@@ -92,6 +98,12 @@ export default class UploadImage extends Vue {
     default: ''
   })
   private errorMessage?: string
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  private circleStyle?: boolean
 
   private file: any = null
   private filelist: any[] = []
@@ -175,6 +187,10 @@ export default class UploadImage extends Vue {
   font-size: 12px;
   margin-top: 7px;
   text-align: left;
+
+  &.error-circle {
+    text-align: center;
+  }
 }
 
 .upload-container {
@@ -252,51 +268,54 @@ export default class UploadImage extends Vue {
         color: $white;
       }
       .show-image:hover .icon-box {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .show-image .icon-box {
         display: none;
+        align-items: center;
+        justify-content: center;
         background-color: rgb(0, 0, 0, 0.7);
         width: 100%;
         height: 100%;
       }
       .show-image .view-file {
         cursor: pointer;
-        font-size: 36px;
-        text-align: right;
-        position: absolute;
-        top: 45%;
-        left: 45%;
-        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 27px;
       }
       .show-image .delete-file {
         cursor: pointer;
-        font-size: 36px;
-        text-align: left;
-        position: absolute;
-        top: 45%;
-        left: 55%;
-        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 33px;
       }
       .show-image .view-file-text {
         cursor: pointer;
         font-size: 14px;
-        text-align: right;
-        position: absolute;
-        top: 55%;
-        left: 45%;
-        transform: translate(-50%, -50%);
       }
       .show-image .delete-file-text {
         cursor: pointer;
         font-size: 14px;
-        text-align: left;
-        position: absolute;
-        top: 55%;
-        left: 55%;
-        transform: translate(-50%, -50%);
       }
     }
   }
+}
+.circle-style {
+  border-radius: 50%;
+}
+
+.icon-padding {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.icon-container {
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 </style>

@@ -9,7 +9,7 @@
       <span v-show="required" class="input-field-required"> *</span>
     </div>
     <div class="input-field-input-group w-full">
-      <div :class="errorMessage ? 'input-field-input-error' : ''">
+      <div :class="errorMessage && type != 'textarea' ? 'input-field-input-error' : ''">
         <div
           v-if="
             type === 'textarea' ||
@@ -61,10 +61,12 @@
           <textarea
             v-if="type === 'textarea'"
             class="textarea"
+            :class="{'textarea-error' : errorMessage}"
             rows="4"
             cols="200"
             :inputmode="inputmode"
             :maxlength="maxlength"
+            :placeholder="placeholder"
             v-model="dataValue"
           ></textarea>
         </div>
@@ -224,6 +226,11 @@ export default class InputField extends Vue {
       :focus {
         outline: none !important;
       }
+
+      &.textarea-error {
+        border: 1px solid $primary !important;
+        border-radius: 4px;
+      }
     }
     .textarea:focus {
       outline: none !important;
@@ -232,6 +239,7 @@ export default class InputField extends Vue {
     .input-select {
       height: 44.67px;
       border: none;
+      color: $gray-disable;
 
       &.no-border {
         border: none;

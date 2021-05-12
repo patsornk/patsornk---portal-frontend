@@ -87,7 +87,6 @@
         >
         </upload-file>
       </div>
-
       <div class="brand-box">
         <input-field
           type="textarea"
@@ -101,6 +100,28 @@
           {{ 256 - $v.brandInfo.$model.length }}
           {{ $t('createBrand.limitCharacters') }}
         </div>
+      </div>
+      <div class="brand-feature-box">
+        <span class="info-title">{{ $t('createBrand.brandFeature.title') }}</span>
+        <brand-feature-header
+          class="feature-header"
+          :activeIndex="currentBrandFeatureIndex"
+          :range="brandFeatureList.length"
+          @createBrandFeature="createBrandFeature"
+          @selectBrandFeature="selectBrandFeature"
+        />
+        <brand-feature-body-rework
+          :key="currentBrandFeatureKey"
+          v-if="brandFeatureList.length"
+          class="feature-body"
+          :featureNo="currentBrandFeatureIndex"
+          :initialData="brandFeatureList[currentBrandFeatureIndex - 1]"
+          :canDelete="brandFeatureList.length > 1"
+          :errorMessage="brandFeatureError"
+          @viewFile="viewFile"
+          @onBrandFeatureChange="onBrandFeatureChange"
+          @deleteBrandFeature="deleteBrandFeature"
+        />
       </div>
     </div>
     <div class="partner-code-list">
@@ -155,6 +176,9 @@ import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
 import Modal from '@/components/atoms/Modal.vue'
 import UploadFile from '@/components/molecules/UploadFile.vue'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import BrandFeatureHeader from '~/components/molecules/brand-feature/BrandFeatureHeader.vue'
+import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody.vue'
+import BrandFeatureBodyRework from '~/components/molecules/brand-feature/BrandFeatureBodyRework.vue'
 
 const validations = {
   brandCode: {
@@ -222,7 +246,10 @@ const validations = {
     PhoneNumInput,
     UploadFile,
     TableComponent,
-    Modal
+    Modal,
+    BrandFeatureHeader,
+    BrandFeatureBody,
+    BrandFeatureBodyRework,
   }
 })
 export default class CreateBrand extends Vue {
@@ -239,6 +266,11 @@ export default class CreateBrand extends Vue {
   banner = undefined
   brandInfo = ''
   partnerCodeList = []
+
+  brandFeatureError = ''
+  currentBrandFeatureKey = 1
+  currentBrandFeatureIndex = 1
+  brandFeatureList:any = []
 
   logourl? = ''
   bannerurl? = ''
@@ -272,6 +304,18 @@ export default class CreateBrand extends Vue {
   }
 
   async mounted(): Promise<void> {
+    this.brandFeatureList = [
+      {
+        image: undefined,
+        imageUrl: undefined,
+        showDisplay: false,
+        ctaLabel: '',
+        ctaType: '',
+        ctaFeature: '',
+        isValid: true,
+      },
+    ]
+
     if (
       window.sessionStorage.getItem('createBrandFirstTime') &&
       window.sessionStorage.getItem('createBrandFirstTime') === 'no'
@@ -431,6 +475,8 @@ export default class CreateBrand extends Vue {
   }
 
   async getBrand(): Promise<void> {
+    this.currentBrandFeatureKey = 0
+    this.brandFeatureList = []
     if (window.sessionStorage.getItem('createBrandId')) {
       try {
         let res = await this.$axios.$get(
@@ -466,6 +512,19 @@ export default class CreateBrand extends Vue {
             this.oldBannerurl = brandAddidtional.additionalBannerImg
               ? true
               : false
+            if (res.data.brandFeature.length) {
+              this.brandFeatureList = res.data.brandFeature.map((brandFeature: any) => {
+                return {
+                  image: undefined,
+                  imageUrl: brandFeature.brandFeatureLogoImgLink,
+                  showDisplay: brandFeature.showInApp,
+                  ctaLabel: brandFeature.brandFeatureLabel,
+                  ctaType: brandFeature.brandFeatureTypeId,
+                  ctaFeature: brandFeature.brandFeatureValue,
+                  isValid: true,
+                }
+              })
+            }
           } else {
             this.brandCode = res.data.brandCode
             this.brandNameTh = res.data.brandNameTh
@@ -484,6 +543,7 @@ export default class CreateBrand extends Vue {
         this.$toast.global.error(error.response.data.message)
       }
     }
+    this.currentBrandFeatureKey = 1
   }
 
   async clickSave() {
@@ -518,12 +578,25 @@ export default class CreateBrand extends Vue {
     } else {
       partnerCodeList = true
     }
-    if (validationGroup && partnerCodeList) {
+
+    const brandFeatureValidate = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false) ? false : true
+    if (validationGroup && partnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { partnerId: any }) => {
           return item.partnerId
         }
       )
+
+      const brandFeatureFormatedList: any[] = []
+      for (const brandFeature of this.brandFeatureList) {
+        brandFeatureFormatedList.push({
+          brandFeatureLabel: brandFeature.ctaLabel,
+          brandFeatureTypeId: brandFeature.ctaType,
+          brandFeatureValue: brandFeature.ctaFeature,
+          brandFeatureLogoImg: await this.getBase64(brandFeature.image),
+          showInApp: brandFeature.showDisplay,
+        })
+      }
 
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
@@ -540,8 +613,10 @@ export default class CreateBrand extends Vue {
         brandPhoneNumber: this.$v.phoneNo.$model,
         brandEmail: this.$v.email.$model,
         showInApp: this.$v.showDisplay.$model,
-        partnerId: partnerId
+        partnerId: partnerId,
+        feature: brandFeatureFormatedList,
       }
+
       try {
         let response = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/create_brand`,
@@ -630,7 +705,7 @@ export default class CreateBrand extends Vue {
         if (response.successful) {
           window.sessionStorage.setItem('createBrandFirstTime', 'no')
           window.sessionStorage.setItem(
-            'createCompanyId',
+            'createBrandId',
             response.data.brandId
           )
           this.$toast.global.success('Saved successfully')
@@ -640,6 +715,62 @@ export default class CreateBrand extends Vue {
       }
     }
   }
+
+  createBrandFeature() {
+    const currentIndex = this.currentBrandFeatureIndex - 1
+    const validate = this.brandFeatureList[currentIndex].ctaLabel != ''
+      || this.brandFeatureList[currentIndex].ctaType != ''
+      || this.brandFeatureList[currentIndex].ctaFeature != ''
+    if(validate) {
+      this.brandFeatureError = ''
+      this.brandFeatureList.push({
+        image: undefined,
+        imageUrl: '',
+        showDisplay: false,
+        ctaLabel: '',
+        ctaType: '',
+        ctaFeature: '',
+        isValid: true,
+      })
+      this.currentBrandFeatureIndex += 1
+    } else {
+      this.brandFeatureError = this.$t('createBrand.brandFeature.error.oneFieldRequired')
+      this.$toast.global.error(this.$t('createBrand.brandFeature.error.toastOneFieldRequired'))
+    }
+  }
+
+  selectBrandFeature(index: number) {
+    if(this.currentBrandFeatureIndex == index) {
+      return false
+    }
+
+    const currentIndex = this.currentBrandFeatureIndex - 1
+    const validate = this.brandFeatureList[currentIndex].ctaLabel != ''
+      || this.brandFeatureList[currentIndex].ctaType != ''
+      || this.brandFeatureList[currentIndex].ctaFeature != ''
+    if(validate) {
+      this.brandFeatureError = ''
+      this.currentBrandFeatureIndex = index
+    } else {
+      this.brandFeatureError = this.$t('createBrand.brandFeature.error.oneFieldRequired')
+      this.$toast.global.error(this.$t('createBrand.brandFeature.error.toastOneFieldRequired'))
+    }
+  }
+
+  deleteBrandFeature(index: number) {
+    this.currentBrandFeatureIndex = this.currentBrandFeatureIndex == 1 ? 1 : this.currentBrandFeatureIndex - 1
+    this.brandFeatureList.splice(index - 1, 1)
+  }
+
+  onBrandFeatureChange(index: number, key: string, value: any) {
+    this.brandFeatureList[index][key] = value
+  }
+
+  @Watch('phoneNo')
+  isBrandFeatureValid(): void {
+    const brandFeature = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false)
+  }
+
 }
 </script>
 
@@ -727,6 +858,22 @@ export default class CreateBrand extends Vue {
       .info-description {
         font-size: 14px;
         text-align: right;
+      }
+    }
+
+    .brand-feature-box {
+      padding: 40px 0px 36px 0px;
+      border-top: 1px solid $grey3;
+      .info-title {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .feature-header {
+        margin-top: 15px;
+      }
+      .feature-body {
+        margin-top: 47px;
       }
     }
 

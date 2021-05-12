@@ -8,7 +8,7 @@ module.exports = {
   brandPage: 'Brand Page',
   display: 'Display on The 1 App',
   brandLogo: 'Brand Logo',
-  brandBanner: 'Brand Banner',
+  brandBanner: 'Brand Cover Page',
   brandInfo: 'Brand Info',
   limitCharacters: 'characters left',
   partnerCodeList: 'Partner code list',
@@ -21,6 +21,22 @@ module.exports = {
     email: 'email',
     numeric: 'numeric',
   },
-    fieldError: 'One or more field have an error. Please check and try again.',
-    partnerCode: 'Please select partner code.',
+  fieldError: 'One or more field have an error. Please check and try again.',
+  partnerCode: 'Please select partner code.',
+  brandFeature: {
+    title: 'Brand Feature',
+    feature: 'Feature',
+    display: 'Display on The 1 App',
+    ctaLabel: 'Feature CTA Label',
+    ctaType: 'CTA Type',
+    ctaFeature: 'Feature CTA',
+    error: {
+      toastOneFieldRequired: 'At least one field required. Please check and try again.',
+      oneFieldRequired: 'At least one field required',
+      image: 'No file chosen',
+      ctaLabel: 'Input Feature CTA Label',
+      ctaType: 'Input CTA Type',
+      ctaFeature: 'Input Feature CTA ',
+    }
+  },
 }
