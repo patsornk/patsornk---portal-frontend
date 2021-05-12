@@ -66,7 +66,7 @@ export default class CreatePartnerCode extends Vue {
     agActionField: AgActionField
   }
   defaultSiebelPartner: SiebelPartnerType = {
-    partnerId: 0,
+    id: 0,
     partnerCode: '',
     partnerName: ''
   }
@@ -166,7 +166,7 @@ export default class CreatePartnerCode extends Vue {
     } else {
       try {
         const payload = {
-          partnerId: event.partnerId,
+          partnerId: event.id,
           partnerCode: event.partnerCode,
           partnerName: event.partnerName,
           companyId: this.companyId
@@ -180,7 +180,7 @@ export default class CreatePartnerCode extends Vue {
         if (res.successful) {
           this.partnerCodeError = ''
           this.dataList.push({
-            partnerId: res.data.partnerId,
+            id: res.data.partnerId,
             partnerCode: res.data.partnerCode,
             partnerName: res.data.partnerName
           })
@@ -214,7 +214,7 @@ export default class CreatePartnerCode extends Vue {
         if (res.successful) {
           this.partnerCodeError = ''
           this.dataList.push({
-            partnerId: res.data.partnerId,
+            id: res.data.partnerId,
             partnerCode: res.data.partnerCode,
             partnerName: res.data.partnerName
           })

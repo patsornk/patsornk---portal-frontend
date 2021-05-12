@@ -126,7 +126,7 @@
     </div>
     <div class="partner-code-list">
       <table-component
-        :rawData="dataList"
+        :rawData="partnerCodeDataList"
         :columnDefs="columnDefs"
         :isShowIconHold="false"
         :isShowInactive="false"
@@ -164,6 +164,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { AgGridVue } from 'ag-grid-vue'
 import { validationMixin } from 'vuelidate'
+import { SiebelPartnerType } from '@/constants/types/PartnerCodeType'
 import {
   required,
   minLength,
@@ -265,7 +266,8 @@ export default class CreateBrand extends Vue {
   logo = undefined
   banner = undefined
   brandInfo = ''
-  partnerCodeList = []
+  partnerCodeList: SiebelPartnerType[] = []
+  partnerCodeDataList: SiebelPartnerType[] = []
 
   brandFeatureError: any = ''
   currentBrandFeatureKey = 1
@@ -320,10 +322,10 @@ export default class CreateBrand extends Vue {
       window.sessionStorage.getItem('createBrandFirstTime') &&
       window.sessionStorage.getItem('createBrandFirstTime') === 'no'
     ) {
+      await this.getListPartnerCode()
       this.getBrand()
-    }
-    if (window.sessionStorage.getItem('createCompanyId')) {
-      this.getListPartnerCode()
+    } else if (window.sessionStorage.getItem('createCompanyId')) {
+      await this.getListPartnerCode()
     }
   }
 
@@ -338,10 +340,10 @@ export default class CreateBrand extends Vue {
         { data: null }
       )
       if (res.successful) {
-        this.dataList = res.data.partner.map(
+        this.partnerCodeDataList = res.data.partner.map(
           (item: { partnerId: any; partnerCode: any; partnerName: any }) => {
             return {
-              partnerId: item.partnerId,
+              id: item.partnerId,
               partnerCode: item.partnerCode,
               partnerName: item.partnerName
             }
@@ -356,7 +358,6 @@ export default class CreateBrand extends Vue {
   }
 
   onChangedLogo(data: any) {
-    console.log('onChangedLogo brand', data)
     this.logourl = data.imageUrl
     if (data.file) {
       this.error.logo = ''
@@ -426,8 +427,6 @@ export default class CreateBrand extends Vue {
       : ''
   }
 
-  private dataList = []
-
   private columnDefs = [
     {
       headerName: 'Siebel Partner code',
@@ -489,15 +488,24 @@ export default class CreateBrand extends Vue {
         )
         if (res.successful) {
           const data = res.data
-          if (res.data.brandAdditional) {
-            const brandAddidtional = res.data.brandAdditional
-            this.brandCode = res.data.brandCode
-            this.brandNameTh = res.data.brandNameTh
-            this.brandNameEn = res.data.brandNameEn
-            this.email = res.data.brandEmail
-            this.phoneNo = res.data.brandPhoneNumber
-            this.phonePrefix = res.data.brandPhonePrefix
-            this.showDisplay = res.data.showInApp
+          data.partners.forEach(
+            (item: { partnerCode: any; partnerId: any; partnerName: any }) => {
+              this.partnerCodeList.push({
+                partnerCode: item.partnerCode,
+                id: item.partnerId,
+                partnerName: item.partnerName
+              })
+            }
+          )
+          if (data.brandAdditional) {
+            const brandAddidtional = data.brandAdditional
+            this.brandCode = data.brandCode
+            this.brandNameTh = data.brandNameTh
+            this.brandNameEn = data.brandNameEn
+            this.email = data.brandEmail
+            this.phoneNo = data.brandPhoneNumber
+            this.phonePrefix = data.brandPhonePrefix
+            this.showDisplay = data.showInApp
             this.logourl = brandAddidtional.additionalLogoImg
               ? brandAddidtional.additionalLogoImg
               : undefined
@@ -507,7 +515,6 @@ export default class CreateBrand extends Vue {
             this.brandInfo = brandAddidtional.additionalInfo
               ? brandAddidtional.additionalInfo
               : ''
-            this.partnerCodeList = res.data.partners
             this.oldLogourl = brandAddidtional.additionalLogoImg ? true : false
             this.oldBannerurl = brandAddidtional.additionalBannerImg
               ? true
@@ -526,17 +533,16 @@ export default class CreateBrand extends Vue {
               })
             }
           } else {
-            this.brandCode = res.data.brandCode
-            this.brandNameTh = res.data.brandNameTh
-            this.brandNameEn = res.data.brandNameEn
-            this.email = res.data.brandEmail
-            this.phoneNo = res.data.brandPhoneNumber
-            this.phonePrefix = res.data.brandPhonePrefix
-            this.showDisplay = res.data.showInApp
+            this.brandCode = data.brandCode
+            this.brandNameTh = data.brandNameTh
+            this.brandNameEn = data.brandNameEn
+            this.email = data.brandEmail
+            this.phoneNo = data.brandPhoneNumber
+            this.phonePrefix = data.brandPhonePrefix
+            this.showDisplay = data.showInApp
             this.logo = undefined
             this.banner = undefined
             this.brandInfo = ''
-            this.partnerCodeList = res.data.partners
           }
         }
       } catch (error) {
@@ -559,7 +565,7 @@ export default class CreateBrand extends Vue {
 
   async save() {
     let validationGroup: boolean = false
-    let partnerCodeList: boolean = false
+    let isPartnerCodeList: boolean = false
     if (this.$v.validationGroup.$invalid) {
       validationGroup = false
       this.$toast.global.error(this.$t('createBrand.fieldError'))
@@ -573,17 +579,17 @@ export default class CreateBrand extends Vue {
       validationGroup = true
     }
     if (!this.$v.partnerCodeList.required) {
-      partnerCodeList = false
+      isPartnerCodeList = false
       this.$toast.global.error(this.$t('createBrand.partnerCode'))
     } else {
-      partnerCodeList = true
+      isPartnerCodeList = true
     }
 
     const brandFeatureValidate = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false) ? false : true
-    if (validationGroup && partnerCodeList && brandFeatureValidate) {
+    if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
-        (item: { partnerId: any }) => {
-          return item.partnerId
+        (item: { id: any }) => {
+          return item.id
         }
       )
 
@@ -636,7 +642,7 @@ export default class CreateBrand extends Vue {
 
   async update() {
     let validationGroup: boolean = false
-    let partnerCodeList: boolean = false
+    let isPartnerCodeList: boolean = false
     if (this.logourl) {
       if (this.$v.validationGroupWithoutLogo.$invalid) {
         validationGroup = false
@@ -664,15 +670,15 @@ export default class CreateBrand extends Vue {
       }
     }
     if (!this.$v.partnerCodeList.required) {
-      partnerCodeList = false
+      isPartnerCodeList = false
       this.$toast.global.error(this.$t('createBrand.partnerCode'))
     } else {
-      partnerCodeList = true
+      isPartnerCodeList = true
     }
-    if (validationGroup && partnerCodeList) {
+    if (validationGroup && isPartnerCodeList) {
       const partnerId = this.$v.partnerCodeList.$model.map(
-        (item: { partnerId: any }) => {
-          return item.partnerId
+        (item: { id: any }) => {
+          return item.id
         }
       )
 

@@ -1,5 +1,5 @@
 export interface SiebelPartnerType {
-  partnerId: number
+  id: number
   partnerCode: string
   partnerName: string
 }

@@ -77,7 +77,7 @@
     >
     </ag-grid-vue>
     <div class="footer-container" v-if="isShowPaginate">
-      <span>{{selectedItem}} / {{ totalItem }}</span>
+      <span>{{ selectedItem }} / {{ totalItem }}</span>
       <t1-pagination
         class="pagination-container"
         v-model="currentPage"
@@ -118,7 +118,7 @@ import '@/assets/scss/agGridStyleOverride.scss'
 })
 export default class TableComponent extends Vue {
   private name = 'table-component'
-  
+
   @Prop({
     type: Number,
     default: 0
@@ -360,7 +360,7 @@ export default class TableComponent extends Vue {
     margin-right: 24px;
     padding: 0px 23px;
 
-    &:focus{
+    &:focus {
       outline: none;
     }
 
