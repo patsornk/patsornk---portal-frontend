@@ -297,7 +297,7 @@ export default class TabBranch extends Vue {
   }
 
   clickNewBranch() {
-    // TO DO
+    this.$router.push(`/organizationManagement/${this.id}/create/branch`)
   }
 
   onRowClicked(row: any) {

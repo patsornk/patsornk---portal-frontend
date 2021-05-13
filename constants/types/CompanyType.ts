@@ -28,3 +28,9 @@ export interface CompanyType {
   updatedAt: string
   updatedBy: string
 }
+
+export interface CompanyDataType {
+  companyId: number
+  companyNameEn: string
+  companyNameTh: string
+}

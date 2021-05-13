@@ -51,7 +51,7 @@
       isShowPaginate
       isShowHeaderTable
       isShowCheckBox
-      headerTitle="Create New Organization "
+      headerTitle="Create New Organization"
       :onRowClicked="onRowClicked"
       :pageCount="pageSize"
       v-model="selectData"

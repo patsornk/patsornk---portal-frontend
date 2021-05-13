@@ -1,5 +1,5 @@
 <template>
-  <div class="create-branch-container">
+  <div class="branch-container">
     <span class="header">{{ $t('createBranch.branchInformation') }}</span>
     <div class="input-section-2">
       <input-field
@@ -1226,7 +1226,7 @@ export default class CreateBranch extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
-.create-branch-container {
+.branch-container {
   padding-top: 60px;
   width: 100%;
 
