@@ -133,7 +133,7 @@ export default class CreateEditPartnerCode extends Vue {
   }
 
   private value: SiebelPartnerType = {
-    partnerId: 0,
+    id: 0,
     partnerCode: '',
     partnerName: ''
   }
