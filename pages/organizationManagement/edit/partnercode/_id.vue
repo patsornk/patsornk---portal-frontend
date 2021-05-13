@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    ปปปป
+  </div>
 </template>
 
 <script lang="ts">
@@ -15,5 +17,12 @@ import { BreadcrumbType, CompanyType } from '~/constants'
   }
 })
 export default class CompanyEditPartnerCode extends Vue {
+  get id() {
+    return this.$route.params.id
+  }
 
+  mounted() {
+    console.log("xx",this.$route.params)
+  }
 }
+</script>

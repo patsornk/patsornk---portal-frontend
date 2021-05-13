@@ -5,6 +5,7 @@ export * from './CountryCodes'
 export * from './Stepbar'
 export * from './CreateStep'
 export * from './CreateBranch'
+export * from './CreateEditPartnerCode'
 
 //types
 export * from './types/Brandfeature'

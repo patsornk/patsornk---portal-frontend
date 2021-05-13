@@ -51,7 +51,7 @@
       </div>
       <div v-if="isCreateNew">
         <button class="add-new-btn" @click="$emit('clickNew')">
-          <span class="material-icons icon"> add </span>
+          <span class="material-icons icon" v-if="isShowAddIcon" > add </span>
           <span class="text">{{ createNewTitle }}</span>
         </button>
       </div>
@@ -232,6 +232,12 @@ export default class TableComponent extends Vue {
     default: false
   })
   readonly isCreateNew!: boolean
+  
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  readonly isShowAddIcon!: boolean
 
   @Prop({
     type: String,

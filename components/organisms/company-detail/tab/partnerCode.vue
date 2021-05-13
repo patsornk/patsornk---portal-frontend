@@ -34,6 +34,7 @@
       isCreateNew
       createNewTitle="Create New Partner Code"
       @clickNew="clickNewPartnerCode"
+      :onRowClicked="onRowClicked"
       headerTitle="Partner Code List"
       :pageCount="pageSize"
       v-model="selectData"
@@ -228,6 +229,11 @@ export default class TabPartnerCode extends Vue {
 
   clickNewPartnerCode(){
     this.$router.push(`/organizationManagement/${this.id}/create/partnercode`)
+  }
+
+  onRowClicked(row: any) {
+    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
+    this.$router.push(`/organizationManagement/edit/partnercode/${row.data.partnerId}`)
   }
 }
 </script>

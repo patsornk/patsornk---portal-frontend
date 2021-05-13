@@ -1,5 +1,7 @@
 <template>
-  <div>sss</div>
+  <div>
+    <CreateEditPartnerCode />
+  </div>
 </template>
 
 <script lang="ts">
@@ -7,11 +9,13 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import T1Button from '@/components/atoms/button.vue'
 import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
 import { BreadcrumbType, CompanyType } from '~/constants'
+import CreateEditPartnerCode from '~/components/organisms/create-edit-partner-code/createEditPartnerCode.vue'
 
 @Component({
   components: {
     T1Button,
-    OrganizationTable
+    OrganizationTable,
+    CreateEditPartnerCode
   }
 })
 export default class CompanyCreatePartnerCode extends Vue {
@@ -50,6 +54,10 @@ export default class CompanyCreatePartnerCode extends Vue {
     return this.$i18n.locale
   }
 
+  get id() {
+    return this.$route.params.id
+  }
+
   @Watch('language')
   setTitleBreadcrumb() {
     this.setupBreadcrumb(
@@ -79,7 +87,28 @@ export default class CompanyCreatePartnerCode extends Vue {
     this.$store.dispatch('breadcrumb/setPageTitle', 'Create partner code')
   }
 
-  mounted() {
+  async getCpmpany(): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.id}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.company = res.data
+
+        this.setupBreadcrumb(
+          this.language === 'th'
+            ? this.company.companyNameTh
+            : this.company.companyNameEn
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
+  mounted() {
+    this.getCpmpany()
+  }
 }
+</script>

@@ -48,6 +48,7 @@
       v-model="selectData"
       :totalItem="totalItem"
       :totalPage="pageSize"
+      :onRowClicked="onRowClicked"
       @onChenagePage="changePage"
       @pagination="changPageSize"
       :rowHeight="80"
@@ -297,6 +298,11 @@ export default class TabBranch extends Vue {
 
   clickNewBranch() {
     // TO DO
+  }
+
+  onRowClicked(row: any) {
+    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
+    this.$router.push(`/organizationManagement/edit/branch/${row.data.partnerId}`)
   }
 }
 </script>

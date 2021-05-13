@@ -40,6 +40,7 @@
       :totalItem="totalItem"
       :totalPage="pageSize"
       @onChenagePage="changePage"
+      :onRowClicked="onRowClicked"
       @pagination="changPageSize"
       :frameworkComponents="frameworkComponents"
       :rowHeight="80"
@@ -261,6 +262,11 @@ export default class TabBrand extends Vue {
 
   clickNewBrand(){
     // TO DO
+  }
+
+  onRowClicked(row: any) {
+    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
+    this.$router.push(`/organizationManagement/edit/brand/${row.data.partnerId}`)
   }
 }
 </script>

@@ -67,7 +67,7 @@ export default class CompanyInformation extends Vue {
   }
 
   editCompany() {
-    this.$router.push(`/organizationManagement/${this.company?.companyId}/edit/company/`)
+    this.$router.push(`/organizationManagement/edit/company/${this.company?.companyId}`)
   }
 }
 </script>
