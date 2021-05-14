@@ -4,10 +4,11 @@
       <span class="siebel-title"> Partner Code Information </span>
       <div class="siebel-container">
         <input-field
+          :disable="editMode"
           :title="'Siebel Partner Code'"
           class="sp-code"
           :maxlength="9"
-          v-model="value.partnerCode"
+          v-model="$v.partnerCode.$model"
           placeholder="Siebel Partner code"
           :errorMessage="error.partnerCode ? error.partnerCode : undefined"
           @onChange="checkPartnerCode"
@@ -16,13 +17,27 @@
         <input-field
           :title="'Siebel Partner Name'"
           class="sp-name"
-          v-model="value.partnerName"
+          v-model="$v.partnerName.$model"
           :maxlength="100"
           placeholder="Siebel Partner name"
           :errorMessage="error.partnerName ? error.partnerName : undefined"
           @onChange="checkPartnerName"
           required
         />
+      </div>
+      <div class="status-container" v-if="editMode">
+        <input-field
+        class="status-dropdown"
+        v-model="$v.status.$model"
+        title="Status"
+        required
+        type="select"
+        :options="statusOption"
+        :optionsReduce="(item) => item.id"
+        :optionsLabel="'status'"
+        placeholder="Please select..."
+        :errorMessage="error.status"
+      />
       </div>
     </div>
     <div class="spector-line" />
@@ -110,8 +125,43 @@ import {
   ErrorSiebelPartner,
   SiebelPartnerType
 } from '@/constants/types/PartnerCodeType'
+import { validationMixin } from 'vuelidate'
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+  numeric
+} from 'vuelidate/lib/validators'
+
+const validations = {
+  partnerCode: {
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
+    maxLength: maxLength(50)
+  },
+  partnerName: {
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
+    maxLength: maxLength(50)
+  },
+  status: {
+    required
+  },
+
+   createGroup: [
+    'partnerCode',
+    'partnerName',
+  ],
+   editGroup: [
+    'partnerCode',
+    'partnerName',
+    'status'
+  ]
+}
 
 @Component({
+  validations: validations,
   components: {
     InputField,
     TableComponent,
@@ -127,15 +177,60 @@ export default class CreateEditPartnerCode extends Vue {
   })
   private componentMode?: PartnerCodeMode
 
-  private error: ErrorSiebelPartner = {
+  @Prop({
+    required: true,
+    default: 0
+  })
+  private compantId?: number
+
+  @Prop({
+    required: false,
+    default: 0
+  })
+  private editId?: number
+
+  private statusOption = [
+    {
+      id: 1,
+      status: 'Draft'
+    },
+    {
+      id: 2,
+      status: 'Active'
+    },
+    {
+      id: 3,
+      status: 'Inactive'
+    },
+    {
+      id: 4,
+      status: 'Onhold'
+    }
+  ]
+  
+
+  private error = {
     partnerCode: '',
-    partnerName: ''
+    partnerName: '',
+    status: ''
   }
 
   private value: SiebelPartnerType = {
     id: 0,
     partnerCode: '',
     partnerName: ''
+  }
+
+  partnerCode = ''
+  partnerName = ''
+  status = ''
+
+  get editMode(): boolean {
+    if (this.componentMode == PartnerCodeMode.CREATE_MODE) {
+      return false
+    } else {
+      return true
+    }
   }
 
   keyword = ''
@@ -209,11 +304,23 @@ export default class CreateEditPartnerCode extends Vue {
     }
   ]
 
+  mounted() {
+    if (this.editMode) {
+      this.getPartnercode()
+    }
+  }
+
+  async getPartnercode(): Promise<void> {
+    
+  }
+
   checkPartnerCode() {}
 
   checkPartnerName() {}
 
-  cancleHandler() {}
+  cancleHandler() {
+    this.$router.push(`/organizationManagement/${this.compantId}`)
+  }
 
   createHandler() {}
 
@@ -255,6 +362,15 @@ export default class CreateEditPartnerCode extends Vue {
         width: 37%;
         margin-right: 33px;
       }
+    }
+  }
+  .status-container {
+    display: flex;
+      flex-direction: row;
+      margin: 24px 0px 0px 0px;
+    .status-dropdown {
+        width: 23%;
+        margin: 0px 59px 0px 0px;
     }
   }
   .spector-line {

@@ -80,7 +80,7 @@
           :inputmode="inputmode"
           :placeholder="placeholder"
           :maxlength="maxlength"
-          :disable="disable"
+          :disabled="disable"
           @blur="$emit('onBlur', dataValue)"
           @change="$emit('onChange', dataValue)"
         />
