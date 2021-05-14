@@ -92,6 +92,8 @@ export default class CreatePartnerCode extends Vue {
   })
   private partnerCodeError: string | undefined
 
+  isLoading = false
+
   get dataValue(): SiebelPartnerType | undefined {
     return this.value
   }
@@ -130,16 +132,21 @@ export default class CreatePartnerCode extends Vue {
   }
 
   private clickAddSiebelPartner() {
-    if (
-      this.dataValue?.partnerCode === '' ||
-      this.dataValue?.partnerName === ''
-    ) {
-      return
-    }
-    this.checkPartnerCode()
-    this.checkPartnerName()
-    if (validateError(this.error)) {
-      this.$emit('clickAdd', this.dataValue)
+    if(!this.isLoading) {
+      this.isLoading = true
+      if (
+        this.dataValue?.partnerCode === '' ||
+        this.dataValue?.partnerName === ''
+      ) {
+        return
+      }
+      this.checkPartnerCode()
+      this.checkPartnerName()
+      if (validateError(this.error)) {
+        this.$emit('clickAdd', { value: this.dataValue, callback: ()=>{ this.isLoading = false}})
+      } else {
+        this.isLoading = false
+      }
     }
   }
 }

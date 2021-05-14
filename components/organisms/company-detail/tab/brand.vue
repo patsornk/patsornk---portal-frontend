@@ -20,6 +20,7 @@
             :reduce="(item) => item.id"
             placeholder="Status"
             :searchable="false"
+            :map-keydown="deleteHandler"
           />
         </div>
         <t1-button class="black" @click.native="search"> Search </t1-button>
@@ -267,6 +268,14 @@ export default class TabBrand extends Vue {
   onRowClicked(row: any) {
     window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
     this.$router.push(`/organizationManagement/edit/brand/${row.data.partnerId}`)
+  }
+
+  deleteHandler(map: any, vm: any) {
+    return {
+      ...map, 8: (e: any) => {
+        e.preventDefault();
+      },
+    }
   }
 }
 </script>

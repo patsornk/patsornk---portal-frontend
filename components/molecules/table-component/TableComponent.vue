@@ -96,6 +96,7 @@
           :reduce="(item) => item.value"
           :clearable="false"
           :searchable="false"
+          :map-keydown="deleteHandler"
         />
       </div>
     </div>
@@ -334,6 +335,14 @@ export default class TableComponent extends Vue {
   @Watch('pagination')
   async chengePagination(): Promise<void> {
     this.gridApi.paginationSetPageSize(this.pagination)
+  }
+
+  deleteHandler(map: any, vm: any) {
+    return {
+      ...map, 8: (e: any) => {
+        e.preventDefault();
+      },
+    }
   }
 
   mounted(): void {

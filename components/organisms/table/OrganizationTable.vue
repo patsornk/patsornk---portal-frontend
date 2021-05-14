@@ -20,6 +20,7 @@
             :reduce="(item) => item.companyTypeId"
             placeholder="Company Type"
             :searchable="false"
+            :map-keydown="deleteHandler"
           />
           <v-select
             class="dropdown"
@@ -31,6 +32,7 @@
             :reduce="(item) => item.companyCategoryId"
             placeholder="Partner Category"
             :searchable="false"
+            :map-keydown="deleteHandler"
           />
           <v-select
             class="dropdown"
@@ -40,6 +42,7 @@
             :reduce="(item) => item.id"
             placeholder="Status"
             :searchable="false"
+            :map-keydown="deleteHandler"
           />
         </div>
         <t1-button class="black" @click.native="search"> Search </t1-button>
@@ -334,6 +337,14 @@ export default class OrganizationTable extends Vue {
         status: item.statusDesc
       }
     })
+  }
+
+  deleteHandler(map: any, vm: any) {
+    return {
+      ...map, 8: (e: any) => {
+        e.preventDefault();
+      },
+    }
   }
 }
 </script>
