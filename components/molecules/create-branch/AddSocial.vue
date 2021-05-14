@@ -18,6 +18,7 @@
         class="input-website"
         v-model="dataList[index].link"
         placeholder="Social Link"
+        :maxlength="255"
         :errorMessage="
           dataList[index].errorLink ? dataList[index].errorLink : ''
         "

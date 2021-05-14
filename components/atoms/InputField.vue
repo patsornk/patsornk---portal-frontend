@@ -29,7 +29,6 @@
             :placeholder="placeholder"
             :searchable="false"
             :disabled="disable"
-            @blur="$emit('onBlur')"
           />
           <div v-if="type === 'switch'" class="switch-container">
             <label class="switch">

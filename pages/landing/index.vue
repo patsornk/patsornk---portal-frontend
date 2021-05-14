@@ -49,10 +49,10 @@ export default class Landing extends Vue {
   }
 
   private onClickMode(value: Organization): void {
-    this.$store.dispatch(
-      'nav/setOrganizNavbarMenu',
-      feature
-    )
+    // this.$store.dispatch(
+    //   'nav/setOrganizNavbarMenu',
+    //   feature
+    // )
     this.$store.dispatch('nav/setOrganization', value)
 
     switch (value) {

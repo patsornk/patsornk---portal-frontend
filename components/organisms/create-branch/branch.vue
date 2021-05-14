@@ -9,16 +9,14 @@
         type="select"
         :options="brandList"
         :optionsReduce="(item) => item.brandId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsLabel="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
         placeholder="Please select..."
         :errorMessage="error.brandId"
       />
       <input-field
         v-model="$v.branchCode.$model"
         :title="$t('createBranch.branchInfo.branchCode')"
-        :maxlength="50"
+        :maxlength="25"
         required
         :errorMessage="error.branchCode"
       />
@@ -39,25 +37,28 @@
       <input-field
         v-model="$v.siebelBranchCode.$model"
         :title="$t('createBranch.branchInfo.siebelBranchCode')"
+        :maxlength="50"
         required
         :errorMessage="error.siebelBranchCode"
       />
       <input-field
         v-model="$v.siebelBranchName.$model"
         :title="$t('createBranch.branchInfo.siebelBranchName')"
+        :maxlength="50"
         required
         :errorMessage="error.siebelBranchName"
       />
       <input-field
         v-model="$v.email.$model"
         :title="$t('createBranch.branchInfo.email')"
-        :maxlength="100"
+        :maxlength="50"
         required
         :errorMessage="error.email"
       />
       <phone-num-input
         v-model="$v.phoneNumber.$model"
         :title="$t('createBranch.branchInfo.phoneNo')"
+        :maxlength="13"
         required
         :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
@@ -68,12 +69,11 @@
         required
         type="select"
         :options="partnerCodeList"
-        :optionsReduce="(item) => item.partnerCodeId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsReduce="(item) => item.partnerId"
+        optionsLabel="partnerCode"
         placeholder="Please select..."
         :errorMessage="error.partnerCodeId"
+        @onBlur="checkPartnerCode"
       />
     </div>
 
@@ -86,22 +86,19 @@
         type="select"
         :options="branchTypeList"
         :optionsReduce="(item) => item.branchTypeId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsLabel="language === 'th' ? 'branchTypeTh' : 'branchTypeEn'"
         placeholder="Please select..."
         :errorMessage="error.branchTypeId"
       />
       <input-field
+        v-if="branchTypeId === '1'"
         v-model="$v.mallId.$model"
         :title="$t('createBranch.location.mall')"
         required
         type="select"
         :options="mallList"
         :optionsReduce="(item) => item.mallId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsLabel="language === 'th' ? 'mallNameTh' : 'mallNameEn'"
         placeholder="Please select..."
         :errorMessage="error.mallId"
       />
@@ -111,9 +108,10 @@
       type="textarea"
       :title="$t('createBranch.location.address')"
       required
-      :maxlength="256"
+      :maxlength="255"
       style="width: 100%"
       v-model="$v.address.$model"
+      :errorMessage="error.address"
     />
 
     <div class="input-section-3">
@@ -142,6 +140,7 @@
         "
         placeholder="Please select..."
         :errorMessage="error.provinceId"
+        :disable="provinceList.length === 0"
       />
       <input-field
         v-model="$v.districtId.$model"
@@ -154,7 +153,8 @@
           language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
         "
         placeholder="Please select..."
-        :errorMessage="error.branchTypeId"
+        :errorMessage="error.districtId"
+        :disable="districtList.length === 0"
       />
       <input-field
         v-model="$v.subDistrictId.$model"
@@ -168,25 +168,31 @@
         "
         placeholder="Please select..."
         :errorMessage="error.subDistrictId"
+        :disable="subDistrictList.length === 0"
       />
       <input-field
         v-model="$v.postalCode.$model"
         :title="$t('createBranch.location.postalCode')"
-        :maxlength="50"
         required
+        type="select"
+        :options="subDistrictList"
+        :optionsReduce="(item) => item.postalCodeId"
+        optionsLabel="postalCode"
+        placeholder="Please select..."
         :errorMessage="error.postalCode"
+        :disable="subDistrictList.length === 0"
       />
       <div></div>
       <input-field
         v-model="$v.latitude.$model"
         :title="$t('createBranch.location.latitude')"
-        :maxlength="50"
+        :maxlength="14"
         :errorMessage="error.latitude"
       />
       <input-field
         v-model="$v.longitude.$model"
         :title="$t('createBranch.location.longitude')"
-        :maxlength="50"
+        :maxlength="14"
         :errorMessage="error.longitude"
       />
 
@@ -208,215 +214,223 @@
 
     <google-map class="branch-map" :position="mapPosition" />
 
-    <div class="mall-head-box">
-      <span class="header">{{ $t('createBranch.mallPageHeader') }}</span>
-      <input-field
-        type="switch"
-        :title="$t('createBranch.mallPage.display')"
-        v-model="$v.showDisplay.$model"
-        :errorMessage="error.showDisplay"
-      />
-    </div>
-
-    <div class="mall-upload-box">
-      <div class="mall-upload-header">
-        <div>
-          {{ $t('createBranch.mallPage.mallLogo') }}
-          <span class="required"> *</span>
-        </div>
+    <div v-if="branchTypeId === '3'">
+      <div class="mall-head-box">
+        <span class="header">{{ $t('createBranch.mallPageHeader') }}</span>
+        <input-field
+          type="switch"
+          :title="$t('createBranch.mallPage.display')"
+          v-model="$v.showDisplay.$model"
+          :errorMessage="error.showDisplay"
+        />
       </div>
-      <upload-file
-        id="mallLogo"
-        class="upload-file"
-        :imageUrl="logoUrl"
-        v-model="$v.logo.$model"
-        :errorMessage="error.logo"
-        @viewFile="viewFile"
-        @onBlur="onChangedLogo"
-        @removeUrl="onRemoveLogo"
-      >
-      </upload-file>
-    </div>
 
-    <div class="mall-upload-box">
-      <div class="mall-upload-header">
-        <div>
-          {{ $t('createBranch.mallPage.mallCover') }}
-          <span class="required"> *</span>
-        </div>
-      </div>
-      <upload-file
-        id="mallCover"
-        class="upload-file"
-        :imageUrl="coverUrl"
-        v-model="$v.cover.$model"
-        :errorMessage="error.cover"
-        @viewFile="viewFile"
-        @onBlur="onChangedCover"
-        @removeUrl="onRemoveCover"
-      >
-      </upload-file>
-    </div>
-
-    <div>
-      <input-field
-        type="textarea"
-        :title="$t('createBranch.mallPage.mallShortDescription')"
-        :maxlength="256"
-        style="width: 100%"
-        v-model="$v.mallDescription.$model"
-      />
-      <div class="mall-description">
-        {{ 256 - $v.mallDescription.$model.length }}
-        {{ $t('createBrand.limitCharacters') }}
-      </div>
-    </div>
-
-    <div class="mall-info">
-      <div class="mall-upload-header">
-        {{ $t('createBranch.mallInfoHeader') }}
-      </div>
-      <div>{{ $t('createBranch.mallInfoDescription') }}</div>
-
-      <div class="add-container">
-        <div class="add-header">
-          <div class="add-box" @click="addWebsite">
-            <img class="icon-add" src="@/assets/images/icon/add-red.png" />
-            <span class="text-add">{{
-              $t('createBranch.mallInfo.addWebsite')
-            }}</span>
-          </div>
-          <div class="icon-box">
-            <img
-              class="icon-edit"
-              src="@/assets/images/icon/edit.png"
-              @click="isViewWebsite = false"
-              v-if="isViewWebsite && websiteList.length > 0"
-            />
-            <img
-              class="icon-save"
-              src="@/assets/images/icon/save.png"
-              @click="checkWebsite"
-              v-if="!isViewWebsite && websiteList.length > 0"
-            />
+      <div class="mall-upload-box">
+        <div class="mall-upload-header">
+          <div>
+            {{ $t('createBranch.mallPage.mallLogo') }}
+            <span class="required"> *</span>
           </div>
         </div>
-        <div>
-          <add-website-view
-            v-if="isViewWebsite"
-            v-model="$v.websiteList.$model"
+        <upload-file
+          id="mallLogo"
+          class="upload-file"
+          :imageUrl="logoUrl"
+          v-model="$v.logo.$model"
+          :errorMessage="error.logo"
+          @viewFile="viewFile"
+          @onBlur="checkLogo"
+          @removeUrl="onRemoveLogo"
+        >
+        </upload-file>
+      </div>
+
+      <div class="mall-upload-box">
+        <div class="mall-upload-header">
+          <div>
+            {{ $t('createBranch.mallPage.mallCover') }}
+            <span class="required"> *</span>
+          </div>
+        </div>
+        <upload-file
+          id="mallCover"
+          class="upload-file"
+          :imageUrl="coverUrl"
+          v-model="$v.cover.$model"
+          :errorMessage="error.cover"
+          @viewFile="viewFile"
+          @onBlur="checkCover"
+          @removeUrl="onRemoveCover"
+        >
+        </upload-file>
+      </div>
+
+      <div>
+        <input-field
+          type="textarea"
+          :title="$t('createBranch.mallPage.mallShortDescription')"
+          :maxlength="255"
+          style="width: 100%"
+          v-model="$v.mallDescription.$model"
+        />
+        <div class="mall-description">
+          {{ 255 - $v.mallDescription.$model.length }}
+          {{ $t('createBrand.limitCharacters') }}
+        </div>
+      </div>
+
+      <div class="mall-info">
+        <div class="mall-upload-header">
+          {{ $t('createBranch.mallInfoHeader') }}
+        </div>
+        <div>{{ $t('createBranch.mallInfoDescription') }}</div>
+
+        <div class="add-container">
+          <div class="add-header">
+            <div class="add-box" @click="addWebsite">
+              <img class="icon-add" src="@/assets/images/icon/add-red.png" />
+              <span class="text-add">{{
+                $t('createBranch.mallInfo.addWebsite')
+              }}</span>
+            </div>
+            <div class="icon-box">
+              <img
+                class="icon-edit"
+                src="@/assets/images/icon/edit.png"
+                @click="isViewWebsite = false"
+                v-if="isViewWebsite && websiteList.length > 0"
+              />
+              <img
+                class="icon-save"
+                src="@/assets/images/icon/save.png"
+                @click="checkWebsite"
+                v-if="!isViewWebsite && websiteList.length > 0"
+              />
+            </div>
+          </div>
+          <div>
+            <add-website-view
+              v-if="isViewWebsite"
+              v-model="$v.websiteList.$model"
+            />
+            <add-website v-else v-model="$v.websiteList.$model" />
+          </div>
+        </div>
+
+        <div class="add-container">
+          <div class="add-header">
+            <div class="add-box" @click="addSocial">
+              <img class="icon-add" src="@/assets/images/icon/add-red.png" />
+              <span class="text-add">{{
+                $t('createBranch.mallInfo.addSocialLink')
+              }}</span>
+            </div>
+            <div class="icon-box">
+              <img
+                class="icon-edit"
+                src="@/assets/images/icon/edit.png"
+                @click="isViewSocial = false"
+                v-if="isViewSocial && socialList.length > 0"
+              />
+              <img
+                class="icon-save"
+                src="@/assets/images/icon/save.png"
+                @click="checkSocial"
+                v-if="!isViewSocial && socialList.length > 0"
+              />
+            </div>
+          </div>
+          <div>
+            <add-social-view
+              v-if="isViewSocial"
+              v-model="$v.socialList.$model"
+            />
+            <add-social v-else v-model="$v.socialList.$model" />
+          </div>
+        </div>
+      </div>
+
+      <div class="time-container">
+        <input-field
+          class="category"
+          v-model="$v.categoryId.$model"
+          :title="$t('createBranch.category')"
+          required
+          type="select"
+          :options="categoryList"
+          :optionsReduce="(item) => item.id"
+          optionsLabel="label"
+          placeholder="Please select..."
+          :errorMessage="error.categoryId"
+        />
+        <input-field
+          class="opening-box"
+          v-model="$v.openingHourId.$model"
+          :title="$t('createBranch.openingHour')"
+          required
+          type="select"
+          :options="openingHourList"
+          :optionsReduce="(item) => item.id"
+          optionsLabel="label"
+          placeholder="Please select..."
+          :errorMessage="error.openingHourId"
+        />
+        <div class="open-daily-box" v-if="openingHourId === '1'">
+          <input-field
+            class="open-time"
+            v-model="$v.openTime.$model"
+            required
+            type="select"
+            :options="timeList"
+            :optionsReduce="(item) => item.label"
+            optionsLabel="label"
+            :placeholder="$t('createBranch.openingHour')"
+            :errorMessage="error.openTime"
           />
-          <add-website v-else v-model="$v.websiteList.$model" />
+          <input-field
+            class="open-meridiem"
+            v-model="$v.openMeridiem.$model"
+            required
+            type="select"
+            :options="meridiemList"
+            :optionsReduce="(item) => item.label"
+            optionsLabel="label"
+            :errorMessage="error.openMeridiem"
+          />
+          <span class="to">to</span>
+          <input-field
+            class="open-time"
+            v-model="$v.closeTime.$model"
+            required
+            type="select"
+            :options="timeList"
+            :optionsReduce="(item) => item.label"
+            optionsLabel="label"
+            :placeholder="$t('createBranch.closingHour')"
+            :errorMessage="error.closeTime"
+          />
+          <input-field
+            class="open-meridiem"
+            v-model="$v.closeMeridiem.$model"
+            required
+            type="select"
+            :options="meridiemList"
+            :optionsReduce="(item) => item.label"
+            optionsLabel="label"
+            :errorMessage="error.closeMeridiem"
+          />
         </div>
-      </div>
-
-      <div class="add-container">
-        <div class="add-header">
-          <div class="add-box" @click="addSocial">
-            <img class="icon-add" src="@/assets/images/icon/add-red.png" />
-            <span class="text-add">{{
-              $t('createBranch.mallInfo.addSocialLink')
-            }}</span>
-          </div>
-          <div class="icon-box">
-            <img
-              class="icon-edit"
-              src="@/assets/images/icon/edit.png"
-              @click="isViewSocial = false"
-              v-if="isViewSocial && socialList.length > 0"
-            />
-            <img
-              class="icon-save"
-              src="@/assets/images/icon/save.png"
-              @click="checkSocial"
-              v-if="!isViewSocial && socialList.length > 0"
-            />
-          </div>
+        <div v-if="openingHourId === '2'">
+          <open-hour-custom
+            v-model="$v.openCusTomList.$model"
+            @changeCusTomList="changeCusTomList"
+          />
         </div>
-        <div>
-          <add-social-view v-if="isViewSocial" v-model="$v.socialList.$model" />
-          <add-social v-else v-model="$v.socialList.$model" />
-        </div>
-      </div>
-    </div>
-
-    <div class="time-container">
-      <input-field
-        class="category"
-        v-model="$v.categoryId.$model"
-        :title="$t('createBranch.category')"
-        required
-        type="select"
-        :options="categoryList"
-        :optionsReduce="(item) => item.id"
-        optionsLabel="label"
-        placeholder="Please select..."
-        :errorMessage="error.brandId"
-      />
-      <input-field
-        class="opening-box"
-        v-model="$v.openingHourId.$model"
-        :title="$t('createBranch.openingHour')"
-        required
-        type="select"
-        :options="openingHourList"
-        :optionsReduce="(item) => item.id"
-        optionsLabel="label"
-        placeholder="Please select..."
-        :errorMessage="error.brandId"
-      />
-      <div class="open-daily-box" v-if="openingHourId === 1">
-        <input-field
-          class="open-time"
-          v-model="$v.openTime.$model"
-          required
-          type="select"
-          :options="timeList"
-          :optionsReduce="(item) => item.label"
-          optionsLabel="label"
-          :placeholder="$t('createBranch.openingHour')"
-          :errorMessage="error.brandId"
-        />
-        <input-field
-          class="open-meridiem"
-          v-model="$v.openMeridiem.$model"
-          required
-          type="select"
-          :options="meridiemList"
-          :optionsReduce="(item) => item.label"
-          optionsLabel="label"
-          :errorMessage="error.brandId"
-        />
-        <span class="to">to</span>
-        <input-field
-          class="open-time"
-          v-model="$v.closeTime.$model"
-          required
-          type="select"
-          :options="timeList"
-          :optionsReduce="(item) => item.label"
-          optionsLabel="label"
-          :placeholder="$t('createBranch.closingHour')"
-          :errorMessage="error.brandId"
-        />
-        <input-field
-          class="open-meridiem"
-          v-model="$v.closeMeridiem.$model"
-          required
-          type="select"
-          :options="meridiemList"
-          :optionsReduce="(item) => item.label"
-          optionsLabel="label"
-          :errorMessage="error.brandId"
-        />
-      </div>
-      <div v-if="openingHourId === 2">
-        <open-hour-custom v-model="$v.openCusTomList.$model" />
       </div>
     </div>
 
     <div class="submit-section">
-      <button class="submit" @click="submit">Save</button>
+      <button class="submit" @click="clickSave">Save</button>
     </div>
 
     <modal v-show="isShowImage" class="show-image">
@@ -466,34 +480,33 @@ const validations = {
     required
   },
   branchCode: {
-    required
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value)
   },
   branchNameTh: {
     required,
-    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value),
-    maxLength: maxLength(50)
+    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value)
   },
   branchNameEn: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
-    maxLength: maxLength(50)
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value)
   },
   siebelBranchCode: {
-    required
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value)
   },
   siebelBranchName: {
-    required
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value)
   },
   email: {
     required,
-    email,
-    maxLength: maxLength(50)
+    email
   },
   phoneNumber: {
     required,
     numeric,
-    minLength: minLength(9),
-    maxLength: maxLength(13)
+    minLength: minLength(9)
   },
   partnerCodeId: { required },
   branchTypeId: { required },
@@ -504,23 +517,27 @@ const validations = {
   districtId: { required },
   subDistrictId: { required },
   postalCode: { required },
-  latitude: { decimal },
-  longitude: { decimal },
+  latitude: {
+    mustBe: (value: any) => /^([\d]{1,3}(\.[\d]{1,10}))*$/g.test(value)
+  },
+  longitude: {
+    mustBe: (value: any) => /^([\d]{1,3}(\.[\d]{1,10}))*$/g.test(value)
+  },
   showDisplay: { required },
   logo: { required },
   cover: { required },
   mallDescription: {},
   websiteList: {},
   socialList: {},
-  categoryId: {},
-  openingHourId: {},
-  openTime: {},
-  openMeridiem: {},
-  closeTime: {},
-  closeMeridiem: {},
-  openCusTomList: {},
+  categoryId: { required },
+  openingHourId: { required },
+  openTime: { required },
+  openMeridiem: { required },
+  closeTime: { required },
+  closeMeridiem: { required },
+  openCusTomList: { required },
 
-  validationGroup: [
+  validationBranchInfoGroup: [
     'brandId',
     'branchCode',
     'branchNameTh',
@@ -529,11 +546,34 @@ const validations = {
     'siebelBranchName',
     'email',
     'phoneNumber',
-    'partnerCodeId',
+    'partnerCodeId'
+  ],
+  validationNotInMallGroup: [
+    'branchTypeId',
+    'address',
+    'countryId',
+    'provinceId',
+    'districtId',
+    'subDistrictId',
+    'postalCode',
+    'latitude',
+    'longitude'
+  ],
+  validationInMallGroup: [
     'branchTypeId',
     'mallId',
     'address',
-
+    'countryId',
+    'provinceId',
+    'districtId',
+    'subDistrictId',
+    'postalCode',
+    'latitude',
+    'longitude'
+  ],
+  validationMallOpenDailyGroup: [
+    'branchTypeId',
+    'address',
     'countryId',
     'provinceId',
     'districtId',
@@ -552,7 +592,26 @@ const validations = {
     'openTime',
     'openMeridiem',
     'closeTime',
-    'closeMeridiem',
+    'closeMeridiem'
+  ],
+  validationMallOpenCustomizeGroup: [
+    'branchTypeId',
+    'address',
+    'countryId',
+    'provinceId',
+    'districtId',
+    'subDistrictId',
+    'postalCode',
+    'latitude',
+    'longitude',
+    'showDisplay',
+    'logo',
+    'cover',
+    'mallDescription',
+    'websiteList',
+    'socialList',
+    'categoryId',
+    'openingHourId',
     'openCusTomList'
   ]
 }
@@ -589,7 +648,7 @@ export default class CreateBranch extends Vue {
   branchTypeId = ''
   mallId = ''
   address = ''
-  countryId = ''
+  countryId = 'Thailand'
   provinceId = ''
   districtId = ''
   subDistrictId = ''
@@ -618,17 +677,21 @@ export default class CreateBranch extends Vue {
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
+      closeMeridiemError: ''
     },
     {
       day: 'Tuesday',
       openTime: '',
       openMeridiem: 'AM',
-      closeTime: '',                             
+      closeTime: '',
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
+      closeMeridiemError: ''
     },
     {
       day: 'Wednesday',
@@ -638,7 +701,9 @@ export default class CreateBranch extends Vue {
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
+      closeMeridiemError: ''
     },
     {
       day: 'Thursday',
@@ -648,7 +713,9 @@ export default class CreateBranch extends Vue {
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
+      closeMeridiemError: ''
     },
     {
       day: 'Friday',
@@ -658,7 +725,9 @@ export default class CreateBranch extends Vue {
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
+      closeMeridiemError: ''
     },
     {
       day: 'Saturday',
@@ -668,7 +737,9 @@ export default class CreateBranch extends Vue {
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
+      closeMeridiemError: ''
     },
     {
       day: 'Sunday',
@@ -678,8 +749,10 @@ export default class CreateBranch extends Vue {
       closeMeridiem: 'PM',
       isDayOff: false,
       openError: '',
+      openMeridiemError: '',
       closeError: '',
-    },
+      closeMeridiemError: ''
+    }
   ]
 
   private error = {
@@ -727,11 +800,11 @@ export default class CreateBranch extends Vue {
   categoryList = []
   openingHourList = [
     {
-      id: 1,
+      id: '1',
       label: 'Open Daily'
     },
     {
-      id: 2,
+      id: '2',
       label: 'Customize'
     }
   ]
@@ -857,8 +930,6 @@ export default class CreateBranch extends Vue {
       ? this.$t('createBranch.error.require').toString()
       : !this.$v.branchNameTh.mustBe
       ? this.$t('createBranch.error.thaiAndNumber').toString()
-      : !this.$v.branchNameTh.maxLength
-      ? this.$t('createBranch.error.maxLength').toString()
       : ''
   }
 
@@ -868,8 +939,6 @@ export default class CreateBranch extends Vue {
       ? this.$t('createBranch.error.require').toString()
       : !this.$v.branchNameEn.mustBe
       ? this.$t('createBranch.error.characterAndNumber').toString()
-      : !this.$v.branchNameEn.maxLength
-      ? this.$t('createBranch.error.maxLength').toString()
       : ''
   }
 
@@ -877,6 +946,8 @@ export default class CreateBranch extends Vue {
   checkSiebelBranchCode(): void {
     this.error.siebelBranchCode = !this.$v.siebelBranchCode.required
       ? this.$t('createBranch.error.require').toString()
+      : !this.$v.branchNameEn.mustBe
+      ? this.$t('createBranch.error.characterAndNumber').toString()
       : ''
   }
 
@@ -884,6 +955,8 @@ export default class CreateBranch extends Vue {
   checkSiebelBranchName(): void {
     this.error.siebelBranchName = !this.$v.siebelBranchName.required
       ? this.$t('createBranch.error.require').toString()
+      : !this.$v.branchNameEn.mustBe
+      ? this.$t('createBranch.error.characterAndNumber').toString()
       : ''
   }
 
@@ -892,9 +965,7 @@ export default class CreateBranch extends Vue {
     this.error.email = !this.$v.email.required
       ? this.$t('createBranch.error.require').toString()
       : !this.$v.email.email
-      ? this.$t('createBranch.error.characterAndNumber').toString()
-      : !this.$v.email.maxLength
-      ? this.$t('createBranch.error.maxLength').toString()
+      ? this.$t('createBranch.error.email').toString()
       : ''
   }
 
@@ -903,16 +974,14 @@ export default class CreateBranch extends Vue {
     this.error.phoneNumber = !this.$v.phoneNumber.required
       ? this.$t('createBranch.error.require').toString()
       : !this.$v.phoneNumber.numeric
-      ? this.$t('createBranch.error.number').toString()
+      ? this.$t('createBranch.error.numeric').toString()
       : !this.$v.phoneNumber.minLength
       ? this.$t('createBranch.error.minLength').toString()
-      : !this.$v.phoneNumber.maxLength
-      ? this.$t('createBranch.error.maxLength').toString()
       : ''
   }
 
   @Watch('partnerCodeId')
-  checkPartnerCodeId(): void {
+  checkPartnerCode(): void {
     this.error.partnerCodeId = !this.$v.partnerCodeId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
@@ -928,6 +997,13 @@ export default class CreateBranch extends Vue {
   @Watch('mallId')
   checkMallId(): void {
     this.error.mallId = !this.$v.mallId.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  @Watch('address')
+  checkAddress(): void {
+    this.error.address = !this.$v.address.required
       ? this.$t('createBranch.error.require').toString()
       : ''
   }
@@ -969,20 +1045,147 @@ export default class CreateBranch extends Vue {
 
   @Watch('latitude')
   checkLatitude(): void {
-    this.error.latitude = !this.$v.latitude.required
-      ? this.$t('createBranch.error.require').toString()
-      : !this.$v.latitude.decimal
-      ? this.$t('decimal').toString()
+    this.error.latitude = !this.$v.latitude.mustBe
+      ? this.$t('createBranch.error.characterAndNumber').toString()
       : ''
   }
 
   @Watch('longitude')
   checkLongitude(): void {
-    this.error.longitude = !this.$v.longitude.required
-      ? this.$t('createBranch.error.require').toString()
-      : !this.$v.longitude.decimal
-      ? this.$t('decimal').toString()
+    this.error.longitude = !this.$v.longitude.mustBe
+      ? this.$t('createBranch.error.characterAndNumber').toString()
       : ''
+  }
+
+  @Watch('categoryId')
+  checkCategoryId(): void {
+    this.error.categoryId = !this.$v.categoryId.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  @Watch('openingHourId')
+  checkOpeningHourId(): void {
+    this.error.openingHourId = !this.$v.openingHourId.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  @Watch('openTime')
+  checkOpenTime(): void {
+    this.error.openTime = !this.$v.openTime.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  @Watch('openMeridiem')
+  checkOpenMeridiem(): void {
+    this.error.openMeridiem = !this.$v.openMeridiem.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  @Watch('closeTime')
+  checkCloseTime(): void {
+    this.error.closeTime = !this.$v.closeTime.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  @Watch('closeMeridiem')
+  checkCloseMeridiem(): void {
+    this.error.closeMeridiem = !this.$v.closeMeridiem.required
+      ? this.$t('createBranch.error.require').toString()
+      : ''
+  }
+
+  changeCusTomList(item: any) {
+    if (this.openCusTomList[item.index].isDayOff) {
+      this.openCusTomList[item.index].openTime = ''
+      this.openCusTomList[item.index].closeTime = ''
+      this.openCusTomList[item.index].openMeridiem = 'AM'
+      this.openCusTomList[item.index].closeMeridiem = 'PM'
+
+      this.openCusTomList[item.index].openError = ''
+      this.openCusTomList[item.index].openMeridiemError = ''
+      this.openCusTomList[item.index].closeError = ''
+      this.openCusTomList[item.index].closeMeridiemError = ''
+    } else {
+      if (
+        item.time === 'open' &&
+        this.openCusTomList[item.index].openTime === ''
+      ) {
+        this.openCusTomList[item.index].openError = 'error'
+      } else {
+        this.openCusTomList[item.index].openError = ''
+        this.openCusTomList[item.index].openMeridiemError = ''
+      }
+      if (
+        item.time === 'close' &&
+        this.openCusTomList[item.index].closeTime === ''
+      ) {
+        this.openCusTomList[item.index].closeError = 'error'
+      } else {
+        this.openCusTomList[item.index].closeError = ''
+        this.openCusTomList[item.index].closeMeridiemError = ''
+      }
+    }
+  }
+
+  checkTimeError(openType: string): void {
+    if (openType === 'daily') {
+      if (
+        this.openTime === this.closeTime &&
+        this.openMeridiem === this.closeMeridiem
+      ) {
+        this.error.openTime = this.$t('createBranch.error.timeError').toString()
+        this.error.openMeridiem = this.$t(
+          'createBranch.error.timeError'
+        ).toString()
+        this.error.closeTime = this.$t(
+          'createBranch.error.timeError'
+        ).toString()
+        this.error.closeMeridiem = this.$t(
+          'createBranch.error.timeError'
+        ).toString()
+      } else {
+        this.error.openTime = ''
+        this.error.openMeridiem = ''
+        this.error.closeTime = ''
+        this.error.closeMeridiem = ''
+        this.checkOpenTime()
+        this.checkCloseTime()
+      }
+    } else {
+      this.openCusTomList.forEach((item) => {
+        if (item.isDayOff) {
+          item.openError = ''
+          item.openMeridiemError = ''
+          item.closeError = ''
+          item.closeMeridiemError = ''
+        } else {
+          if (item.openTime === '') {
+            item.openError = 'error'
+          }
+          if (item.closeTime === '') {
+            item.closeError = 'error'
+          }
+          if (
+            item.openTime === item.closeTime &&
+            item.openMeridiem === item.closeMeridiem
+          ) {
+            item.openError = this.$t('createBranch.error.timeError').toString()
+            item.openMeridiemError = this.$t(
+              'createBranch.error.timeError'
+            ).toString()
+            item.closeError = this.$t('createBranch.error.timeError').toString()
+            item.closeMeridiemError = this.$t(
+              'createBranch.error.timeError'
+            ).toString()
+          }
+        }
+      })
+    }
   }
 
   private changeIsModal(): void {
@@ -994,18 +1197,16 @@ export default class CreateBranch extends Vue {
     this.imageUrl = imageUrl
   }
 
-  onChangedLogo(data: any) {
-    console.log('onChangedLogo', data)
+  checkLogo(data: any) {
     this.logoUrl = data.imageUrl
     if (data.file) {
       this.error.logo = ''
     } else {
       this.error.logo = this.$t('createBranch.error.require').toString()
     }
-    console.log('logoUrl', this.logoUrl)
   }
 
-  onChangedCover(data: any) {
+  checkCover(data: any) {
     this.coverUrl = data.imageUrl
     if (data.file) {
       this.error.cover = ''
@@ -1060,39 +1261,115 @@ export default class CreateBranch extends Vue {
   }
 
   async getBrand(): Promise<any> {
-    // try {
-    //   let res = await this.$axios.$get(
-    //     `${
-    //       process.env.PORTAL_ENDPOINT
-    //     }/brand?companyId=${window.sessionStorage.getItem(
-    //       'createCompanyId'
-    //     )}`,
-    //     { data: null }
-    //   )
-    //   if (res.successful) {
-    //     this.brandList = res.data.companySize
-    //   }
-    // } catch (error) {
-    //   this.$toast.global.error(error.response.data.message)
-    // }
+    try {
+      // let res = await this.$axios.$get(
+      //   `${
+      //     process.env.PORTAL_ENDPOINT
+      //   }/list_brand?companyId=${window.sessionStorage.getItem(
+      //     'createCompanyId'
+      //   )}`,
+      //   { data: null }
+      // )
+      // if (res.successful) {
+      // this.brandList = res.data.brand
+      this.brandList = [
+        {
+          brandId: 'brandId',
+          brandNameTh: 'brandNameTh',
+          brandNameEn: 'brandNameEn'
+        }
+      ]
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   async getPartnerCode(): Promise<any> {
-    // try {
-    //   let res = await this.$axios.$get(
-    //     `${
-    //       process.env.PORTAL_ENDPOINT
-    //     }/partner_code?companyId=${window.sessionStorage.getItem(
-    //       'createCompanyId'
-    //     )}`,
-    //     { data: null }
-    //   )
-    //   if (res.successful) {
-    //     this.partnerCodeList = res.data.companyCategory
-    //   }
-    // } catch (error) {
-    //   this.$toast.global.error(error.response.data.message)
-    // }
+    try {
+      // let res = await this.$axios.$get(
+      //   `${
+      //     process.env.PORTAL_ENDPOINT
+      //   }/partner_code?companyId=${window.sessionStorage.getItem(
+      //     'createCompanyId'
+      //   )}`,
+      //   { data: null }
+      // )
+      // if (res.successful) {
+      // this.partnerCodeList = res.data.partner
+      this.partnerCodeList = [
+        {
+          partnerId: 1,
+          partnerCode: 'cmg1234',
+          partnerName: 'Central Marketing group 1234'
+        }
+      ]
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getBranchType(): Promise<any> {
+    try {
+      // let res = await this.$axios.$get(
+      //   `${process.env.PORTAL_ENDPOINT}/get_branch_type`,
+      //   { data: null }
+      // )
+      // if (res.successful) {
+      //   this.branchTypeList = res.data.branch_type
+      this.branchTypeList = [
+        {
+          branchTypeId: '1',
+          branchTypeTh: 'In a Mall',
+          branchTypeEn: 'In a Mall'
+        },
+        {
+          branchTypeId: '2',
+          branchTypeTh: 'Not in a Mall',
+          branchTypeEn: 'Not in a Mall'
+        },
+        {
+          branchTypeId: '3',
+          branchTypeTh: 'Mall',
+          branchTypeEn: 'Mall'
+        }
+      ]
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getMallList(): Promise<any> {
+    try {
+      // let res = await this.$axios.$get(
+      //   `${process.env.PORTAL_ENDPOINT}/get_branch_type`,
+      //   { data: null }
+      // )
+      // if (res.successful) {
+      //   this.branchTypeList = res.data.branch_type
+      this.mallList = [
+        {
+          mallId: '1',
+          mallNameTh: 'Mall 1',
+          mallNameEn: 'Mall 1'
+        },
+        {
+          mallId: '2',
+          mallNameTh: 'Mall 2',
+          mallNameEn: 'Mall 2'
+        },
+        {
+          mallId: '3',
+          mallNameTh: 'Mall 3',
+          mallNameEn: 'Mall 3'
+        }
+      ]
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   async mounted(): Promise<void> {
@@ -1104,6 +1381,8 @@ export default class CreateBranch extends Vue {
     }
     this.getBrand()
     this.getPartnerCode()
+    this.getBranchType()
+    this.getMallList()
   }
 
   async getBranch(): Promise<void> {
@@ -1135,90 +1414,183 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  async submit(): Promise<void> {
-    if (this.$v.validationGroup.$invalid) {
-      this.$toast.global.error(this.$t('createBranch.fieldError'))
-      this.checkBrandId()
-      this.checkBranchCode()
-      this.checkBranchNameTh()
-      this.checkBranchNameEn()
-      this.checkSiebelBranchCode()
-      this.checkSiebelBranchName()
-      this.checkEmail()
-      this.checkPhoneNumber()
-      this.checkPartnerCodeId()
-      this.checkBranchTypeId()
-      this.checkMallId()
-      this.checkCountryId()
-      this.checkProvinceId()
-      this.checkDistrictId()
-      this.checkSubDistrictId()
-      this.checkPostalCode()
-      this.checkLatitude()
-      this.checkLongitude()
+  async clickSave() {
+    if (
+      window.sessionStorage.getItem('createBranchFirstTime') &&
+      window.sessionStorage.getItem('createBranchFirstTime') === 'no'
+    ) {
+      this.update()
     } else {
-      const payload = {
-        companyNameTh: this.$v.companyNameTh.$model,
-        companyNameEn: this.$v.companyNameEn.$model,
-        companyTypeId: this.$v.typeId.$model,
-        companyCategoryId: this.$v.categoryId.$model,
-        companySizeId: this.$v.sizeId.$model,
-        assignee: this.$v.assignee.$model,
-        companyEmail: this.$v.email.$model,
-        companyPhonePrefix: this.companyPhonePrefix,
-        companyPhoneNumber: this.$v.phoneNumber.$model
-      }
-      if (
-        window.sessionStorage.getItem('companyFirstTime') &&
-        window.sessionStorage.getItem('companyFirstTime') === 'no'
-      ) {
-        try {
-          let response = await this.$axios.$post(
-            `${process.env.PORTAL_ENDPOINT}/update_company`,
-            {
-              companyId: window.sessionStorage.getItem('createCompanyId'),
-              ...payload
-            }
-          )
-          if (response.successful) {
-            this.$store.dispatch(
-              'organizartion/setCompanyId',
-              response.data.companyId
-            )
-            window.sessionStorage.setItem(
-              'createCompanyId',
-              response.data.companyId
-            )
-            this.$toast.global.success('Saved successfully')
-            window.sessionStorage.setItem('createCompanyFirstTime', 'no')
-          }
-        } catch (error) {
-          this.$toast.global.error(error.response.data.message)
-        }
-      } else {
-        try {
-          let response = await this.$axios.$post(
-            `${process.env.PORTAL_ENDPOINT}/create_company`,
-            payload
-          )
-          if (response.successful) {
-            this.$store.dispatch(
-              'organizartion/setCompanyId',
-              response.data.companyId
-            )
-            window.sessionStorage.setItem(
-              'createCompanyId',
-              response.data.companyId
-            )
-            window.sessionStorage.setItem('companyFirstTime', 'no')
-            this.$toast.global.success('Saved successfully')
-            this.$router.push('/organizationManagement/create/partnercode')
-          }
-        } catch (error) {
-          this.$toast.global.error(error.response.data.message)
-        }
-      }
+      this.save()
     }
+  }
+
+  validateInfoAndLocation() {
+    this.checkBrandId()
+    this.checkBranchCode()
+    this.checkBranchNameTh()
+    this.checkBranchNameEn()
+    this.checkSiebelBranchCode()
+    this.checkSiebelBranchName()
+    this.checkEmail()
+    this.checkPhoneNumber()
+    this.checkPartnerCode()
+    this.checkAddress()
+    this.checkCountryId()
+    this.checkProvinceId()
+    this.checkDistrictId()
+    this.checkSubDistrictId()
+    this.checkPostalCode()
+    this.checkLatitude()
+    this.checkLongitude()
+  }
+
+  validateMall() {
+    this.checkLogo(this.$v.logo.$model)
+    this.checkCover(this.$v.cover.$model)
+    this.checkCategoryId()
+    this.checkOpeningHourId()
+  }
+
+  validateOpenDaily() {
+    this.checkOpenTime()
+    this.checkCloseTime()
+    this.checkTimeError('daily')
+  }
+
+  validateOpenCustomize() {
+    this.checkTimeError('customize')
+  }
+
+  async save(): Promise<void> {
+    switch (this.branchTypeId) {
+      case '1':
+        if (
+          this.$v.validationBranchInfoGroup.$invalid ||
+          this.$v.validationInMallGroup.$invalid
+        ) {
+          this.$toast.global.error(this.$t('createBranch.fieldError'))
+          this.validateInfoAndLocation()
+          this.checkBranchTypeId()
+          this.checkMallId()
+          return
+        }
+      case '3':
+        if (this.openingHourId === '1') {
+          if (
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationMallOpenDailyGroup.$invalid
+          ) {
+            this.$toast.global.error(this.$t('createBranch.fieldError'))
+            this.validateInfoAndLocation()
+            this.validateMall()
+            this.validateOpenDaily()
+            return
+          }
+        } else if (this.openingHourId === '2') {
+          if (
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationMallOpenCustomizeGroup.$invalid
+          ) {
+            this.$toast.global.error(this.$t('createBranch.fieldError'))
+            this.validateInfoAndLocation()
+            this.validateMall()
+            this.validateOpenCustomize()
+            return
+          }
+        }
+      default:
+        if (
+          this.$v.validationBranchInfoGroup.$invalid ||
+          this.$v.validationNotInMallGroup.$invalid
+        ) {
+          this.$toast.global.error(this.$t('createBranch.fieldError'))
+          this.validateInfoAndLocation()
+          this.checkBranchTypeId()
+          return
+        }
+    }
+
+    const payload = {
+      brandId: this.$v.brandId.$model,
+      branchNameEn: this.$v.branchNameEn.$model,
+      branchNameTh: this.$v.branchNameTh.$model,
+      partnerId: this.$v.partnerCodeId.$model,
+      siebelBranchCode: this.$v.siebelBranchCode.$model,
+      siebelBranchName: this.$v.siebelBranchName.$model,
+      branchTypeId: this.$v.branchTypeId.$model,
+      address: this.$v.address.$model,
+      subDistrict: this.$v.subDistrictId.$model,
+      district: this.$v.districtId.$model,
+      province: this.$v.provinceId.$model,
+      postalCode: this.$v.postalCode.$model,
+      country: this.$v.countryId.$model,
+      latitude: this.$v.latitude.$model,
+      longitude: this.$v.longitude.$model,
+      branchPhonePrefix: this.$v.companyPhonePrefix.$model,
+      branchPhoneNumber: this.$v.phoneNumber.$model,
+      branchEmail: this.$v.email.$model,
+
+      mallLogoImg: this.$v.logo.$model,
+      mallCoverPageImg: this.$v.cover.$model,
+      mallShortDesc: this.$v.mallDescription.$model,
+      // mallWebsiteUrl: this.$v.0000000.$model,
+      // mallFacebook: this.$v.0000000.$model,
+      // mallInstagram: this.$v.0000000.$model,
+      // mallLine: this.$v.0000000.$model,
+      // mallTwitter: this.$v.0000000.$model,
+      mallCategoryId: this.$v.categoryId.$model,
+      // openingHour: this.$v.0000000.$model,
+      showInApp: this.$v.showDisplay.$model
+    }
+
+    try {
+      let response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/create_company`,
+        payload
+      )
+      if (response.successful) {
+        this.$store.dispatch(
+          'organizartion/setCompanyId',
+          response.data.companyId
+        )
+        window.sessionStorage.setItem(
+          'createCompanyId',
+          response.data.companyId
+        )
+        window.sessionStorage.setItem('createBranchFirstTime', 'no')
+        this.$toast.global.success('Saved successfully')
+        this.$router.push('/organizationManagement/create/partnercode')
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async update() {
+    // try {
+    //     let response = await this.$axios.$post(
+    //       `${process.env.PORTAL_ENDPOINT}/update_company`,
+    //       {
+    //         companyId: window.sessionStorage.getItem('createCompanyId'),
+    //         ...payload
+    //       }
+    //     )
+    //     if (response.successful) {
+    //       this.$store.dispatch(
+    //         'organizartion/setCompanyId',
+    //         response.data.companyId
+    //       )
+    //       window.sessionStorage.setItem(
+    //         'createCompanyId',
+    //         response.data.companyId
+    //       )
+    //       this.$toast.global.success('Saved successfully')
+    //       window.sessionStorage.setItem('createcreateBranchFirstTime', 'no')
+    //     }
+    //   } catch (error) {
+    //     this.$toast.global.error(error.response.data.message)
+    //   }
   }
 }
 </script>
@@ -1237,7 +1609,7 @@ export default class CreateBranch extends Vue {
 
   .input-section-2 {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 45% 45%;
     grid-column-gap: 60px;
     grid-row-gap: 25px;
     padding: 30px 10% 30px 0px;
