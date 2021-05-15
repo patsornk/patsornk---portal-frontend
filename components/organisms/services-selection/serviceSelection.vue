@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="submit-section">
-      <button class="submit" @click="clickSave">Save</button>
+      <!-- <button class="submit" @click="clickSave">Save</button> -->
     </div>
   </div>
 </template>
@@ -82,13 +82,17 @@ export default class ServiceSelection extends Vue {
   }
 
   async apply(item: ServiceType) {
-    this.addItem(item, this.appliedServices)
-    this.deleteItem(item, this.availableServices)
+    if (await this.applyService(item.serviceId)) {
+      this.addItem(item, this.appliedServices)
+      this.deleteItem(item, this.availableServices)
+    }
   }
 
   async unApply(item: ServiceType) {
-    this.addItem(item, this.availableServices)
-    this.deleteItem(item, this.appliedServices)
+    if (await this.removeService(item.serviceId)) {
+      this.addItem(item, this.availableServices)
+      this.deleteItem(item, this.appliedServices)
+    }
   }
 
   addItem(item: ServiceType, list: ServiceType[]) {
@@ -102,14 +106,36 @@ export default class ServiceSelection extends Vue {
     }
   }
 
-  async clickSave() {
-    if (this.appliedServices.length === 0) {
-      this.$toast.global.success('Saved successfully')
-      return
-    }
+  async removeService(serviceId: number): Promise<boolean> {
     const payload = {
-      companyId: window.sessionStorage.getItem('createCompanyId'),
-      serviceId: this.appliedServices.map((item: any) => item.serviceId)
+      companyId: parseInt(
+        window.sessionStorage.getItem('createCompanyId') ?? ''
+      ),
+      serviceId: [serviceId]
+    }
+    try {
+      let response = await this.$axios.$delete(
+        `${process.env.PORTAL_ENDPOINT}/remove_service`,
+        { data: payload }
+      )
+      if (response.successful) {
+        this.$toast.global.success('Saved successfully')
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+      return false
+    }
+  }
+
+  async applyService(serviceId: number): Promise<boolean> {
+    const payload = {
+      companyId: parseInt(
+        window.sessionStorage.getItem('createCompanyId') ?? ''
+      ),
+      serviceId: [serviceId]
     }
     try {
       let response = await this.$axios.$post(
@@ -117,10 +143,36 @@ export default class ServiceSelection extends Vue {
         payload
       )
       if (response.successful) {
-        this.getAppliedServices()
-        this.getAvailableServices()
         this.$toast.global.success('Saved successfully')
+        return true
+      } else {
+        return false
       }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+      return false
+    }
+  }
+
+  async clickSave() {
+    // if (this.appliedServices.length === 0) {
+    //   this.$toast.global.success('Saved successfully')
+    //   return
+    // }
+    // const payload = {
+    //   companyId: window.sessionStorage.getItem('createCompanyId'),
+    //   serviceId: this.appliedServices.map((item: any) => item.serviceId)
+    // }
+    try {
+      // let response = await this.$axios.$post(
+      //   `${process.env.PORTAL_ENDPOINT}/apply_service`,
+      //   payload
+      // )
+      // if (response.successful) {
+      //   this.getAppliedServices()
+      //   this.getAvailableServices()
+      this.$toast.global.success('Saved successfully')
+      // }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }

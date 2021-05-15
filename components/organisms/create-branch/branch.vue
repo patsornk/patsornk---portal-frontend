@@ -465,6 +465,7 @@ import AddSocial from '@/components/molecules/create-branch/AddSocial.vue'
 import AddSocialView from '@/components/molecules/create-branch/AddSocialView.vue'
 import OpenHourCustom from '@/components/molecules/create-branch/OpenHourCustom.vue'
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
+import { BrandInitialData, BranchTypeDataType, MallDataType, SiebelPartnerType } from '~/constants'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -788,10 +789,10 @@ export default class CreateBranch extends Vue {
     closeMeridiem: ''
   }
 
-  brandList = []
-  partnerCodeList = []
-  branchTypeList = []
-  mallList = []
+  brandList: BrandInitialData[] = []
+  partnerCodeList: SiebelPartnerType[] = []
+  branchTypeList: BranchTypeDataType[] = []
+  mallList: MallDataType[] = []
   countryList = []
   provinceList = []
   districtList = []
@@ -1274,7 +1275,7 @@ export default class CreateBranch extends Vue {
       // this.brandList = res.data.brand
       this.brandList = [
         {
-          brandId: 'brandId',
+          brandId: 0,
           brandNameTh: 'brandNameTh',
           brandNameEn: 'brandNameEn'
         }
@@ -1299,7 +1300,7 @@ export default class CreateBranch extends Vue {
       // this.partnerCodeList = res.data.partner
       this.partnerCodeList = [
         {
-          partnerId: 1,
+          id: 1,
           partnerCode: 'cmg1234',
           partnerName: 'Central Marketing group 1234'
         }
@@ -1320,17 +1321,17 @@ export default class CreateBranch extends Vue {
       //   this.branchTypeList = res.data.branch_type
       this.branchTypeList = [
         {
-          branchTypeId: '1',
+          branchTypeId: 1,
           branchTypeTh: 'In a Mall',
           branchTypeEn: 'In a Mall'
         },
         {
-          branchTypeId: '2',
+          branchTypeId: 2,
           branchTypeTh: 'Not in a Mall',
           branchTypeEn: 'Not in a Mall'
         },
         {
-          branchTypeId: '3',
+          branchTypeId: 3,
           branchTypeTh: 'Mall',
           branchTypeEn: 'Mall'
         }
@@ -1351,17 +1352,17 @@ export default class CreateBranch extends Vue {
       //   this.branchTypeList = res.data.branch_type
       this.mallList = [
         {
-          mallId: '1',
+          mallId: 1,
           mallNameTh: 'Mall 1',
           mallNameEn: 'Mall 1'
         },
         {
-          mallId: '2',
+          mallId: 2,
           mallNameTh: 'Mall 2',
           mallNameEn: 'Mall 2'
         },
         {
-          mallId: '3',
+          mallId: 3,
           mallNameTh: 'Mall 3',
           mallNameEn: 'Mall 3'
         }
