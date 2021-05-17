@@ -8,7 +8,7 @@
         :circleStyle="true"
         v-model="$v.image.$model"
         :imageUrl="$v.imageUrl.$model"
-        @viewFile="$emit('viewFile')"
+        @viewFile="$emit('viewFile', $v.imageUrl.$model)"
         @onBlur="onUploadImage"
         @removeUrl="onRemoveFeatureImage"
         :errorMessage="error.image"
@@ -153,7 +153,7 @@ export default class BrandFeatureBodyRework extends Vue {
   }
 
   updated() {
-    if(this.currentfeatureNo !== this.featureNo) {
+    if (this.currentfeatureNo !== this.featureNo) {
       this.currentfeatureNo = this.featureNo
       this.showDisplay = this.initialData.showDisplay
       this.ctaLabel = this.initialData.ctaLabel
@@ -224,7 +224,7 @@ export default class BrandFeatureBodyRework extends Vue {
       this.error.ctaFeature = !this.$v.ctaFeature.required
         ? this.$t('createBrand.brandFeature.error.ctaFeature').toString()
         : ''
-      this.error.image = this.image ? '' : this.$t('createBrand.brandFeature.error.image').toString()
+      this.error.image = this.imageUrl ? '' : this.$t('createBrand.brandFeature.error.image').toString()
     }
   }
 

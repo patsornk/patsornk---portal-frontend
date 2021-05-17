@@ -523,7 +523,7 @@ export default class CreateBrand extends Vue {
               this.brandFeatureList = res.data.brandFeature.map((brandFeature: any) => {
                 return {
                   image: undefined,
-                  imageUrl: brandFeature.brandFeatureLogoImgLink,
+                  imageUrl: `${process.env.PORTAL_HOST}${brandFeature.brandFeatureLogoImgLink}`,
                   showDisplay: brandFeature.showInApp,
                   ctaLabel: brandFeature.brandFeatureLabel,
                   ctaType: brandFeature.brandFeatureTypeId,
@@ -675,12 +675,25 @@ export default class CreateBrand extends Vue {
     } else {
       isPartnerCodeList = true
     }
-    if (validationGroup && isPartnerCodeList) {
+    
+    const brandFeatureValidate = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false) ? false : true
+    if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
         }
       )
+
+      const brandFeatureFormatedList: any[] = []
+      for (const brandFeature of this.brandFeatureList) {
+        brandFeatureFormatedList.push({
+          brandFeatureLabel: brandFeature.ctaLabel,
+          brandFeatureTypeId: brandFeature.ctaType,
+          brandFeatureValue: brandFeature.ctaFeature,
+          brandFeatureLogoImg: await this.getBase64(brandFeature.image),
+          showInApp: brandFeature.showDisplay,
+        })
+      }
 
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
@@ -701,7 +714,8 @@ export default class CreateBrand extends Vue {
         brandPhoneNumber: this.$v.phoneNo.$model,
         brandEmail: this.$v.email.$model,
         showInApp: this.$v.showDisplay.$model,
-        partnerId: partnerId
+        partnerId: partnerId,
+        feature: brandFeatureFormatedList,
       }
       try {
         let response = await this.$axios.$post(

@@ -64,7 +64,12 @@
             </div>
           </div>
         </label>
-        <div class="error-message error-circle">{{ errorMessage }}</div>
+        <div 
+          class="error-message"
+          :class="{ 'error-circle': circleStyle }"
+        >
+          {{ errorMessage }}
+        </div>
       </div>
     </div>
   </div>
