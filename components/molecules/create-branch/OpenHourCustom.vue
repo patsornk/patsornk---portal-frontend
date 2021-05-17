@@ -12,6 +12,7 @@
             type="checkbox"
             :title="$t('Mark as day off')"
             v-model="item.isDayOff"
+            @onChange="$emit('changeCusTomList', { index, time: '' })"
           />
         </div>
       </div>
@@ -27,6 +28,7 @@
           optionsLabel="label"
           :placeholder="$t('createBranch.openingHour')"
           :errorMessage="item.openError"
+          @onChange="$emit('changeCusTomList', { index, time: 'open' })"
         />
         <input-field
           class="open-meridiem"
@@ -37,6 +39,7 @@
           :options="meridiemList"
           :optionsReduce="(item) => item.label"
           optionsLabel="label"
+          :errorMessage="item.openMeridiemError"
         />
         <span class="to">to</span>
         <input-field
@@ -50,6 +53,7 @@
           optionsLabel="label"
           :placeholder="$t('createBranch.closingHour')"
           :errorMessage="item.closeError"
+          @onChange="$emit('changeCusTomList', { index, time: 'close' })"
         />
         <input-field
           class="open-meridiem"
@@ -60,6 +64,7 @@
           :options="meridiemList"
           :optionsReduce="(item) => item.label"
           optionsLabel="label"
+          :errorMessage="item.closeMeridiemError"
         />
       </div>
     </div>

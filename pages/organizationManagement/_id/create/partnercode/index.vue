@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CreateEditPartnerCode />
+    <CreateEditPartnerCode
+    :compantId="id"
+    />
   </div>
 </template>
 

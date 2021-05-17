@@ -6,6 +6,7 @@
         v-model="dataList[index]"
         placeholder="Website Link"
         @onBlur="setValue"
+        :maxlength="255"
       />
       <img
         class="icon-close"

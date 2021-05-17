@@ -7,6 +7,7 @@
       :reduce="(locale) => locale.code"
       class="lang-select"
       label="name"
+      :map-keydown="deleteHandler"
     >
       <template #selected-option="option">
         <div class="dropdown-option">
@@ -61,6 +62,14 @@ export default class ChangeLang extends Vue {
   private imageIcon(name: string): any {
     const image = require(`@/assets/images/lang/${name}.png`)
     return image
+  }
+
+  deleteHandler(map: any, vm: any) {
+    return {
+      ...map, 8: (e: any) => {
+        e.preventDefault();
+      },
+    }
   }
 }
 </script>

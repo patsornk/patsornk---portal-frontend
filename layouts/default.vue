@@ -69,6 +69,8 @@ export default class Default extends Vue {
         window.sessionStorage.removeItem('createCompanyId')
         window.sessionStorage.removeItem('createBrandFirstTime')
         window.sessionStorage.removeItem('createBrandId')
+        window.sessionStorage.removeItem('createBranchFirstTime')
+        window.sessionStorage.removeItem('createBranchId')
         window.sessionStorage.removeItem('maxStepbar')
         this.$store.dispatch('stepbar/setMaxState', 0)
       default:

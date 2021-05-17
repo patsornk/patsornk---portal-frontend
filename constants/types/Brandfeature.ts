@@ -1,3 +1,9 @@
+export interface BrandInitialData {
+    brandId: number
+    brandNameTh: string
+    brandNameEn: string
+}
+
 export interface BrandFeatureInitialData {
     image: any
     imageUrl?: string

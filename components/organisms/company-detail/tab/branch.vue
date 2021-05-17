@@ -20,6 +20,7 @@
             :reduce="(item) => item.brandId"
             placeholder="From which brand"
             :searchable="false"
+            :map-keydown="deleteHandler"
           />
           <v-select
             class="dropdown"
@@ -29,6 +30,7 @@
             :reduce="(item) => item.id"
             placeholder="Status"
             :searchable="false"
+            :map-keydown="deleteHandler"
           />
         </div>
         <t1-button class="black" @click.native="search"> Search </t1-button>
@@ -303,6 +305,14 @@ export default class TabBranch extends Vue {
   onRowClicked(row: any) {
     window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
     this.$router.push(`/organizationManagement/edit/branch/${row.data.partnerId}`)
+  }
+
+  deleteHandler(map: any, vm: any) {
+    return {
+      ...map, 8: (e: any) => {
+        e.preventDefault();
+      },
+    }
   }
 }
 </script>

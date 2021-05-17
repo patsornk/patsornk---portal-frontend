@@ -29,6 +29,7 @@
             :placeholder="placeholder"
             :searchable="false"
             :disabled="disable"
+            :map-keydown="deleteHandler"
             @blur="$emit('onBlur')"
           />
           <div v-if="type === 'switch'" class="switch-container">
@@ -79,7 +80,7 @@
           :inputmode="inputmode"
           :placeholder="placeholder"
           :maxlength="maxlength"
-          :disable="disable"
+          :disabled="disable"
           @blur="$emit('onBlur', dataValue)"
           @change="$emit('onChange', dataValue)"
         />
@@ -193,6 +194,14 @@ export default class InputField extends Vue {
   @Watch('dataValue')
   changeDataValue() {
     this.$emit('onChange')
+  }
+
+  deleteHandler(map: any, vm: any) {
+    return {
+      ...map, 8: (e: any) => {
+        e.preventDefault();
+      },
+    }
   }
 }
 </script>
