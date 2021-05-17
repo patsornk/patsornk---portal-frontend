@@ -5,7 +5,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   // layout: 'login'
-  layout: 'landing'
+  layout: 'default'
 })
 export default class Home extends Vue {
   mounted() {
