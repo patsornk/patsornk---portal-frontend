@@ -121,9 +121,9 @@ export default class CentarlLogin extends Vue {
     this.validateUsername()
     this.validatePassword()
 
-    if (validateError(this.error)) {
+    // if (validateError(this.error)) {
       this.$router.push('/landing')
-    }
+    // }
   }
 }
 </script>
