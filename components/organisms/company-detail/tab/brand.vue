@@ -262,12 +262,12 @@ export default class TabBrand extends Vue {
   }
 
   clickNewBrand(){
-    // TO DO
+    this.$router.push(`/organizationManagement/${this.id}/create/brand`)
   }
 
   onRowClicked(row: any) {
     window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
-    this.$router.push(`/organizationManagement/edit/brand/${row.data.partnerId}`)
+    this.$router.push(`/organizationManagement/edit/brand/${row.data.brandId}`)
   }
 
   deleteHandler(map: any, vm: any) {

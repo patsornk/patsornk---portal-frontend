@@ -1,0 +1,151 @@
+<template>
+  <div class="create-step-container">
+    <div class="w-full h-full">
+      <create-brand mode="edit" :companyId="companyId" :brandId="brandId" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import T1Button from '@/components/atoms/button.vue'
+import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
+import { BreadcrumbType, CompanyType } from '~/constants'
+import CreateBrand from '@/components/organisms/create-brand/brand.vue'
+
+@Component({
+  components: {
+    T1Button,
+    OrganizationTable,
+    CreateBrand,
+  }
+})
+export default class CompanyEditBrand extends Vue {
+  private company: CompanyType = {
+    assignee: '',
+    companyCategory: {
+      companyCategoryEn: '',
+      companyCategoryId: 0,
+      companyCategoryTh: ''
+    },
+    companyEmail: '',
+    companyId: 0,
+    companyNameEn: '',
+    companyNameTh: '',
+    companyPhoneNumber: '',
+    companyPhonePrefix: '',
+    companySize: {
+      companySizeEn: '',
+      companySizeId: 0,
+      companySizeTh: ''
+    },
+    companyType: {
+      companyTypeEn: '',
+      companyTypeId: 0,
+      companyTypeTh: ''
+    },
+    createdAt: '',
+    createdBy: '',
+    status: 0,
+    statusDesc: '',
+    updatedAt: '',
+    updatedBy: ''
+  }
+
+  get language(): any {
+    return this.$i18n.locale
+  }
+
+  get brandId() {
+    return this.$route.params.id
+  }
+
+  get companyId() {
+    return window.sessionStorage.getItem('parentCompanyId')
+  }
+
+  @Watch('language')
+  setTitleBreadcrumb() {
+    this.setupBreadcrumb(
+      this.language === 'th'
+        ? this.company.companyNameTh
+        : this.company.companyNameEn
+    )
+  }
+
+  private setupBreadcrumb(title: string): void {
+    const breadcrumb: BreadcrumbType[] = [
+      {
+        title: 'Organization Management',
+        url: '/'
+      },
+      {
+        title,
+        url: '/'
+      },
+      {
+        title: `Brand brand - ${title}`,
+        url: '/',
+        active: true
+      }
+    ]
+    this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
+    this.$store.dispatch('breadcrumb/setPageTitle', `Brand brand - ${title}`)
+  }
+
+  async getCpmpany(): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.company = res.data
+
+        this.setupBreadcrumb(
+          this.language === 'th'
+            ? this.company.companyNameTh
+            : this.company.companyNameEn
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  mounted() {
+    this.getCpmpany()
+  }
+
+}
+</script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/_variables.scss';
+
+.create-step-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 50px;
+  padding-top: 0px;
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 34px;
+    border-top: 1px solid $grey3;
+    width: 100%;
+
+    .t1-button {
+      width: 200px;
+    }
+
+    .black-transparent {
+      margin-right: 42px;
+    }
+  }
+}
+</style>

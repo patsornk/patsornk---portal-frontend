@@ -193,7 +193,7 @@ export default class BrandFeatureBodyRework extends Vue {
   }
 
   onRemoveFeatureImage() {
-    this.imageUrl = undefined
+    this.imageUrl = ''
     this.$emit('onBrandFeatureChange', this.featureNo - 1, 'image', undefined)
     this.$emit('onBrandFeatureChange', this.featureNo - 1, 'imageUrl', undefined)
     if (this.showDisplay) {

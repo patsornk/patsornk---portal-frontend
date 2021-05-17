@@ -161,7 +161,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { AgGridVue } from 'ag-grid-vue'
 import { validationMixin } from 'vuelidate'
 import { SiebelPartnerType } from '@/constants/types/PartnerCodeType'
@@ -254,6 +254,21 @@ const validations = {
   }
 })
 export default class CreateBrand extends Vue {
+  @Prop({
+    type: String,
+  })
+  mode: string
+
+  @Prop({
+    type: String,
+  })
+  companyId: string
+
+  @Prop({
+    type: String,
+  })
+  brandId: string
+
   $i18n: any
 
   brandCode = ''
@@ -318,25 +333,29 @@ export default class CreateBrand extends Vue {
       },
     ]
 
-    if (
-      window.sessionStorage.getItem('createBrandFirstTime') &&
-      window.sessionStorage.getItem('createBrandFirstTime') === 'no'
-    ) {
-      await this.getListPartnerCode()
+    if (!this.mode) {
+      if (
+        window.sessionStorage.getItem('createBrandFirstTime') &&
+        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+      ) {
+        this.getBrand()
+      }
+      if (window.sessionStorage.getItem('createCompanyId')) {
+        this.getListPartnerCode()
+      }
+    } else if (this.mode === 'create') {
+      this.getListPartnerCode()
+    } else if (this.mode === 'edit') {
       this.getBrand()
-    } else if (window.sessionStorage.getItem('createCompanyId')) {
-      await this.getListPartnerCode()
+      this.getListPartnerCode()
     }
   }
 
   async getListPartnerCode(): Promise<void> {
     try {
+      const companyId = this.companyId ? this.companyId : window.sessionStorage.getItem('createCompanyId')
       let res = await this.$axios.$get(
-        `${
-          process.env.PORTAL_ENDPOINT
-        }/partner_code?companyId=${window.sessionStorage.getItem(
-          'createCompanyId'
-        )}`,
+        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${companyId}`,
         { data: null }
       )
       if (res.successful) {
@@ -476,14 +495,11 @@ export default class CreateBrand extends Vue {
   async getBrand(): Promise<void> {
     this.currentBrandFeatureKey = 0
     this.brandFeatureList = []
-    if (window.sessionStorage.getItem('createBrandId')) {
+    if (window.sessionStorage.getItem('createBrandId') || this.brandId) {
       try {
+        const brandId = this.brandId ? this.brandId : window.sessionStorage.getItem('createBrandId')
         let res = await this.$axios.$get(
-          `${
-            process.env.PORTAL_ENDPOINT
-          }/get_brand?brandId=${window.sessionStorage.getItem(
-            'createBrandId'
-          )}&brandAdditional=true&partners=true`,
+          `${process.env.PORTAL_ENDPOINT}/get_brand?brandId=${brandId}&brandAdditional=true&partners=true`,
           { data: null }
         )
         if (res.successful) {
@@ -507,7 +523,7 @@ export default class CreateBrand extends Vue {
             this.phonePrefix = data.brandPhonePrefix
             this.showDisplay = data.showInApp
             this.logourl = brandAddidtional.additionalLogoImg
-              ? brandAddidtional.additionalLogoImg
+              ? `${process.env.PORTAL_HOST}${brandAddidtional.additionalLogoImg}`
               : undefined
             this.bannerurl = brandAddidtional.additionalBannerImg
               ? brandAddidtional.additionalBannerImg
@@ -522,6 +538,7 @@ export default class CreateBrand extends Vue {
             if (res.data.brandFeature.length) {
               this.brandFeatureList = res.data.brandFeature.map((brandFeature: any) => {
                 return {
+                  id: brandFeature.brandFeatureId,
                   image: undefined,
                   imageUrl: `${process.env.PORTAL_HOST}${brandFeature.brandFeatureLogoImgLink}`,
                   showDisplay: brandFeature.showInApp,
@@ -553,13 +570,19 @@ export default class CreateBrand extends Vue {
   }
 
   async clickSave() {
-    if (
-      window.sessionStorage.getItem('createBrandFirstTime') &&
-      window.sessionStorage.getItem('createBrandFirstTime') === 'no'
-    ) {
-      this.update()
-    } else {
+    if (!this.mode) {
+      if (
+        window.sessionStorage.getItem('createBrandFirstTime') &&
+        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+      ) {
+        this.update()
+      } else {
+        this.save()
+      }
+    } else if (this.mode === 'create') {
       this.save()
+    } else if (this.mode === 'edit') {
+      this.update()
     }
   }
 
@@ -592,6 +615,7 @@ export default class CreateBrand extends Vue {
           return item.id
         }
       )
+      const companyId = this.companyId ? this.companyId : window.sessionStorage.getItem('createCompanyId')
 
       const brandFeatureFormatedList: any[] = []
       for (const brandFeature of this.brandFeatureList) {
@@ -607,7 +631,7 @@ export default class CreateBrand extends Vue {
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
       const payload = {
-        companyId: window.sessionStorage.getItem('createCompanyId'),
+        companyId: companyId,
         brandNameTh: this.$v.brandNameTh.$model,
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
@@ -629,10 +653,15 @@ export default class CreateBrand extends Vue {
           payload
         )
         if (response.successful) {
-          window.sessionStorage.setItem('createBrandFirstTime', 'no')
-          window.sessionStorage.setItem('createBrandId', response.data.brandId)
-          this.$toast.global.success('Saved successfully')
-          this.$router.push('/organizationManagement/create/branch')
+          if (!this.mode) {
+            window.sessionStorage.setItem('createBrandFirstTime', 'no')
+            window.sessionStorage.setItem('createBrandId', response.data.brandId)
+            this.$toast.global.success('Saved successfully')
+            this.$router.push('/organizationManagement/create/branch')
+          } else {
+            this.$router.push(`/organizationManagement/${this.companyId}`)
+            this.$toast.global.success('Created successfully')
+          }
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
@@ -683,14 +712,18 @@ export default class CreateBrand extends Vue {
           return item.id
         }
       )
+      const companyId = this.companyId ? Number(this.companyId) : window.sessionStorage.getItem('createCompanyId')
+      const brandId = this.brandId ? Number(this.brandId) : window.sessionStorage.getItem('createBrandId')
 
       const brandFeatureFormatedList: any[] = []
       for (const brandFeature of this.brandFeatureList) {
+        const imageUrl = await this.getBase64(brandFeature.image)
         brandFeatureFormatedList.push({
+          brandFeatureId: brandFeature?.id,
+          brandFeatureLogoImg: brandFeature.imageUrl ? imageUrl : '',
           brandFeatureLabel: brandFeature.ctaLabel,
           brandFeatureTypeId: brandFeature.ctaType,
           brandFeatureValue: brandFeature.ctaFeature,
-          brandFeatureLogoImg: await this.getBase64(brandFeature.image),
           showInApp: brandFeature.showDisplay,
         })
       }
@@ -699,8 +732,8 @@ export default class CreateBrand extends Vue {
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
 
       const payload = {
-        companyId: window.sessionStorage.getItem('createCompanyId'),
-        brandId: window.sessionStorage.getItem('createBrandId'),
+        companyId: companyId,
+        brandId: brandId,
         brandNameTh: this.$v.brandNameTh.$model,
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
@@ -723,12 +756,17 @@ export default class CreateBrand extends Vue {
           payload
         )
         if (response.successful) {
-          window.sessionStorage.setItem('createBrandFirstTime', 'no')
-          window.sessionStorage.setItem(
-            'createBrandId',
-            response.data.brandId
-          )
-          this.$toast.global.success('Saved successfully')
+          if (!this.mode) {
+            window.sessionStorage.setItem('createBrandFirstTime', 'no')
+            window.sessionStorage.setItem(
+              'createCompanyId',
+              response.data.brandId
+            )
+            this.$toast.global.success('Saved successfully')
+          } else {
+            this.$router.push(`/organizationManagement/${companyId}`)
+            this.$toast.global.success('Saved successfully')
+          }
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
