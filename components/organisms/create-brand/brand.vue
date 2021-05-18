@@ -180,6 +180,7 @@ import TableComponent from '~/components/molecules/table-component/TableComponen
 import BrandFeatureHeader from '~/components/molecules/brand-feature/BrandFeatureHeader.vue'
 import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody.vue'
 import BrandFeatureBodyRework from '~/components/molecules/brand-feature/BrandFeatureBodyRework.vue'
+import { BreadcrumbType } from '~/constants'
 
 const validations = {
   brandCode: {
@@ -257,21 +258,24 @@ export default class CreateBrand extends Vue {
   @Prop({
     type: String,
   })
-  mode: string
+  mode!: string
 
   @Prop({
     type: String,
   })
-  companyId: string
+  companyId!: string
 
   @Prop({
     type: String,
   })
-  brandId: string
+  brandId!: string
 
   $i18n: any
-
   brandCode = ''
+  brandName = {
+    th: '',
+    en: '',
+  }
   brandNameTh = ''
   brandNameEn = ''
   email = ''
@@ -492,6 +496,10 @@ export default class CreateBrand extends Vue {
     })
   }
 
+  get language(): any {
+    return this.$i18n.locale
+  }
+
   async getBrand(): Promise<void> {
     this.currentBrandFeatureKey = 0
     this.brandFeatureList = []
@@ -514,6 +522,10 @@ export default class CreateBrand extends Vue {
             }
           )
           if (data.brandAdditional) {
+            if (this.mode === 'edit') {
+              this.brandName.th = data.brandNameTh
+              this.brandName.en = data.brandNameEn
+            }
             const brandAddidtional = data.brandAdditional
             this.brandCode = data.brandCode
             this.brandNameTh = data.brandNameTh
@@ -828,7 +840,6 @@ export default class CreateBrand extends Vue {
   isBrandFeatureValid(): void {
     const brandFeature = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false)
   }
-
 }
 </script>
 

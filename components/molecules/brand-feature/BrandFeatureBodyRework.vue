@@ -1,5 +1,14 @@
 <template>
   <div class="brand-feature-body-container">
+    <dialog-popup 
+      :display="dialogDisplay"
+      :title="dialogTitle"
+      :description="dialogDescription"
+      :leftButtonTitle="dialogLeftButtonText"
+      :rightButtonTitle="dialogRightButtonText"
+      @onLeftButtonClick="dialogLeftButtonAction"
+      @onRightButtonClick="dialogRightButtonAction"
+    />
     <div>
       <upload-file
         :id="`brand_feature_image-${featureNo}`"
@@ -22,7 +31,7 @@
             v-if="canDelete"
             class="delete-icon"
             src="@/assets/images/table/delete.png"
-            @click="$emit('deleteBrandFeature', featureNo)"
+            @click="deleteBrandFeature"
           />
         </div>
         <input-field
@@ -91,13 +100,14 @@ import { BrandFeatureInitialData, BrandFeatureError } from '~/constants/types/Br
 import InputField from '~/components/atoms/InputField.vue'
 import UploadImage from '~/components/molecules/UploadImage.vue'
 import UploadFile from '~/components/molecules/UploadFile.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 
 const validations = {
   image: {},
   imageUrl: {required},
   ctaLabel: {required},
   ctaType: {required},
-  ctaFeature: {required},
+  ctaFeature: {required}
 }
 
 @Component({
@@ -106,6 +116,7 @@ const validations = {
     InputField,
     UploadImage,
     UploadFile,
+    DialogPopup,
 }})
 export default class BrandFeatureBodyRework extends Vue {
   @Prop({
@@ -128,8 +139,25 @@ export default class BrandFeatureBodyRework extends Vue {
   @Prop({
     type: String,
   })
-
   errorMessage = ''
+
+  dialogDisplay = false
+  dialogTitle = "Want to Delete this brand feature ? "
+  dialogDescription = "Please check the information before click to confirm button. The information will lose and never get back."
+  dialogLeftButtonText = "Cancel"
+  dialogRightButtonText = "Delete"
+  dialogLeftButtonAction = () => { 
+    this.setDialogDisplay(false)
+  }
+  dialogRightButtonAction = () => {
+    this.$emit('deleteBrandFeature', this.featureNo)
+    this.setDialogDisplay(false)
+  }
+  
+  setDialogDisplay(value: boolean) {
+    this.dialogDisplay = value
+  }
+
 
   ctaTypeOptions = []
 
@@ -264,6 +292,12 @@ export default class BrandFeatureBodyRework extends Vue {
     }
     if (this.showDisplay) {
       this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)
+    }
+  }
+
+  deleteBrandFeature(): void {
+    if (!this.showDisplay) {
+      this.dialogDisplay = true
     }
   }
 }

@@ -10,7 +10,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import T1Button from '@/components/atoms/button.vue'
 import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
-import { BreadcrumbType, CompanyType } from '~/constants'
+import { BreadcrumbType } from '~/constants'
 import CreateBrand from '@/components/organisms/create-brand/brand.vue'
 
 @Component({
@@ -21,35 +21,14 @@ import CreateBrand from '@/components/organisms/create-brand/brand.vue'
   }
 })
 export default class CompanyEditBrand extends Vue {
-  private company: CompanyType = {
-    assignee: '',
-    companyCategory: {
-      companyCategoryEn: '',
-      companyCategoryId: 0,
-      companyCategoryTh: ''
-    },
-    companyEmail: '',
-    companyId: 0,
-    companyNameEn: '',
-    companyNameTh: '',
-    companyPhoneNumber: '',
-    companyPhonePrefix: '',
-    companySize: {
-      companySizeEn: '',
-      companySizeId: 0,
-      companySizeTh: ''
-    },
-    companyType: {
-      companyTypeEn: '',
-      companyTypeId: 0,
-      companyTypeTh: ''
-    },
-    createdAt: '',
-    createdBy: '',
-    status: 0,
-    statusDesc: '',
-    updatedAt: '',
-    updatedBy: ''
+  private brand: any = {
+    nameEn: '',
+    nameTh: '',
+  }
+
+  private company: any = {
+    nameEn: '',
+    nameTh: '',
   }
 
   get language(): any {
@@ -66,55 +45,76 @@ export default class CompanyEditBrand extends Vue {
 
   @Watch('language')
   setTitleBreadcrumb() {
-    this.setupBreadcrumb(
-      this.language === 'th'
-        ? this.company.companyNameTh
-        : this.company.companyNameEn
-    )
+    this.setupBreadcrumb()
   }
 
-  private setupBreadcrumb(title: string): void {
+  private setupBreadcrumb(): void {
+    const company = this.language === 'th'
+      ? this.company.nameTh
+      : this.company.nameEn
+
+    const brand = this.language === 'th'
+      ? this.brand.nameTh
+      : this.brand.nameEn
+
     const breadcrumb: BreadcrumbType[] = [
       {
         title: 'Organization Management',
         url: '/'
       },
       {
-        title,
+        title: company,
         url: '/'
       },
       {
-        title: `Brand brand - ${title}`,
+        title: `Brand - ${brand}`,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', `Brand brand - ${title}`)
+    this.$store.dispatch('breadcrumb/setPageTitle', `Brand - ${brand}`)
   }
 
-  async getCpmpany(): Promise<void> {
+  async getBrand(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
-        { data: null }
-      )
-      if (res.successful) {
-        this.company = res.data
-
-        this.setupBreadcrumb(
-          this.language === 'th'
-            ? this.company.companyNameTh
-            : this.company.companyNameEn
+      const brandId = this.brandId ? this.brandId : window.sessionStorage.getItem('createBrandId')
+        let res = await this.$axios.$get(
+          `${process.env.PORTAL_ENDPOINT}/get_brand?brandId=${brandId}&brandAdditional=true&partners=true`,
+          { data: null }
         )
+      if (res.successful) {
+        const data = res.data
+        this.brand = {
+          nameTh: data.brandNameTh,
+          nameEn: data.brandNameEn
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  mounted() {
-    this.getCpmpany()
+  async getCompany(): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        const data = res.data
+        this.company.nameEn = data.companyNameEn
+        this.company.nameTh = data.companyNameTh
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async mounted() {
+    await this.getCompany()
+    await this.getBrand()
+    this.setupBreadcrumb()
   }
 
 }

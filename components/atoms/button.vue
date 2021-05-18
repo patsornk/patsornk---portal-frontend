@@ -36,6 +36,7 @@ export default class T1Button extends Vue {
   background: $primary;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   &:focus,
   &:hover {
@@ -48,6 +49,11 @@ export default class T1Button extends Vue {
 .black {
   border: 2px solid $grey-text;
   background: $mid-black;
+}
+.outline {
+  color: $mid-black;
+  border: 1px solid $gray-disable;
+  background: $white;
 }
 .transparent {
   border: 2px solid $primary;
