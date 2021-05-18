@@ -11,6 +11,7 @@
         :optionsReduce="(item) => item.brandId"
         :optionsLabel="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
         placeholder="Please select..."
+        :disable="disableBrandId"
         :errorMessage="error.brandId"
       />
       <input-field
@@ -91,7 +92,7 @@
         :errorMessage="error.branchTypeId"
       />
       <input-field
-        v-if="branchTypeId === '1'"
+        v-if="branchTypeId === 1"
         v-model="$v.mallId.$model"
         :title="$t('createBranch.location.mall')"
         required
@@ -121,10 +122,8 @@
         required
         type="select"
         :options="countryList"
-        :optionsReduce="(item) => item.countryId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsReduce="(item) => item.countryNameEn"
+        :optionsLabel="language === 'th' ? 'countryNameTh' : 'countryNameEn'"
         placeholder="Please select..."
         :errorMessage="error.countryId"
       />
@@ -135,10 +134,9 @@
         type="select"
         :options="provinceList"
         :optionsReduce="(item) => item.provinceId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsLabel="language === 'th' ? 'provinceNameTh' : 'provinceNameEn'"
         placeholder="Please select..."
+        @onChange="getDistrictList"
         :errorMessage="error.provinceId"
         :disable="provinceList.length === 0"
       />
@@ -149,10 +147,9 @@
         type="select"
         :options="districtList"
         :optionsReduce="(item) => item.districtId"
-        :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
-        "
+        :optionsLabel="language === 'th' ? 'districtNameTh' : 'districtNameEn'"
         placeholder="Please select..."
+        @onChange="getSubDistrictList"
         :errorMessage="error.districtId"
         :disable="districtList.length === 0"
       />
@@ -164,9 +161,10 @@
         :options="subDistrictList"
         :optionsReduce="(item) => item.subDistrictId"
         :optionsLabel="
-          language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
+          language === 'th' ? 'subDistrictNameTh' : 'subDistrictNameEn'
         "
         placeholder="Please select..."
+        @onChange="getPostalCodeList"
         :errorMessage="error.subDistrictId"
         :disable="subDistrictList.length === 0"
       />
@@ -175,12 +173,12 @@
         :title="$t('createBranch.location.postalCode')"
         required
         type="select"
-        :options="subDistrictList"
-        :optionsReduce="(item) => item.postalCodeId"
+        :options="postalCodeList"
+        :optionsReduce="(item) => item.postalCode"
         optionsLabel="postalCode"
         placeholder="Please select..."
         :errorMessage="error.postalCode"
-        :disable="subDistrictList.length === 0"
+        :disable="postalCodeList.length === 0"
       />
       <div></div>
       <input-field
@@ -214,7 +212,7 @@
 
     <google-map class="branch-map" :position="mapPosition" />
 
-    <div v-if="branchTypeId === '3'">
+    <div v-if="branchTypeId === 3">
       <div class="mall-head-box">
         <span class="header">{{ $t('createBranch.mallPageHeader') }}</span>
         <input-field
@@ -232,6 +230,7 @@
             <span class="required"> *</span>
           </div>
         </div>
+        {{ logo }}
         <upload-file
           id="mallLogo"
           class="upload-file"
@@ -465,7 +464,12 @@ import AddSocial from '@/components/molecules/create-branch/AddSocial.vue'
 import AddSocialView from '@/components/molecules/create-branch/AddSocialView.vue'
 import OpenHourCustom from '@/components/molecules/create-branch/OpenHourCustom.vue'
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
-import { BrandInitialData, BranchTypeDataType, MallDataType, SiebelPartnerType } from '~/constants'
+import {
+  BrandInitialData,
+  BranchTypeDataType,
+  MallDataType,
+  SiebelPartnerType
+} from '~/constants'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -562,7 +566,7 @@ const validations = {
   ],
   validationInMallGroup: [
     'branchTypeId',
-    'mallId',
+    // 'mallId',
     'address',
     'countryId',
     'provinceId',
@@ -572,7 +576,7 @@ const validations = {
     'latitude',
     'longitude'
   ],
-  validationMallOpenDailyGroup: [
+  validationMallGroup: [
     'branchTypeId',
     'address',
     'countryId',
@@ -588,7 +592,23 @@ const validations = {
     'mallDescription',
     'websiteList',
     'socialList',
-    'categoryId',
+    // 'categoryId',
+    'openingHourId'
+  ],
+  validationMallOpenDailyGroup: [
+    'branchTypeId',
+    'address',
+    'countryId',
+    'provinceId',
+    'districtId',
+    'subDistrictId',
+    'postalCode',
+    'latitude',
+    'longitude',
+    'showDisplay',
+    'logo',
+    'cover',
+    // 'categoryId',
     'openingHourId',
     'openTime',
     'openMeridiem',
@@ -611,7 +631,7 @@ const validations = {
     'mallDescription',
     'websiteList',
     'socialList',
-    'categoryId',
+    // 'categoryId',
     'openingHourId',
     'openCusTomList'
   ]
@@ -636,18 +656,18 @@ const validations = {
 export default class CreateBranch extends Vue {
   $i18n: any
 
-  brandId = ''
+  brandId: any = ''
   branchCode = ''
   branchNameTh = ''
   branchNameEn = ''
   siebelBranchCode = ''
   siebelBranchName = ''
   email = ''
-  companyPhonePrefix = '+66'
+  phonePrefix = '+66'
   phoneNumber = ''
   partnerCodeId = ''
-  branchTypeId = ''
-  mallId = ''
+  branchTypeId: any = ''
+  mallId = 0
   address = ''
   countryId = 'Thailand'
   provinceId = ''
@@ -660,8 +680,8 @@ export default class CreateBranch extends Vue {
   logo = ''
   cover = ''
   mallDescription = ''
-  websiteList = ['']
-  socialList = [{ type: 0, link: '' }]
+  websiteList = []
+  socialList = [{ type: '', link: '' }]
   categoryId = ''
   openingHourId = ''
   openTime = ''
@@ -671,6 +691,7 @@ export default class CreateBranch extends Vue {
   OpenHourCustom = ''
   openCusTomList = [
     {
+      dayOfWeek: 2,
       day: 'Monday',
       openTime: '',
       openMeridiem: 'AM',
@@ -683,6 +704,7 @@ export default class CreateBranch extends Vue {
       closeMeridiemError: ''
     },
     {
+      dayOfWeek: 3,
       day: 'Tuesday',
       openTime: '',
       openMeridiem: 'AM',
@@ -695,6 +717,7 @@ export default class CreateBranch extends Vue {
       closeMeridiemError: ''
     },
     {
+      dayOfWeek: 4,
       day: 'Wednesday',
       openTime: '',
       openMeridiem: 'AM',
@@ -707,6 +730,7 @@ export default class CreateBranch extends Vue {
       closeMeridiemError: ''
     },
     {
+      dayOfWeek: 5,
       day: 'Thursday',
       openTime: '',
       openMeridiem: 'AM',
@@ -719,6 +743,7 @@ export default class CreateBranch extends Vue {
       closeMeridiemError: ''
     },
     {
+      dayOfWeek: 6,
       day: 'Friday',
       openTime: '',
       openMeridiem: 'AM',
@@ -731,6 +756,7 @@ export default class CreateBranch extends Vue {
       closeMeridiemError: ''
     },
     {
+      dayOfWeek: 7,
       day: 'Saturday',
       openTime: '',
       openMeridiem: 'AM',
@@ -743,6 +769,7 @@ export default class CreateBranch extends Vue {
       closeMeridiemError: ''
     },
     {
+      dayOfWeek: 1,
       day: 'Sunday',
       openTime: '',
       openMeridiem: 'AM',
@@ -764,7 +791,7 @@ export default class CreateBranch extends Vue {
     siebelBranchCode: '',
     siebelBranchName: '',
     email: '',
-    companyPhonePrefix: '',
+    phonePrefix: '',
     phoneNumber: '',
     partnerCodeId: '',
     branchTypeId: '',
@@ -793,10 +820,16 @@ export default class CreateBranch extends Vue {
   partnerCodeList: SiebelPartnerType[] = []
   branchTypeList: BranchTypeDataType[] = []
   mallList: MallDataType[] = []
-  countryList = []
+  countryList = [
+    {
+      countryNameEn: 'Thailand',
+      countryNameTh: 'ไทย'
+    }
+  ]
   provinceList = []
   districtList = []
   subDistrictList = []
+  postalCodeList: any = []
 
   categoryList = []
   openingHourList = [
@@ -894,6 +927,8 @@ export default class CreateBranch extends Vue {
     }
   ]
 
+  disableBrandId = false
+
   isShowImage = false
   imageUrl = ''
   logoUrl? = ''
@@ -901,6 +936,11 @@ export default class CreateBranch extends Vue {
 
   isViewWebsite = false
   isViewSocial = false
+
+  isSetProvince = false
+  isSetDistrict = false
+  isSetSubDistrict = false
+  isSetPostalCode = false
 
   get language(): any {
     return this.$i18n.locale
@@ -1009,35 +1049,30 @@ export default class CreateBranch extends Vue {
       : ''
   }
 
-  @Watch('countryId')
   checkCountryId(): void {
     this.error.countryId = !this.$v.countryId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
   }
 
-  @Watch('provinceId')
   checkProvinceId(): void {
     this.error.provinceId = !this.$v.provinceId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
   }
 
-  @Watch('districtId')
   checkDistrictId(): void {
     this.error.districtId = !this.$v.districtId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
   }
 
-  @Watch('subDistrictId')
   checkSubDistrictId(): void {
     this.error.subDistrictId = !this.$v.subDistrictId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
   }
 
-  @Watch('postalCode')
   checkPostalCode(): void {
     this.error.postalCode = !this.$v.postalCode.required
       ? this.$t('createBranch.error.require').toString()
@@ -1199,8 +1234,15 @@ export default class CreateBranch extends Vue {
   }
 
   checkLogo(data: any) {
-    this.logoUrl = data.imageUrl
-    if (data.file) {
+    if (data.imageUrl) {
+      this.logoUrl = data.imageUrl
+
+      if (data.file) {
+        this.error.logo = ''
+      } else {
+        this.error.logo = this.$t('createBranch.error.require').toString()
+      }
+    } else if (data) {
       this.error.logo = ''
     } else {
       this.error.logo = this.$t('createBranch.error.require').toString()
@@ -1208,8 +1250,15 @@ export default class CreateBranch extends Vue {
   }
 
   checkCover(data: any) {
-    this.coverUrl = data.imageUrl
-    if (data.file) {
+    if (data.imageUrl) {
+      this.coverUrl = data.imageUrl
+
+      if (data.file) {
+        this.error.cover = ''
+      } else {
+        this.error.cover = this.$t('createBranch.error.require').toString()
+      }
+    } else if (data) {
       this.error.cover = ''
     } else {
       this.error.cover = this.$t('createBranch.error.require').toString()
@@ -1224,8 +1273,25 @@ export default class CreateBranch extends Vue {
     this.coverUrl = undefined
   }
 
+  getBase64(file: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve(undefined)
+      } else {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = (error) => {
+          reject(error)
+        }
+      }
+    })
+  }
+
   private onChangedPrefixNumber(value: string): void {
-    this.companyPhonePrefix = value
+    this.phonePrefix = value
   }
 
   private findInMap() {
@@ -1237,7 +1303,7 @@ export default class CreateBranch extends Vue {
 
   addWebsite() {
     if (this.websiteList.length === 0) {
-      this.websiteList = ['']
+      this.websiteList = []
       this.isViewWebsite = false
     }
   }
@@ -1263,24 +1329,27 @@ export default class CreateBranch extends Vue {
 
   async getBrand(): Promise<any> {
     try {
-      // let res = await this.$axios.$get(
-      //   `${
-      //     process.env.PORTAL_ENDPOINT
-      //   }/list_brand?companyId=${window.sessionStorage.getItem(
-      //     'createCompanyId'
-      //   )}`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      // this.brandList = res.data.brand
-      this.brandList = [
-        {
-          brandId: 0,
-          brandNameTh: 'brandNameTh',
-          brandNameEn: 'brandNameEn'
+      let res = await this.$axios.$get(
+        `${
+          process.env.PORTAL_ENDPOINT
+        }/list_brand?companyId=${window.sessionStorage.getItem(
+          'createCompanyId'
+        )}`,
+        { data: null }
+      )
+      if (res.successful) {
+        if (
+          window.sessionStorage.getItem('createBranchFirstTime') &&
+          window.sessionStorage.getItem('createBranchFirstTime') === 'no'
+        ) {
+          this.brandList = res.data.brand
+        } else {
+          this.brandList = res.data.brand
+          this.brandId =
+            Number(window.sessionStorage.getItem('createBrandId')) || 0
+          this.disableBrandId = true
         }
-      ]
-      // }
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
@@ -1288,24 +1357,17 @@ export default class CreateBranch extends Vue {
 
   async getPartnerCode(): Promise<any> {
     try {
-      // let res = await this.$axios.$get(
-      //   `${
-      //     process.env.PORTAL_ENDPOINT
-      //   }/partner_code?companyId=${window.sessionStorage.getItem(
-      //     'createCompanyId'
-      //   )}`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      // this.partnerCodeList = res.data.partner
-      this.partnerCodeList = [
-        {
-          id: 1,
-          partnerCode: 'cmg1234',
-          partnerName: 'Central Marketing group 1234'
-        }
-      ]
-      // }
+      let res = await this.$axios.$get(
+        `${
+          process.env.PORTAL_ENDPOINT
+        }/partner_code?brandId=${window.sessionStorage.getItem(
+          'createBrandId'
+        )}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.partnerCodeList = res.data.partner
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
@@ -1313,30 +1375,13 @@ export default class CreateBranch extends Vue {
 
   async getBranchType(): Promise<any> {
     try {
-      // let res = await this.$axios.$get(
-      //   `${process.env.PORTAL_ENDPOINT}/get_branch_type`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      //   this.branchTypeList = res.data.branch_type
-      this.branchTypeList = [
-        {
-          branchTypeId: 1,
-          branchTypeTh: 'In a Mall',
-          branchTypeEn: 'In a Mall'
-        },
-        {
-          branchTypeId: 2,
-          branchTypeTh: 'Not in a Mall',
-          branchTypeEn: 'Not in a Mall'
-        },
-        {
-          branchTypeId: 3,
-          branchTypeTh: 'Mall',
-          branchTypeEn: 'Mall'
-        }
-      ]
-      // }
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_branch_type`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.branchTypeList = res.data.branchType
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
@@ -1344,39 +1389,98 @@ export default class CreateBranch extends Vue {
 
   async getMallList(): Promise<any> {
     try {
-      // let res = await this.$axios.$get(
-      //   `${process.env.PORTAL_ENDPOINT}/get_branch_type`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      //   this.branchTypeList = res.data.branch_type
-      this.mallList = [
-        {
-          mallId: 1,
-          mallNameTh: 'Mall 1',
-          mallNameEn: 'Mall 1'
-        },
-        {
-          mallId: 2,
-          mallNameTh: 'Mall 2',
-          mallNameEn: 'Mall 2'
-        },
-        {
-          mallId: 3,
-          mallNameTh: 'Mall 3',
-          mallNameEn: 'Mall 3'
-        }
-      ]
-      // }
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_mall`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.mallList = res.data.mall
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
+  async getProvinceList(): Promise<any> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_province`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.provinceList = res.data.provinces
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getDistrictList(): Promise<any> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_district?provinceId=${this.provinceId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.districtList = res.data.districts
+        if (!this.isSetProvince) {
+          this.isSetProvince = true
+        } else {
+          this.subDistrictList = []
+          this.postalCodeList = []
+          this.districtId = ''
+          this.subDistrictId = ''
+          this.postalCode = ''
+          this.error.provinceId = ''
+          this.error.districtId = ''
+          this.error.subDistrictId = ''
+          this.error.postalCode = ''
+        }
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getSubDistrictList(): Promise<any> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_sub_district?districtId=${this.districtId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.subDistrictList = res.data.subDistricts
+        if (!this.isSetProvince) {
+          this.isSetDistrict = true
+        } else {
+          this.postalCodeList = []
+          this.subDistrictId = ''
+          this.postalCode = ''
+          this.error.districtId = ''
+          this.error.subDistrictId = ''
+          this.error.postalCode = ''
+        }
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  getPostalCodeList() {
+    this.postalCodeList = this.subDistrictList.filter((item: any) => {
+      return item.subDistrictId === this.subDistrictId
+    })
+    if (this.postalCodeList.length === 1) {
+      this.postalCode = this.postalCodeList[0].postalCode
+    }
+    this.error.subDistrictId = ''
+    this.error.postalCode = ''
+  }
+
   async mounted(): Promise<void> {
     if (
-      window.sessionStorage.getItem('branchFirstTime') &&
-      window.sessionStorage.getItem('branchFirstTime') === 'no'
+      window.sessionStorage.getItem('createBranchFirstTime') &&
+      window.sessionStorage.getItem('createBranchFirstTime') === 'no'
     ) {
       this.getBranch()
     }
@@ -1384,31 +1488,92 @@ export default class CreateBranch extends Vue {
     this.getPartnerCode()
     this.getBranchType()
     this.getMallList()
+    this.getProvinceList()
   }
 
   async getBranch(): Promise<void> {
     if (window.sessionStorage.getItem('createBranchId')) {
       try {
-        // let res = await this.$axios.$get(
-        //   `${
-        //     process.env.PORTAL_ENDPOINT
-        //   }/get_company?companyId=${window.sessionStorage.getItem(
-        //     'createCompanyId'
-        //   )}`,
-        //   { data: null }
-        // )
-        // if (res.successful) {
-        //   const data = res.data
-        //   this.companyNameTh = data.companyNameTh
-        //   this.companyNameEn = data.companyNameEn
-        //   this.typeId = data.companyType.companyTypeId
-        //   this.categoryId = data.companyCategory.companyCategoryId
-        //   this.sizeId = data.companySize.companySizeId
-        //   this.assignee = data.assignee
-        //   this.email = data.companyEmail
-        //   this.companyPhonePrefix = data.companyPhonePrefix
-        //   this.phoneNumber = data.companyPhoneNumber
-        // }
+        let res = await this.$axios.$get(
+          `${
+            process.env.PORTAL_ENDPOINT
+          }/get_branch?branchId=${window.sessionStorage.getItem(
+            'createBranchId'
+          )}`,
+          { data: null }
+        )
+        if (res.successful) {
+          const data = res.data
+          this.brandId = data.brandId
+          this.branchCode = data.branchCode
+          this.branchNameTh = data.branchNameTh
+          this.branchNameEn = data.branchNameEn
+          this.siebelBranchCode = data.siebelBranch.code
+          this.siebelBranchName = data.siebelBranch.name
+          this.email = data.branchEmail
+          this.phonePrefix = data.branchPhonePrefix
+          this.phoneNumber = data.branchPhoneNumber
+          // this.partnerCodeId = data.partnerCodeId
+          this.branchTypeId = data.branchType.branchTypeId
+          this.mallId = data.mall.mallId
+          this.address = data.address.address
+          this.countryId = data.address.country
+          this.provinceId = data.address.province.provinceId
+          this.districtId = data.address.district.districtId
+          this.subDistrictId = data.address.subDistrict.subDistrictId
+          this.postalCode = data.address.subDistrict.postalCode
+          this.latitude = data.location.latitude
+          this.longitude = data.location.longitude
+          this.showDisplay = data.showInApp
+          this.logo = data.mall.mallLogoImg
+          this.cover = data.mall.mallCoverPageImg
+          this.mallDescription = data.mall.mallShortDesc
+          this.websiteList = data.mall.mallInfo.websiteUrl
+
+          if (data.mall.mallInfo.facebook) {
+            data.mall.mallInfo.facebook.forEach((link: string) => {
+              this.socialList.push({ type: 'Facebook', link: link })
+            })
+          }
+
+          if (data.mall.mallInfo.instagram) {
+            data.mall.mallInfo.instagram.forEach((link: string) => {
+              this.socialList.push({ type: 'Instagram', link: link })
+            })
+          }
+
+          if (data.mall.mallInfo.line) {
+            data.mall.mallInfo.line.forEach((link: string) => {
+              this.socialList.push({ type: 'Line', link: link })
+            })
+          }
+
+          if (data.mall.mallInfo.twitter) {
+            data.mall.mallInfo.twitter.forEach((link: string) => {
+              this.socialList.push({ type: 'Twitter', link: link })
+            })
+          }
+
+          // this.categoryId  = data.mall.mallInfo.mallCategory.mallCategoryId
+          if (data.mall.mallInfo.openingHour.length === 7) {
+            this.openingHourId = '1'
+            this.openCusTomList = data.mall.mallInfo.openingHour
+          } else if (data.mall.mallInfo.openingHour.length === 1) {
+            this.openingHourId = '2'
+            this.openTime = data.mall.mallInfo.openingHour.openingTime.split(
+              '|'
+            )[0]
+            this.OpenHourCustom = data.mall.mallInfo.openingHour.openingTime.split(
+              '|'
+            )[1]
+            this.closeTime = data.mall.mallInfo.openingHour.closingTime.split(
+              '|'
+            )[0]
+            this.closeMeridiem = data.mall.mallInfo.openingHour.closingTime.split(
+              '|'
+            )[1]
+          }
+        }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
       }
@@ -1436,6 +1601,7 @@ export default class CreateBranch extends Vue {
     this.checkEmail()
     this.checkPhoneNumber()
     this.checkPartnerCode()
+    this.checkBranchTypeId()
     this.checkAddress()
     this.checkCountryId()
     this.checkProvinceId()
@@ -1449,7 +1615,7 @@ export default class CreateBranch extends Vue {
   validateMall() {
     this.checkLogo(this.$v.logo.$model)
     this.checkCover(this.$v.cover.$model)
-    this.checkCategoryId()
+    // this.checkCategoryId()
     this.checkOpeningHourId()
   }
 
@@ -1463,9 +1629,9 @@ export default class CreateBranch extends Vue {
     this.checkTimeError('customize')
   }
 
-  async save(): Promise<void> {
+  async setPayload() {
     switch (this.branchTypeId) {
-      case '1':
+      case 1:
         if (
           this.$v.validationBranchInfoGroup.$invalid ||
           this.$v.validationInMallGroup.$invalid
@@ -1475,8 +1641,33 @@ export default class CreateBranch extends Vue {
           this.checkBranchTypeId()
           this.checkMallId()
           return
+        } else {
+          return {
+            brandId: this.$v.brandId.$model,
+            branchCode: this.$v.branchCode.$model,
+            branchNameEn: this.$v.branchNameEn.$model,
+            branchNameTh: this.$v.branchNameTh.$model,
+            partnerId: [this.$v.partnerCodeId.$model],
+            siebelBranchCode: this.$v.siebelBranchCode.$model,
+            siebelBranchName: this.$v.siebelBranchName.$model,
+            branchTypeId: this.$v.branchTypeId.$model,
+            address: this.$v.address.$model,
+            subDistrictId: this.$v.subDistrictId.$model,
+            districtId: this.$v.districtId.$model,
+            provinceId: this.$v.provinceId.$model,
+            postalCode: this.$v.postalCode.$model,
+            country: this.$v.countryId.$model,
+            latitude: this.$v.latitude.$model,
+            longitude: this.$v.longitude.$model,
+            branchPhonePrefix: this.phonePrefix,
+            branchPhoneNumber: this.$v.phoneNumber.$model,
+            branchEmail: this.$v.email.$model,
+            showInApp: this.$v.showDisplay.$model,
+            mallId: this.$v.mallId.$model
+          }
+          break
         }
-      case '3':
+      case 3:
         if (this.openingHourId === '1') {
           if (
             this.$v.validationBranchInfoGroup.$invalid ||
@@ -1486,7 +1677,78 @@ export default class CreateBranch extends Vue {
             this.validateInfoAndLocation()
             this.validateMall()
             this.validateOpenDaily()
+
             return
+          } else {
+            const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+            const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
+
+            let mallFacebook: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Facebook') {
+                mallFacebook.push(item.link)
+              }
+            })
+            let mallInstagram: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Instagram') {
+                mallInstagram.push(item.link)
+              }
+            })
+            let mallLine: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Line') {
+                mallLine.push(item.link)
+              }
+            })
+            let mallTwitter: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Twitter') {
+                mallTwitter.push(item.link)
+              }
+            })
+            const openingHour = {
+              dayOfWeek: 0,
+              openingTime: this.openTime + '|' + this.openMeridiem,
+              closingTime: this.closeTime + '|' + this.closeMeridiem,
+              dayOff: false,
+              allDay: false
+            }
+
+            return {
+              brandId: this.$v.brandId.$model,
+              branchCode: this.$v.branchCode.$model,
+              branchNameEn: this.$v.branchNameEn.$model,
+              branchNameTh: this.$v.branchNameTh.$model,
+              partnerId: [this.$v.partnerCodeId.$model],
+              siebelBranchCode: this.$v.siebelBranchCode.$model,
+              siebelBranchName: this.$v.siebelBranchName.$model,
+              branchTypeId: this.$v.branchTypeId.$model,
+              address: this.$v.address.$model,
+              subDistrictId: this.$v.subDistrictId.$model,
+              districtId: this.$v.districtId.$model,
+              provinceId: this.$v.provinceId.$model,
+              postalCode: this.$v.postalCode.$model,
+              country: this.$v.countryId.$model,
+              latitude: this.$v.latitude.$model,
+              longitude: this.$v.longitude.$model,
+              branchPhonePrefix: this.phonePrefix,
+              branchPhoneNumber: this.$v.phoneNumber.$model,
+              branchEmail: this.$v.email.$model,
+              showInApp: this.$v.showDisplay.$model,
+
+              mallLogoImg: getLogoBase64,
+              mallCoverPageImg: getCoverBase64,
+              mallShortDesc: this.$v.mallDescription.$model,
+              mallWebsiteUrl: this.$v.websiteList.$model,
+              mallFacebook,
+              mallInstagram,
+              mallLine,
+              mallTwitter,
+              openingHour,
+              mallCategoryId: this.$v.categoryId.$model
+            }
+            break
           }
         } else if (this.openingHourId === '2') {
           if (
@@ -1497,8 +1759,93 @@ export default class CreateBranch extends Vue {
             this.validateInfoAndLocation()
             this.validateMall()
             this.validateOpenCustomize()
+
             return
+          } else {
+            const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+            const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
+
+            let mallFacebook: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Facebook') {
+                mallFacebook.push(item.link)
+              }
+            })
+            let mallInstagram: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Instagram') {
+                mallInstagram.push(item.link)
+              }
+            })
+            let mallLine: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Line') {
+                mallLine.push(item.link)
+              }
+            })
+            let mallTwitter: string[] = []
+            this.$v.socialList.$model.forEach((item: any) => {
+              if (item.type === 'Twitter') {
+                mallTwitter.push(item.link)
+              }
+            })
+
+            let openingHour: any = []
+            this.$v.openCusTomList.$model.forEach((item: any) => {
+              openingHour.push({
+                dayOfWeek: item.dayOfWeek,
+                openingTime: item.openTime + '|' + item.openMeridiem,
+                closingTime: item.closeTime + '|' + item.closeMeridiem,
+                dayOff: item.isDayOff,
+                allDay: false
+              })
+            })
+
+            return {
+              brandId: this.$v.brandId.$model,
+              branchCode: this.$v.branchCode.$model,
+              branchNameEn: this.$v.branchNameEn.$model,
+              branchNameTh: this.$v.branchNameTh.$model,
+              partnerId: [this.$v.partnerCodeId.$model],
+              siebelBranchCode: this.$v.siebelBranchCode.$model,
+              siebelBranchName: this.$v.siebelBranchName.$model,
+              branchTypeId: this.$v.branchTypeId.$model,
+              address: this.$v.address.$model,
+              subDistrictId: this.$v.subDistrictId.$model,
+              districtId: this.$v.districtId.$model,
+              provinceId: this.$v.provinceId.$model,
+              postalCode: this.$v.postalCode.$model,
+              country: this.$v.countryId.$model,
+              latitude: this.$v.latitude.$model,
+              longitude: this.$v.longitude.$model,
+              branchPhonePrefix: this.phonePrefix,
+              branchPhoneNumber: this.$v.phoneNumber.$model,
+              branchEmail: this.$v.email.$model,
+              showInApp: this.$v.showDisplay.$model,
+
+              mallLogoImg: getLogoBase64,
+              mallCoverPageImg: getCoverBase64,
+              mallShortDesc: this.$v.mallDescription.$model,
+              mallWebsiteUrl: this.$v.websiteList.$model,
+              mallFacebook,
+              mallInstagram,
+              mallLine,
+              mallTwitter,
+              openingHour,
+              mallCategoryId: this.$v.categoryId.$model
+            }
+            break
           }
+        } else {
+          if (
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationMallGroup.$invalid
+          ) {
+            this.$toast.global.error(this.$t('createBranch.fieldError'))
+            this.validateInfoAndLocation()
+            this.validateMall()
+          }
+          return
         }
       default:
         if (
@@ -1508,60 +1855,55 @@ export default class CreateBranch extends Vue {
           this.$toast.global.error(this.$t('createBranch.fieldError'))
           this.validateInfoAndLocation()
           this.checkBranchTypeId()
+
           return
+        } else {
+          return {
+            brandId: this.$v.brandId.$model,
+            branchCode: this.$v.branchCode.$model,
+            branchNameEn: this.$v.branchNameEn.$model,
+            branchNameTh: this.$v.branchNameTh.$model,
+            partnerId: [this.$v.partnerCodeId.$model],
+            siebelBranchCode: this.$v.siebelBranchCode.$model,
+            siebelBranchName: this.$v.siebelBranchName.$model,
+            branchTypeId: this.$v.branchTypeId.$model,
+            address: this.$v.address.$model,
+            subDistrictId: this.$v.subDistrictId.$model,
+            districtId: this.$v.districtId.$model,
+            provinceId: this.$v.provinceId.$model,
+            postalCode: this.$v.postalCode.$model,
+            country: this.$v.countryId.$model,
+            latitude: this.$v.latitude.$model,
+            longitude: this.$v.longitude.$model,
+            branchPhonePrefix: this.phonePrefix,
+            branchPhoneNumber: this.$v.phoneNumber.$model,
+            branchEmail: this.$v.email.$model,
+            showInApp: this.$v.showDisplay.$model
+          }
         }
     }
+  }
 
-    const payload = {
-      brandId: this.$v.brandId.$model,
-      branchNameEn: this.$v.branchNameEn.$model,
-      branchNameTh: this.$v.branchNameTh.$model,
-      partnerId: this.$v.partnerCodeId.$model,
-      siebelBranchCode: this.$v.siebelBranchCode.$model,
-      siebelBranchName: this.$v.siebelBranchName.$model,
-      branchTypeId: this.$v.branchTypeId.$model,
-      address: this.$v.address.$model,
-      subDistrict: this.$v.subDistrictId.$model,
-      district: this.$v.districtId.$model,
-      province: this.$v.provinceId.$model,
-      postalCode: this.$v.postalCode.$model,
-      country: this.$v.countryId.$model,
-      latitude: this.$v.latitude.$model,
-      longitude: this.$v.longitude.$model,
-      branchPhonePrefix: this.$v.companyPhonePrefix.$model,
-      branchPhoneNumber: this.$v.phoneNumber.$model,
-      branchEmail: this.$v.email.$model,
-
-      mallLogoImg: this.$v.logo.$model,
-      mallCoverPageImg: this.$v.cover.$model,
-      mallShortDesc: this.$v.mallDescription.$model,
-      // mallWebsiteUrl: this.$v.0000000.$model,
-      // mallFacebook: this.$v.0000000.$model,
-      // mallInstagram: this.$v.0000000.$model,
-      // mallLine: this.$v.0000000.$model,
-      // mallTwitter: this.$v.0000000.$model,
-      mallCategoryId: this.$v.categoryId.$model,
-      // openingHour: this.$v.0000000.$model,
-      showInApp: this.$v.showDisplay.$model
+  async save(): Promise<void> {
+    let payload = await this.setPayload()
+    if (!payload) {
+      return
     }
 
     try {
       let response = await this.$axios.$post(
-        `${process.env.PORTAL_ENDPOINT}/create_company`,
+        `${process.env.PORTAL_ENDPOINT}/create_branch`,
         payload
       )
       if (response.successful) {
         this.$store.dispatch(
-          'organizartion/setCompanyId',
-          response.data.companyId
+          'organizartion/setBranchId',
+          response.data.branchId
         )
-        window.sessionStorage.setItem(
-          'createCompanyId',
-          response.data.companyId
-        )
+        window.sessionStorage.setItem('createBranchId', response.data.branchId)
         window.sessionStorage.setItem('createBranchFirstTime', 'no')
         this.$toast.global.success('Saved successfully')
-        this.$router.push('/organizationManagement/create/partnercode')
+        this.$router.push('/organizationManagement/create/service')
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -1569,29 +1911,26 @@ export default class CreateBranch extends Vue {
   }
 
   async update() {
-    // try {
-    //     let response = await this.$axios.$post(
-    //       `${process.env.PORTAL_ENDPOINT}/update_company`,
-    //       {
-    //         companyId: window.sessionStorage.getItem('createCompanyId'),
-    //         ...payload
-    //       }
-    //     )
-    //     if (response.successful) {
-    //       this.$store.dispatch(
-    //         'organizartion/setCompanyId',
-    //         response.data.companyId
-    //       )
-    //       window.sessionStorage.setItem(
-    //         'createCompanyId',
-    //         response.data.companyId
-    //       )
-    //       this.$toast.global.success('Saved successfully')
-    //       window.sessionStorage.setItem('createcreateBranchFirstTime', 'no')
-    //     }
-    //   } catch (error) {
-    //     this.$toast.global.error(error.response.data.message)
-    //   }
+    let payload = await this.setPayload()
+    if (payload) {
+      Object.assign(payload, {
+        branchId: window.sessionStorage.getItem('createBranchId')
+      })
+    } else {
+      return
+    }
+
+    try {
+      let response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/update_branch`,
+        payload
+      )
+      if (response.successful) {
+        this.$toast.global.success('Saved successfully')
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 }
 </script>
