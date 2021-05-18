@@ -10,7 +10,7 @@
             <img
               class="icon"
               src="@/assets/images/table/hold.png"
-              @click="$emit('clickHHold')"
+              @click="$emit('clickHold', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">On hold</span>
           </div>
@@ -18,7 +18,7 @@
             <img
               class="icon"
               src="@/assets/images/table/inactive.png"
-              @click="$emit('clickInactive')"
+              @click="$emit('clickInactive', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">Inactive</span>
           </div>
@@ -26,7 +26,7 @@
             <img
               class="icon"
               src="@/assets/images/table/delete.png"
-              @click="$emit('clickDelete')"
+              @click="$emit('clickDelete', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">Delete</span>
           </div>

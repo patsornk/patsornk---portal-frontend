@@ -45,6 +45,9 @@
       @pagination="changPageSize"
       :rowHeight="80"
       class="row-h-80"
+      @clickHold="clickHold"
+      @clickInactive="clickInactive"
+      @clickDelete="clickDelete"
     />
   </div>
 </template>
@@ -191,9 +194,12 @@ export default class TabPartnerCode extends Vue {
       path = path + `&statusId=${this.fillterData.compantStatus}`
     }
     try {
-      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
-        data: null
-      })
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}${path}`,
+        {
+          data: null
+        }
+      )
       if (res.successful) {
         this.mappingPartnerCode(res.data)
       }
@@ -223,25 +229,84 @@ export default class TabPartnerCode extends Vue {
       return {
         partnerCode: item.partnerCode,
         partnerId: item.partnerId,
-        partnerName: item.partnerName,
+        partnerName: item.partnerName
       }
     })
   }
 
-  clickNewPartnerCode(){
+  clickNewPartnerCode() {
     this.$router.push(`/organizationManagement/${this.id}/create/partnercode`)
   }
 
+  async changeStatus(event: any, statusId: number) {
+    let partnerId: number[] = []
+
+    event.forEach((item: any) => {
+      partnerId.push(item.partnerId)
+    })
+
+    const payload = {
+      partnerId,
+      statusId
+    }
+
+    try {
+      let response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/update_partner_code_status`,
+        payload
+      )
+      if (response.successful) {
+        this.getPartnarCode('1', this.pagination)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.message)
+    }
+  }
+
+  async clickHold(event: any) {
+    await this.changeStatus(event, 4)
+  }
+
+  async clickInactive(event: any) {
+    await this.changeStatus(event, 3)
+  }
+
+  async clickDelete(event: any) {
+    let payload: any = []
+
+    event.forEach((item: any) => {
+      payload.push(item.partnerId)
+    })
+    console.log('payload', payload)
+
+    try {
+      let response = await this.$axios.$delete(
+        `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
+        {
+          data: { partnerId: payload }
+        }
+      )
+      if (response.successful) {
+        this.getPartnarCode('1', this.pagination)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
   onRowClicked(row: any) {
-    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
-    this.$router.push(`/organizationManagement/edit/partnercode/${row.data.partnerId}`)
+    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '')
+    this.$router.push(
+      `/organizationManagement/edit/partnercode/${row.data.partnerId}`
+    )
   }
 
   deleteHandler(map: any, vm: any) {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        e.preventDefault()
+      }
     }
   }
 }
