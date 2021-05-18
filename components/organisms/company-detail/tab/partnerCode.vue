@@ -49,22 +49,35 @@
       @clickInactive="clickInactive"
       @clickDelete="clickDelete"
     />
+
+    <dialog-popup
+      :display="dialogDisplay"
+      :title="dialogTitle"
+      :description="dialogDescription"
+      :leftButtonTitle="dialogLeftButtonText"
+      :rightButtonTitle="dialogRightButtonText"
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="dialogAction"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import { OrganizationManagementStatus } from '~/constants'
 
 @Component({
   components: {
     TableComponent,
     InputField,
     T1Dropdown,
-    T1Button
+    T1Button,
+    DialogPopup
   }
 })
 export default class TabPartnerCode extends Vue {
@@ -79,6 +92,13 @@ export default class TabPartnerCode extends Vue {
   get language(): any {
     return this.$i18n.locale
   }
+
+  status = 'ww'
+  dialogDisplay = false
+  dialogTitle = ''
+  dialogDescription = ''
+  dialogLeftButtonText = 'Cancel'
+  dialogRightButtonText = ''
 
   selectData = []
   pageSize = 0
@@ -238,6 +258,54 @@ export default class TabPartnerCode extends Vue {
     this.$router.push(`/organizationManagement/${this.id}/create/partnercode`)
   }
 
+  async clickHold(event: any) {
+    this.status = OrganizationManagementStatus.HOLD
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to change ${event.length} items seletection status to on hold  ?`
+    this.dialogDescription =
+      'This account will be temporarity disabled. Are you sure you want to change account status?'
+    this.dialogRightButtonText = 'Confirm'
+  }
+
+  async clickInactive(event: any) {
+    this.status = OrganizationManagementStatus.INACTIVE
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to change ${event.length} items seletection status to inctive   ?`
+    this.dialogDescription =
+      'This account will be disabled. Are you sure you want to change account status?'
+    this.dialogRightButtonText = 'Confirm'
+  }
+
+  async clickDelete(event: any) {
+    this.status = OrganizationManagementStatus.DELETE
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to delete ${event.length} items selection   ?`
+    this.dialogDescription = `Please check the information before click to confirm button. The information will lose and never get back.`
+    this.dialogRightButtonText = 'Delete'
+  }
+
+  dialogCancelAction() {
+    this.setDialogDisplay(false)
+  }
+
+  dialogAction() {
+    switch (this.status) {
+      case OrganizationManagementStatus.HOLD:
+        this.changeStatus(this.selectData, 4)
+        break
+      case OrganizationManagementStatus.INACTIVE:
+        this.changeStatus(this.selectData, 3)
+        break
+      case OrganizationManagementStatus.DELETE:
+        this.deletePartnerCode(this.selectData)
+        break
+    }
+  }
+
+  setDialogDisplay(value: boolean) {
+    this.dialogDisplay = value
+  }
+
   async changeStatus(event: any, statusId: number) {
     let partnerId: number[] = []
 
@@ -263,21 +331,12 @@ export default class TabPartnerCode extends Vue {
     }
   }
 
-  async clickHold(event: any) {
-    await this.changeStatus(event, 4)
-  }
-
-  async clickInactive(event: any) {
-    await this.changeStatus(event, 3)
-  }
-
-  async clickDelete(event: any) {
+  async deletePartnerCode(event: any) {
     let payload: any = []
 
     event.forEach((item: any) => {
       payload.push(item.partnerId)
     })
-    console.log('payload', payload)
 
     try {
       let response = await this.$axios.$delete(

@@ -1,6 +1,6 @@
 <template>
   <div class="brand-feature-body-container">
-    <dialog-popup 
+    <dialog-popup
       :display="dialogDisplay"
       :title="dialogTitle"
       :description="dialogDescription"
@@ -26,7 +26,9 @@
     <div class="form-container">
       <div class="feature-container">
         <div class="feature">
-          <div class="title">{{`${$t('createBrand.brandFeature.feature')} ${featureNo}`}}</div>
+          <div class="title">
+            {{ `${$t('createBrand.brandFeature.feature')} ${featureNo}` }}
+          </div>
           <img
             v-if="canDelete"
             class="delete-icon"
@@ -41,8 +43,8 @@
         />
       </div>
       <div class="text-danger text-sm validation-error-text">
-          {{ errorMessage }}
-        </div>
+        {{ errorMessage }}
+      </div>
       <input-field
         class="input"
         :title="$t('createBrand.brandFeature.ctaLabel')"
@@ -82,12 +84,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Vue, 
-  Prop,
-  Component,
-  Watch
-} from 'vue-property-decorator'
+import { Vue, Prop, Component, Watch } from 'vue-property-decorator'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -96,7 +93,10 @@ import {
   email,
   numeric
 } from 'vuelidate/lib/validators'
-import { BrandFeatureInitialData, BrandFeatureError } from '~/constants/types/Brandfeature'
+import {
+  BrandFeatureInitialData,
+  BrandFeatureError
+} from '~/constants/types/Brandfeature'
 import InputField from '~/components/atoms/InputField.vue'
 import UploadImage from '~/components/molecules/UploadImage.vue'
 import UploadFile from '~/components/molecules/UploadFile.vue'
@@ -104,10 +104,10 @@ import DialogPopup from '~/components/molecules/DialogPopup.vue'
 
 const validations = {
   image: {},
-  imageUrl: {required},
-  ctaLabel: {required},
-  ctaType: {required},
-  ctaFeature: {required}
+  imageUrl: { required },
+  ctaLabel: { required },
+  ctaType: { required },
+  ctaFeature: { required }
 }
 
 @Component({
@@ -116,8 +116,9 @@ const validations = {
     InputField,
     UploadImage,
     UploadFile,
-    DialogPopup,
-}})
+    DialogPopup
+  }
+})
 export default class BrandFeatureBodyRework extends Vue {
   @Prop({
     type: Object
@@ -126,38 +127,38 @@ export default class BrandFeatureBodyRework extends Vue {
 
   @Prop({
     type: Number,
-    required: true,
+    required: true
   })
   readonly featureNo!: number
 
   @Prop({
     type: Boolean,
-    required: true,
+    required: true
   })
   readonly canDelete!: boolean
 
   @Prop({
-    type: String,
+    type: String
   })
   errorMessage = ''
 
   dialogDisplay = false
-  dialogTitle = "Want to Delete this brand feature ? "
-  dialogDescription = "Please check the information before click to confirm button. The information will lose and never get back."
-  dialogLeftButtonText = "Cancel"
-  dialogRightButtonText = "Delete"
-  dialogLeftButtonAction = () => { 
+  dialogTitle = 'Want to Delete this brand feature ? '
+  dialogDescription =
+    'Please check the information before click to confirm button. The information will lose and never get back.'
+  dialogLeftButtonText = 'Cancel'
+  dialogRightButtonText = 'Delete'
+  dialogLeftButtonAction() {
     this.setDialogDisplay(false)
   }
-  dialogRightButtonAction = () => {
+  dialogRightButtonAction() {
     this.$emit('deleteBrandFeature', this.featureNo)
     this.setDialogDisplay(false)
   }
-  
+
   setDialogDisplay(value: boolean) {
     this.dialogDisplay = value
   }
-
 
   ctaTypeOptions = []
 
@@ -173,11 +174,11 @@ export default class BrandFeatureBodyRework extends Vue {
     ctaLabel: '',
     ctaType: '',
     ctaFeature: '',
-    image: '',
+    image: ''
   }
 
   mounted(): void {
-    this.getCtaType();
+    this.getCtaType()
   }
 
   updated() {
@@ -211,10 +212,22 @@ export default class BrandFeatureBodyRework extends Vue {
   onUploadImage(value: any) {
     this.imageUrl = value.imageUrl
     this.$emit('onBrandFeatureChange', this.featureNo - 1, 'image', value.file)
-    this.$emit('onBrandFeatureChange', this.featureNo - 1, 'imageUrl', value.imageUrl)    
+    this.$emit(
+      'onBrandFeatureChange',
+      this.featureNo - 1,
+      'imageUrl',
+      value.imageUrl
+    )
     if (this.showDisplay) {
-      this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)
-      this.error.image = this.imageUrl ? '' : this.$t('createBrand.brandFeature.error.image').toString()
+      this.$emit(
+        'onBrandFeatureChange',
+        this.featureNo - 1,
+        'isValid',
+        !this.$v.$invalid
+      )
+      this.error.image = this.imageUrl
+        ? ''
+        : this.$t('createBrand.brandFeature.error.image').toString()
     } else {
       this.error.image = ''
     }
@@ -223,27 +236,49 @@ export default class BrandFeatureBodyRework extends Vue {
   onRemoveFeatureImage() {
     this.imageUrl = ''
     this.$emit('onBrandFeatureChange', this.featureNo - 1, 'image', undefined)
-    this.$emit('onBrandFeatureChange', this.featureNo - 1, 'imageUrl', undefined)
+    this.$emit(
+      'onBrandFeatureChange',
+      this.featureNo - 1,
+      'imageUrl',
+      undefined
+    )
     if (this.showDisplay) {
-      this.error.image = this.imageUrl ? '' : this.$t('createBrand.brandFeature.error.image').toString()
-      this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)
+      this.error.image = this.imageUrl
+        ? ''
+        : this.$t('createBrand.brandFeature.error.image').toString()
+      this.$emit(
+        'onBrandFeatureChange',
+        this.featureNo - 1,
+        'isValid',
+        !this.$v.$invalid
+      )
     }
   }
 
   @Watch('showDisplay')
   onChangedShowDisplay(): void {
     this.$v.$touch()
-    this.$emit('onBrandFeatureChange', this.featureNo - 1, 'showDisplay', this.showDisplay)
+    this.$emit(
+      'onBrandFeatureChange',
+      this.featureNo - 1,
+      'showDisplay',
+      this.showDisplay
+    )
     if (!this.showDisplay) {
       this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', true)
       this.error = {
         ctaLabel: '',
         ctaType: '',
-        ctaFeature: '',
+        ctaFeature: ''
       }
     } else {
-      this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)  
-      this.error.ctaLabel = !this.$v.ctaLabel.required 
+      this.$emit(
+        'onBrandFeatureChange',
+        this.featureNo - 1,
+        'isValid',
+        !this.$v.$invalid
+      )
+      this.error.ctaLabel = !this.$v.ctaLabel.required
         ? this.$t('createBrand.brandFeature.error.ctaLabel').toString()
         : ''
       this.error.ctaType = !this.$v.ctaType.required
@@ -252,46 +287,78 @@ export default class BrandFeatureBodyRework extends Vue {
       this.error.ctaFeature = !this.$v.ctaFeature.required
         ? this.$t('createBrand.brandFeature.error.ctaFeature').toString()
         : ''
-      this.error.image = this.imageUrl ? '' : this.$t('createBrand.brandFeature.error.image').toString()
+      this.error.image = this.imageUrl
+        ? ''
+        : this.$t('createBrand.brandFeature.error.image').toString()
     }
   }
 
   @Watch('ctaLabel')
   onCtaLabelChanged(): void {
-    this.$emit('onBrandFeatureChange', this.featureNo - 1, 'ctaLabel', this.ctaLabel)
+    this.$emit(
+      'onBrandFeatureChange',
+      this.featureNo - 1,
+      'ctaLabel',
+      this.ctaLabel
+    )
     if (this.showDisplay) {
       this.error.ctaLabel = !this.$v.ctaLabel.required
         ? this.$t('createBrand.brandFeature.error.ctaLabel').toString()
         : ''
     }
     if (this.showDisplay) {
-      this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)
+      this.$emit(
+        'onBrandFeatureChange',
+        this.featureNo - 1,
+        'isValid',
+        !this.$v.$invalid
+      )
     }
   }
 
   @Watch('ctaType')
   onCtaTypeChanged(): void {
-    this.$emit('onBrandFeatureChange', this.featureNo - 1, 'ctaType', this.ctaType)
+    this.$emit(
+      'onBrandFeatureChange',
+      this.featureNo - 1,
+      'ctaType',
+      this.ctaType
+    )
     if (this.showDisplay) {
       this.error.ctaType = !this.$v.ctaType.required
         ? this.$t('createBrand.brandFeature.error.ctaType').toString()
         : ''
     }
     if (this.showDisplay) {
-      this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)
+      this.$emit(
+        'onBrandFeatureChange',
+        this.featureNo - 1,
+        'isValid',
+        !this.$v.$invalid
+      )
     }
   }
 
   @Watch('ctaFeature')
   onCtaFeatureChanged(): void {
-    this.$emit('onBrandFeatureChange', this.featureNo - 1, 'ctaFeature', this.ctaFeature)
+    this.$emit(
+      'onBrandFeatureChange',
+      this.featureNo - 1,
+      'ctaFeature',
+      this.ctaFeature
+    )
     if (this.showDisplay) {
       this.error.ctaFeature = !this.$v.ctaFeature.required
         ? this.$t('createBrand.brandFeature.error.ctaFeature').toString()
         : ''
     }
     if (this.showDisplay) {
-      this.$emit('onBrandFeatureChange', this.featureNo - 1, 'isValid', !this.$v.$invalid)
+      this.$emit(
+        'onBrandFeatureChange',
+        this.featureNo - 1,
+        'isValid',
+        !this.$v.$invalid
+      )
     }
   }
 
@@ -359,5 +426,4 @@ export default class BrandFeatureBodyRework extends Vue {
     text-align: right;
   }
 }
-
 </style>

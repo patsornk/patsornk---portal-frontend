@@ -6,3 +6,10 @@ export const DataPrePageList: DataPrePage[] = [
   { value: "50" },
   { value: "100" }
 ]
+
+export enum OrganizationManagementStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  HOLD = 'hold',
+  DELETE = 'delete',
+}
