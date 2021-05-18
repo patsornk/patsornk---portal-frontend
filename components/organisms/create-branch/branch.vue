@@ -681,7 +681,7 @@ export default class CreateBranch extends Vue {
   cover = ''
   mallDescription = ''
   websiteList = []
-  socialList = [{ type: '', link: '' }]
+  socialList: {type: any, link: String}[] = [{ type: '', link: '' }]
   categoryId = ''
   openingHourId = ''
   openTime = ''
