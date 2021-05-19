@@ -61,7 +61,7 @@
         <upload-file
           id="brandLogo"
           class="upload-file"
-          :imageUrl="logourl"
+          :imageUrl="logoUrl"
           v-model="$v.logo.$model"
           :errorMessage="error.logo"
           @viewFile="viewFile"
@@ -297,7 +297,7 @@ export default class CreateBrand extends Vue {
   currentBrandFeatureIndex = 1
   brandFeatureList: any = []
 
-  logourl? = ''
+  logoUrl? = ''
   bannerurl? = ''
 
   oldLogourl = false
@@ -387,8 +387,15 @@ export default class CreateBrand extends Vue {
   }
 
   onChangedLogo(data: any) {
-    this.logourl = data.imageUrl
-    if (data.file) {
+    if (data.imageUrl) {
+      this.logoUrl = data.imageUrl
+
+      if (data.file) {
+        this.error.logo = ''
+      } else {
+        this.error.logo = this.$t('createBrand.error.require').toString()
+      }
+    } else if (data) {
       this.error.logo = ''
     } else {
       this.error.logo = this.$t('createBrand.error.require').toString()
@@ -478,7 +485,7 @@ export default class CreateBrand extends Vue {
   ]
 
   onRemoveLogo() {
-    this.logourl = undefined
+    this.logoUrl = undefined
   }
 
   onRemoveBanner() {
@@ -712,7 +719,7 @@ export default class CreateBrand extends Vue {
 
     let validationGroup: boolean = false
     let isPartnerCodeList: boolean = false
-    if (this.logourl) {
+    if (this.logoUrl) {
       if (this.$v.validationGroupWithoutLogo.$invalid) {
         validationGroup = false
         this.$toast.global.error(this.$t('createBrand.fieldError'))
@@ -787,7 +794,7 @@ export default class CreateBrand extends Vue {
         brandNameEn: this.$v.brandNameEn.$model,
         brandCode: this.$v.brandCode.$model,
         brandLogoImg:
-          this.oldLogourl && !this.logourl ? undefined : getLogoBase64, // Wait for api
+          this.oldLogourl && !this.logoUrl ? undefined : getLogoBase64, // Wait for api
         brandBannerImg:
           this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
         brandInfo: this.$v.brandInfo.$model,
