@@ -98,8 +98,8 @@
         required
         type="select"
         :options="mallList"
-        :optionsReduce="(item) => item.mallId"
-        :optionsLabel="language === 'th' ? 'mallNameTh' : 'mallNameEn'"
+        :optionsReduce="(item) => item.mall.mallId"
+        :optionsLabel="language === 'th' ? 'branchNameTh' : 'branchNameEn'"
         placeholder="Please select..."
         :errorMessage="error.mallId"
       />
