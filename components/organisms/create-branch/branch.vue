@@ -164,7 +164,7 @@
           language === 'th' ? 'subDistrictNameTh' : 'subDistrictNameEn'
         "
         placeholder="Please select..."
-        @onChange="getPostalCodeList"
+        @onChange="getPostalCode"
         :errorMessage="error.subDistrictId"
         :disable="subDistrictList.length === 0"
       />
@@ -172,13 +172,8 @@
         v-model="$v.postalCode.$model"
         :title="$t('createBranch.location.postalCode')"
         required
-        type="select"
-        :options="postalCodeList"
-        :optionsReduce="(item) => item.postalCode"
-        optionsLabel="postalCode"
         placeholder="Please select..."
         :errorMessage="error.postalCode"
-        :disable="postalCodeList.length === 0"
       />
       <div></div>
       <input-field
@@ -842,8 +837,7 @@ export default class CreateBranch extends Vue {
   ]
   provinceList = []
   districtList = []
-  subDistrictList = []
-  postalCodeList: any = []
+  subDistrictList: any = []
 
   categoryList = []
   openingHourList = [
@@ -1044,6 +1038,20 @@ export default class CreateBranch extends Vue {
 
   @Watch('branchTypeId')
   checkBranchTypeId(): void {
+    console.log('branchTypeId', this.branchTypeId)
+
+    console.log('showDisplay', this.showDisplay)
+    console.log('logo', this.logo)
+    console.log('cover', this.cover)
+    console.log('mallDescription', this.mallDescription)
+    console.log('websiteList', this.websiteList)
+    console.log('socialList', this.socialList)
+    console.log('openingHourId', this.openingHourId)
+    console.log('openTime', this.openTime)
+    console.log('OpenHourCustom', this.OpenHourCustom)
+    console.log('closeTime', this.closeTime)
+    console.log('closeMeridiem', this.closeMeridiem)
+    console.log('openCusTomList', this.openCusTomList)
     this.error.branchTypeId = !this.$v.branchTypeId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
@@ -1342,7 +1350,9 @@ export default class CreateBranch extends Vue {
   }
 
   async getBrand(): Promise<any> {
-    const maxStepbar = parseInt(window.sessionStorage.getItem('maxStepbar') ?? '0')
+    const maxStepbar = parseInt(
+      window.sessionStorage.getItem('maxStepbar') ?? '0'
+    )
     if (this.componetMode == 'onboard' && maxStepbar && maxStepbar < 3) {
       return
     }
@@ -1445,7 +1455,6 @@ export default class CreateBranch extends Vue {
           this.isSetProvince = true
         } else {
           this.subDistrictList = []
-          this.postalCodeList = []
           this.districtId = ''
           this.subDistrictId = ''
           this.postalCode = ''
@@ -1471,7 +1480,6 @@ export default class CreateBranch extends Vue {
         if (!this.isSetProvince) {
           this.isSetDistrict = true
         } else {
-          this.postalCodeList = []
           this.subDistrictId = ''
           this.postalCode = ''
           this.error.districtId = ''
@@ -1484,12 +1492,15 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  getPostalCodeList() {
-    this.postalCodeList = this.subDistrictList.filter((item: any) => {
-      return item.subDistrictId === this.subDistrictId
-    })
-    if (this.postalCodeList.length === 1) {
-      this.postalCode = this.postalCodeList[0].postalCode
+  getPostalCode() {
+    let data = []
+    if (this.subDistrictList.length > 0) {
+      data = this.subDistrictList.filter((item: any) => {
+        return item.subDistrictId === this.subDistrictId
+      })
+    }
+    if (data.length > 0) {
+      this.postalCode = data[0].postalCode
     }
     this.error.subDistrictId = ''
     this.error.postalCode = ''
@@ -1546,7 +1557,11 @@ export default class CreateBranch extends Vue {
           this.logo = data.mall.mallLogoImg
           this.cover = data.mall.mallCoverPageImg
           this.mallDescription = data.mall.mallShortDesc
+            ? data.mall.mallShortDesc
+            : ''
           this.websiteList = data.mall.mallInfo.websiteUrl
+            ? data.mall.mallInfo.websiteUrl
+            : []
 
           if (data.mall.mallInfo.facebook) {
             data.mall.mallInfo.facebook.forEach((link: string) => {
