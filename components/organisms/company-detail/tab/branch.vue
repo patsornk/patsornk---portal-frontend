@@ -58,6 +58,7 @@
       @clickHold="clickHold"
       @clickInactive="clickInactive"
       @clickDelete="clickDelete"
+      itemKey="brandId"
     />
 
     <dialog-popup

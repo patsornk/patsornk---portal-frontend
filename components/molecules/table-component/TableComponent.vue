@@ -64,7 +64,7 @@
       </div>
       <div v-if="isCreateNew">
         <button class="add-new-btn" @click="$emit('clickNew')">
-          <span class="material-icons icon" v-if="isShowAddIcon" > add </span>
+          <span class="material-icons icon" v-if="isShowAddIcon"> add </span>
           <span class="text">{{ createNewTitle }}</span>
         </button>
       </div>
@@ -90,7 +90,7 @@
     >
     </ag-grid-vue>
     <div class="footer-container" v-if="isShowPaginate">
-      <span>{{ selectedItem }} / {{ totalItem }}</span>
+      <span>{{ selectedRows }} / {{ totalItem }}</span>
       <t1-pagination
         class="pagination-container"
         v-model="currentPage"
@@ -252,7 +252,7 @@ export default class TableComponent extends Vue {
     default: false
   })
   readonly isCreateNew!: boolean
-  
+
   @Prop({
     type: Boolean,
     default: true
@@ -265,6 +265,14 @@ export default class TableComponent extends Vue {
   })
   readonly createNewTitle!: string
 
+  @Prop({
+    type: String,
+    default: 'id'
+  })
+  readonly itemKey!: string
+
+  private selectData: any = {}
+  private selectedIds = []
   private lists = DataPrePageList
   private selectedRows = 0
   private pagination = 10
@@ -287,10 +295,16 @@ export default class TableComponent extends Vue {
     this.gridApi.setQuickFilter(val)
   }
 
-  private onSelectionChanged() {
+  private onSelectionChanged(value: any) {
     this.isCheckboxSelection = true
     const selectedRows = this.gridApi.getSelectedRows()
-    this.selectedRows = this.gridApi.getSelectedRows().length
+    const currentSelectedIds = selectedRows.map((row: any) => row.companyId)
+    this.rawData.forEach((data: any) => {
+      this.selectData[data.companyId] = currentSelectedIds.includes(data[this.itemKey])
+    })
+
+    this.selectedRows = this.selectedItemNumber()
+
     this.$emit('input', selectedRows)
     this.$nextTick(() => {
       this.isCheckboxSelection = false
@@ -344,6 +358,14 @@ export default class TableComponent extends Vue {
       : this.columnDefs
   }
 
+  selectedItemNumber(): number {
+    let count = 0;
+    for(var key in this.selectData) {
+      count += this.selectData[key] ? 1 : 0
+    }
+    return count
+  }
+
   @Watch('value')
   async chengeValue(): Promise<void> {
     if (!this.isCheckboxSelection) {
@@ -370,6 +392,12 @@ export default class TableComponent extends Vue {
     window.onresize = this.onInnerWidthChanged
     this.gridApi.sizeColumnsToFit()
     this.gridApi.paginationSetPageSize(10)
+  }
+
+  updated() {
+    this.gridApi.forEachNode((node :any) => {
+      node.setSelected(this.selectData[node.data[this.itemKey]])
+    })
   }
 }
 </script>

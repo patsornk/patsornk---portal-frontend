@@ -136,6 +136,7 @@
         isShowCheckBox
         :headerTitle="$t('createBrand.partnerCodeList')"
         v-model="$v.partnerCodeList.$model"
+        itemKey="brandId"
       />
     </div>
     <div class="submit-section">

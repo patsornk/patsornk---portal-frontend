@@ -63,6 +63,7 @@
       :totalPage="pageSize"
       @onChenagePage="changePage"
       @pagination="changPageSize"
+      itemKey="companyId"
     />
   </div>
 </template>

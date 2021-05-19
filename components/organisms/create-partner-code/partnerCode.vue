@@ -11,6 +11,7 @@
       :isShowInactive="false"
       :frameworkComponents="frameworkComponents"
       @clickDelete="clickDeleteList"
+      itemKey="partnerId"
     />
 
     <siebel-partner

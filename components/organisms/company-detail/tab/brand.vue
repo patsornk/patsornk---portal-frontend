@@ -46,6 +46,7 @@
       :frameworkComponents="frameworkComponents"
       :rowHeight="80"
       class="row-h-80"
+      itemKey="brandId"
     />
   </div>
 </template>

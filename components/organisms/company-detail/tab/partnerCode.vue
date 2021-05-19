@@ -48,6 +48,7 @@
       @clickHold="clickHold"
       @clickInactive="clickInactive"
       @clickDelete="clickDelete"
+      itemKey="partnerId"
     />
 
     <dialog-popup

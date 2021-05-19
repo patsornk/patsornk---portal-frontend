@@ -57,6 +57,7 @@
       :isShowAddIcon="false"
       createNewTitle="Assign More Brand"
       @clickNew="clickAssignNew"
+      itemKey="partnerId"
     />
     <div class="footer">
       <t-1-button type="black-transparent" @click.native="cancleHandler">
