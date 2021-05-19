@@ -1038,20 +1038,6 @@ export default class CreateBranch extends Vue {
 
   @Watch('branchTypeId')
   checkBranchTypeId(): void {
-    console.log('branchTypeId', this.branchTypeId)
-
-    console.log('showDisplay', this.showDisplay)
-    console.log('logo', this.logo)
-    console.log('cover', this.cover)
-    console.log('mallDescription', this.mallDescription)
-    console.log('websiteList', this.websiteList)
-    console.log('socialList', this.socialList)
-    console.log('openingHourId', this.openingHourId)
-    console.log('openTime', this.openTime)
-    console.log('OpenHourCustom', this.OpenHourCustom)
-    console.log('closeTime', this.closeTime)
-    console.log('closeMeridiem', this.closeMeridiem)
-    console.log('openCusTomList', this.openCusTomList)
     this.error.branchTypeId = !this.$v.branchTypeId.required
       ? this.$t('createBranch.error.require').toString()
       : ''
