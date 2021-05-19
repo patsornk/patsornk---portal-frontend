@@ -826,7 +826,13 @@ export default class CreateBranch extends Vue {
   }
 
   brandList: BrandInitialData[] = []
-  partnerCodeList: SiebelPartnerType[] = []
+  partnerCodeList: SiebelPartnerType[] = [
+    {
+      id: 0,
+      partnerCode: "string",
+      partnerName: "string"
+    }
+  ]
   branchTypeList: BranchTypeDataType[] = []
   mallList: MallDataType[] = []
   countryList = [
