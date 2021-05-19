@@ -70,7 +70,7 @@
         required
         type="select"
         :options="partnerCodeList"
-        :optionsReduce="(item) => item.partnerId"
+        :optionsReduce="(item) => item.id"
         optionsLabel="partnerCode"
         placeholder="Please select..."
         :errorMessage="error.partnerCodeId"
@@ -452,7 +452,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 import InputField from '@/components/atoms/InputField.vue'
 import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
 import GoogleMap from '~/components/atoms/GoogleMap.vue'
@@ -656,6 +656,20 @@ const validations = {
 export default class CreateBranch extends Vue {
   $i18n: any
 
+  @Prop({
+    type: String,
+    required: false,
+    default: ''
+  })
+  readonly parentCompantId!: string
+
+  @Prop({
+    type: String,
+    required: false,
+    default: 'onboard'
+  })
+  readonly componetMode!: string
+
   brandId: any = ''
   branchCode = ''
   branchNameTh = ''
@@ -681,7 +695,7 @@ export default class CreateBranch extends Vue {
   cover = ''
   mallDescription = ''
   websiteList = []
-  socialList: {type: any, link: String}[] = [{ type: '', link: '' }]
+  socialList: { type: any; link: String }[] = [{ type: '', link: '' }]
   categoryId = ''
   openingHourId = ''
   openTime = ''
@@ -817,7 +831,13 @@ export default class CreateBranch extends Vue {
   }
 
   brandList: BrandInitialData[] = []
-  partnerCodeList: SiebelPartnerType[] = []
+  partnerCodeList: SiebelPartnerType[] = [
+    {
+      id: 0,
+      partnerCode: "string_mock",
+      partnerName: "string"
+    }
+  ]
   branchTypeList: BranchTypeDataType[] = []
   mallList: MallDataType[] = []
   countryList = [
@@ -1328,48 +1348,48 @@ export default class CreateBranch extends Vue {
   }
 
   async getBrand(): Promise<any> {
-    try {
-      let res = await this.$axios.$get(
-        `${
-          process.env.PORTAL_ENDPOINT
-        }/list_brand?companyId=${window.sessionStorage.getItem(
-          'createCompanyId'
-        )}`,
-        { data: null }
-      )
-      if (res.successful) {
-        if (
-          window.sessionStorage.getItem('createBranchFirstTime') &&
-          window.sessionStorage.getItem('createBranchFirstTime') === 'no'
-        ) {
-          this.brandList = res.data.brand
-        } else {
-          this.brandList = res.data.brand
-          this.brandId =
-            Number(window.sessionStorage.getItem('createBrandId')) || 0
-          this.disableBrandId = true
+    const companyId = this.parentCompantId
+      ? this.parentCompantId
+      : window.sessionStorage.getItem('createCompanyId')
+      ? window.sessionStorage.getItem('createCompanyId')
+      : ''
+    if (companyId) {
+      try {
+        let res = await this.$axios.$get(
+          `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${companyId}`,
+          { data: null }
+        )
+        if (res.successful) {
+          if (this.componetMode == 'onboard') {
+            this.brandList = res.data.brand
+            this.brandId =
+              Number(window.sessionStorage.getItem('createBrandId')) || 0
+            this.disableBrandId = true
+          } else {
+            this.brandList = res.data.brand
+            this.disableBrandId = false
+          }
         }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
       }
-    } catch (error) {
-      this.$toast.global.error(error.response.data.message)
     }
   }
 
+  @Watch('brandId')
   async getPartnerCode(): Promise<any> {
-    try {
-      let res = await this.$axios.$get(
-        `${
-          process.env.PORTAL_ENDPOINT
-        }/partner_code?brandId=${window.sessionStorage.getItem(
-          'createBrandId'
-        )}`,
-        { data: null }
-      )
-      if (res.successful) {
-        this.partnerCodeList = res.data.partner
+    if (this.brandId) {
+      try {
+        let res = await this.$axios.$get(
+          `${process.env.PORTAL_ENDPOINT}/partner_code?brandId=${this.brandId}`,
+          { data: null }
+        )
+        if (res.successful) {
+          this.partnerCodeList = res.data.partner
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
       }
-    } catch (error) {
-      this.$toast.global.error(error.response.data.message)
     }
   }
 

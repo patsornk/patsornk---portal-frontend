@@ -1,6 +1,8 @@
 <template>
   <div class="create-branch-container">
-    <create-new-branch />
+    <create-new-branch
+    :parentCompantId="companyId"
+    componetMode="create" />
   </div>
 </template>
 
@@ -18,6 +20,10 @@ export default class CreateBranch extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  get companyId(): any {
+    return this.$route.params.id
   }
 
   private company: CompanyDataType = {
@@ -61,7 +67,7 @@ export default class CreateBranch extends Vue {
       let res = await this.$axios.$get(
         `${
           process.env.PORTAL_ENDPOINT
-        }/get_company?companyId=${window.sessionStorage.getItem('parentCompanyId')}`,
+        }/get_company?companyId=${this.companyId}`,
         { data: null }
       )
       if (res.successful) {
