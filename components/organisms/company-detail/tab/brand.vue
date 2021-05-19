@@ -256,7 +256,7 @@ export default class TabBrand extends Vue {
         additionalLogoImg: item.brandAdditional.additionalLogoImg,
         brandNameTh: item.brandNameTh,
         brandNameEn: item.brandNameEn,
-        numberOfBranch: 0,
+        numberOfBranch: item.numberOfBranches,
         status: item.statusDesc
       }
     })
