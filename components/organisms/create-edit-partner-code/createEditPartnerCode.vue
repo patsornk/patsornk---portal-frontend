@@ -27,17 +27,16 @@
       </div>
       <div class="status-container" v-if="editMode">
         <input-field
-        class="status-dropdown"
-        v-model="$v.status.$model"
-        title="Status"
-        required
-        type="select"
-        :options="statusOption"
-        :optionsReduce="(item) => item.id"
-        :optionsLabel="'status'"
-        placeholder="Please select..."
-        :errorMessage="error.status"
-      />
+          class="status-dropdown"
+          v-model="$v.status.$model"
+          title="Status"
+          required
+          type="select"
+          :options="statusOption"
+          :optionsReduce="(item) => item.id"
+          :optionsLabel="'status'"
+          placeholder="Please select..."
+        />
       </div>
     </div>
     <div class="spector-line" />
@@ -57,7 +56,7 @@
       :isCreateNew="true"
       :isShowAddIcon="false"
       createNewTitle="Assign More Brand"
-      @clickNew="clickNew"
+      @clickNew="clickAssignNew"
     />
     <div class="footer">
       <t-1-button type="black-transparent" @click.native="cancleHandler">
@@ -114,7 +113,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import InputField from '@/components/atoms/InputField.vue'
 import TableComponent from '@/components/molecules/table-component/TableComponent.vue'
 import SiebelPartner from '@/components/molecules/create-partner/SiebelPartner.vue'
@@ -149,15 +148,8 @@ const validations = {
     required
   },
 
-   createGroup: [
-    'partnerCode',
-    'partnerName',
-  ],
-   editGroup: [
-    'partnerCode',
-    'partnerName',
-    'status'
-  ]
+  createGroup: ['partnerCode', 'partnerName'],
+  editGroup: ['partnerCode', 'partnerName', 'status']
 }
 
 @Component({
@@ -207,12 +199,10 @@ export default class CreateEditPartnerCode extends Vue {
       status: 'Onhold'
     }
   ]
-  
 
   private error = {
     partnerCode: '',
-    partnerName: '',
-    status: ''
+    partnerName: ''
   }
 
   private value: SiebelPartnerType = {
@@ -223,7 +213,9 @@ export default class CreateEditPartnerCode extends Vue {
 
   partnerCode = ''
   partnerName = ''
-  status = ''
+  partnerId = 0
+  companyId = 0
+  status = 0
 
   get editMode(): boolean {
     if (this.componentMode == PartnerCodeMode.CREATE_MODE) {
@@ -239,7 +231,7 @@ export default class CreateEditPartnerCode extends Vue {
   isShowBrand = false
 
   selectData = []
-  dataList = []
+  dataList: any = []
   frameworkComponents = {}
   readonly columnDefs = [
     {
@@ -247,7 +239,7 @@ export default class CreateEditPartnerCode extends Vue {
       field: 'brandCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.regioCompanyNameEn}
+                  ${params.data.brandCode}
                 </div>`
       }
     },
@@ -256,7 +248,7 @@ export default class CreateEditPartnerCode extends Vue {
       field: 'brandNameTh',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.regioCompanyNameTh}
+                  ${params.data.brandNameTh}
                 </div>`
       }
     },
@@ -265,14 +257,14 @@ export default class CreateEditPartnerCode extends Vue {
       field: 'brandNameEn',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.regioCompanyNameEn}
+                  ${params.data.brandNameEn}
                 </div>`
       }
     }
   ]
 
   modalSelectData = []
-  modalDataList = []
+  modalDataList: any = []
   modalFrameworkComponents = {}
   readonly modalColumnDefs = [
     {
@@ -280,7 +272,7 @@ export default class CreateEditPartnerCode extends Vue {
       field: 'brandCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.regioCompanyNameEn}
+                  ${params.data.brandCode}
                 </div>`
       }
     },
@@ -289,7 +281,7 @@ export default class CreateEditPartnerCode extends Vue {
       field: 'brandNameTh',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.regioCompanyNameTh}
+                  ${params.data.brandNameTh}
                 </div>`
       }
     },
@@ -298,35 +290,206 @@ export default class CreateEditPartnerCode extends Vue {
       field: 'brandNameEn',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
-                  ${params.data.regioCompanyNameEn}
+                  ${params.data.brandNameEn}
                 </div>`
       }
     }
   ]
 
   mounted() {
-    if (this.editMode) {
+    if (this.editMode && this.editId) {
       this.getPartnercode()
+      this.getAssignedBrand('1', '10')
+      this.getAssignBrand('1', '10')
+    } else {
+      this.getBrandList('1', '10')
+    }
+  }
+
+  async createPartnerCode() {
+    try {
+      const payload = {
+        // partnerCode: this.newSiebelPartner.partnerCode,
+        // partnerName: this.newSiebelPartner.partnerName,
+        // companyId: this.companyId
+      }
+
+      let res = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/create_partner_code`,
+        payload
+      )
+
+      if (res.successful) {
+        // this.partnerCodeError = ''
+        // this.dataList.push({
+        //   id: res.data.partnerId,
+        //   partnerCode: res.data.partnerCode,
+        //   partnerName: res.data.partnerName
+        // })
+        // this.clearData()
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+      if (error.response.data.code === '07') {
+        // this.partnerCodeError = 'Duplicate Siebel Partner code'
+      }
+    }
+  }
+
+  async editPartnerCode() {
+    try {
+      const payload = {
+        partnerId: this.partnerId,
+        partnerName: this.partnerName,
+        companyId: this.companyId
+      }
+      let res = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
+        payload
+      )
+      if (res.successful) {
+        this.partnerCode = res.data.partnerCode
+        this.partnerName = res.data.partnerName
+        this.partnerId = res.data.partnerId
+        this.status = res.data.status
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
     }
   }
 
   async getPartnercode(): Promise<void> {
-    
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_partner_code?partnerId=${this.editId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        const data = res.data
+        this.partnerCode = data.partnerCode
+        this.partnerName = data.partnerName
+        this.partnerId = data.partnerId
+        this.status = data.status
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
-  checkPartnerCode() {}
+  async getBrandList(page: string, limit: string) {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_brand?page=${page}&limit=${limit}&companyId=${this.compantId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        const data = res.data
+        this.modalDataList = data.brand.map(
+          (item: { brandCode: any; brandNameTh: any; brandNameEn: any }) => {
+            return {
+              brandCode: item.brandCode,
+              brandNameTh: item.brandNameTh,
+              brandNameEn: item.brandNameEn
+            }
+          }
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
 
-  checkPartnerName() {}
+  async getAssignedBrand(page: string, limit: string): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${
+          process.env.PORTAL_ENDPOINT
+        }/list_brand_by_partner?page=${page}&limit=${limit}&partnerId=${
+          this.editId
+        }&assigned=${true}`,
+        { data: null }
+      )
+      if (res.successful) {
+        const data = res.data
+        this.dataList = data.brand.map(
+          (item: { brandCode: any; brandNameTh: any; brandNameEn: any }) => {
+            return {
+              brandCode: item.brandCode,
+              brandNameTh: item.brandNameTh,
+              brandNameEn: item.brandNameEn
+            }
+          }
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getAssignBrand(page: string, limit: string): Promise<any> {
+    try {
+      let res = await this.$axios.$get(
+        `${
+          process.env.PORTAL_ENDPOINT
+        }/list_brand_by_partner?page=${page}&limit=${limit}&partnerId=${
+          this.editId
+        }&assigned=${false}`,
+        { data: null }
+      )
+      if (res.successful) {
+        console.log(res.data)
+        this.modalDataList = res.data.brand.map(
+          (item: { brandCode: any; brandNameTh: any; brandNameEn: any }) => {
+            return {
+              brandCode: item.brandCode,
+              brandNameTh: item.brandNameTh,
+              brandNameEn: item.brandNameEn
+            }
+          }
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  @Watch('partnerCode')
+  checkPartnerCode() {
+    // this.error.brandNameEn = !this.$v.brandNameEn.required
+    //   ? this.$t('createBrand.error.require').toString()
+    //   : !this.$v.brandNameEn.mustBe
+    //   ? this.$t('createBrand.error.characterAndNumber').toString()
+    //   : !this.$v.brandNameEn.maxLength
+    //   ? this.$t('createBrand.error.maxLength').toString()
+    //   : ''
+  }
+
+  @Watch('partnerName')
+  checkPartnerName() {
+    // this.error.brandNameEn = !this.$v.brandNameEn.required
+    //   ? this.$t('createBrand.error.require').toString()
+    //   : !this.$v.brandNameEn.mustBe
+    //   ? this.$t('createBrand.error.characterAndNumber').toString()
+    //   : !this.$v.brandNameEn.maxLength
+    //   ? this.$t('createBrand.error.maxLength').toString()
+    //   : ''
+  }
 
   cancleHandler() {
     this.$router.push(`/organizationManagement/${this.compantId}`)
   }
 
-  createHandler() {}
+  createHandler() {
+    if (this.editMode) {
+      this.editPartnerCode()
+    } else {
+      this.createPartnerCode()
+    }
+  }
 
   clickDeleteList() {}
 
-  clickNew() {
+  clickAssignNew() {
     this.isShowBrand = true
   }
 
@@ -366,11 +529,11 @@ export default class CreateEditPartnerCode extends Vue {
   }
   .status-container {
     display: flex;
-      flex-direction: row;
-      margin: 24px 0px 0px 0px;
+    flex-direction: row;
+    margin: 24px 0px 0px 0px;
     .status-dropdown {
-        width: 23%;
-        margin: 0px 59px 0px 0px;
+      width: 23%;
+      margin: 0px 59px 0px 0px;
     }
   }
   .spector-line {
