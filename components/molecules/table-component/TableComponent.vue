@@ -6,6 +6,14 @@
           {{ headerTitle }}
         </span>
         <span class="icon-list" v-if="selectedRows">
+          <div class="icon-container" v-if="isShowActive">
+            <img
+              class="icon"
+              src="@/assets/images/table/active.png"
+              @click="$emit('clickActive', gridApi.getSelectedRows())"
+            />
+            <span class="tooltiptext">Inactive</span>
+          </div>
           <div class="icon-container" v-if="isShowIconHold">
             <img
               class="icon"
@@ -32,6 +40,11 @@
           </div>
         </span>
         <span class="icon-list" v-else>
+          <img
+            v-if="isShowActive"
+            class="icon-container icon"
+            src="@/assets/images/table/active-disable.png"
+          />
           <img
             v-if="isShowIconHold"
             class="icon-container icon"
@@ -179,6 +192,12 @@ export default class TableComponent extends Vue {
     default: false
   })
   readonly isShowHeaderTable!: boolean
+
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  readonly isShowActive!: boolean
 
   @Prop({
     type: Boolean,

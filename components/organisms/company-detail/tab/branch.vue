@@ -54,6 +54,20 @@
       @onChenagePage="changePage"
       @pagination="changPageSize"
       :rowHeight="80"
+      @clickActive="clickActive"
+      @clickHold="clickHold"
+      @clickInactive="clickInactive"
+      @clickDelete="clickDelete"
+    />
+
+    <dialog-popup
+      :display="dialogDisplay"
+      :title="dialogTitle"
+      :description="dialogDescription"
+      :leftButtonTitle="dialogLeftButtonText"
+      :rightButtonTitle="dialogRightButtonText"
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="dialogAction"
     />
   </div>
 </template>
@@ -61,16 +75,19 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import { OrganizationManagementStatus } from '~/constants'
 
 @Component({
   components: {
     TableComponent,
     InputField,
     T1Dropdown,
-    T1Button
+    T1Button,
+    DialogPopup
   }
 })
 export default class TabBranch extends Vue {
@@ -85,6 +102,13 @@ export default class TabBranch extends Vue {
   get language(): any {
     return this.$i18n.locale
   }
+
+  status = ''
+  dialogDisplay = false
+  dialogTitle = ''
+  dialogDescription = ''
+  dialogLeftButtonText = 'Cancel'
+  dialogRightButtonText = ''
 
   selectData = []
   pageSize = 0
@@ -144,10 +168,10 @@ export default class TabBranch extends Vue {
     },
     {
       headerName: 'Branch code',
-      field: 'brandCode',
+      field: 'branchCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
-                  ${params.data.brandCode}
+                  ${params.data.branchCode}
                 </div>`
       }
     },
@@ -173,8 +197,13 @@ export default class TabBranch extends Vue {
       headerName: 'Branch Type',
       field: 'branchType',
       cellRenderer: (params: any) => {
+        let branchType =
+          this.language === 'th'
+            ? params.data.branchType.branchTypeTh
+            : params.data.branchType.branchTypeEn
+
         return `<div class="custom-row-80">
-                  ${params.data.branchType}
+                  ${branchType}
                 </div>`
       }
     },
@@ -210,8 +239,8 @@ export default class TabBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.getBrands()
-    this.getBranches('1', '10')
+    await this.getBrands()
+    await this.getBranches('1', '10')
   }
 
   changePage(page: number) {
@@ -247,16 +276,13 @@ export default class TabBranch extends Vue {
 
   async getBranches(page: String, limit: String): Promise<void> {
     try {
-      // let res = await this.$axios.$get(
-      //   `${process.env.PORTAL_ENDPOINT}/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      //   this.mappingBranch(res.data)
-      // }
-      // this.dataList = [{
-      //   status: 'Active'
-      // }]
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_branch?companyId=${this.id}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.mappingBranch(res.data)
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
@@ -265,11 +291,16 @@ export default class TabBranch extends Vue {
   mappingBranch(data: any) {
     this.pageSize = data.totalPage
     this.totalItem = data.total
-    this.dataList = data.brand.map((item: any) => {
+    this.dataList = data.branch.map((item: any) => {
       return {
-        brandId: item.brandId,
-        brandNameTh: item.brandNameTh,
-        brandNameEn: item.brandNameEn
+        branchId: item.branchId,
+        branchNameTh: item.branchNameTh,
+        branchNameEn: item.branchNameEn,
+        branchCode: item.branchCode,
+        fromWhichBrand: item.brandId,
+        partnerCode: item.partners[0].partnerCode,
+        branchType: item.branchType,
+        status: item.statusDesc
       }
     })
   }
@@ -302,16 +333,122 @@ export default class TabBranch extends Vue {
     this.$router.push(`/organizationManagement/${this.id}/create/branch`)
   }
 
+  async changeStatus(event: any, statusId: number) {
+    let partnerId: number[] = []
+
+    event.forEach((item: any) => {
+      partnerId.push(item.partnerId)
+    })
+
+    const payload = {
+      partnerId,
+      statusId
+    }
+
+    try {
+      // let response = await this.$axios.$post(
+      //   `${process.env.PORTAL_ENDPOINT}/update_partner_code_status`,
+      //   payload
+      // )
+      // if (response.successful) {
+      //   this.getPartnarCode('1', this.pagination)
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.message)
+    }
+  }
+
+  async clickActive(event: any) {
+    await this.changeStatus(event, 2)
+  }
+
+  async clickHold(event: any) {
+    await this.changeStatus(event, 4)
+  }
+
+  async clickInactive(event: any) {
+    await this.changeStatus(event, 3)
+  }
+
+  async clickDelete(event: any) {
+    let payload: any = []
+
+    event.forEach((item: any) => {
+      payload.push(item.branchId)
+    })
+
+    try {
+      // let response = await this.$axios.$delete(
+      //   `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
+      //   {
+      //     data: { partnerId: payload }
+      //   }
+      // )
+      // if (response.successful) {
+      //   this.getPartnarCode('1', this.pagination)
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  dialogCancelAction() {
+    this.setDialogDisplay(false)
+  }
+
+  dialogAction() {
+    switch (this.status) {
+      case OrganizationManagementStatus.HOLD:
+        this.changeStatus(this.selectData, 4)
+        break
+      case OrganizationManagementStatus.INACTIVE:
+        this.changeStatus(this.selectData, 3)
+        break
+      case OrganizationManagementStatus.DELETE:
+        this.deletePartnerCode(this.selectData)
+        break
+    }
+  }
+
+  setDialogDisplay(value: boolean) {
+    this.dialogDisplay = value
+  }
+
+  async deletePartnerCode(event: any) {
+    let payload: any = []
+
+    event.forEach((item: any) => {
+      payload.push(item.partnerId)
+    })
+
+    try {
+      // let response = await this.$axios.$delete(
+      //   `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
+      //   {
+      //     data: { partnerId: payload }
+      //   }
+      // )
+      // if (response.successful) {
+      //   this.getPartnarCode('1', this.pagination)
+      // }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
   onRowClicked(row: any) {
-    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
-    this.$router.push(`/organizationManagement/edit/branch/${row.data.partnerId}`)
+    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '')
+    this.$router.push(
+      `/organizationManagement/edit/branch/${row.data.partnerId}`
+    )
   }
 
   deleteHandler(map: any, vm: any) {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        e.preventDefault()
+      }
     }
   }
 }

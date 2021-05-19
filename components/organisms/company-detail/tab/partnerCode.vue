@@ -93,7 +93,7 @@ export default class TabPartnerCode extends Vue {
     return this.$i18n.locale
   }
 
-  status = 'ww'
+  status = ''
   dialogDisplay = false
   dialogTitle = ''
   dialogDescription = ''
