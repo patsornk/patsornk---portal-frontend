@@ -831,7 +831,11 @@ export default class CreateBranch extends Vue {
   }
 
   brandList: BrandInitialData[] = []
-  partnerCodeList: SiebelPartnerType[] = []
+  partnerCodeList: SiebelPartnerType[] = [{
+    id: 0,
+  partnerCode: "string",
+  partnerName: "string"
+  }]
   branchTypeList: BranchTypeDataType[] = []
   mallList: MallDataType[] = []
   countryList = [
@@ -1342,6 +1346,10 @@ export default class CreateBranch extends Vue {
   }
 
   async getBrand(): Promise<any> {
+    const maxStepbar = parseInt(window.sessionStorage.getItem('maxStepbar') ?? '0')
+    if (this.componetMode == 'onboard' && maxStepbar && maxStepbar < 3) {
+      return
+    }
     const companyId = this.parentCompantId
       ? this.parentCompantId
       : window.sessionStorage.getItem('createCompanyId')
