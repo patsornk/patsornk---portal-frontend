@@ -1385,7 +1385,13 @@ export default class CreateBranch extends Vue {
           { data: null }
         )
         if (res.successful) {
-          this.partnerCodeList = res.data.partner
+          this.partnerCodeList = res.data.partner.map((item: any) => {
+            return {
+              id: item.partnerId,
+              partnerCode: item.partnerCode,
+              partnerName: item.partnerName
+            }
+          })
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)

@@ -549,7 +549,7 @@ export default class CreateBrand extends Vue {
             this.phoneNo = data.brandPhoneNumber
             this.phonePrefix = data.brandPhonePrefix
             this.showDisplay = data.showInApp
-            this.logourl = brandAddidtional.additionalLogoImg
+            this.logoUrl = brandAddidtional.additionalLogoImg
               ? getImagePath(brandAddidtional.additionalLogoImg)
               : undefined
             this.bannerurl = brandAddidtional.additionalBannerImg
