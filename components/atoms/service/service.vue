@@ -2,19 +2,19 @@
   <div class="service-container">
     <div class="logo-container">
       <div class="logo-img">
-        <img class="logo" src="@/assets/images/navbar/profile.jpg" />
+        <img class="logo" :src="assets('navbar/profile.jpg')" />
       </div>
       <img
         v-if="isApply && !isActive"
         class="close"
-        src="@/assets/images/service/close.png"
+        :src="assets('service/close.png')"
         @click="$emit('unApply')"
       />
       <div class="active" v-if="isActive">Active</div>
     </div>
     <div class="title-box">
       <div>{{ title }}</div>
-      <img class="view-detail" src="@/assets/images/service/view-detail.png" />
+      <img class="view-detail" :src="assets('service/view-detail.png')" />
     </div>
     <div class="detail">{{ detail }}</div>
     <div class="footer">
@@ -27,6 +27,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 
 @Component
 export default class Service extends Vue {
@@ -59,6 +60,10 @@ export default class Service extends Vue {
     default: false
   })
   readonly isActive!: boolean
+
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 }
 </script>
 

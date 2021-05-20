@@ -23,11 +23,11 @@ import {
   Vue,
   Prop
 } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 
 @Component
 export default class NavMenuItem extends Vue {
-  private imagePreUrl: string =
-    '../../assets/images/navbar/'
+  private imagePreUrl: string = getAssetsPath('mages/navbar/')
   @Prop({
     type: String,
     default: undefined
@@ -48,7 +48,7 @@ export default class NavMenuItem extends Vue {
   readonly active!: boolean
 
   get imageIcon() {
-    const image = require(`@/assets/images/navbar/${this.icon}`)
+    const image = getAssetsPath(`navbar/${this.icon}`)
     return image
   }
 }

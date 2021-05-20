@@ -58,6 +58,7 @@ import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
 import AgBranchButton from '~/components/atoms/AgBranchButton.js'
+import { getImagePath } from '~/helper/images'
 
 @Component({
   components: {
@@ -253,7 +254,7 @@ export default class TabBrand extends Vue {
     this.dataList = data.brand.map((item: any) => {
       return {
         brandId: item.brandId,
-        additionalLogoImg: item.brandAdditional.additionalLogoImg,
+        additionalLogoImg: getImagePath(item.brandAdditional.additionalLogoImg),
         brandNameTh: item.brandNameTh,
         brandNameEn: item.brandNameEn,
         numberOfBranch: item.numberOfBranches,

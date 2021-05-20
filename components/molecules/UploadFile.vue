@@ -33,7 +33,7 @@
                 <div class="icon-container">
                   <img
                     class="view-file"
-                    src="@/assets/images/login/eye-white.png"
+                    :src="assets('login/eye-white.png')"
                   />
                 </div>
                 <span class="view-file-text" @click="viewFile">
@@ -44,7 +44,7 @@
                 <div class="icon-container">
                   <img
                     class="delete-file"
-                    src="@/assets/images/table/delete-white.png"
+                    :src="assets('table/delete-white.png')"
                   />
                 </div>
                 <div class="delete-file-text">Delete File</div>
@@ -77,6 +77,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 
 @Component
 export default class UploadImage extends Vue {
@@ -112,6 +113,10 @@ export default class UploadImage extends Vue {
 
   private file: any = null
   private filelist: any[] = []
+
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 
   fileSelected() {
     const file: any = this.$refs.file

@@ -2,7 +2,7 @@
   <div class="website-container">
     <div class="list-box" v-for="(item, index) in dataList" :key="index">
       <div class="icon-social">
-        <img src="@/assets/images/icon/link.png" />
+        <img :src="assets('icon/link.png')" />
       </div>
       <div class="link-box">
         <div class="link">{{ item }}</div>
@@ -15,6 +15,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import InputField from '~/components/atoms/InputField.vue'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -42,6 +43,10 @@ export default class AddWebsite extends Vue {
 
   removeInput(index: number) {
     this.dataList?.splice(index, 1)
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>

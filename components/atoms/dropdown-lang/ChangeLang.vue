@@ -45,6 +45,7 @@ import {
   Vue,
   Watch
 } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 
 @Component
 export default class ChangeLang extends Vue {
@@ -60,7 +61,7 @@ export default class ChangeLang extends Vue {
   }
 
   private imageIcon(name: string): any {
-    const image = require(`@/assets/images/lang/${name}.png`)
+    const image = getAssetsPath(`lang/${name}.png`);
     return image
   }
 

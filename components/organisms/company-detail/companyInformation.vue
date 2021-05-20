@@ -4,7 +4,7 @@
       <div class="text-header">Company Information</div>
       <img
         class="edit"
-        src="@/assets/images/company-detail/edit.png"
+        :src="assets('company-detail/edit.png')"
         @click="editCompany"
       />
     </div>
@@ -49,6 +49,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TextInfo from '@/components/atoms/TextInfo.vue'
 import { CompanyType } from '~/constants'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: { TextInfo }
@@ -68,6 +69,10 @@ export default class CompanyInformation extends Vue {
 
   editCompany() {
     this.$router.push(`/organizationManagement/edit/company/${this.company?.companyId}`)
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>

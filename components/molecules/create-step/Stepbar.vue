@@ -17,7 +17,7 @@
         >
           <img
             v-if="showCompletedIcon(index)"
-            src="@/assets/images/check.png"
+            :src="assets('common/check.png')"
           />
           <span v-else>{{ index + 1 }}</span>
         </div>
@@ -40,6 +40,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 
 interface StepData {
   title: string
@@ -53,6 +54,10 @@ export default class Stepbar extends Vue {
     type: Array
   })
   readonly title!: StepData[]
+
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 
   get maxState() {
     return this.$store.state.stepbar.maxState

@@ -182,6 +182,7 @@ import BrandFeatureHeader from '~/components/molecules/brand-feature/BrandFeatur
 import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody.vue'
 import BrandFeatureBodyRework from '~/components/molecules/brand-feature/BrandFeatureBodyRework.vue'
 import { BreadcrumbType } from '~/constants'
+import { getImagePath } from '~/helper/images'
 
 const validations = {
   brandCode: {
@@ -536,7 +537,7 @@ export default class CreateBrand extends Vue {
             this.phonePrefix = data.brandPhonePrefix
             this.showDisplay = data.showInApp
             this.logourl = brandAddidtional.additionalLogoImg
-              ? `${process.env.PORTAL_HOST}${brandAddidtional.additionalLogoImg}`
+              ? getImagePath(brandAddidtional.additionalLogoImg)
               : undefined
             this.bannerurl = brandAddidtional.additionalBannerImg
               ? brandAddidtional.additionalBannerImg
@@ -553,7 +554,7 @@ export default class CreateBrand extends Vue {
                 return {
                   id: brandFeature.brandFeatureId,
                   image: undefined,
-                  imageUrl: `${process.env.PORTAL_HOST}${brandFeature.brandFeatureLogoImgLink}`,
+                  imageUrl: getImagePath(brandFeature.brandFeatureLogoImgLink),
                   showDisplay: brandFeature.showInApp,
                   ctaLabel: brandFeature.brandFeatureLabel,
                   ctaType: brandFeature.brandFeatureTypeId,

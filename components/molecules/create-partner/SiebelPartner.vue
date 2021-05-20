@@ -37,13 +37,13 @@
     <img
       v-else
       class="icon"
-      src="@/assets/images/partner-code/save.png"
+      :src="assets('partner-code/save.png')"
       @click="clickAddSiebelPartner"
     />
     <div v-if="deleteAble">
       <img
         class="icon"
-        src="@/assets/images/table/delete.png"
+        :src="assets('table/delete.png')"
         @click="$emit('clickDelete')"
       />
     </div>
@@ -59,6 +59,7 @@ import {
 import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '@/components/atoms/button.vue'
 import { isRequiredEmpty, validateError } from '~/helper'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -91,6 +92,10 @@ export default class CreatePartnerCode extends Vue {
     type: String
   })
   private partnerCodeError: string | undefined
+
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 
   isLoading = false
 

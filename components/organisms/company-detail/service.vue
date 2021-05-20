@@ -2,7 +2,7 @@
   <div class="company-service-container">
     <div class="header-box">
       <div class="text-header">Services</div>
-      <img class="edit" src="@/assets/images/company-detail/edit.png" />
+      <img class="edit" :src="assets('company-detail/edit.png')" />
     </div>
     <div class="data-box">
       <div v-for="(item, index) in services" :key="index">
@@ -23,6 +23,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import TextInfo from '@/components/atoms/TextInfo.vue'
 import Service from '@/components/atoms/service/service.vue'
 import { ServiceType } from '~/constants'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: { TextInfo, Service }
@@ -38,6 +39,10 @@ export default class CompanyInformation extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 
   services: ServiceType[] = []

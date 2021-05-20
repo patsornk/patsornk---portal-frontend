@@ -9,7 +9,7 @@
           <div class="icon-container" v-if="isShowActive">
             <img
               class="icon"
-              src="@/assets/images/table/active.png"
+              :src="assets('table/active.png')"
               @click="$emit('clickActive', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">Inactive</span>
@@ -17,7 +17,7 @@
           <div class="icon-container" v-if="isShowIconHold">
             <img
               class="icon"
-              src="@/assets/images/table/hold.png"
+              :src="assets('table/hold.png')"
               @click="$emit('clickHold', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">On hold</span>
@@ -25,7 +25,7 @@
           <div class="icon-container" v-if="isShowInactive">
             <img
               class="icon"
-              src="@/assets/images/table/inactive.png"
+              :src="assets('table/inactive.png')"
               @click="$emit('clickInactive', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">Inactive</span>
@@ -33,7 +33,7 @@
           <div class="icon-container" v-if="isShowDelete">
             <img
               class="icon"
-              src="@/assets/images/table/delete.png"
+              :src="assets('table/delete.png')"
               @click="$emit('clickDelete', gridApi.getSelectedRows())"
             />
             <span class="tooltiptext">Delete</span>
@@ -43,22 +43,22 @@
           <img
             v-if="isShowActive"
             class="icon-container icon"
-            src="@/assets/images/table/active-disable.png"
+            :src="assets('table/active-disable.png')"
           />
           <img
             v-if="isShowIconHold"
             class="icon-container icon"
-            src="@/assets/images/table/hold-disable.png"
+            :src="assets('table/hold-disable.png')"
           />
           <img
             v-if="isShowInactive"
             class="icon-container icon"
-            src="@/assets/images/table/inactive-disable.png"
+            :src="assets('table/inactive-disable.png')"
           />
           <img
             v-if="isShowDelete"
             class="icon-container icon"
-            src="@/assets/images/table/delete-disable.png"
+            :src="assets('table/delete-disable.png')"
           />
         </span>
       </div>
@@ -121,6 +121,7 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { AgGridVue } from 'ag-grid-vue'
 import T1Pagination from '@/components/atoms/pagination.vue'
 import { DataPrePageList } from '~/constants'
+import { getAssetsPath } from '~/helper/images'
 
 import '@/assets/scss/agGridStyleOverride.scss'
 
@@ -270,6 +271,10 @@ export default class TableComponent extends Vue {
     default: 'id'
   })
   readonly itemKey!: string
+
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 
   private selectData: any = {}
   private selectedIds = []

@@ -4,16 +4,18 @@
       <div class="icon-social">
         <img
           v-if="item.type === type.FACEBOOK"
-          src="@/assets/images/icon/facebook.png"
+          :src="assets('icon/facebook.png')"
         />
         <img
           v-if="item.type === type.INSTARGRAM"
-          src="@/assets/images/icon/instagram.png"
+          :src="assets('icon/instagram.png')"
         />
-        <img v-if="item.type === type.LINE" src="@/assets/images/icon/line.png" />
+        <img 
+          v-if="item.type === type.LINE" 
+          :src="assets('icon/line.png')" />
         <img
           v-if="item.type === type.TWITTER"
-          src="@/assets/images/icon/twitter.png"
+          :src="assets('icon/twitter.png')"
         />
       </div>
       <div class="link-box">
@@ -30,6 +32,7 @@ import { CreateBranch } from '~/constants'
 import InputField from '~/components/atoms/InputField.vue'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
+import { getAssetsPath } from '~/helper/images'
 
 const validations = {
   dataList: { $each: { type: { required }, link: { required } } }
@@ -57,6 +60,10 @@ export default class AddSocial extends Vue {
 
   set dataList(value) {
     this.dataList = value
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>

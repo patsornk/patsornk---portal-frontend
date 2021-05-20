@@ -19,7 +19,7 @@
           <img
             v-if="canDelete"
             class="delete-icon"
-            src="@/assets/images/table/delete.png"
+            :src="assets('table/delete.png')"
             @click="$emit('deleteBrandFeature', activeIndex)"
           />
         </div>
@@ -67,6 +67,7 @@ import {
 import InputField from '~/components/atoms/InputField.vue'
 import UploadImage from '~/components/molecules/UploadImage.vue'
 import UploadFile from '~/components/molecules/UploadFile.vue'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -102,6 +103,9 @@ export default class BrandFeatureBody extends Vue {
   })
   readonly canDelete!: boolean
 
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 
   private error = {
     image: '',

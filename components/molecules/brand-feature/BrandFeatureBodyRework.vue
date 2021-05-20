@@ -32,7 +32,7 @@
           <img
             v-if="canDelete"
             class="delete-icon"
-            src="@/assets/images/table/delete.png"
+            :src="assets('table/delete.png')"
             @click="deleteBrandFeature"
           />
         </div>
@@ -85,6 +85,7 @@
 
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -158,6 +159,10 @@ export default class BrandFeatureBodyRework extends Vue {
 
   setDialogDisplay(value: boolean) {
     this.dialogDisplay = value
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 
   ctaTypeOptions = []

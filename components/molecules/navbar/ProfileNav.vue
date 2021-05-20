@@ -2,7 +2,7 @@
   <div class="profile-nav">
     <div class="profile-img">
       <!-- get profile -->
-      <img src="@/assets/images/navbar/profile.jpg" />
+      <img :src="assets('navbar/profile.jpg')" />
     </div>
     <div class="profile-content">
       <span class="name">robert.s@email.com</span>
@@ -13,9 +13,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { getAssetsPath } from '~/helper/images'
 
 @Component
-export default class ProfileNav extends Vue {}
+export default class ProfileNav extends Vue {
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -54,6 +54,7 @@ import {
 import { isRequiredEmpty, validateError } from '~/helper'
 import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '~/components/atoms/button.vue'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -103,7 +104,7 @@ export default class CentarlLogin extends Vue {
   }
 
   private imageIcon(name: string): any {
-    const image = require(`@/assets/images/login/${name}.png`)
+    const image = getAssetsPath(`login/${name}.png`)
     return image
   }
 

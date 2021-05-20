@@ -10,7 +10,7 @@
       />
       <img
         class="icon-close"
-        src="@/assets/images/icon/close.png"
+        :src="assets('icon/close.png')"
         @click="removeInput(index)"
       />
     </div>
@@ -24,6 +24,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import InputField from '~/components/atoms/InputField.vue'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -58,6 +59,10 @@ export default class AddWebsite extends Vue {
     console.log('dataList', this.dataList)
     this.dataList?.splice(index, 1)
     console.log('dataList', this.dataList)
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>

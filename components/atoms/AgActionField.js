@@ -5,7 +5,7 @@ export default Vue.extend({
         <span>
           <img
             class="btn-edit"
-            src="https://dev-the1-portal.s3-ap-southeast-1.amazonaws.com/assets/btn-edit.png"
+            src="${process.env.PORTAL_HOST}/assets/icon/edit.png"
             @click="btnClickedHandler"
           />
         </span>

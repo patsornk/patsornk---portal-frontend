@@ -3,13 +3,13 @@
     <div class="drawer-toggle" role="button">
       <img
         class="hamberger"
-        src="@/assets/images/navbar/hamberger.png"
+        :src="assets('navbar/hamberger.png')"
         @click="$store.dispatch('nav/toggleSidebar')"
       />
       <div class="flex items-center justify-end">
         <img
           class="mr-2 cursor-pointer"
-          src="@/assets/images/navbar/menu-group.png"
+          :src="assets('navbar/menu-group.png')"
           @click="onClickMenuApps"
         />
         <change-lang />
@@ -34,7 +34,7 @@
       <change-lang />
       <img
         class="ml-8 cursor-pointer"
-        src="@/assets/images/navbar/menu-group.png"
+        :src="assets('navbar/menu-group.png')"
         @click="onClickMenuApps"
       />
       <div
@@ -59,6 +59,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import ChangeLang from '~/components/atoms/dropdown-lang/ChangeLang.vue'
 import { Organization } from '~/constants'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -93,6 +94,10 @@ export default class HeaderNav extends Vue {
         value: Organization.REQUEST
       }
     ]
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>

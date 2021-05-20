@@ -7,7 +7,7 @@
       @click.native="onClickMenu(menu.link)"
     >
       <img
-        src="@/assets/images/navbar/arrow-right.png"
+        :src="assets('navbar/arrow-right.png')"
         v-if="menu.subMenu"
       />
     </nav-menu-item>
@@ -36,6 +36,7 @@ import {
   Watch
 } from 'vue-property-decorator'
 import NavMenuItem from '~/components/atoms/navbar/NavMenuItem.vue'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   name: 'nav-menu',
@@ -61,6 +62,10 @@ export default class NavMenu extends Vue {
 
   private onClickSubMenu(index: number): void {
     this.activeSubMenu = index
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 
   private onClickMenu(link: string): void {

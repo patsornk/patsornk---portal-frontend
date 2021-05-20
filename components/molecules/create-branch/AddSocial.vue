@@ -25,7 +25,7 @@
       />
       <img
         class="icon-close"
-        src="@/assets/images/icon/close.png"
+        :src="assets('icon/close.png')"
         @click="removeInput(index)"
       />
     </div>
@@ -41,6 +41,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import InputField from '~/components/atoms/InputField.vue'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
+import { getAssetsPath } from '~/helper/images'
 
 const validations = {
   dataList: { $each: { type: { required }, link: { required } } }
@@ -86,6 +87,10 @@ export default class AddSocial extends Vue {
       label: 'Twitter'
     }
   ]
+
+  assets(name: string) {
+    return getAssetsPath(name)
+  }
 
   addInput() {
     this.dataList?.push({ type: 0, link: '' })

@@ -282,7 +282,7 @@
         <div class="add-container">
           <div class="add-header">
             <div class="add-box" @click="addWebsite">
-              <img class="icon-add" src="@/assets/images/icon/add-red.png" />
+              <img class="icon-add" :src="assets('icon/add-red.png')" />
               <span class="text-add">{{
                 $t('createBranch.mallInfo.addWebsite')
               }}</span>
@@ -290,13 +290,13 @@
             <div class="icon-box">
               <img
                 class="icon-edit"
-                src="@/assets/images/icon/edit.png"
+                :src="assets('icon/edit.png')"
                 @click="isViewWebsite = false"
                 v-if="isViewWebsite && websiteList.length > 0"
               />
               <img
                 class="icon-save"
-                src="@/assets/images/icon/save.png"
+                :src="assets('icon/save.png')"
                 @click="checkWebsite"
                 v-if="!isViewWebsite && websiteList.length > 0"
               />
@@ -314,7 +314,7 @@
         <div class="add-container">
           <div class="add-header">
             <div class="add-box" @click="addSocial">
-              <img class="icon-add" src="@/assets/images/icon/add-red.png" />
+              <img class="icon-add" :src="assets('icon/add-red.png')" />
               <span class="text-add">{{
                 $t('createBranch.mallInfo.addSocialLink')
               }}</span>
@@ -322,13 +322,13 @@
             <div class="icon-box">
               <img
                 class="icon-edit"
-                src="@/assets/images/icon/edit.png"
+                :src="assets('icon/edit.png')"
                 @click="isViewSocial = false"
                 v-if="isViewSocial && socialList.length > 0"
               />
               <img
                 class="icon-save"
-                src="@/assets/images/icon/save.png"
+                :src="assets('icon/save.png')"
                 @click="checkSocial"
                 v-if="!isViewSocial && socialList.length > 0"
               />
@@ -459,6 +459,7 @@ import AddSocial from '@/components/molecules/create-branch/AddSocial.vue'
 import AddSocialView from '@/components/molecules/create-branch/AddSocialView.vue'
 import OpenHourCustom from '@/components/molecules/create-branch/OpenHourCustom.vue'
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
+import { getAssetsPath } from '~/helper/images'
 import {
   BrandInitialData,
   BranchTypeDataType,
@@ -958,6 +959,10 @@ export default class CreateBranch extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 
   mapPosition: MapPosition = {
