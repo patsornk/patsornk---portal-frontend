@@ -5,7 +5,6 @@
         class="input-website"
         v-model="dataList[index]"
         placeholder="Website Link"
-        @onBlur="setValue"
         :maxlength="255"
       />
       <img
@@ -46,8 +45,10 @@ export default class AddWebsite extends Vue {
     this.dataList = value
   }
 
-  setValue(event: any) {
-    console.log('event', event)
+  mounted() {
+    if (this.dataList?.length === 0) {
+      this.$emit('input', [''])
+    }
   }
 
   addInput() {

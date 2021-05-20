@@ -61,14 +61,6 @@ export default class AddSocial extends Vue {
   })
   private value?: object[]
 
-  get dataList() {
-    return this.value
-  }
-
-  set dataList(value) {
-    this.dataList = value
-  }
-
   socialList = [
     {
       id: 1,
@@ -88,8 +80,18 @@ export default class AddSocial extends Vue {
     }
   ]
 
-  assets(name: string) {
-    return getAssetsPath(name)
+  get dataList() {
+    return this.value
+  }
+
+  set dataList(value) {
+    this.dataList = value
+  }
+
+  mounted() {
+    if (this.dataList?.length === 0) {
+      this.$emit('input', [{ type: '', link: '' }])
+    }
   }
 
   addInput() {
@@ -97,10 +99,11 @@ export default class AddSocial extends Vue {
   }
 
   removeInput(index: number) {
-    console.log(index)
-    console.log('dataList', this.dataList)
     this.dataList?.splice(index, 1)
-    console.log('dataList', this.dataList)
+  }
+  
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>

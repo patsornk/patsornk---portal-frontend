@@ -225,7 +225,6 @@
             <span class="required"> *</span>
           </div>
         </div>
-        {{ logo }}
         <upload-file
           id="mallLogo"
           class="upload-file"
@@ -691,7 +690,7 @@ export default class CreateBranch extends Vue {
   cover = ''
   mallDescription = ''
   websiteList = []
-  socialList: { type: any; link: String }[] = [{ type: '', link: '' }]
+  socialList: { type: any; link: String }[] = []
   categoryId = ''
   openingHourId = ''
   openTime = ''
@@ -943,8 +942,8 @@ export default class CreateBranch extends Vue {
   logoUrl? = ''
   coverUrl? = ''
 
-  isViewWebsite = false
-  isViewSocial = false
+  isViewWebsite = true
+  isViewSocial = true
 
   isSetProvince = false
   isSetDistrict = false
@@ -1247,32 +1246,34 @@ export default class CreateBranch extends Vue {
   }
 
   checkLogo(data: any) {
-    if (data.imageUrl) {
-      this.logoUrl = data.imageUrl
-
-      if (data.file) {
-        this.error.logo = ''
-      } else {
-        this.error.logo = this.$t('createBranch.error.require').toString()
-      }
-    } else if (data) {
+    if (data) {
       this.error.logo = ''
+      if (data.imageUrl) {
+        this.logoUrl = data.imageUrl
+
+        if (data.file) {
+          this.error.logo = ''
+        } else {
+          this.error.logo = this.$t('createBranch.error.require').toString()
+        }
+      }
     } else {
       this.error.logo = this.$t('createBranch.error.require').toString()
     }
   }
 
   checkCover(data: any) {
-    if (data.imageUrl) {
-      this.coverUrl = data.imageUrl
-
-      if (data.file) {
-        this.error.cover = ''
-      } else {
-        this.error.cover = this.$t('createBranch.error.require').toString()
-      }
-    } else if (data) {
+    if (data) {
       this.error.cover = ''
+      if (data.imageUrl) {
+        this.coverUrl = data.imageUrl
+
+        if (data.file) {
+          this.error.cover = ''
+        } else {
+          this.error.cover = this.$t('createBranch.error.require').toString()
+        }
+      }
     } else {
       this.error.cover = this.$t('createBranch.error.require').toString()
     }
@@ -1323,7 +1324,7 @@ export default class CreateBranch extends Vue {
 
   addSocial() {
     if (this.socialList.length === 0) {
-      this.socialList = [{ type: 0, link: '' }]
+      this.socialList = []
       this.isViewSocial = false
     }
   }
@@ -1704,6 +1705,8 @@ export default class CreateBranch extends Vue {
 
             return
           } else {
+            this.checkWebsite()
+            this.checkSocial()
             const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
             const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
 
@@ -1786,6 +1789,8 @@ export default class CreateBranch extends Vue {
 
             return
           } else {
+            this.checkWebsite()
+            this.checkSocial()
             const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
             const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
 

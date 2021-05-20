@@ -2,7 +2,7 @@
   <div>
     <div
       class="upload-container"
-      :class="{ 'error': errorMessage, 'circle-style': circleStyle }"
+      :class="{ error: errorMessage, 'circle-style': circleStyle }"
       id="app"
     >
       <div
@@ -64,10 +64,7 @@
             </div>
           </div>
         </label>
-        <div 
-          class="error-message"
-          :class="{ 'error-circle': circleStyle }"
-        >
+        <div class="error-message" :class="{ 'error-circle': circleStyle }">
           {{ errorMessage }}
         </div>
       </div>
@@ -113,6 +110,11 @@ export default class UploadImage extends Vue {
 
   private file: any = null
   private filelist: any[] = []
+  private dataImageUrl: any
+
+  mounted() {
+    this.dataImageUrl = this.imageUrl
+  }
 
   assets(name: string) {
     return getAssetsPath(name)
@@ -128,10 +130,10 @@ export default class UploadImage extends Vue {
   }
   remove() {
     this.filelist = []
-    this.imageUrl = ''
+    this.dataImageUrl = ''
     this.file = undefined
     this.$emit('input', this.file)
-    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
+    this.$emit('onBlur', { file: this.file, imageUrl: this.dataImageUrl })
     this.$emit('removeUrl', this.file)
   }
   dragover(event: any) {
@@ -182,9 +184,9 @@ export default class UploadImage extends Vue {
       })
     }
 
-    this.file && (this.imageUrl = URL.createObjectURL(this.file))
+    this.file && (this.dataImageUrl = URL.createObjectURL(this.file))
     this.$emit('input', this.file)
-    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
+    this.$emit('onBlur', { file: this.file, imageUrl: this.dataImageUrl })
   }
 }
 </script>
