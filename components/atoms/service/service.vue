@@ -110,7 +110,7 @@ export default class Service extends Vue {
   .title-box {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid $primary;
+    border-bottom: 2px solid $primary;
     margin-top: 18px;
     padding-bottom: 10px;
     font-size: 36px;

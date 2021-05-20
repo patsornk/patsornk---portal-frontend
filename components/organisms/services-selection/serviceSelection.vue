@@ -2,7 +2,7 @@
   <div class="services-selection-container">
     <span>Services Selection (Optional)</span>
     <div class="text-header">Applied Services</div>
-    <div class="list-section">
+    <div v-if="appliedServices.length > 0" class="list-section">
       <div v-for="(item, index) in appliedServices" :key="index">
         <service
           :title="item.serviceName"
@@ -13,6 +13,7 @@
         />
       </div>
     </div>
+    <div class="no-applied" v-else>No Applied Service chosen </div>
     <div class="text-header">Available Services</div>
     <div class="list-section">
       <div v-for="(item, index) in availableServices" :key="index">
@@ -199,6 +200,13 @@ export default class ServiceSelection extends Vue {
     grid-template-columns: 30% 30% 30%;
     grid-column-gap: 27px;
     grid-row-gap: 38px;
+  }
+
+  .no-applied {
+    text-align: center;
+    color: $gray-disable;
+    font-size: 24px;
+    font-weight: 400;
   }
 
   .submit-section {
