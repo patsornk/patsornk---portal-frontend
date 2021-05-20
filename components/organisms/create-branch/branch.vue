@@ -179,7 +179,7 @@
       <input-field
         v-model="$v.latitude.$model"
         :title="$t('createBranch.location.latitude')"
-        :maxlength="14"
+        :maxlength="13"
         :errorMessage="error.latitude"
       />
       <input-field
