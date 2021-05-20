@@ -102,7 +102,9 @@
         </div>
       </div>
       <div class="brand-feature-box">
-        <span class="info-title">{{ $t('createBrand.brandFeature.title') }}</span>
+        <span class="info-title">{{
+          $t('createBrand.brandFeature.title')
+        }}</span>
         <brand-feature-header
           class="feature-header"
           :activeIndex="currentBrandFeatureIndex"
@@ -253,22 +255,22 @@ const validations = {
     Modal,
     BrandFeatureHeader,
     BrandFeatureBody,
-    BrandFeatureBodyRework,
+    BrandFeatureBodyRework
   }
 })
 export default class CreateBrand extends Vue {
   @Prop({
-    type: String,
+    type: String
   })
   mode!: string
 
   @Prop({
-    type: String,
+    type: String
   })
   companyId!: string
 
   @Prop({
-    type: String,
+    type: String
   })
   brandId!: string
 
@@ -276,7 +278,7 @@ export default class CreateBrand extends Vue {
   brandCode = ''
   brandName = {
     th: '',
-    en: '',
+    en: ''
   }
   brandNameTh = ''
   brandNameEn = ''
@@ -293,7 +295,7 @@ export default class CreateBrand extends Vue {
   brandFeatureError: any = ''
   currentBrandFeatureKey = 1
   currentBrandFeatureIndex = 1
-  brandFeatureList:any = []
+  brandFeatureList: any = []
 
   logourl? = ''
   bannerurl? = ''
@@ -335,8 +337,8 @@ export default class CreateBrand extends Vue {
         ctaLabel: '',
         ctaType: '',
         ctaFeature: '',
-        isValid: true,
-      },
+        isValid: true
+      }
     ]
 
     if (!this.mode) {
@@ -359,7 +361,9 @@ export default class CreateBrand extends Vue {
 
   async getListPartnerCode(): Promise<void> {
     try {
-      const companyId = this.companyId ? this.companyId : window.sessionStorage.getItem('createCompanyId')
+      const companyId = this.companyId
+        ? this.companyId
+        : window.sessionStorage.getItem('createCompanyId')
       let res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${companyId}`,
         { data: null }
@@ -507,7 +511,9 @@ export default class CreateBrand extends Vue {
     this.brandFeatureList = []
     if (window.sessionStorage.getItem('createBrandId') || this.brandId) {
       try {
-        const brandId = this.brandId ? this.brandId : window.sessionStorage.getItem('createBrandId')
+        const brandId = this.brandId
+          ? this.brandId
+          : window.sessionStorage.getItem('createBrandId')
         let res = await this.$axios.$get(
           `${process.env.PORTAL_ENDPOINT}/get_brand?brandId=${brandId}&brandAdditional=true&partners=true`,
           { data: null }
@@ -601,6 +607,12 @@ export default class CreateBrand extends Vue {
   }
 
   async save() {
+    const brandFeatureValidate = this.brandFeatureList.find(
+      (brandFeature: any) => brandFeature.isValid == false
+    )
+      ? false
+      : true
+
     let validationGroup: boolean = false
     let isPartnerCodeList: boolean = false
     if (this.$v.validationGroup.$invalid) {
@@ -614,7 +626,11 @@ export default class CreateBrand extends Vue {
       this.onChangedLogo(this.$v.logo.$model)
     } else {
       validationGroup = true
+      if (!brandFeatureValidate) {
+        this.$toast.global.error(this.$t('createBrand.fieldError'))
+      }
     }
+
     if (!this.$v.partnerCodeList.required) {
       isPartnerCodeList = false
       this.$toast.global.error(this.$t('createBrand.partnerCode'))
@@ -622,14 +638,15 @@ export default class CreateBrand extends Vue {
       isPartnerCodeList = true
     }
 
-    const brandFeatureValidate = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false) ? false : true
     if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
         }
       )
-      const companyId = this.companyId ? this.companyId : window.sessionStorage.getItem('createCompanyId')
+      const companyId = this.companyId
+        ? this.companyId
+        : window.sessionStorage.getItem('createCompanyId')
 
       const brandFeatureFormatedList: any[] = []
       for (const brandFeature of this.brandFeatureList) {
@@ -638,7 +655,7 @@ export default class CreateBrand extends Vue {
           brandFeatureTypeId: brandFeature.ctaType,
           brandFeatureValue: brandFeature.ctaFeature,
           brandFeatureLogoImg: await this.getBase64(brandFeature.image),
-          showInApp: brandFeature.showDisplay,
+          showInApp: brandFeature.showDisplay
         })
       }
 
@@ -658,7 +675,7 @@ export default class CreateBrand extends Vue {
         brandEmail: this.$v.email.$model,
         showInApp: this.$v.showDisplay.$model,
         partnerId: partnerId,
-        feature: brandFeatureFormatedList,
+        feature: brandFeatureFormatedList
       }
 
       try {
@@ -669,7 +686,10 @@ export default class CreateBrand extends Vue {
         if (response.successful) {
           if (!this.mode) {
             window.sessionStorage.setItem('createBrandFirstTime', 'no')
-            window.sessionStorage.setItem('createBrandId', response.data.brandId)
+            window.sessionStorage.setItem(
+              'createBrandId',
+              response.data.brandId
+            )
             this.$toast.global.success('Saved successfully')
             this.$router.push('/organizationManagement/create/branch')
           } else {
@@ -684,6 +704,12 @@ export default class CreateBrand extends Vue {
   }
 
   async update() {
+    const brandFeatureValidate = this.brandFeatureList.find(
+      (brandFeature: any) => brandFeature.isValid == false
+    )
+      ? false
+      : true
+
     let validationGroup: boolean = false
     let isPartnerCodeList: boolean = false
     if (this.logourl) {
@@ -697,6 +723,9 @@ export default class CreateBrand extends Vue {
         this.onChangedPhoneNo()
       } else {
         validationGroup = true
+        if (!brandFeatureValidate) {
+          this.$toast.global.error(this.$t('createBrand.fieldError'))
+        }
       }
     } else {
       if (this.$v.validationGroup.$invalid) {
@@ -710,6 +739,9 @@ export default class CreateBrand extends Vue {
         this.onChangedLogo(this.$v.logo.$model)
       } else {
         validationGroup = true
+        if (!brandFeatureValidate) {
+          this.$toast.global.error(this.$t('createBrand.fieldError'))
+        }
       }
     }
     if (!this.$v.partnerCodeList.required) {
@@ -718,16 +750,19 @@ export default class CreateBrand extends Vue {
     } else {
       isPartnerCodeList = true
     }
-    
-    const brandFeatureValidate = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false) ? false : true
+
     if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
         }
       )
-      const companyId = this.companyId ? Number(this.companyId) : window.sessionStorage.getItem('createCompanyId')
-      const brandId = this.brandId ? Number(this.brandId) : window.sessionStorage.getItem('createBrandId')
+      const companyId = this.companyId
+        ? Number(this.companyId)
+        : window.sessionStorage.getItem('createCompanyId')
+      const brandId = this.brandId
+        ? Number(this.brandId)
+        : window.sessionStorage.getItem('createBrandId')
 
       const brandFeatureFormatedList: any[] = []
       for (const brandFeature of this.brandFeatureList) {
@@ -738,7 +773,7 @@ export default class CreateBrand extends Vue {
           brandFeatureLabel: brandFeature.ctaLabel,
           brandFeatureTypeId: brandFeature.ctaType,
           brandFeatureValue: brandFeature.ctaFeature,
-          showInApp: brandFeature.showDisplay,
+          showInApp: brandFeature.showDisplay
         })
       }
 
@@ -762,7 +797,7 @@ export default class CreateBrand extends Vue {
         brandEmail: this.$v.email.$model,
         showInApp: this.$v.showDisplay.$model,
         partnerId: partnerId,
-        feature: brandFeatureFormatedList,
+        feature: brandFeatureFormatedList
       }
       try {
         let response = await this.$axios.$post(
@@ -788,12 +823,19 @@ export default class CreateBrand extends Vue {
     }
   }
 
-  createBrandFeature() {
+  get createBrandFeatureValidate() {
     const currentIndex = this.currentBrandFeatureIndex - 1
-    const validate = this.brandFeatureList[currentIndex].ctaLabel != ''
-      || this.brandFeatureList[currentIndex].ctaType != ''
-      || this.brandFeatureList[currentIndex].ctaFeature != ''
-    if(validate) {
+    const validate =
+      this.brandFeatureList[currentIndex].ctaLabel != '' ||
+      this.brandFeatureList[currentIndex].ctaType != '' ||
+      this.brandFeatureList[currentIndex].ctaFeature != '' ||
+      (this.brandFeatureList[currentIndex].imageUrl != '' &&
+        this.brandFeatureList[currentIndex].imageUrl != undefined)
+    return validate
+  }
+
+  createBrandFeature() {
+    if (this.createBrandFeatureValidate) {
       this.brandFeatureError = ''
       this.brandFeatureList.push({
         image: undefined,
@@ -802,45 +844,62 @@ export default class CreateBrand extends Vue {
         ctaLabel: '',
         ctaType: '',
         ctaFeature: '',
-        isValid: true,
+        isValid: true
       })
       this.currentBrandFeatureIndex += 1
     } else {
-      this.brandFeatureError = this.$t('createBrand.brandFeature.error.oneFieldRequired')
-      this.$toast.global.error(this.$t('createBrand.brandFeature.error.toastOneFieldRequired'))
+      this.brandFeatureError = this.$t(
+        'createBrand.brandFeature.error.oneFieldRequired'
+      )
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastOneFieldRequired')
+      )
     }
   }
 
   selectBrandFeature(index: number) {
-    if(this.currentBrandFeatureIndex == index) {
+    if (this.currentBrandFeatureIndex == index) {
       return false
     }
 
-    const currentIndex = this.currentBrandFeatureIndex - 1
-    const validate = this.brandFeatureList[currentIndex].ctaLabel != ''
-      || this.brandFeatureList[currentIndex].ctaType != ''
-      || this.brandFeatureList[currentIndex].ctaFeature != ''
-    if(validate) {
+    if (this.createBrandFeatureValidate) {
       this.brandFeatureError = ''
       this.currentBrandFeatureIndex = index
     } else {
-      this.brandFeatureError = this.$t('createBrand.brandFeature.error.oneFieldRequired')
-      this.$toast.global.error(this.$t('createBrand.brandFeature.error.toastOneFieldRequired'))
+      this.brandFeatureError = this.$t(
+        'createBrand.brandFeature.error.oneFieldRequired'
+      )
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastOneFieldRequired')
+      )
     }
   }
 
   deleteBrandFeature(index: number) {
-    this.currentBrandFeatureIndex = this.currentBrandFeatureIndex == 1 ? 1 : this.currentBrandFeatureIndex - 1
-    this.brandFeatureList.splice(index - 1, 1)
+    if (this.currentBrandFeatureIndex === 1) {
+      this.currentBrandFeatureIndex = 2
+      setTimeout(() => {
+        this.brandFeatureList.splice(index - 1, 1)
+        this.currentBrandFeatureIndex = 1
+      }, 100)
+    } else {
+      this.currentBrandFeatureIndex -= 1
+      this.brandFeatureList.splice(index - 1, 1)
+    }
   }
 
   onBrandFeatureChange(index: number, key: string, value: any) {
+    if (value) {
+      this.brandFeatureError = ''
+    }
     this.brandFeatureList[index][key] = value
   }
 
   @Watch('phoneNo')
   isBrandFeatureValid(): void {
-    const brandFeature = this.brandFeatureList.find((brandFeature: any) => brandFeature.isValid == false)
+    const brandFeature = this.brandFeatureList.find(
+      (brandFeature: any) => brandFeature.isValid == false
+    )
   }
 }
 </script>

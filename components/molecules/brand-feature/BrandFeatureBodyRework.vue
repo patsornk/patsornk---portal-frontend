@@ -15,9 +15,9 @@
         :key="`brand_feature_image-${featureNo}`"
         class="upload-file"
         :circleStyle="true"
-        v-model="$v.image.$model"
-        :imageUrl="$v.imageUrl.$model"
-        @viewFile="$emit('viewFile', $v.imageUrl.$model)"
+        v-model="image"
+        :imageUrl="imageUrl"
+        @viewFile="$emit('viewFile', imageUrl)"
         @onBlur="onUploadImage"
         @removeUrl="onRemoveFeatureImage"
         :errorMessage="error.image"
@@ -104,8 +104,6 @@ import UploadFile from '~/components/molecules/UploadFile.vue'
 import DialogPopup from '~/components/molecules/DialogPopup.vue'
 
 const validations = {
-  image: {},
-  imageUrl: { required },
   ctaLabel: { required },
   ctaType: { required },
   ctaFeature: { required }
@@ -228,7 +226,7 @@ export default class BrandFeatureBodyRework extends Vue {
         'onBrandFeatureChange',
         this.featureNo - 1,
         'isValid',
-        !this.$v.$invalid
+        this.formValid
       )
       this.error.image = this.imageUrl
         ? ''
@@ -255,7 +253,7 @@ export default class BrandFeatureBodyRework extends Vue {
         'onBrandFeatureChange',
         this.featureNo - 1,
         'isValid',
-        !this.$v.$invalid
+        this.formValid
       )
     }
   }
@@ -281,7 +279,7 @@ export default class BrandFeatureBodyRework extends Vue {
         'onBrandFeatureChange',
         this.featureNo - 1,
         'isValid',
-        !this.$v.$invalid
+        this.formValid
       )
       this.error.ctaLabel = !this.$v.ctaLabel.required
         ? this.$t('createBrand.brandFeature.error.ctaLabel').toString()
@@ -316,7 +314,7 @@ export default class BrandFeatureBodyRework extends Vue {
         'onBrandFeatureChange',
         this.featureNo - 1,
         'isValid',
-        !this.$v.$invalid
+        this.formValid
       )
     }
   }
@@ -339,7 +337,7 @@ export default class BrandFeatureBodyRework extends Vue {
         'onBrandFeatureChange',
         this.featureNo - 1,
         'isValid',
-        !this.$v.$invalid
+        this.formValid
       )
     }
   }
@@ -362,7 +360,7 @@ export default class BrandFeatureBodyRework extends Vue {
         'onBrandFeatureChange',
         this.featureNo - 1,
         'isValid',
-        !this.$v.$invalid
+        this.formValid
       )
     }
   }
@@ -371,6 +369,10 @@ export default class BrandFeatureBodyRework extends Vue {
     if (!this.showDisplay) {
       this.dialogDisplay = true
     }
+  }
+
+  get formValid(): boolean {
+    return !this.$v.$invalid && this.imageUrl !== ''
   }
 }
 </script>

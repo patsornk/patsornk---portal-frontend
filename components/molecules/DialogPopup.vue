@@ -14,7 +14,7 @@
           <t1-button type="outline" @click.native="$emit('onLeftButtonClick')">
             {{leftButtonTitle}}
           </t1-button>
-          <t1-button class="btn-edit" @click.native="$emit('onRightButtonClick')">
+          <t1-button @click.native="$emit('onRightButtonClick')">
             {{rightButtonTitle}}
           </t1-button>
         </div>
