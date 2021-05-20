@@ -167,9 +167,9 @@ export default class CreatePartnerCode extends Vue {
     } else {
       try {
         const payload = {
-          partnerId: event.id,
-          partnerCode: event.partnerCode,
-          partnerName: event.partnerName,
+          partnerId: event.value.partnerId,
+          partnerCode: event.value.partnerCode,
+          partnerName: event.value.partnerName,
           companyId: this.companyId
         }
 
