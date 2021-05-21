@@ -64,6 +64,7 @@
       @onChenagePage="changePage"
       :frameworkComponents="frameworkComponents"
       @pagination="changPageSize"
+      :currentPage="currentPage"
       itemKey="companyId"
     />
   </div>
@@ -105,11 +106,15 @@ export default class OrganizationTable extends Vue {
     agColumnHeader: CustomHeader
   }
 
+  tableOderField = ''
+  tableOderBy = ''
+  currentPage = 1
   selectData = []
   pageSize = 0
   totalItem = 0
   inputType = 'text'
   clickSearch = false
+  clickSort = false
   fillterData = {
     keyword: '',
     companyTypeId: 0,
@@ -250,39 +255,37 @@ export default class OrganizationTable extends Vue {
   ]
 
   private async sortingList(data: any, order: any) {
-    this.filterCompanies('1',this.pagination,data.colKey,order)
-    // switch(data.colKey) {
-    //   case OrganizationTableCol.NameTh:
-    //   break
-    //   case OrganizationTableCol.NameEn:
-    //     console.log(data, 'sss', order)
-    //   break
-    //   case OrganizationTableCol.CompCat:
-    //     console.log(data, 'sss', order)
-    //   break
-    //   case OrganizationTableCol.CompType:
-    //     console.log(data, 'sss', order)
-    //   break
-    //   case OrganizationTableCol.CompSize:
-    //     console.log(data, 'sss', order)
-    //   break
-    //   case OrganizationTableCol.CompStatus:
-    //     console.log(data, 'sss', order)
-    //   break
-    //   default :
-    //   break
-    // }
+    this.clickSort = true
+    this.clickSearch = false
+    if (data.colKey == 'status') { return }
+    if (this.tableOderField == data.colKey) {
+      if (this.tableOderBy == 'asc') {
+        this.tableOderBy = 'desc'
+      } else {
+        this.tableOderBy = 'asc'
+      }
+    } else {
+      this.tableOderField = data.colKey
+      this.tableOderBy = 'asc'
+    }
+    this.currentPage = 1
+    this.filterCompanies('1',this.pagination, this.tableOderField, this.tableOderBy)
   }
 
   private async search() {
     this.clickSearch = true
+    this.clickSort = false
+    this.tableOderField = ''
+    this.tableOderBy = ''
+    this.currentPage = 1
     this.filterCompanies('1', this.pagination)
   }
 
   async changPageSize(pagination: String) {
     this.pagination = pagination
-    if (this.clickSearch) {
-      this.filterCompanies('1', pagination)
+    this.currentPage = 1
+    if (this.clickSearch || this.clickSort) {
+      this.filterCompanies('1', pagination, this.tableOderField, this.tableOderBy)
     } else {
       this.getCompanies('1', pagination)
     }
@@ -296,12 +299,14 @@ export default class OrganizationTable extends Vue {
     await this.getCompanyType()
     await this.getCompanySize()
     await this.getCompanyCategory()
+    this.currentPage = 1
     this.getCompanies('1', '10')
   }
 
   changePage(page: number) {
-    if (this.clickSearch) {
-      this.filterCompanies(page.toString(), this.pagination)
+    this.currentPage = page
+    if (this.clickSearch || this.clickSort) {
+      this.filterCompanies(page.toString(), this.pagination, this.tableOderField, this.tableOderBy)
     } else {
       this.getCompanies(page.toString(), this.pagination)
     }

@@ -161,7 +161,7 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
-  async clickEditNewSiebelPartner(event: SiebelPartnerType) {
+  async clickEditNewSiebelPartner(event: any) {
     if (this.checkDuplicate(event)) {
       this.partnerCodeError = 'Duplicate Siebel Partner code'
     } else {

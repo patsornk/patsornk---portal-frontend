@@ -265,6 +265,13 @@ export default class TableComponent extends Vue {
     default: ''
   })
   readonly createNewTitle!: string
+  
+  @Prop({
+    type: Number,
+    default: 1,
+    required: false
+  })
+  currentPage?: Number
 
   @Prop({
     type: String,
@@ -281,7 +288,6 @@ export default class TableComponent extends Vue {
   private lists = DataPrePageList
   private selectedRows = 0
   private pagination = 10
-  private currentPage = 1
   private searchQuery = ''
   private gridOptions: any = {
     onRowClicked: this.onRowClicked,
