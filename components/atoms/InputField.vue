@@ -9,7 +9,11 @@
       <span v-show="required" class="input-field-required"> *</span>
     </div>
     <div class="input-field-input-group w-full">
-      <div :class="errorMessage && type != 'textarea' ? 'input-field-input-error' : ''">
+      <div
+        :class="
+          errorMessage && type != 'textarea' ? 'input-field-input-error' : ''
+        "
+      >
         <div
           v-if="
             type === 'textarea' ||
@@ -27,7 +31,7 @@
             :label="optionsLabel"
             :reduce="optionsReduce"
             :placeholder="placeholder"
-            :searchable="false"
+            :searchable="searchable"
             :disabled="disable"
             :map-keydown="deleteHandler"
             @blur="$emit('onBlur')"
@@ -62,7 +66,7 @@
           <textarea
             v-if="type === 'textarea'"
             class="textarea"
-            :class="{'textarea-error' : errorMessage}"
+            :class="{ 'textarea-error': errorMessage }"
             rows="4"
             cols="200"
             :inputmode="inputmode"
@@ -124,6 +128,12 @@ export default class InputField extends Vue {
     type: Boolean
   })
   private disable!: boolean
+
+  @Prop({
+    default: false,
+    type: Boolean
+  })
+  private searchable!: boolean
 
   @Prop({
     type: String,
@@ -198,9 +208,12 @@ export default class InputField extends Vue {
 
   deleteHandler(map: any, vm: any) {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        if (!this.searchable) {
+          e.preventDefault()
+        }
+      }
     }
   }
 }

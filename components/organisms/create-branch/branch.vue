@@ -379,6 +379,7 @@
             optionsLabel="label"
             :placeholder="$t('createBranch.openingHour')"
             :errorMessage="error.openTime"
+            searchable
           />
           <input-field
             class="open-meridiem"
@@ -401,6 +402,7 @@
             optionsLabel="label"
             :placeholder="$t('createBranch.closingHour')"
             :errorMessage="error.closeTime"
+            searchable
           />
           <input-field
             class="open-meridiem"

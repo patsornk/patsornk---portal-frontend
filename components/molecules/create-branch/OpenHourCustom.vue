@@ -29,6 +29,7 @@
           :placeholder="$t('createBranch.openingHour')"
           :errorMessage="item.openError"
           @onChange="$emit('changeCusTomList', { index, time: 'open' })"
+          searchable
         />
         <input-field
           class="open-meridiem"
@@ -54,6 +55,7 @@
           :placeholder="$t('createBranch.closingHour')"
           :errorMessage="item.closeError"
           @onChange="$emit('changeCusTomList', { index, time: 'close' })"
+          searchable
         />
         <input-field
           class="open-meridiem"
