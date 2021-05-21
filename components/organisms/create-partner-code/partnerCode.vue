@@ -32,7 +32,7 @@
       @changePartnerCode="changePartnerCode"
     />
 
-    <div class="add-container" @click="isShowNewForm = true">
+    <div class="add-container" @click="clickAdd">
       <span class="material-icons icon-add"> add </span>
       <span class="text-add"> {{$t('createPartnerCode.addSieabelPartner')}} </span>
     </div>
@@ -156,7 +156,12 @@ export default class CreatePartnerCode extends Vue {
   }
 
   clickEditSiebelPartner(param: string) {
-    if (this.isShowEditForm) return false
+    if (this.isShowNewForm) {
+      this.$toast.global.error(
+        'Please finish current action before click another.'
+      )
+      return
+    }
     this.isShowEditForm = true
     this.dataList.forEach((item) => {
       if (item.partnerCode === param) {
@@ -164,6 +169,15 @@ export default class CreatePartnerCode extends Vue {
       }
     })
     this.deleteItem(this.editSiebelPartner)
+  }
+  clickAdd() {
+    if (this.isShowEditForm) {
+      this.$toast.global.error(
+        'Please finish current action before click another.'
+      )
+      return
+    }
+    this.isShowNewForm = true
   }
 
   deleteItem(item: SiebelPartnerType) {
