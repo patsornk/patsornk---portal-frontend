@@ -70,7 +70,7 @@
         required
         type="select"
         :options="partnerCodeList"
-        :optionsReduce="(item) => item.partnerId"
+        :optionsReduce="(item) => item.id"
         optionsLabel="partnerCode"
         placeholder="Please select..."
         :errorMessage="error.partnerCodeId"
