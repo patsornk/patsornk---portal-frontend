@@ -138,7 +138,7 @@
         isShowCheckBox
         :headerTitle="$t('createBrand.partnerCodeList')"
         v-model="$v.partnerCodeList.$model"
-        itemKey="brandId"
+        itemKey="id"
       />
     </div>
     <div class="submit-section">
@@ -386,17 +386,22 @@ export default class CreateBrand extends Vue {
     }
   }
 
-  onChangedLogo(data: any) {
-    if (data.imageUrl) {
-      this.logoUrl = data.imageUrl
+  get validateLogo() {
+    return this.logoUrl ? true : false
+  }
 
-      if (data.file) {
-        this.error.logo = ''
-      } else {
-        this.error.logo = this.$t('createBrand.error.require').toString()
-      }
-    } else if (data) {
+  onChangedLogo(data: any) {
+    if (data) {
       this.error.logo = ''
+      if (data.imageUrl) {
+        this.logoUrl = data.imageUrl
+
+        if (data.file) {
+          this.error.logo = ''
+        } else {
+          this.error.logo = this.$t('createBrand.error.require').toString()
+        }
+      }
     } else {
       this.error.logo = this.$t('createBrand.error.require').toString()
     }
@@ -622,7 +627,7 @@ export default class CreateBrand extends Vue {
 
     let validationGroup: boolean = false
     let isPartnerCodeList: boolean = false
-    if (this.$v.validationGroup.$invalid) {
+    if (this.$v.validationGroup.$invalid && !this.validateLogo) {
       validationGroup = false
       this.$toast.global.error(this.$t('createBrand.fieldError'))
       this.onChangedBrandCode()
@@ -735,7 +740,7 @@ export default class CreateBrand extends Vue {
         }
       }
     } else {
-      if (this.$v.validationGroup.$invalid) {
+      if (this.$v.validationGroup.$invalid && !this.validateLogo) {
         validationGroup = false
         this.$toast.global.error(this.$t('createBrand.fieldError'))
         this.onChangedBrandCode()
