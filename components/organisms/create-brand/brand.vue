@@ -896,7 +896,7 @@ export default class CreateBrand extends Vue {
   }
 
   onBrandFeatureChange(index: number, key: string, value: any) {
-    if (value) {
+    if (value && key !== 'showDisplay' && key !== 'isValid') {
       this.brandFeatureError = ''
     }
     this.brandFeatureList[index][key] = value
