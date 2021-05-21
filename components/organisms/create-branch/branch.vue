@@ -70,7 +70,7 @@
         required
         type="select"
         :options="partnerCodeList"
-        :optionsReduce="(item) => item.id"
+        :optionsReduce="(item) => item.partnerId"
         optionsLabel="partnerCode"
         placeholder="Please select..."
         :errorMessage="error.partnerCodeId"
@@ -1748,14 +1748,13 @@ export default class CreateBranch extends Vue {
                 mallTwitter.push(item.link)
               }
             })
-            const openingHour = {
+            const openingHour = [{
               dayOfWeek: 0,
               openingTime: this.openTime + '|' + this.openMeridiem,
               closingTime: this.closeTime + '|' + this.closeMeridiem,
               dayOff: false,
               allDay: false
-            }
-
+            }]
             return {
               brandId: this.$v.brandId.$model,
               branchCode: this.$v.branchCode.$model,
@@ -1787,7 +1786,7 @@ export default class CreateBranch extends Vue {
               mallLine,
               mallTwitter,
               openingHour,
-              mallCategoryId: this.$v.categoryId.$model
+              mallCategoryId: this.$v.categoryId.$model ? this.$v.categoryId.$model : null
             }
             break
           }
