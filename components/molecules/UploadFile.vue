@@ -110,10 +110,8 @@ export default class UploadImage extends Vue {
 
   private file: any = null
   private filelist: any[] = []
-  private dataImageUrl: any
 
   mounted() {
-    this.dataImageUrl = this.imageUrl
   }
 
   assets(name: string) {
@@ -130,10 +128,10 @@ export default class UploadImage extends Vue {
   }
   remove() {
     this.filelist = []
-    this.dataImageUrl = ''
+    this.imageUrl = ''
     this.file = undefined
     this.$emit('input', this.file)
-    this.$emit('onBlur', { file: this.file, imageUrl: this.dataImageUrl })
+    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
     this.$emit('removeUrl', this.file)
   }
   dragover(event: any) {
@@ -184,9 +182,9 @@ export default class UploadImage extends Vue {
       })
     }
 
-    this.file && (this.dataImageUrl = URL.createObjectURL(this.file))
+    this.file && (this.imageUrl = URL.createObjectURL(this.file))
     this.$emit('input', this.file)
-    this.$emit('onBlur', { file: this.file, imageUrl: this.dataImageUrl })
+    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
   }
 }
 </script>
