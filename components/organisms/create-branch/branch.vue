@@ -561,7 +561,7 @@ const validations = {
   ],
   validationInMallGroup: [
     'branchTypeId',
-    // 'mallId',
+    'mallId',
     'address',
     'countryId',
     'provinceId',
@@ -676,7 +676,7 @@ export default class CreateBranch extends Vue {
   phoneNumber = ''
   partnerCodeId = ''
   branchTypeId: any = ''
-  mallId = 0
+  mallId = ''
   address = ''
   countryId = 'Thailand'
   provinceId = ''
@@ -1362,8 +1362,7 @@ export default class CreateBranch extends Vue {
         if (res.successful) {
           if (this.componetMode == 'onboard') {
             this.brandList = res.data.brand
-            this.brandId =
-              Number(window.sessionStorage.getItem('createBrandId')) || 0
+            this.brandId = window.sessionStorage.getItem('createBrandId') || ''
             this.disableBrandId = true
           } else {
             this.brandList = res.data.brand
@@ -1421,6 +1420,15 @@ export default class CreateBranch extends Vue {
       )
       if (res.successful) {
         this.mallList = res.data.mall
+
+        const isMallInList =
+          this.mallList.filter((item) => {
+            item.mallId === this.mallId
+          }).length > 0
+
+        if (!isMallInList) {
+          this.mallId = ''
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -1540,7 +1548,7 @@ export default class CreateBranch extends Vue {
           this.email = data.branchEmail
           this.phonePrefix = data.branchPhonePrefix
           this.phoneNumber = data.branchPhoneNumber
-          // this.partnerCodeId = data.partnerCodeId
+          this.partnerCodeId = data.partnerCodeId
           this.branchTypeId = data.branchType.branchTypeId
           this.mallId = data.mall.mallId
           this.address = data.address.address

@@ -54,6 +54,7 @@
       @onChenagePage="changePage"
       @pagination="changPageSize"
       :rowHeight="80"
+      class="row-h-80"
       @clickActive="clickActive"
       @clickHold="clickHold"
       @clickInactive="clickInactive"
