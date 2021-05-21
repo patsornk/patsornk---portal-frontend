@@ -676,7 +676,7 @@ export default class CreateBranch extends Vue {
   phoneNumber = ''
   partnerCodeId = ''
   branchTypeId: any = ''
-  mallId = ''
+  mallId: any = ''
   address = ''
   countryId = 'Thailand'
   provinceId = ''
