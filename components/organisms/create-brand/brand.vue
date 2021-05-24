@@ -334,12 +334,12 @@ export default class CreateBrand extends Vue {
     this.phonePrefix = value
   }
 
-  viewFile(imageUrl: string) {
+  viewFile(imageUrl: string): void {
     this.isShowImage = true
     this.imageUrl = imageUrl
   }
 
-  async mounted(): Promise<void> {
+  mounted(): void {
     this.brandFeatureList = [
       {
         image: undefined,
@@ -375,7 +375,7 @@ export default class CreateBrand extends Vue {
       const companyId = this.companyId
         ? this.companyId
         : window.sessionStorage.getItem('createCompanyId')
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${companyId}`,
         { data: null }
       )
@@ -537,7 +537,7 @@ export default class CreateBrand extends Vue {
         const brandId = this.brandId
           ? this.brandId
           : window.sessionStorage.getItem('createBrandId')
-        let res = await this.$axios.$get(
+        const res = await this.$axios.$get(
           `${process.env.PORTAL_ENDPOINT}/get_brand?brandId=${brandId}&brandAdditional=true&partners=true`,
           { data: null }
         )
@@ -569,28 +569,30 @@ export default class CreateBrand extends Vue {
               ? getImagePath(brandAddidtional.additionalLogoImg)
               : undefined
             this.bannerurl = brandAddidtional.additionalBannerImg
-              ? brandAddidtional.additionalBannerImg
+              ? getImagePath(brandAddidtional.additionalBannerImg)
               : undefined
             this.brandInfo = brandAddidtional.additionalInfo
               ? brandAddidtional.additionalInfo
               : ''
-            this.oldLogourl = brandAddidtional.additionalLogoImg ? true : false
-            this.oldBannerurl = brandAddidtional.additionalBannerImg
-              ? true
-              : false
+            this.oldLogourl = !!brandAddidtional.additionalLogoImg
+            this.oldBannerurl = !!brandAddidtional.additionalBannerImg
             if (res.data.brandFeature.length) {
-              this.brandFeatureList = res.data.brandFeature.map((brandFeature: any) => {
-                return {
-                  id: brandFeature.brandFeatureId,
-                  image: undefined,
-                  imageUrl: getImagePath(brandFeature.brandFeatureLogoImgLink),
-                  showDisplay: brandFeature.showInApp,
-                  ctaLabel: brandFeature.brandFeatureLabel,
-                  ctaType: brandFeature.brandFeatureTypeId,
-                  ctaFeature: brandFeature.brandFeatureValue,
-                  isValid: true,
+              this.brandFeatureList = res.data.brandFeature.map(
+                (brandFeature: any) => {
+                  return {
+                    id: brandFeature.brandFeatureId,
+                    image: undefined,
+                    imageUrl: brandFeature.brandFeatureLogoImgLink
+                      ? getImagePath(brandFeature.brandFeatureLogoImgLink)
+                      : undefined,
+                    showDisplay: brandFeature.showInApp,
+                    ctaLabel: brandFeature.brandFeatureLabel,
+                    ctaType: brandFeature.brandFeatureTypeId,
+                    ctaFeature: brandFeature.brandFeatureValue,
+                    isValid: true
+                  }
                 }
-              })
+              )
             }
           } else {
             this.brandCode = data.brandCode
