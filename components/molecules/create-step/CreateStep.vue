@@ -27,6 +27,18 @@
         {{$t('common.createNewCompany')}}
       </t-1-button>
     </div>
+
+    <dialog-popup
+      :display="dialogDisplay"
+      title="Want to Create New Organization  ?"
+      description="To make sure, Please check the information before click ‘Create New Organization’ "
+      leftButtonTitle="Cancel"
+      rightButtonTitle="Create New Organization "
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="dialogAction"
+      leftStyle="flex: 0.25"
+      rightStyle="flex: 0.67"
+    />
   </div>
 </template>
 
@@ -39,6 +51,7 @@ import CreateBrand from '@/components/organisms/create-brand/brand.vue'
 import CreateBranch from '@/components/organisms/create-branch/branch.vue'
 import CreatePartnerCode from '@/components/organisms/create-partner-code/partnerCode.vue'
 import ServiceSelection from '~/components/organisms/services-selection/serviceSelection.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import { StepbarContent, CreateStepBar } from '~/constants'
 
 @Component({
@@ -49,7 +62,8 @@ import { StepbarContent, CreateStepBar } from '~/constants'
     CreateBrand,
     CreateBranch,
     CreatePartnerCode,
-    ServiceSelection
+    ServiceSelection,
+    DialogPopup
   }
 })
 export default class CreateStep extends Vue {
@@ -75,6 +89,7 @@ export default class CreateStep extends Vue {
     ]
   }
   private step = CreateStepBar
+  private dialogDisplay = false
 
   get btnStatus() {
     return this.$store.getters['stepbar/maxState'] === 4 ? '' : 'disable'
@@ -104,6 +119,19 @@ export default class CreateStep extends Vue {
         this.$toast.global.error(error.response.data.message)
       }
     }
+  }
+
+  createNewCompany() {
+    this.dialogDisplay = true
+  }
+
+  dialogCancelAction() {
+    this.dialogDisplay = false
+  }
+
+  dialogAction() {
+    this.dialogDisplay = false
+    this.createOrgHandler()
   }
 }
 </script>

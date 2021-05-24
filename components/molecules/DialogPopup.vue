@@ -11,11 +11,18 @@
       </template>
       <template v-slot:footer>
         <div class="dialog-footer">
-          <t1-button type="outline" @click.native="$emit('onLeftButtonClick')">
-            {{leftButtonTitle}}
+          <t1-button
+            type="outline"
+            :style="leftStyle"
+            @click.native="$emit('onLeftButtonClick')"
+          >
+            {{ leftButtonTitle }}
           </t1-button>
-          <t1-button @click.native="$emit('onRightButtonClick')">
-            {{rightButtonTitle}}
+          <t1-button
+            :style="rightStyle"
+            @click.native="$emit('onRightButtonClick')"
+          >
+            {{ rightButtonTitle }}
           </t1-button>
         </div>
       </template>
@@ -61,7 +68,25 @@ export default class DialogPopup extends Vue {
   })
   readonly rightButtonTitle!: string
 
+  @Prop({
+    type: String
+  })
+  readonly leftStyle!: string
+
+  @Prop({
+    type: String
+  })
+  readonly rightStyle!: string
+
   mounted(): void {}
+
+  updated() {
+    if (this.display) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+  }
 }
 </script>
 

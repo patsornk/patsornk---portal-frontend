@@ -40,3 +40,7 @@
 .toasted .primary, .toasted.toasted-primary .material-icons{
   color: $success;
 }
+
+body.modal-open{
+  overflow: hidden;
+}
