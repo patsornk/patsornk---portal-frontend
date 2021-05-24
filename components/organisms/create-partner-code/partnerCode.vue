@@ -34,11 +34,13 @@
 
     <div class="add-container" @click="clickAdd">
       <span class="material-icons icon-add"> add </span>
-      <span class="text-add"> {{$t('createPartnerCode.addSieabelPartner')}} </span>
+      <span class="text-add">
+        {{ $t('createPartnerCode.addSieabelPartner') }}
+      </span>
     </div>
 
     <div class="submit-section">
-      <button class="submit" @click="clickSave">{{$t('common.save')}}</button>
+      <button class="submit" @click="clickSave">{{ $t('common.save') }}</button>
     </div>
   </div>
 </template>
@@ -73,6 +75,7 @@ export default class CreatePartnerCode extends Vue {
   }
   defaultSiebelPartner: SiebelPartnerType = {
     id: 0,
+    partnerId: 0,
     partnerCode: '',
     partnerName: ''
   }
@@ -189,7 +192,9 @@ export default class CreatePartnerCode extends Vue {
 
   async clickEditNewSiebelPartner(event: any) {
     if (this.checkDuplicate(event)) {
-      this.partnerCodeError = this.$t('createPartnerCode.duplicatePartnerCode').toString()
+      this.partnerCodeError = this.$t(
+        'createPartnerCode.duplicatePartnerCode'
+      ).toString()
     } else {
       try {
         const payload = {
@@ -208,15 +213,21 @@ export default class CreatePartnerCode extends Vue {
           this.partnerCodeError = ''
           this.dataList.push({
             id: res.data.partnerId,
+            partnerId: res.data.partnerId,
             partnerCode: res.data.partnerCode,
             partnerName: res.data.partnerName
+          })
+          this.dataList.sort((a, b) => {
+            return a.partnerId - b.partnerId
           })
           this.clearData()
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
         if (error.response.data.code === '07') {
-          this.partnerCodeError = this.$t('createPartnerCode.duplicatePartnerCode').toString()
+          this.partnerCodeError = this.$t(
+            'createPartnerCode.duplicatePartnerCode'
+          ).toString()
         }
       }
     }
@@ -225,7 +236,9 @@ export default class CreatePartnerCode extends Vue {
   async clickAddNewSiebelPartner(data: any) {
     const event = data.value
     if (this.checkDuplicate(event)) {
-      this.partnerCodeError = this.$t('createPartnerCode.duplicatePartnerCode').toString()
+      this.partnerCodeError = this.$t(
+        'createPartnerCode.duplicatePartnerCode'
+      ).toString()
     } else {
       try {
         const payload = {
@@ -243,15 +256,21 @@ export default class CreatePartnerCode extends Vue {
           this.partnerCodeError = ''
           this.dataList.push({
             id: res.data.partnerId,
+            partnerId: res.data.partnerId,
             partnerCode: res.data.partnerCode,
             partnerName: res.data.partnerName
+          })
+          this.dataList.sort((a, b) => {
+            return a.partnerId - b.partnerId
           })
           this.clearData()
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
         if (error.response.data.code === '07') {
-          this.partnerCodeError = this.$t('createPartnerCode.duplicatePartnerCode').toString()
+          this.partnerCodeError = this.$t(
+            'createPartnerCode.duplicatePartnerCode'
+          ).toString()
         }
       }
     }
@@ -268,7 +287,9 @@ export default class CreatePartnerCode extends Vue {
 
   changePartnerCode(event: SiebelPartnerType) {
     if (this.checkDuplicate(event)) {
-      this.partnerCodeError = this.$t('createPartnerCode.duplicatePartnerCode').toString()
+      this.partnerCodeError = this.$t(
+        'createPartnerCode.duplicatePartnerCode'
+      ).toString()
     } else {
       this.partnerCodeError = ''
     }
