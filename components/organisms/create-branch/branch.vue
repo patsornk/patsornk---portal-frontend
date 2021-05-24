@@ -425,7 +425,7 @@
     </div>
 
     <div class="submit-section">
-      <button class="submit" @click="clickSave">{{$t('common.save')}}</button>
+      <button class="submit" @click="clickSave">{{ $t('common.save') }}</button>
     </div>
 
     <modal v-show="isShowImage" class="show-image">
@@ -1607,7 +1607,9 @@ export default class CreateBranch extends Vue {
           // this.categoryId  = data.mall.mallInfo.mallCategory.mallCategoryId
           if (data.mall.mallInfo.openingHour.length === 7) {
             this.openingHourId = '2'
-            this.openCusTomList = this.mappingOpeningHour(data.mall.mallInfo.openingHour)
+            this.openCusTomList = this.mappingOpeningHour(
+              data.mall.mallInfo.openingHour
+            )
           } else if (data.mall.mallInfo.openingHour.length === 1) {
             this.openingHourId = '1'
             this.openTime = data.mall.mallInfo.openingHour.openingTime.split(
@@ -1975,13 +1977,13 @@ export default class CreateBranch extends Vue {
   mappingOpeningHour(values: any[]) {
     return values.map((value: any) => {
       return {
-        dayOfWeek: value.dayOfWeek,
-        day: getDay(value.dayOfWeek),
+        dayOfWeek: Number(value.dayOfWeek),
+        day: getDay(value.dayOfWeek) || '',
         openTime: this.getTime(value.openingTime, 0),
         openMeridiem: this.getTime(value.openingTime, 1),
         closeTime: this.getTime(value.closingTime, 0),
         closeMeridiem: this.getTime(value.closingTime, 1),
-        isDayOff: value.dayOff,
+        isDayOff: !!value.dayOff,
         openError: '',
         openMeridiemError: '',
         closeError: '',
