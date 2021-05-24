@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <CreateEditPartnerCode
-    :compantId="id"
-    />
+  <div class="partner-container">
+    <partner-code :companyIdParent="id"/>
   </div>
 </template>
 
@@ -12,12 +10,14 @@ import T1Button from '@/components/atoms/button.vue'
 import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
 import { BreadcrumbType, CompanyType } from '~/constants'
 import CreateEditPartnerCode from '~/components/organisms/create-edit-partner-code/createEditPartnerCode.vue'
+import PartnerCode from '~/components/organisms/create-partner-code/partnerCode.vue'
 
 @Component({
   components: {
     T1Button,
     OrganizationTable,
-    CreateEditPartnerCode
+    CreateEditPartnerCode,
+    PartnerCode
   }
 })
 export default class CompanyCreatePartnerCode extends Vue {
@@ -114,3 +114,11 @@ export default class CompanyCreatePartnerCode extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/_variables.scss';
+
+.partner-container {
+  padding: 0px 55px;
+}
+</style>

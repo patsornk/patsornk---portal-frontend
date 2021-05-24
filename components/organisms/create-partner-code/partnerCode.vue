@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import InputField from '@/components/atoms/InputField.vue'
 import TableComponent from '@/components/molecules/table-component/TableComponent.vue'
 import SiebelPartner from '@/components/molecules/create-partner/SiebelPartner.vue'
@@ -59,6 +59,11 @@ import { SiebelPartnerType } from '~/constants/types/PartnerCodeType'
   }
 })
 export default class CreatePartnerCode extends Vue {
+  @Prop({
+    type: String
+  })
+  companyIdParent!: string
+
   companyId = window.sessionStorage.getItem('createCompanyId')
 
   deleteAble = false
@@ -117,7 +122,13 @@ export default class CreatePartnerCode extends Vue {
   ]
 
   async mounted() {
-    if (this.$route.params.currentStep === 'partnercode' && this.companyId) {
+    if (this.companyIdParent) {
+      this.companyId = this.companyIdParent
+      this.getPartnerList()
+    } else if (
+      this.$route.params.currentStep === 'partnercode' &&
+      this.companyId
+    ) {
       this.getPartnerList()
     }
   }
@@ -128,6 +139,7 @@ export default class CreatePartnerCode extends Vue {
         `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.companyId}`,
         { data: null }
       )
+
       if (res.successful) {
         this.dataList = res.data.partner
         if (this.dataList.length > 0) {
@@ -294,7 +306,11 @@ export default class CreatePartnerCode extends Vue {
       )
       return
     }
-    this.$router.push('/organizationManagement/create/brand')
+    if (this.companyIdParent) {
+      this.$router.push(`/organizationManagement/${this.companyIdParent}`)
+    } else {
+      this.$router.push('/organizationManagement/create/brand')
+    }
   }
 }
 </script>

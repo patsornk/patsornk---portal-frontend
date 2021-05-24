@@ -255,10 +255,6 @@ export default class TabPartnerCode extends Vue {
     })
   }
 
-  clickNewPartnerCode() {
-    this.$router.push(`/organizationManagement/${this.id}/create/partnercode`)
-  }
-
   async clickHold(event: any) {
     this.status = OrganizationManagementStatus.HOLD
     this.setDialogDisplay(true)
@@ -352,6 +348,10 @@ export default class TabPartnerCode extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+  }
+
+  clickNewPartnerCode() {
+    this.$router.push(`/organizationManagement/${this.id}/create/partnercode`)
   }
 
   onRowClicked(row: any) {

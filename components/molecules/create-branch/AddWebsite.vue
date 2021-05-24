@@ -56,10 +56,7 @@ export default class AddWebsite extends Vue {
   }
 
   removeInput(index: number) {
-    console.log(index)
-    console.log('dataList', this.dataList)
     this.dataList?.splice(index, 1)
-    console.log('dataList', this.dataList)
   }
 
   assets(name: string) {

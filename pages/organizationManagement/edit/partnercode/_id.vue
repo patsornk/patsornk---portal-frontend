@@ -1,9 +1,10 @@
 <template>
   <div>
     <CreateEditPartnerCode
-     :compantId="compantId"
-     :componentMode="mode"
-     :editId="id" />
+      :compantId="compantId"
+      :componentMode="mode"
+      :editId="id"
+    />
   </div>
 </template>
 

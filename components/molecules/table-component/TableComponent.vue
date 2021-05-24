@@ -10,15 +10,15 @@
             <img
               class="icon"
               :src="assets('table/active.png')"
-              @click="$emit('clickActive', gridApi.getSelectedRows())"
+              @click="clickAction('clickActive')"
             />
-            <span class="tooltiptext">Inactive</span>
+            <span class="tooltiptext">Active</span>
           </div>
           <div class="icon-container" v-if="isShowIconHold">
             <img
               class="icon"
               :src="assets('table/hold.png')"
-              @click="$emit('clickHold', gridApi.getSelectedRows())"
+              @click="clickAction('clickHold')"
             />
             <span class="tooltiptext">On hold</span>
           </div>
@@ -26,7 +26,7 @@
             <img
               class="icon"
               :src="assets('table/inactive.png')"
-              @click="$emit('clickInactive', gridApi.getSelectedRows())"
+              @click="clickAction('clickInactive')"
             />
             <span class="tooltiptext">Inactive</span>
           </div>
@@ -34,7 +34,7 @@
             <img
               class="icon"
               :src="assets('table/delete.png')"
-              @click="$emit('clickDelete', gridApi.getSelectedRows())"
+              @click="clickAction('clickDelete')"
             />
             <span class="tooltiptext">Delete</span>
           </div>
@@ -265,7 +265,7 @@ export default class TableComponent extends Vue {
     default: ''
   })
   readonly createNewTitle!: string
-  
+
   @Prop({
     type: Number,
     default: 1,
@@ -309,9 +309,11 @@ export default class TableComponent extends Vue {
   private onSelectionChanged(value: any) {
     this.isCheckboxSelection = true
     const selectedRows = this.gridApi.getSelectedRows()
-    const currentSelectedIds = selectedRows.map((row: any) => row.companyId)
+    const currentSelectedIds = selectedRows.map((row: any) => row[this.itemKey])
     this.rawData.forEach((data: any) => {
-      this.selectData[data.companyId] = currentSelectedIds.includes(data[this.itemKey])
+      this.selectData[data[this.itemKey]] = currentSelectedIds.includes(
+        data[this.itemKey]
+      )
     })
 
     this.selectedRows = this.selectedItemNumber()
@@ -370,10 +372,12 @@ export default class TableComponent extends Vue {
   }
 
   selectedItemNumber(): number {
-    let count = 0;
-    for(var key in this.selectData) {
+    let count = 0
+    for (var key in this.selectData) {
+      console.log('selectData', this.selectData[key])
       count += this.selectData[key] ? 1 : 0
     }
+    console.log('count', count)
     return count
   }
 
@@ -391,9 +395,10 @@ export default class TableComponent extends Vue {
 
   deleteHandler(map: any, vm: any) {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        e.preventDefault()
+      }
     }
   }
 
@@ -406,9 +411,14 @@ export default class TableComponent extends Vue {
   }
 
   updated() {
-    this.gridApi.forEachNode((node :any) => {
+    this.gridApi.forEachNode((node: any) => {
       node.setSelected(this.selectData[node.data[this.itemKey]])
     })
+  }
+
+  clickAction(emit: string) {
+    this.selectData = {}
+    this.$emit(emit, this.gridApi.getSelectedRows())
   }
 }
 </script>
