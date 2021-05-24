@@ -1,20 +1,17 @@
 <template>
   <div>
     <div class="filter-container">
-      <input-field
-        :type="inputType"
-        class="input-field-input"
-        v-model="fillterData.keyword"
-        placeholder="placeholder"
-        @blur="$emit('onBlur')"
-        :required="false"
+      <input-search
+        v-model="filterData.search"
+        placeholder="Search..."
+        :options="searchList"
       />
 
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
             class="dropdown"
-            v-model="fillterData.companyTypeId"
+            v-model="filterData.companyTypeId"
             :options="companyType"
             :label="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
             :reduce="(item) => item.companyTypeId"
@@ -24,7 +21,7 @@
           />
           <v-select
             class="dropdown"
-            v-model="fillterData.companyCategoryId"
+            v-model="filterData.companyCategoryId"
             :options="companyCategory"
             :label="
               language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
@@ -36,7 +33,7 @@
           />
           <v-select
             class="dropdown"
-            v-model="fillterData.compantStatus"
+            v-model="filterData.compantStatus"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -77,6 +74,7 @@ import CustomHeader from '~/components/atoms/AgCustomHeader'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import InputSearch from '~/components/atoms/InputSearch.vue'
 
 enum OrganizationTableCol {
   NameTh = "companyNameTh",
@@ -92,7 +90,8 @@ enum OrganizationTableCol {
     TableComponent,
     InputField,
     T1Dropdown,
-    T1Button
+    T1Button,
+    InputSearch
   }
 })
 export default class OrganizationTable extends Vue {
@@ -115,8 +114,21 @@ export default class OrganizationTable extends Vue {
   inputType = 'text'
   clickSearch = false
   clickSort = false
-  fillterData = {
-    keyword: '',
+  searchList = [
+    {
+      id: 'company',
+      label: 'Search by Company'
+    },
+    {
+      id: 'partner',
+      label: 'Search by PartnerCode'
+    }
+  ]
+  filterData = {
+    search: {
+      searchBy: 'company',
+      keyword: ''
+    },
     companyTypeId: 0,
     companyCategoryId: 0,
     compantStatus: 0
@@ -383,27 +395,29 @@ export default class OrganizationTable extends Vue {
 
   async filterCompanies(page: String, limit: String, sortBy?: String, sortDirection?: String): Promise<void> {
     let path: String = `/list_company?page=${page}&limit=${limit}`
+
+    if (this.filterData.search.searchBy !== '') {
+      path = path + `&keywordOf=${this.filterData.search.searchBy}`
+    }
     if (sortBy) {
       path = path + `&sortBy=${sortBy}`
     }
     if (sortDirection) {
       path = path + `&sortDirection=${sortDirection}`
     }
-    if (this.fillterData.keyword !== '') {
-      path = path + `&keyword=${this.fillterData.keyword}`
+    if (this.filterData.search.keyword !== '') {
+      path = path + `&keyword=${this.filterData.search.keyword}`
     }
-    if (this.fillterData.compantStatus > 0) {
-      path = path + `&statusId=${this.fillterData.compantStatus}`
+    if (this.filterData.compantStatus > 0) {
+      path = path + `&statusId=${this.filterData.compantStatus}`
     }
-    if (this.fillterData.companyCategoryId > 0) {
-      path = path + `&companyCategoryId=${this.fillterData.companyCategoryId}`
+    if (this.filterData.companyCategoryId > 0) {
+      path = path + `&companyCategoryId=${this.filterData.companyCategoryId}`
     }
-    if (
-      this.fillterData.companyTypeId &&
-      this.fillterData.companyTypeId !== 1
-    ) {
-      path = path + `&companyTypeId=${this.fillterData.companyTypeId}`
+    if (this.filterData.companyTypeId && this.filterData.companyTypeId !== 1) {
+      path = path + `&companyTypeId=${this.filterData.companyTypeId}`
     }
+
     try {
       let res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,

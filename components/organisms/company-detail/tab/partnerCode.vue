@@ -4,7 +4,7 @@
       <input-field
         :type="inputType"
         class="input-field-input"
-        v-model="fillterData.keyword"
+        v-model="filterData.keyword"
         placeholder="Search from  Partner code"
         @blur="$emit('onBlur')"
         :required="false"
@@ -14,7 +14,7 @@
         <div class="dropdown-group">
           <v-select
             class="dropdown"
-            v-model="fillterData.compantStatus"
+            v-model="filterData.compantStatus"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -106,7 +106,7 @@ export default class TabPartnerCode extends Vue {
   totalItem = 0
   inputType = 'text'
   clickSearch = false
-  fillterData = {
+  filterData = {
     keyword: '',
     compantStatus: 0
   }
@@ -208,11 +208,11 @@ export default class TabPartnerCode extends Vue {
 
   async filterPartnerCode(page: String, limit: String): Promise<void> {
     let path: String = `/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`
-    if (this.fillterData.keyword !== '') {
-      path = path + `&keyword=${this.fillterData.keyword}`
+    if (this.filterData.keyword !== '') {
+      path = path + `&keyword=${this.filterData.keyword}`
     }
-    if (this.fillterData.compantStatus > 0) {
-      path = path + `&statusId=${this.fillterData.compantStatus}`
+    if (this.filterData.compantStatus > 0) {
+      path = path + `&statusId=${this.filterData.compantStatus}`
     }
     try {
       let res = await this.$axios.$get(

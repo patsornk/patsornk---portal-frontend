@@ -1,20 +1,17 @@
 <template>
   <div>
     <div class="filter-container">
-      <input-field
-        :type="inputType"
-        class="input-field-input"
-        v-model="fillterData.keyword"
-        placeholder="Search from Branch Code, Branch name  or Partner code"
-        @blur="$emit('onBlur')"
-        :required="false"
+      <input-search
+        v-model="filterData.search"
+        placeholder="Search..."
+        :options="searchList"
       />
 
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
             class="dropdown"
-            v-model="fillterData.brandId"
+            v-model="filterData.brandId"
             :options="brandList"
             :label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
             :reduce="(item) => item.brandId"
@@ -24,7 +21,7 @@
           />
           <v-select
             class="dropdown"
-            v-model="fillterData.compantStatus"
+            v-model="filterData.compantStatus"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -78,6 +75,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import DialogPopup from '~/components/molecules/DialogPopup.vue'
+import InputSearch from '~/components/atoms/InputSearch.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
@@ -89,7 +87,8 @@ import { OrganizationManagementStatus } from '~/constants'
     InputField,
     T1Dropdown,
     T1Button,
-    DialogPopup
+    DialogPopup,
+    InputSearch
   }
 })
 export default class TabBranch extends Vue {
@@ -117,8 +116,21 @@ export default class TabBranch extends Vue {
   totalItem = 0
   inputType = 'text'
   clickSearch = false
-  fillterData = {
-    keyword: '',
+  searchList = [
+    {
+      id: 'branch',
+      label: 'Search by Branch'
+    },
+    {
+      id: 'partner',
+      label: 'Search by PartnerCode'
+    }
+  ]
+  filterData = {
+    search: {
+      searchBy: 'branch',
+      keyword: ''
+    },
     brandId: 0,
     compantStatus: 0
   }
@@ -254,26 +266,31 @@ export default class TabBranch extends Vue {
   }
 
   async filterBranches(page: String, limit: String): Promise<void> {
-    // let path: String = `/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`
-    // if (this.fillterData.keyword !== '') {
-    //   path = path + `&keyword=${this.fillterData.keyword}`
-    // }
-    // if (this.fillterData.brandId) {
-    //   path = path + `&companyTypeId=${this.fillterData.brandId}`
-    // }
-    // if (this.fillterData.compantStatus > 0) {
-    //   path = path + `&statusId=${this.fillterData.compantStatus}`
-    // }
-    // try {
-    //   let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
-    //     data: null
-    //   })
-    //   if (res.successful) {
-    //     this.mappingBranch(res.data)
-    //   }
-    // } catch (error) {
-    //   this.$toast.global.error(error.response.data.message)
-    // }
+    let path: String = `/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`
+
+    if (this.filterData.search.searchBy !== '') {
+      path = path + `&keywordOf=${this.filterData.search.searchBy}`
+    }
+    if (this.filterData.search.keyword !== '') {
+      path = path + `&keyword=${this.filterData.search.keyword}`
+    }
+    if (this.filterData.brandId) {
+      path = path + `&companyTypeId=${this.filterData.brandId}`
+    }
+    if (this.filterData.compantStatus > 0) {
+      path = path + `&statusId=${this.filterData.compantStatus}`
+    }
+
+    try {
+      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
+        data: null
+      })
+      if (res.successful) {
+        this.mappingBranch(res.data)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   async getBranches(page: String, limit: String): Promise<void> {

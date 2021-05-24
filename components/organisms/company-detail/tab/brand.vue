@@ -1,20 +1,17 @@
 <template>
   <div>
     <div class="filter-container">
-      <input-field
-        :type="inputType"
-        class="input-field-input"
-        v-model="fillterData.keyword"
+      <input-search
+        v-model="filterData.search"
         placeholder="Search from Brand code, Brand name  or Partner code"
-        @blur="$emit('onBlur')"
-        :required="false"
+        :options="searchList"
       />
 
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
             class="dropdown"
-            v-model="fillterData.compantStatus"
+            v-model="filterData.compantStatus"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -54,6 +51,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import InputSearch from '~/components/atoms/InputSearch.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
@@ -65,7 +63,8 @@ import { getImagePath } from '~/helper/images'
     TableComponent,
     InputField,
     T1Dropdown,
-    T1Button
+    T1Button,
+    InputSearch
   }
 })
 export default class TabBrand extends Vue {
@@ -86,8 +85,21 @@ export default class TabBrand extends Vue {
   totalItem = 0
   inputType = 'text'
   clickSearch = false
-  fillterData = {
-    keyword: '',
+  searchList = [
+    {
+      id: 'brand',
+      label: 'Search by Brand'
+    },
+    {
+      id: 'partner',
+      label: 'Search by PartnerCode'
+    }
+  ]
+  filterData = {
+    search: {
+      searchBy: 'brand',
+      keyword: ''
+    },
     compantStatus: 0
   }
   private pagination: String = '10'
@@ -216,12 +228,17 @@ export default class TabBrand extends Vue {
 
   async filterBrands(page: String, limit: String): Promise<void> {
     let path: String = `/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`
-    if (this.fillterData.keyword !== '') {
-      path = path + `&keyword=${this.fillterData.keyword}`
+
+    if (this.filterData.search.searchBy !== '') {
+      path = path + `&keywordOf=${this.filterData.search.searchBy}`
     }
-    if (this.fillterData.compantStatus > 0) {
-      path = path + `&statusId=${this.fillterData.compantStatus}`
+    if (this.filterData.search.keyword !== '') {
+      path = path + `&keyword=${this.filterData.search.keyword}`
     }
+    if (this.filterData.compantStatus > 0) {
+      path = path + `&statusId=${this.filterData.compantStatus}`
+    }
+
     try {
       let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
         data: null
