@@ -1364,7 +1364,8 @@ export default class CreateBranch extends Vue {
         if (res.successful) {
           if (this.componetMode == 'onboard') {
             this.brandList = res.data.brand
-            this.brandId = window.sessionStorage.getItem('createBrandId') || ''
+            this.brandId =
+              Number(window.sessionStorage.getItem('createBrandId')) || ''
             this.disableBrandId = true
           } else {
             this.brandList = res.data.brand
@@ -1452,6 +1453,7 @@ export default class CreateBranch extends Vue {
   }
 
   async getDistrictList(): Promise<any> {
+    if (!this.provinceId) return
     try {
       let res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_district?provinceId=${this.provinceId}`,
@@ -1459,8 +1461,8 @@ export default class CreateBranch extends Vue {
       )
       if (res.successful) {
         this.districtList = res.data.districts
-        if (!this.isSetProvince) {
-          this.isSetProvince = true
+        if (!this.isSetDistrict) {
+          this.isSetDistrict = true
         } else {
           this.subDistrictList = []
           this.districtId = ''
@@ -1478,6 +1480,8 @@ export default class CreateBranch extends Vue {
   }
 
   async getSubDistrictList(): Promise<any> {
+    if (!this.districtId) return
+
     try {
       let res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_sub_district?districtId=${this.districtId}`,
@@ -1485,8 +1489,8 @@ export default class CreateBranch extends Vue {
       )
       if (res.successful) {
         this.subDistrictList = res.data.subDistricts
-        if (!this.isSetProvince) {
-          this.isSetDistrict = true
+        if (!this.isSetSubDistrict) {
+          this.isSetSubDistrict = true
         } else {
           this.subDistrictId = ''
           this.postalCode = ''
@@ -1515,17 +1519,17 @@ export default class CreateBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
+    await this.getBrand()
+    await this.getPartnerCode()
+    await this.getBranchType()
+    await this.getMallList()
+    await this.getProvinceList()
     if (
       window.sessionStorage.getItem('createBranchFirstTime') &&
       window.sessionStorage.getItem('createBranchFirstTime') === 'no'
     ) {
       this.getBranch()
     }
-    this.getBrand()
-    this.getPartnerCode()
-    this.getBranchType()
-    this.getMallList()
-    this.getProvinceList()
   }
 
   async getBranch(): Promise<void> {
@@ -1541,7 +1545,7 @@ export default class CreateBranch extends Vue {
         )
         if (res.successful) {
           const data = res.data
-          this.brandId = data.brandId
+          this.brandId = data.brand.brandId
           this.branchCode = data.branchCode
           this.branchNameTh = data.branchNameTh
           this.branchNameEn = data.branchNameEn
@@ -1550,7 +1554,7 @@ export default class CreateBranch extends Vue {
           this.email = data.branchEmail
           this.phonePrefix = data.branchPhonePrefix
           this.phoneNumber = data.branchPhoneNumber
-          this.partnerCodeId = data.partnerCodeId
+          this.partnerCodeId = data.partners[0].partnerId
           this.branchTypeId = data.branchType.branchTypeId
           this.mallId = data.mall.mallId
           this.address = data.address.address
