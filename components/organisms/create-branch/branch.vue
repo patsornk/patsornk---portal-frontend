@@ -461,6 +461,7 @@ import AddSocialView from '@/components/molecules/create-branch/AddSocialView.vu
 import OpenHourCustom from '@/components/molecules/create-branch/OpenHourCustom.vue'
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
 import { getAssetsPath } from '~/helper/images'
+import { getDay } from '~/helper/date'
 import {
   BrandInitialData,
   BranchTypeDataType,
@@ -1605,10 +1606,10 @@ export default class CreateBranch extends Vue {
 
           // this.categoryId  = data.mall.mallInfo.mallCategory.mallCategoryId
           if (data.mall.mallInfo.openingHour.length === 7) {
-            this.openingHourId = '1'
-            this.openCusTomList = data.mall.mallInfo.openingHour
-          } else if (data.mall.mallInfo.openingHour.length === 1) {
             this.openingHourId = '2'
+            this.openCusTomList = this.mappingOpeningHour(data.mall.mallInfo.openingHour)
+          } else if (data.mall.mallInfo.openingHour.length === 1) {
+            this.openingHourId = '1'
             this.openTime = data.mall.mallInfo.openingHour.openingTime.split(
               '|'
             )[0]
@@ -1964,6 +1965,29 @@ export default class CreateBranch extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+  }
+
+  getTime(value: string, index: number) {
+    const time = value.split('|')
+    return time[index] ? time[index] : ''
+  }
+
+  mappingOpeningHour(values: any[]) {
+    return values.map((value: any) => {
+      return {
+        dayOfWeek: value.dayOfWeek,
+        day: getDay(value.dayOfWeek),
+        openTime: this.getTime(value.openingTime, 0),
+        openMeridiem: this.getTime(value.openingTime, 1),
+        closeTime: this.getTime(value.closingTime, 0),
+        closeMeridiem: this.getTime(value.closingTime, 1),
+        isDayOff: value.dayOff,
+        openError: '',
+        openMeridiemError: '',
+        closeError: '',
+        closeMeridiemError: ''
+      }
+    })
   }
 
   async update() {
