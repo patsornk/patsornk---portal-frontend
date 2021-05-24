@@ -10,7 +10,9 @@
         <div
           class="status"
           :class="{
-            active: index === maxState || index === currentState,
+            active:
+              (index === maxState || index === currentState) &&
+              maxState != currentState,
             disabled: index > maxState
           }"
           @click="onClickStep(index)"
@@ -26,8 +28,9 @@
           :class="{
             active: index <= maxState
           }"
-          >{{ item.title }}</span
         >
+          {{ item.title }}
+        </span>
       </div>
       <div
         v-if="index + 1 !== title.length"
@@ -72,7 +75,11 @@ export default class Stepbar extends Vue {
   }
 
   private showCompletedIcon(index: number): boolean {
-    return index < this.maxState && index != this.currentState
+    return (
+      (index < this.maxState && index != this.currentState) ||
+      this.currentState == this.maxState ||
+      index == this.maxState
+    )
   }
 
   private onClickStep(index: number): void {
