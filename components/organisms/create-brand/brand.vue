@@ -544,6 +544,7 @@ export default class CreateBrand extends Vue {
           data.partners.forEach(
             (item: { partnerCode: any; partnerId: any; partnerName: any }) => {
               this.partnerCodeList.push({
+                partnerId: item.partnerId,
                 partnerCode: item.partnerCode,
                 id: item.partnerId,
                 partnerName: item.partnerName
