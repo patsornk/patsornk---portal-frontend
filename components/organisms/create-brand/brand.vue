@@ -10,6 +10,7 @@
         :maxlength="25"
         v-model="$v.brandCode.$model"
         :errorMessage="error.brandCode"
+        :disable="this.mode === 'edit'"
       />
     </div>
     <div class="input-section">
