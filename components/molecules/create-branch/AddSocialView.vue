@@ -7,7 +7,7 @@
           :src="assets('icon/facebook.png')"
         />
         <img
-          v-if="item.type === type.INSTARGRAM"
+          v-if="item.type === type.INSTAGRAM"
           :src="assets('icon/instagram.png')"
         />
         <img 

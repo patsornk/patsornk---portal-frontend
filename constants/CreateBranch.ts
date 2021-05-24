@@ -1,6 +1,6 @@
 export enum CreateBranch {
   FACEBOOK = 'Facebook',
-  INSTARGRAM = 'Instragram',
+  INSTAGRAM = 'Instagram',
   LINE = 'Line',
   TWITTER = 'Twitter',
 }

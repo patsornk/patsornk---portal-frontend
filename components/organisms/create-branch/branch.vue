@@ -1573,25 +1573,29 @@ export default class CreateBranch extends Vue {
 
           if (data.mall.mallInfo.facebook) {
             data.mall.mallInfo.facebook.forEach((link: string) => {
-              this.socialList.push({ type: 'Facebook', link: link })
+              if (link !== '')
+                this.socialList.push({ type: 'Facebook', link: link })
             })
           }
 
           if (data.mall.mallInfo.instagram) {
             data.mall.mallInfo.instagram.forEach((link: string) => {
-              this.socialList.push({ type: 'Instagram', link: link })
+              if (link !== '')
+                this.socialList.push({ type: 'Instagram', link: link })
             })
           }
 
           if (data.mall.mallInfo.line) {
             data.mall.mallInfo.line.forEach((link: string) => {
-              this.socialList.push({ type: 'Line', link: link })
+              if (link !== '')
+                this.socialList.push({ type: 'Line', link: link })
             })
           }
 
           if (data.mall.mallInfo.twitter) {
             data.mall.mallInfo.twitter.forEach((link: string) => {
-              this.socialList.push({ type: 'Twitter', link: link })
+              if (link !== '')
+                this.socialList.push({ type: 'Twitter', link: link })
             })
           }
 
@@ -1750,13 +1754,15 @@ export default class CreateBranch extends Vue {
                 mallTwitter.push(item.link)
               }
             })
-            const openingHour = [{
-              dayOfWeek: 0,
-              openingTime: this.openTime + '|' + this.openMeridiem,
-              closingTime: this.closeTime + '|' + this.closeMeridiem,
-              dayOff: false,
-              allDay: false
-            }]
+            const openingHour = [
+              {
+                dayOfWeek: 0,
+                openingTime: this.openTime + '|' + this.openMeridiem,
+                closingTime: this.closeTime + '|' + this.closeMeridiem,
+                dayOff: false,
+                allDay: false
+              }
+            ]
             return {
               brandId: this.$v.brandId.$model,
               branchCode: this.$v.branchCode.$model,
@@ -1788,7 +1794,9 @@ export default class CreateBranch extends Vue {
               mallLine,
               mallTwitter,
               openingHour,
-              mallCategoryId: this.$v.categoryId.$model ? this.$v.categoryId.$model : null
+              mallCategoryId: this.$v.categoryId.$model
+                ? this.$v.categoryId.$model
+                : null
             }
             break
           }
