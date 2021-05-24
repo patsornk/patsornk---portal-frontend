@@ -1,12 +1,12 @@
 <template>
-  <div class="step-bar-container">{{maxState}}{{currentState}}
+  <div class="step-bar-container">
     <div v-for="(item, index) in title" :key="index" class="step-bar">
       <div
         class="step"
         :class="{
           nomargin: index + 1 === title.length
         }"
-      >{{index}}
+      >
         <div
           class="status"
           :class="{
