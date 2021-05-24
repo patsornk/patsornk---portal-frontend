@@ -637,7 +637,7 @@ const validations = {
 
 @Component({
   mixins: [validationMixin],
-  validations: validations,
+  validations,
   components: {
     InputField,
     PhoneNumInput,
@@ -1630,7 +1630,7 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  async clickSave() {
+  clickSave(): void {
     if (
       window.sessionStorage.getItem('createBranchFirstTime') &&
       window.sessionStorage.getItem('createBranchFirstTime') === 'no'
@@ -1641,7 +1641,7 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  validateInfoAndLocation() {
+  validateInfoAndLocation(): void {
     this.checkBrandId()
     this.checkBranchCode()
     this.checkBranchNameTh()
@@ -1662,20 +1662,20 @@ export default class CreateBranch extends Vue {
     this.checkLongitude()
   }
 
-  validateMall() {
+  validateMall(): void {
     this.checkLogo(this.$v.logo.$model)
     this.checkCover(this.$v.cover.$model)
     // this.checkCategoryId()
     this.checkOpeningHourId()
   }
 
-  validateOpenDaily() {
+  validateOpenDaily(): void {
     this.checkOpenTime()
     this.checkCloseTime()
     this.checkTimeError('daily')
   }
 
-  validateOpenCustomize() {
+  validateOpenCustomize(): void {
     this.checkTimeError('customize')
   }
 

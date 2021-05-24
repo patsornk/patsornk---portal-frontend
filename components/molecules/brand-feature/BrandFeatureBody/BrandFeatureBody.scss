@@ -1,0 +1,56 @@
+
+@import '@/assets/scss/_variables.scss';
+.brand-feature-body-container {
+  display: flex;
+  flex: 1;
+
+  .upload-file {
+    height: 305px;
+    width: 305px;
+
+    .error {
+      background: none !important;
+    }
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 47px;
+
+    .feature-container {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      .feature {
+        display: flex;
+        align-items: center;
+        .title {
+          font-size: 16px;
+          font-weight: bold;
+          text-decoration-line: underline;
+        }
+        .delete-icon {
+          margin-left: 36px;
+          height: 16.67px;
+          width: 15.36px;
+        }
+      }
+    }
+
+    .input {
+      margin-top: 21px;
+    }
+  }
+
+  .validation-error-text {
+    color: $primary;
+    top: 5px;
+    position: relative;
+  }
+  .info-description {
+    font-size: 14px;
+    text-align: right;
+  }
+}

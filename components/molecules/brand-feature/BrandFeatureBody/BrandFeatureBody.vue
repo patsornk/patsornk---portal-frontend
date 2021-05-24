@@ -75,14 +75,9 @@
         :maxlength="255"
         :placeholder="$t('createBrand.brandFeature.ctaFeature')"
       />
-      <div v-if="language === 'th'" class="info-description">
-        {{ $t('common.charaterLeftS') }}
-        {{ 255 - $v.ctaFeature.$model.length }}
-        {{ $t('common.charaterLeftE') }}
-      </div>
-      <div v-else class="info-description">
-        {{ 255 - $v.ctaFeature.$model.length }}
-        {{ $t('common.charaterLeftS') }}
+      <div class="info-description">
+        {{ 256 - $v.ctaFeature.$model.length }}
+        {{ $t('createBrand.limitCharacters') }}
       </div>
     </div>
   </div>
@@ -118,7 +113,7 @@ const brandFeatureValidations = {
     DialogPopup
   }
 })
-export default class BrandFeatureBodyRework extends Vue {
+export default class BrandFeatureBody extends Vue {
   @Prop({
     type: Object
   })
@@ -140,12 +135,6 @@ export default class BrandFeatureBodyRework extends Vue {
     type: String
   })
   errorMessage = ''
-
-  get language(): any {
-    return this.$i18n.locale
-  }
-
-  $i18n: any
 
   dialogDisplay = false
   dialogTitle = 'Want to Delete this brand feature ? '
@@ -393,59 +382,5 @@ export default class BrandFeatureBodyRework extends Vue {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/_variables.scss';
-.brand-feature-body-container {
-  display: flex;
-  flex: 1;
-
-  .upload-file {
-    height: 305px;
-    width: 305px;
-
-    .error {
-      background: none !important;
-    }
-  }
-
-  .form-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin-left: 47px;
-
-    .feature-container {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      .feature {
-        display: flex;
-        align-items: center;
-        .title {
-          font-size: 16px;
-          font-weight: bold;
-          text-decoration-line: underline;
-        }
-        .delete-icon {
-          margin-left: 36px;
-          height: 16.67px;
-          width: 15.36px;
-        }
-      }
-    }
-
-    .input {
-      margin-top: 21px;
-    }
-  }
-
-  .validation-error-text {
-    color: $primary;
-    top: 5px;
-    position: relative;
-  }
-  .info-description {
-    font-size: 14px;
-    text-align: right;
-  }
-}
+@import './BrandFeatureBody.scss';
 </style>

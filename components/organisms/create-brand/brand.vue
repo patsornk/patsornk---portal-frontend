@@ -123,14 +123,14 @@
           @createBrandFeature="createBrandFeature"
           @selectBrandFeature="selectBrandFeature"
         />
-        <brand-feature-body-rework
-          :key="currentBrandFeatureKey"
+        <brand-feature-body
           v-if="brandFeatureList.length"
+          :key="currentBrandFeatureKey"
           class="feature-body"
-          :featureNo="currentBrandFeatureIndex"
-          :initialData="brandFeatureList[currentBrandFeatureIndex - 1]"
-          :canDelete="brandFeatureList.length > 1"
-          :errorMessage="brandFeatureError"
+          :feature-no="currentBrandFeatureIndex"
+          :initial-data="brandFeatureList[currentBrandFeatureIndex - 1]"
+          :can-delete="brandFeatureList.length > 1"
+          :error-message="brandFeatureError"
           @viewFile="viewFile"
           @onBrandFeatureChange="onBrandFeatureChange"
           @deleteBrandFeature="deleteBrandFeature"
@@ -192,9 +192,7 @@ import Modal from '@/components/atoms/Modal.vue'
 import UploadFile from '@/components/molecules/UploadFile.vue'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import BrandFeatureHeader from '~/components/molecules/brand-feature/BrandFeatureHeader.vue'
-import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody.vue'
-import BrandFeatureBodyRework from '~/components/molecules/brand-feature/BrandFeatureBodyRework.vue'
-import { BreadcrumbType } from '~/constants'
+import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody/BrandFeatureBody.vue'
 import { getImagePath } from '~/helper/images'
 
 const validations = {
@@ -256,7 +254,7 @@ const validations = {
 }
 @Component({
   mixins: [validationMixin],
-  validations: validations,
+  validations,
   components: {
     AgGridVue,
     InputField,
@@ -265,8 +263,7 @@ const validations = {
     TableComponent,
     Modal,
     BrandFeatureHeader,
-    BrandFeatureBody,
-    BrandFeatureBodyRework
+    BrandFeatureBody
   }
 })
 export default class CreateBrand extends Vue {
@@ -291,6 +288,7 @@ export default class CreateBrand extends Vue {
     th: '',
     en: ''
   }
+
   brandNameTh = ''
   brandNameEn = ''
   email = ''
@@ -871,7 +869,7 @@ export default class CreateBrand extends Vue {
         ctaFeature: '',
         isValid: true
       })
-      this.currentBrandFeatureIndex += 1
+      this.currentBrandFeatureIndex = this.brandFeatureList.length
     } else {
       this.brandFeatureError = this.$t(
         'createBrand.brandFeature.error.oneFieldRequired'
@@ -883,7 +881,7 @@ export default class CreateBrand extends Vue {
   }
 
   selectBrandFeature(index: number) {
-    if (this.currentBrandFeatureIndex == index) {
+    if (this.currentBrandFeatureIndex === index) {
       return false
     }
 

@@ -85,6 +85,7 @@
       class="ag-theme-material w-100 ag-grid-table"
       colResizeDefault="shift"
       rowSelection="multiple"
+      @row-selected="onRowSelected"
       @selection-changed="onSelectionChanged"
       :frameworkComponents="frameworkComponents"
     >
@@ -312,7 +313,7 @@ export default class TableComponent extends Vue {
     this.gridApi.setQuickFilter(val)
   }
 
-  private onSelectionChanged(value: any) {
+  public onSelectionChanged(value: any): void {
     this.isCheckboxSelection = true
     const selectedRows = this.gridApi.getSelectedRows()
     const currentSelectedIds = selectedRows.map((row: any) => row[this.itemKey])

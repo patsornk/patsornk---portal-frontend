@@ -88,7 +88,7 @@ export default class UploadImage extends Vue {
     type: String,
     default: ''
   })
-  private imageUrl?: string | undefined
+  public imageUrl?: string | undefined
 
   @Prop({
     required: true,
@@ -110,9 +110,6 @@ export default class UploadImage extends Vue {
 
   private file: any = null
   private filelist: any[] = []
-
-  mounted() {
-  }
 
   assets(name: string) {
     return getAssetsPath(name)
