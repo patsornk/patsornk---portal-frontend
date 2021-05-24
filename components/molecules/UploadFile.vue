@@ -56,10 +56,10 @@
           <div class="upload-input">
             <span class="material-icons icon-upload"> cloud_upload </span>
             <div>
-              <span class="drop-text">Drop file to upload or</span>
-              <span class="btn-upload">Upload file</span>
+              <span class="drop-text">{{$t('common.dragAndDrop')}}</span>
+              <span class="btn-upload">{{$t('common.upload')}}</span>
               <div class="drop-text-description">
-                ( .jpg file, .jpeg or .png file , File size maximum 20MB)
+                {{$t('common.fileType')}}
               </div>
             </div>
           </div>

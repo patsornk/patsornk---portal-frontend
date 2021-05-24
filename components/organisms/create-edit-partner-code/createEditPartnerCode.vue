@@ -9,7 +9,7 @@
           class="sp-code"
           :maxlength="50"
           v-model="$v.partnerCode.$model"
-          placeholder="Siebel Partner code"
+          :placeholder="$t('createPartnerCode.sieabelPartner')"
           :errorMessage="error.partnerCode ? error.partnerCode : undefined"
           @onChange="checkPartnerCode"
           required
@@ -19,7 +19,7 @@
           class="sp-name"
           v-model="$v.partnerName.$model"
           :maxlength="50"
-          placeholder="Siebel Partner name"
+          :placeholder="$t('createPartnerCode.sieabelPartnerName')"
           :errorMessage="error.partnerName ? error.partnerName : undefined"
           @onChange="checkPartnerName"
           required
@@ -35,7 +35,7 @@
           :options="statusOption"
           :optionsReduce="(item) => item.id"
           optionsLabel="status"
-          placeholder="Please select..."
+          :placeholder="$t('common.pleaseSelect')"
           :errorMessage="error.status ? error.status : undefined"
         />
       </div>
@@ -63,7 +63,9 @@
       itemKey="brandId"
     />
     <div class="footer">
-      <t-1-button class="black" @click.native="clickSave"> Save </t-1-button>
+      <t-1-button class="black" @click.native="clickSave"> 
+        {{$t('common.save')}}
+      </t-1-button>
     </div>
 
     <div class="ass-brand-modal" v-if="isShowBrand">
@@ -102,13 +104,13 @@
                 type="black-transparent"
                 @click.native="clickCloseModel"
               >
-                Cancel
+                {{$t('common.cancel')}}
               </t-1-button>
               <t-1-button
                 :class="modalSelectData.length === 0 ? 'disable' : ''"
                 @click.native="clickSubmitModel"
               >
-                Assign
+                {{$t('createCompany.assign')}}
               </t-1-button>
             </div>
           </div>

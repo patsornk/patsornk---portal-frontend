@@ -4,7 +4,7 @@
     <div class="input-section">
       <input-field
         v-model="$v.companyNameTh.$model"
-        title="Company Name (TH)"
+        :title="$t('createCompany.companyNameTh')"
         :maxlength="50"
         required
         :errorMessage="error.companyNameTh"
@@ -12,25 +12,25 @@
       <input-field
         v-model="$v.companyNameEn.$model"
         required
-        title="Company Name (EN)"
+        :title="$t('createCompany.companyNameEn')"
         :maxlength="50"
         :errorMessage="error.companyNameEn"
       />
       <input-field
         v-model="$v.typeId.$model"
-        title="Company type"
+        :title="$t('createCompany.companyType')"
         required
         type="select"
         :options="companyTypeList"
         :optionsReduce="(item) => item.companyTypeId"
         :optionsLabel="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.typeId"
         @onBlur="checkTypeId()"
       />
       <input-field
         v-model="$v.categoryId.$model"
-        title="Partner Category"
+        :title="$t('createCompany.partnerCategory')"
         required
         type="select"
         :options="companyTypeCategory"
@@ -38,36 +38,36 @@
         :optionsLabel="
           language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
         "
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.categoryId"
       />
       <input-field
         v-model="$v.sizeId.$model"
-        title="Business Size"
+        :title="$t('createCompany.businessSize')"
         required
         type="select"
         :options="companyTypeSize"
         :optionsReduce="(item) => item.companySizeId"
         :optionsLabel="language === 'th' ? 'companySizeTh' : 'companySizeEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.sizeId"
       />
       <input-field
         v-model="$v.assignee.$model"
-        title="Assignee"
+        :title="$t('createCompany.assignee')"
         required
         :errorMessage="error.assignee"
       />
       <input-field
         v-model="$v.email.$model"
-        title="E-mail"
+        :title="$t('createCompany.email')"
         :maxlength="100"
         required
         :errorMessage="error.email"
       />
       <phone-num-input
         v-model="$v.phoneNumber.$model"
-        title="Phone No."
+        :title="$t('createCompany.phoneNo')"
         required
         :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
@@ -80,12 +80,12 @@
         :options="companyStatusOption"
         :optionsReduce="(item) => item.id"
         :optionsLabel="'status'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.companyStatus"
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="submit">Save</button>
+      <button class="submit" @click="submit">{{$t('common.save')}}</button>
     </div>
   </div>
 </template>
@@ -424,7 +424,7 @@ export default class EditCompany extends Vue {
             'createCompanyId',
             response.data.companyId
           )
-          this.$toast.global.success('Saved successfully')
+          this.$toast.global.success(this.$t('common.successfully').toString())
           window.sessionStorage.setItem('createCompanyFirstTime', 'no')
         }
       } catch (error) {

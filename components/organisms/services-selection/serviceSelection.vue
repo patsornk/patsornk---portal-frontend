@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="submit-section">
-      <!-- <button class="submit" @click="clickSave">Save</button> -->
+      <!-- <button class="submit" @click="clickSave">{{$t('common.save')}}</button> -->
     </div>
   </div>
 </template>
@@ -120,7 +120,7 @@ export default class ServiceSelection extends Vue {
         { data: payload }
       )
       if (response.successful) {
-        this.$toast.global.success('Saved successfully')
+        this.$toast.global.success(this.$t('common.successfully').toString())
         return true
       } else {
         return false
@@ -144,7 +144,7 @@ export default class ServiceSelection extends Vue {
         payload
       )
       if (response.successful) {
-        this.$toast.global.success('Saved successfully')
+        this.$toast.global.success(this.$t('common.successfully').toString())
         return true
       } else {
         return false
@@ -157,7 +157,7 @@ export default class ServiceSelection extends Vue {
 
   async clickSave() {
     // if (this.appliedServices.length === 0) {
-    //   this.$toast.global.success('Saved successfully')
+    //   this.$toast.global.success(this.$t('common.successfully').toString())
     //   return
     // }
     // const payload = {
@@ -172,7 +172,7 @@ export default class ServiceSelection extends Vue {
       // if (response.successful) {
       //   this.getAppliedServices()
       //   this.getAvailableServices()
-      this.$toast.global.success('Saved successfully')
+      this.$toast.global.success(this.$t('common.successfully').toString())
       // }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

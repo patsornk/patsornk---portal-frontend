@@ -1,7 +1,7 @@
 <template>
   <div class="company-info-container">
     <div class="header-box">
-      <div class="text-header">Company Information</div>
+      <div class="text-header">{{$t('createCompany.companyInfo')}}</div>
       <img
         class="edit"
         :src="assets('company-detail/edit.png')"
@@ -9,8 +9,8 @@
       />
     </div>
     <div class="data-box">
-      <text-info title="Company Name (TH)" :value="company.companyNameTh" />
-      <text-info title="Company Name (EN)" :value="company.companyNameEn" />
+      <text-info :title="$t('createCompany.companyNameTh')" :value="company.companyNameTh" />
+      <text-info :title="$t('createCompany.companyNameEn')" :value="company.companyNameEn" />
       <text-info
         title="Company Type"
         :value="
@@ -20,7 +20,7 @@
         "
       />
       <text-info
-        title="Partner Category"
+        :title="$t('createCompany.partnerCategory')"
         :value="
           language === 'en'
             ? company.companyCategory.companyCategoryEn
@@ -28,14 +28,14 @@
         "
       />
       <text-info
-        title="Business Size"
+        :title="$t('createCompany.businessSize')"
         :value="
           language === 'en'
             ? company.companySize.companySizeEn
             : company.companySize.companySizeTh
         "
       />
-      <text-info title="Assignee" :value="company.assignee" />
+      <text-info :title="$t('createCompany.assignee')" :value="company.assignee" />
       <text-info title="Email" :value="company.companyEmail" />
       <text-info
         title="Phone Number"

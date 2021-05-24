@@ -1,6 +1,6 @@
 module.exports = {
-  brandInformation: 'Brand Information',
-
+  companyInfo: 'ข้อมูลบริษัท',
+  createCompany: 'สร้างบริษัท',
   error: {
     require: 'require',
     characterAndNumber: 'a-z, 0-9',
@@ -10,6 +10,18 @@ module.exports = {
     maxLength: 'maxLength',
     email: 'email',
   },
-    fieldError: 'One or more field have an error. Please check and try again.',
-    partnerCode: 'Please select partner code.',
+  companyNameTh: 'ชื่อบริษัท (ภาษาไทย)',
+  companyNameEn: 'ชื่อบริษัท (ภาษาอังกฤษ)',
+  companyType: 'ประเภทบริษัท',
+  pleaseEnter: 'กรุณาระบุ',
+  pleaseSelect: 'กรุณาเลือก',
+  partnerCategory: 'ประเภทธุรกิจ',
+  businessSize: 'ขนาดธุรกิจ',
+  assign: 'ผู้ดูแล',
+  assignee: 'ผู้ดูแล',
+  email: 'อีเมล',
+  phoneNo: 'เบอร์โทรศัพท์',
+  companyNameInput: 'ระบุชื่อบริษัท',
+  emailInput: 'ระบุอีเมล',
+  phoneNoInput: 'ระบุเบอร์โทรศัพท์',
 }

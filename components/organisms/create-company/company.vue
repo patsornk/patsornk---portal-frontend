@@ -1,10 +1,11 @@
 <template>
   <div class="create-company-container">
-    <span class="header">Company Information</span>
+    <span class="header">{{$t('createCompany.companyInfo')}}</span>
     <div class="input-section">
       <input-field
         v-model="$v.companyNameTh.$model"
-        title="Company Name (TH)"
+        :title="$t('createCompany.companyNameTh')"
+        :placeholder="$t('createCompany.companyNameInput')"
         :maxlength="50"
         required
         :errorMessage="error.companyNameTh"
@@ -12,25 +13,26 @@
       <input-field
         v-model="$v.companyNameEn.$model"
         required
-        title="Company Name (EN)"
+        :title="$t('createCompany.companyNameEn')"
+        :placeholder="$t('createCompany.companyNameInput')"
         :maxlength="50"
         :errorMessage="error.companyNameEn"
       />
       <input-field
         v-model="$v.typeId.$model"
-        title="Company type"
+        :title="$t('createCompany.companyType')"
         required
         type="select"
         :options="companyTypeList"
         :optionsReduce="(item) => item.companyTypeId"
         :optionsLabel="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.typeId"
         @onBlur="checkTypeId()"
       />
       <input-field
         v-model="$v.categoryId.$model"
-        title="Partner Category"
+        :title="$t('createCompany.partnerCategory')"
         required
         type="select"
         :options="companyTypeCategory"
@@ -38,43 +40,45 @@
         :optionsLabel="
           language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
         "
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.categoryId"
       />
       <input-field
         v-model="$v.sizeId.$model"
-        title="Business Size"
+        :title="$t('createCompany.businessSize')"
         required
         type="select"
         :options="companyTypeSize"
         :optionsReduce="(item) => item.companySizeId"
         :optionsLabel="language === 'th' ? 'companySizeTh' : 'companySizeEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.sizeId"
       />
       <input-field
         v-model="$v.assignee.$model"
-        title="Assignee"
+        :title="$t('createCompany.assignee')"
+        :placeholder="$t('common.pleaseSelect')"
         required
         :errorMessage="error.assignee"
       />
       <input-field
         v-model="$v.email.$model"
-        title="E-mail"
+        :title="$t('createCompany.email')"
+        :placeholder="$t('createCompany.emailInput')"
         :maxlength="100"
         required
         :errorMessage="error.email"
       />
       <phone-num-input
         v-model="$v.phoneNumber.$model"
-        title="Phone No."
+        :title="$t('createCompany.phoneNo')"
         required
         :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="submit">Save</button>
+      <button class="submit" @click="submit">{{$t('common.save')}}</button>
     </div>
   </div>
 </template>
@@ -181,9 +185,9 @@ export default class CreateCompany extends Vue {
   @Watch('companyNameTh')
   checkCompanyNameTh(): void {
     this.error.companyNameTh = !this.$v.companyNameTh.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : !this.$v.companyNameTh.mustBe
-      ? this.$t('createCompany.thaiAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.companyNameTh.maxLength
       ? this.$t('createCompany.maxLength').toString()
       : ''
@@ -192,9 +196,9 @@ export default class CreateCompany extends Vue {
   @Watch('companyNameEn')
   checkCompanyNameEn(): void {
     this.error.companyNameEn = !this.$v.companyNameEn.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : !this.$v.companyNameEn.mustBe
-      ? this.$t('createCompany.characterAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.companyNameEn.maxLength
       ? this.$t('createCompany.maxLength').toString()
       : ''
@@ -203,37 +207,37 @@ export default class CreateCompany extends Vue {
   @Watch('typeId')
   checkTypeId(): void {
     this.error.typeId = !this.$v.typeId.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : ''
   }
 
   @Watch('categoryId')
   checkCategoryId(): void {
     this.error.categoryId = !this.$v.categoryId.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : ''
   }
 
   @Watch('sizeId')
   checkSizeId(): void {
     this.error.sizeId = !this.$v.sizeId.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : ''
   }
 
   @Watch('assignee')
   checkAssignee(): void {
     this.error.assignee = !this.$v.assignee.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : ''
   }
 
   @Watch('email')
   checkEmail(): void {
     this.error.email = !this.$v.email.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : !this.$v.email.email
-      ? this.$t('createCompany.email').toString()
+      ? this.$t('common.invalidEmailFormat').toString()
       : !this.$v.email.maxLength
       ? this.$t('createCompany.maxLength').toString()
       : ''
@@ -242,9 +246,9 @@ export default class CreateCompany extends Vue {
   @Watch('phoneNumber')
   checkPhoneNumber(): void {
     this.error.phoneNumber = !this.$v.phoneNumber.required
-      ? this.$t('createCompany.error.require').toString()
+      ? this.$t('createCompany.pleaseEnter').toString()
       : !this.$v.phoneNumber.numeric
-      ? this.$t('createCompany.number').toString()
+      ? this.$t('common.invalidPhoneFormat').toString()
       : !this.$v.phoneNumber.minLength
       ? this.$t('createCompany.minLength').toString()
       : !this.$v.phoneNumber.maxLength
@@ -386,7 +390,7 @@ export default class CreateCompany extends Vue {
               'createCompanyId',
               response.data.companyId
             )
-            this.$toast.global.success('Saved successfully')
+            this.$toast.global.success(this.$t('common.successfully').toString())
             window.sessionStorage.setItem('createCompanyFirstTime', 'no')
           }
         } catch (error) {
@@ -408,7 +412,7 @@ export default class CreateCompany extends Vue {
               response.data.companyId
             )
             window.sessionStorage.setItem('companyFirstTime', 'no')
-            this.$toast.global.success('Saved successfully')
+            this.$toast.global.success(this.$t('common.successfully').toString())
             this.$router.push('/organizationManagement/create/partnercode')
           }
         } catch (error) {

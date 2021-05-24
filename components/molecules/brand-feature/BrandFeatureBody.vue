@@ -25,7 +25,7 @@
         </div>
         <input-field
           type="switch"
-          title="Display on The 1 App"
+          :title="$t('createBrand.display')"
           v-model="data.showDisplay"
           :errorMessage="error.showDisplay"
         />

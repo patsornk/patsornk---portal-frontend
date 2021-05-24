@@ -5,6 +5,7 @@
       <input-field
         class="input-brand-code"
         :title="$t('createBrand.brandCode')"
+        :placeholder="$t('createBrand.brandCodeInput')"
         :required="true"
         :maxlength="25"
         v-model="$v.brandCode.$model"
@@ -14,6 +15,7 @@
     <div class="input-section">
       <input-field
         :title="$t('createBrand.brandNameTh')"
+        :placeholder="$t('createBrand.brandNameThInput')"
         :required="true"
         :maxlength="50"
         v-model="$v.brandNameTh.$model"
@@ -21,6 +23,7 @@
       />
       <input-field
         :title="$t('createBrand.brandNameEn')"
+        :placeholder="$t('createBrand.brandNameEnInput')"
         :required="true"
         :maxlength="50"
         v-model="$v.brandNameEn.$model"
@@ -28,6 +31,7 @@
       />
       <input-field
         :title="$t('createBrand.email')"
+        :placeholder="$t('createCompany.emailInput')"
         :required="true"
         :maxlength="50"
         v-model="$v.email.$model"
@@ -47,7 +51,7 @@
 
         <input-field
           type="switch"
-          title="Display on The 1 App"
+          :title="$t('createBrand.display')"
           v-model="$v.showDisplay.$model"
           :errorMessage="error.showDisplay"
         />
@@ -91,14 +95,20 @@
         <input-field
           type="textarea"
           :title="$t('createBrand.brandInfo')"
+          :placeholder="$t('createBrand.inputBrandInfo')"
           :required="false"
-          :maxlength="256"
+          :maxlength="255"
           style="width: 100%"
           v-model="$v.brandInfo.$model"
         />
-        <div class="info-description">
-          {{ 256 - $v.brandInfo.$model.length }}
-          {{ $t('createBrand.limitCharacters') }}
+        <div v-if="language === 'th'" class="info-description">
+          {{ $t('common.charaterLeftS') }}
+          {{ 255 - $v.brandInfo.$model.length }}
+          {{ $t('common.charaterLeftE') }}
+        </div>
+        <div v-else class="info-description">
+          {{ 255 - $v.brandInfo.$model.length }}
+          {{ $t('common.charaterLeftS') }}
         </div>
       </div>
       <div class="brand-feature-box">
@@ -142,7 +152,7 @@
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="clickSave">Save</button>
+      <button class="submit" @click="clickSave">{{$t('common.save')}}</button>
     </div>
     <modal v-show="isShowImage" class="show-image">
       <template v-slot:header>
@@ -399,11 +409,11 @@ export default class CreateBrand extends Vue {
         if (data.file) {
           this.error.logo = ''
         } else {
-          this.error.logo = this.$t('createBrand.error.require').toString()
+          this.error.logo = this.$t('createBrand.brandFeature.error.image').toString()
         }
       }
     } else {
-      this.error.logo = this.$t('createBrand.error.require').toString()
+      this.error.logo = this.$t('createBrand.brandFeature.error.image').toString()
     }
   }
 
@@ -414,9 +424,9 @@ export default class CreateBrand extends Vue {
   @Watch('brandCode')
   onChangedBrandCode(): void {
     this.error.brandCode = !this.$v.brandCode.required
-      ? this.$t('createBrand.error.require').toString()
+      ? this.$t('createBrand.brandCodeInput').toString()
       : !this.$v.brandCode.mustBe
-      ? this.$t('createBrand.error.characterAndNumber').toString()
+      ? this.$t('createBrand.common.invalidInputInformation').toString()
       : !this.$v.brandCode.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -425,9 +435,9 @@ export default class CreateBrand extends Vue {
   @Watch('brandNameTh')
   onChangedBrandNameTh(): void {
     this.error.brandNameTh = !this.$v.brandNameTh.required
-      ? this.$t('createBrand.error.require').toString()
+      ? this.$t('createBrand.brandNameThInput').toString()
       : !this.$v.brandNameTh.mustBe
-      ? this.$t('createBrand.error.thaiAndNumber').toString()
+      ? this.$t('createBrand.common.invalidInputInformation').toString()
       : !this.$v.brandNameTh.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -436,9 +446,9 @@ export default class CreateBrand extends Vue {
   @Watch('brandNameEn')
   onChangedBrandNameEn(): void {
     this.error.brandNameEn = !this.$v.brandNameEn.required
-      ? this.$t('createBrand.error.require').toString()
+      ? this.$t('createBrand.brandNameEnInput').toString()
       : !this.$v.brandNameEn.mustBe
-      ? this.$t('createBrand.error.characterAndNumber').toString()
+      ? this.$t('createBrand.common.invalidInputInformation').toString()
       : !this.$v.brandNameEn.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -447,9 +457,9 @@ export default class CreateBrand extends Vue {
   @Watch('email')
   onChangedEmail(): void {
     this.error.email = !this.$v.email.required
-      ? this.$t('createBrand.error.require').toString()
+      ? this.$t('createCompany.emailInput').toString()
       : !this.$v.email.email
-      ? this.$t('createBrand.error.email').toString()
+      ? this.$t('createBrand.common.invalidEmailFormat').toString()
       : !this.$v.email.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -458,9 +468,9 @@ export default class CreateBrand extends Vue {
   @Watch('phoneNo')
   onChangedPhoneNo(): void {
     this.error.phoneNo = !this.$v.phoneNo.required
-      ? this.$t('createBrand.error.require').toString()
+      ? this.$t('createCompany.phoneNoInput').toString()
       : !this.$v.phoneNo.numeric
-      ? this.$t('createBrand.error.numeric').toString()
+      ? this.$t('createBrand.common.invalidPhoneFormat').toString()
       : !this.$v.phoneNo.minLength
       ? this.$t('createBrand.error.minLength').toString()
       : !this.$v.phoneNo.maxLength
@@ -702,7 +712,7 @@ export default class CreateBrand extends Vue {
               'createBrandId',
               response.data.brandId
             )
-            this.$toast.global.success('Saved successfully')
+            this.$toast.global.success(this.$t('common.successfully').toString())
             this.$router.push('/organizationManagement/create/branch')
           } else {
             this.$router.push(`/organizationManagement/${this.companyId}`)
@@ -823,10 +833,10 @@ export default class CreateBrand extends Vue {
               'createCompanyId',
               response.data.brandId
             )
-            this.$toast.global.success('Saved successfully')
+            this.$toast.global.success(this.$t('common.successfully').toString())
           } else {
             this.$router.push(`/organizationManagement/${companyId}`)
-            this.$toast.global.success('Saved successfully')
+            this.$toast.global.success(this.$t('common.successfully').toString())
           }
         }
       } catch (error) {

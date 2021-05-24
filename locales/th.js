@@ -3,11 +3,15 @@ import createBrand from './th/createBrand'
 import createBranch from './th/createBranch'
 import createCompany from './th/createCompany'
 import common from './th/common'
+import createPartnerCode from './th/createPartnercode'
+import applyService from './th/applyService'
 
 module.exports = {
   home,
   common,
   createBrand,
   createBranch,
-  createCompany
+  createCompany,
+  createPartnerCode,
+  applyService
 }

@@ -4,7 +4,7 @@
       :display="dialogDisplay"
       :title="dialogTitle"
       :description="dialogDescription"
-      :leftButtonTitle="dialogLeftButtonText"
+      :leftButtonTitle="$t('common.cancel')"
       :rightButtonTitle="dialogRightButtonText"
       @onLeftButtonClick="dialogLeftButtonAction"
       @onRightButtonClick="dialogRightButtonAction"
@@ -38,7 +38,7 @@
         </div>
         <input-field
           type="switch"
-          title="Display on The 1 App"
+          :title="$t('createBrand.display')"
           v-model="showDisplay"
         />
       </div>
@@ -51,7 +51,7 @@
         :required="showDisplay"
         v-model="$v.ctaLabel.$model"
         :errorMessage="error.ctaLabel"
-        placeholder="Input placeholder"
+        :placeholder="$t('createBrand.brandFeature.ctaLabel')"
       />
       <input-field
         type="select"
@@ -63,7 +63,7 @@
         :optionsReduce="(item) => item.featureTypeId"
         optionsLabel="featureTypeValue"
         :errorMessage="error.ctaType"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
       />
       <input-field
         type="textarea"
@@ -73,11 +73,16 @@
         v-model="$v.ctaFeature.$model"
         :errorMessage="error.ctaFeature"
         :maxlength="255"
-        placeholder="Input placeholder"
+        :placeholder="$t('createBrand.brandFeature.ctaFeature')"
       />
-      <div class="info-description">
-        {{ 256 - $v.ctaFeature.$model.length }}
-        {{ $t('createBrand.limitCharacters') }}
+      <div v-if="language === 'th'" class="info-description">
+        {{ $t('common.charaterLeftS') }}
+        {{ 255 - $v.ctaFeature.$model.length }}
+        {{ $t('common.charaterLeftE') }}
+      </div>
+      <div v-else class="info-description">
+        {{ 255 - $v.ctaFeature.$model.length }}
+        {{ $t('common.charaterLeftS') }}
       </div>
     </div>
   </div>
@@ -140,6 +145,12 @@ export default class BrandFeatureBodyRework extends Vue {
     type: String
   })
   errorMessage = ''
+
+  get language(): any {
+    return this.$i18n.locale
+  }
+
+  $i18n: any
 
   dialogDisplay = false
   dialogTitle = 'Want to Delete this brand feature ? '

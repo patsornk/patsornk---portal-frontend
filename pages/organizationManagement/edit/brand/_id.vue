@@ -59,7 +59,7 @@ export default class CompanyEditBrand extends Vue {
 
     const breadcrumb: BreadcrumbType[] = [
       {
-        title: 'Organization Management',
+        title: this.$t('home.landing.organiztionMng').toString(),
         url: '/'
       },
       {

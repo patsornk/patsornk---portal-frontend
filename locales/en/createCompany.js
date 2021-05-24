@@ -1,6 +1,6 @@
 module.exports = {
-  brandInformation: 'Brand Information',
-
+  companyInfo: 'Company Information',
+  createCompany: 'Create Company',
   error: {
     require: 'require',
     characterAndNumber: 'a-z, 0-9',
@@ -10,6 +10,18 @@ module.exports = {
     maxLength: 'maxLength',
     email: 'email',
   },
-  fieldError: 'One or more field have an error. Please check and try again.',
-  partnerCode: 'Please select partner code.',
+  companyNameTh: 'Company Name (TH)',
+  companyNameEn: 'Company Name (EN)',
+  companyType: 'Company Type',
+  pleaseEnter: 'Please enter',
+  pleaseSelect: 'Please select',
+  partnerCategory: 'Partner Category',
+  businessSize: 'Business Size',
+  assign: 'Assign',
+  assignee: 'Assignee',
+  email: 'Email',
+  phoneNo: 'Phone No.',
+  companyNameInput: 'Input company name',
+  emailInput: 'Input email',
+  phoneNoInput: 'Input Phone No.',
 }

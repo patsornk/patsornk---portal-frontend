@@ -17,14 +17,14 @@
         )
       "
     >
-      Save
+      {{$t('common.save')}}
     </button> -->
     <div class="footer">
       <t-1-button type="black-transparent" @click.native="cancleOrgHandler">
-        Cancel
+        {{$t('common.cancel')}}
       </t-1-button>
       <t-1-button :type="btnStatus" @click.native="createOrgHandler">
-        Create new company
+        {{$t('common.createNewCompany')}}
       </t-1-button>
     </div>
   </div>
@@ -59,7 +59,21 @@ export default class CreateStep extends Vue {
   })
   readonly param!: string
 
-  private stepTitle = StepbarContent
+  $i18n: any
+
+  get language(): any {
+    return this.$i18n.locale
+  }
+
+  get stepTitle() {
+    return [
+      { title: this.$t('createCompany.createCompany').toString(), value: 'company' },
+      { title: this.$t('common.createPartnerCode').toString(), value: 'partnercode' },
+      { title: this.$t('common.createBrand').toString(), value: 'brand' },
+      { title: this.$t('common.createBranch').toString(), value: 'branch' },
+      { title: this.$t('common.serviceSelection').toString(), value: 'service' }
+    ]
+  }
   private step = CreateStepBar
 
   get btnStatus() {
@@ -72,9 +86,13 @@ export default class CreateStep extends Vue {
 
   async createOrgHandler() {
     if (window.sessionStorage.getItem('maxStepbar') == '4') {
-      const compId = parseInt(window.sessionStorage.getItem('createCompanyId') ?? '-1')
+      const compId = parseInt(
+        window.sessionStorage.getItem('createCompanyId') ?? '-1'
+      )
       try {
-        if (compId < 0) { throw 'Invalid company id'}
+        if (compId < 0) {
+          throw 'Invalid company id'
+        }
         let response = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/submit_company`,
           { companyId: compId }
@@ -85,7 +103,6 @@ export default class CreateStep extends Vue {
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
       }
-      
     }
   }
 }

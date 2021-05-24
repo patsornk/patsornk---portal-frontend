@@ -9,7 +9,15 @@
         <breadcrumb />
         <div v-if="isShowTitleButton" class="title-contriner">
           <span class="page-title">{{ pageTitle }}</span>
-          <t-1-button @click.native="onClickTitleButton">Create</t-1-button>
+          <div @click="onClickTitleButton" class="button-title">
+            <img
+            class="add-icon"
+            :src="getIcon('icon/add-white.png')"
+          />
+          <span class="btn" > 
+            {{ buttonTitle }} 
+          </span>
+          </div>
         </div>
         <div v-else class="title-contriner">
           <span class="page-title">{{ pageTitle }}</span>
@@ -29,6 +37,7 @@ import SidebarNav from '~/components/organisms/navbar/SidebarNavbar.vue'
 import Breadcrumb from '~/components/atoms/Breadcrumb.vue'
 import T1Button from '@/components/atoms/button.vue'
 import { BreadcrumbType, Organization } from '~/constants'
+import { getAssetsPath } from '~/helper/images'
 
 @Component({
   components: {
@@ -53,6 +62,7 @@ export default class Default extends Vue {
 
   get isShowTitleButton(): boolean {
     switch (this.pageTitle) {
+      case 'การจัดการองค์กร':
       case 'Organization Management':
         return true
       default:
@@ -60,8 +70,24 @@ export default class Default extends Vue {
     }
   }
 
+  get buttonTitle(): String {
+    switch (this.pageTitle) {
+      case 'การจัดการองค์กร':
+        return 'สร้างการองค์กรใหม่'
+      case 'Organization Management':
+        return 'Create New Organiztion'
+      default:
+        return ''
+    }
+  }
+
+  getIcon(name: string) {
+    return getAssetsPath(name)
+  }
+
   onClickTitleButton() {
     switch (this.pageTitle) {
+      case 'การจัดการองค์กร':
       case 'Organization Management':
         this.$router.push('/organizationManagement/create')
         window.sessionStorage.removeItem('createCompanyFirstTime')
@@ -121,6 +147,27 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .button-title {
+      display: flex;
+      flex-direction: row;
+      // width: 229px;
+      height: 40px;
+      background: $primary;
+      border-radius: 6px; 
+      align-content: center;
+      align-items: center;
+      .add-icon {
+        width: 12px;
+        height: 12px;
+        margin: 0px 4px 0px 8px;
+      }
+      .btn {
+        color: $white;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0px 8px 0px 0px;
+      }
+    }
     .page-title {
       margin-bottom: 1rem;
       font-size: 36px;

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import T1Button from '@/components/atoms/button.vue'
 import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
 import { BreadcrumbType } from '~/constants'
@@ -17,17 +17,23 @@ import { BreadcrumbType } from '~/constants'
   }
 })
 export default class OrganizationManagement extends Vue {
+  get language(): any {
+    return this.$i18n.locale
+  }
+
+  @Watch('language')
   private setupBreadcrumb(): void {
     const breadcrumb: BreadcrumbType[] = [
       {
-        title: 'Organization Management',
-        url: '/'
+        title: this.$t('home.landing.organiztionMng').toString(),
+        url: '/',
+        active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
 
     //set Page title
-    this.$store.dispatch('breadcrumb/setPageTitle', 'Organization Management')
+    this.$store.dispatch('breadcrumb/setPageTitle', this.$t('home.landing.organiztionMng').toString())
   }
 
   mounted() {

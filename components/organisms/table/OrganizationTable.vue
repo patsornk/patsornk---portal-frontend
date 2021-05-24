@@ -18,7 +18,7 @@
             :options="companyType"
             :label="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
             :reduce="(item) => item.companyTypeId"
-            placeholder="Company Type"
+            :placeholder="$t('createCompany.companyType').toString()"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
@@ -30,7 +30,7 @@
               language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
             "
             :reduce="(item) => item.companyCategoryId"
-            placeholder="Partner Category"
+            :placeholder="$t('createCompany.partnerCategory').toString()"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
@@ -40,12 +40,12 @@
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
-            placeholder="Status"
+            :placeholder="$t('common.status').toString()"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> Search </t1-button>
+        <t1-button class="black" @click.native="search"> {{$t('common.search').toString()}} </t1-button>
       </div>
     </div>
     <table-component
@@ -54,7 +54,7 @@
       isShowPaginate
       isShowHeaderTable
       isShowCheckBox
-      headerTitle="Create New Organization"
+      :headerTitle="$t('home.createNewOrganiztion').toString()"
       :onRowClicked="onRowClicked"
       :pageCount="pageSize"
       v-model="selectData"
@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import CustomHeader from '~/components/atoms/AgCustomHeader'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
@@ -149,9 +149,12 @@ export default class OrganizationTable extends Vue {
   ]
   dataList0 = []
   dataList = []
-  readonly columnDefs = [
+  columnDefs = [
     {
-      headerName: 'Company Name (TH)',
+      headerValueGetter: () => {
+        return this.$t('createCompany.companyNameTh').toString()
+      },
+      // headerName: this.$t('createCompany.companyNameTh').toString(),
       field: 'regioCompanyNameTh',
       headerComponentParams: {
         colKey: OrganizationTableCol.NameTh,
@@ -167,7 +170,7 @@ export default class OrganizationTable extends Vue {
       }
     },
     {
-      headerName: 'Company Name (EN)',
+      headerName: this.$t('createCompany.companyNameEn').toString(),
       field: 'regioCompanyNameEn',
       headerComponentParams: {
         colKey: OrganizationTableCol.NameEn,
@@ -183,7 +186,7 @@ export default class OrganizationTable extends Vue {
       }
     },
     {
-      headerName: 'Company Category',
+      headerName: this.$t('createCompany.partnerCategory').toString(),
       field: 'companyCategory',
       headerComponentParams: {
         colKey: OrganizationTableCol.CompCat,
@@ -199,7 +202,7 @@ export default class OrganizationTable extends Vue {
       }
     },
     {
-      headerName: 'Company Type',
+      headerName: this.$t('createCompany.companyType').toString(),
       field: 'companyType',
       headerComponentParams: {
         colKey: OrganizationTableCol.CompType,
@@ -215,7 +218,7 @@ export default class OrganizationTable extends Vue {
       }
     },
     {
-      headerName: 'Business Size',
+      headerName: this.$t('createCompany.businessSize').toString(),
       field: 'businessSize',
       headerComponentParams: {
         colKey: OrganizationTableCol.CompSize,
@@ -231,7 +234,7 @@ export default class OrganizationTable extends Vue {
       }
     },
     {
-      headerName: 'Status',
+      headerName: this.$t('common.status').toString(),
       field: 'status',
       headerComponentParams: {
         colKey: OrganizationTableCol.CompStatus,
@@ -271,6 +274,72 @@ export default class OrganizationTable extends Vue {
     this.currentPage = 1
     this.filterCompanies('1',this.pagination, this.tableOderField, this.tableOderBy)
   }
+
+  // @Watch('language')
+  // changeCollHeader() {
+  //   this.columnDefs = [
+  //     {
+  //       headerName: this.$t('createCompany.companyNameTh').toString(),
+  //       field: 'regioCompanyNameTh',
+  //       cellRenderer: (params: any) => {
+  //         return `<div class="custom-row">
+  //                 ${params.data.regioCompanyNameTh}
+  //               </div>`
+  //       }
+  //     },
+  //     {
+  //       headerName: this.$t('createCompany.companyNameEn').toString(),
+  //       field: 'regioCompanyNameEn',
+  //       cellRenderer: (params: any) => {
+  //         return `<div class="custom-row">
+  //                 ${params.data.regioCompanyNameEn}
+  //               </div>`
+  //       }
+  //     },
+  //     {
+  //       headerName: this.$t('createCompany.partnerCategory').toString(),
+  //       field: 'companyCategory',
+  //       cellRenderer: (params: any) => {
+  //         return `<div class="custom-row">
+  //                 ${params.data.companyCategory}
+  //               </div>`
+  //       }
+  //     },
+  //     {
+  //       headerName: this.$t('createCompany.companyType').toString(),
+  //       field: 'companyType',
+  //       cellRenderer: (params: any) => {
+  //         return `<div class="custom-row">
+  //                 ${params.data.companyType}
+  //               </div>`
+  //       }
+  //     },
+  //     {
+  //       headerName: this.$t('createCompany.businessSize').toString(),
+  //       field: 'businessSize',
+  //       cellRenderer: (params: any) => {
+  //         return `<div class="custom-row">
+  //                 ${params.data.businessSize}
+  //               </div>`
+  //       }
+  //     },
+  //     {
+  //       headerName: this.$t('common.status').toString(),
+  //       field: 'status',
+  //       cellRenderer: (params: any) => {
+  //         let strFormat = ''
+  //         params.data.status === 'Active'
+  //           ? (strFormat = 'active')
+  //           : params.data.status === 'On hold'
+  //           ? (strFormat = 'hold')
+  //           : (strFormat = 'in-active')
+  //         return `<div class="custom-row">
+  //                 <span class='row-status ${strFormat}'>${params.data.status}</span>
+  //               </div>`
+  //       }
+  //     }
+  //   ]
+  // }
 
   private async search() {
     this.clickSearch = true
@@ -336,9 +405,12 @@ export default class OrganizationTable extends Vue {
       path = path + `&companyTypeId=${this.fillterData.companyTypeId}`
     }
     try {
-      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
-        data: null
-      })
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}${path}`,
+        {
+          data: null
+        }
+      )
       if (res.successful) {
         this.mappingCompany(res.data)
       }
@@ -447,9 +519,10 @@ export default class OrganizationTable extends Vue {
 
   deleteHandler(map: any, vm: any) {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        e.preventDefault()
+      }
     }
   }
 }

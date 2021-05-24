@@ -40,7 +40,7 @@ export default class CreateBranch extends Vue {
   private setupBreadcrumb(): void {
     const breadcrumb: BreadcrumbType[] = [
       {
-        title: 'Organization Management',
+        title: this.$t('home.landing.organiztionMng').toString(),
         url: '/'
       },
       {

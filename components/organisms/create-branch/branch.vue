@@ -10,7 +10,7 @@
         :options="brandList"
         :optionsReduce="(item) => item.brandId"
         :optionsLabel="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :disable="disableBrandId"
         :errorMessage="error.brandId"
       />
@@ -72,7 +72,7 @@
         :options="partnerCodeList"
         :optionsReduce="(item) => item.id"
         optionsLabel="partnerCode"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.partnerCodeId"
         @onBlur="checkPartnerCode"
       />
@@ -88,7 +88,7 @@
         :options="branchTypeList"
         :optionsReduce="(item) => item.branchTypeId"
         :optionsLabel="language === 'th' ? 'branchTypeTh' : 'branchTypeEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.branchTypeId"
       />
       <input-field
@@ -100,7 +100,7 @@
         :options="mallList"
         :optionsReduce="(item) => item.mall.mallId"
         :optionsLabel="language === 'th' ? 'branchNameTh' : 'branchNameEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.mallId"
       />
     </div>
@@ -124,7 +124,7 @@
         :options="countryList"
         :optionsReduce="(item) => item.countryNameEn"
         :optionsLabel="language === 'th' ? 'countryNameTh' : 'countryNameEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.countryId"
       />
       <input-field
@@ -135,7 +135,7 @@
         :options="provinceList"
         :optionsReduce="(item) => item.provinceId"
         :optionsLabel="language === 'th' ? 'provinceNameTh' : 'provinceNameEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         @onChange="getDistrictList"
         :errorMessage="error.provinceId"
         :disable="provinceList.length === 0"
@@ -148,7 +148,7 @@
         :options="districtList"
         :optionsReduce="(item) => item.districtId"
         :optionsLabel="language === 'th' ? 'districtNameTh' : 'districtNameEn'"
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         @onChange="getSubDistrictList"
         :errorMessage="error.districtId"
         :disable="districtList.length === 0"
@@ -163,7 +163,7 @@
         :optionsLabel="
           language === 'th' ? 'subDistrictNameTh' : 'subDistrictNameEn'
         "
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         @onChange="getPostalCode"
         :errorMessage="error.subDistrictId"
         :disable="subDistrictList.length === 0"
@@ -172,7 +172,7 @@
         v-model="$v.postalCode.$model"
         :title="$t('createBranch.location.postalCode')"
         required
-        placeholder="Please select..."
+        :placeholder="$t('common.pleaseSelect')"
         :errorMessage="error.postalCode"
       />
       <div></div>
@@ -353,7 +353,7 @@
           :options="categoryList"
           :optionsReduce="(item) => item.id"
           optionsLabel="label"
-          placeholder="Please select..."
+          :placeholder="$t('common.pleaseSelect')"
           :errorMessage="error.categoryId"
         />
         <input-field
@@ -365,7 +365,7 @@
           :options="openingHourList"
           :optionsReduce="(item) => item.id"
           optionsLabel="label"
-          placeholder="Please select..."
+          :placeholder="$t('common.pleaseSelect')"
           :errorMessage="error.openingHourId"
         />
         <div class="open-daily-box" v-if="openingHourId === '1'">
@@ -425,7 +425,7 @@
     </div>
 
     <div class="submit-section">
-      <button class="submit" @click="clickSave">Save</button>
+      <button class="submit" @click="clickSave">{{$t('common.save')}}</button>
     </div>
 
     <modal v-show="isShowImage" class="show-image">
@@ -1946,7 +1946,7 @@ export default class CreateBranch extends Vue {
         )
         window.sessionStorage.setItem('createBranchId', response.data.branchId)
         window.sessionStorage.setItem('createBranchFirstTime', 'no')
-        this.$toast.global.success('Saved successfully')
+        this.$toast.global.success(this.$t('common.successfully').toString())
         this.$router.push('/organizationManagement/create/service')
       }
     } catch (error) {
@@ -1970,7 +1970,7 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
-        this.$toast.global.success('Saved successfully')
+        this.$toast.global.success(this.$t('common.successfully').toString())
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

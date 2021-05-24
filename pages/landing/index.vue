@@ -42,7 +42,7 @@ export default class Landing extends Vue {
         value: Organization.REQUEST
       },
       {
-        title: 'Organization Management',
+        title: this.$t('home.landing.organiztionMng').toString(),
         value: Organization.ORGANIZATIONMANAGEMENT
       }
     ]

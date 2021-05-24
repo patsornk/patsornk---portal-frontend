@@ -66,7 +66,7 @@
       :display="dialogDisplay"
       :title="dialogTitle"
       :description="dialogDescription"
-      :leftButtonTitle="dialogLeftButtonText"
+      :leftButtonTitle="$t('common.cancel')"
       :rightButtonTitle="dialogRightButtonText"
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"

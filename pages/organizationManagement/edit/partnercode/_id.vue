@@ -74,7 +74,7 @@ export default class CompanyEditPartnerCode extends Vue {
   private setupBreadcrumb(title: string): void {
     const breadcrumb: BreadcrumbType[] = [
       {
-        title: 'Organization Management',
+        title: this.$t('home.landing.organiztionMng').toString(),
         url: '/'
       },
       {

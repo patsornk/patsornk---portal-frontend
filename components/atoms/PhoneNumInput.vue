@@ -20,6 +20,7 @@
           v-model="dataValue"
           class="input-number"
           :class="errorMessage !== '' ? 'input-error' : ''"
+        :placeholder="$t('createCompany.phoneNoInput')"
           type="text"
           inputmode="tel"
           maxlength="13"

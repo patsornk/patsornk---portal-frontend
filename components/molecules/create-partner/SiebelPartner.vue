@@ -4,7 +4,7 @@
       class="sp-code"
       :maxlength="9"
       v-model="dataValue.partnerCode"
-      placeholder="Siebel Partner code"
+      :placeholder="$t('createPartnerCode.sieabelPartner')"
       :errorMessage="error.partnerCode ? error.partnerCode : undefined"
       @onChange="checkPartnerCode"
       required
@@ -14,7 +14,7 @@
       class="sp-name"
       v-model="dataValue.partnerName"
       :maxlength="100"
-      placeholder="Siebel Partner name"
+      :placeholder="$t('createPartnerCode.sieabelPartnerName')"
       :errorMessage="error.partnerName ? error.partnerName : undefined"
       @onChange="checkPartnerName"
       required
@@ -32,7 +32,7 @@
       "
       @click.native="clickAddSiebelPartner"
     >
-      Add
+      {{$t('common.add')}}
     </t1-button>
     <img
       v-else
@@ -119,7 +119,7 @@ export default class CreatePartnerCode extends Vue {
 
   private checkPartnerCode(): void {
     if (isRequiredEmpty(this.dataValue?.partnerCode)) {
-      this.error.partnerCode = 'Empty'
+      this.error.partnerCode = this.$t('createPartnerCode.inputSieabelPartner').toString()
     } else if (this.dataValue?.partnerCode && this.dataValue?.partnerCode.length < 3) {
       this.error.partnerCode = 'minlength'
     } else {
@@ -130,7 +130,7 @@ export default class CreatePartnerCode extends Vue {
 
   private checkPartnerName(): void {
     if (isRequiredEmpty(this.dataValue?.partnerName)) {
-      this.error.partnerName = 'Empty'
+      this.error.partnerName = this.$t('createPartnerCode.inputSieabelPartnerName').toString()
     } else {
       this.error.partnerName = ''
     }

@@ -132,6 +132,12 @@ import '@/assets/scss/agGridStyleOverride.scss'
   }
 })
 export default class TableComponent extends Vue {
+  
+  $i18n: any
+  get language(): any {
+    return this.$i18n.locale
+  }
+
   private name = 'table-component'
 
   @Prop({
@@ -400,6 +406,11 @@ export default class TableComponent extends Vue {
         e.preventDefault()
       }
     }
+  }
+
+  @Watch('language')
+  refreshHeader() {
+    this.gridApi.redrawRows()
   }
 
   mounted(): void {

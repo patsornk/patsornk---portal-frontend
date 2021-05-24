@@ -25,8 +25,8 @@ export default class T1Button extends Vue {
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 .t1-button {
-  padding: 6px 16px;
-  width: 160px;
+  // padding: 6px 16px;
+  width: 207px;
   height: 40px;
   border: 2px solid $primary;
   border-radius: 6px;
