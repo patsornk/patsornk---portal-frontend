@@ -974,8 +974,8 @@ export default class CreateBranch extends Vue {
   }
 
   mapPosition: MapPosition = {
-    lat: Number(13.7457381),
-    lng: Number(100.5371002)
+    lat: parseInt(this.latitude) || 13.7457381,
+    lng: parseInt(this.longitude) || 100.5371002
   }
 
   @Watch('language')
@@ -1364,8 +1364,8 @@ export default class CreateBranch extends Vue {
 
   private findInMap() {
     if (this.$v.latitude.$model && this.$v.longitude.$model) {
-      this.mapPosition.lat = Number(this.$v.latitude.$model)
-      this.mapPosition.lng = Number(this.$v.longitude.$model)
+      this.mapPosition.lat = parseInt(this.$v.latitude.$model)
+      this.mapPosition.lng = parseInt(this.$v.longitude.$model)
     }
   }
 
@@ -1417,7 +1417,7 @@ export default class CreateBranch extends Vue {
           if (this.componetMode == 'onboard') {
             this.brandList = res.data.brand
             this.brandId =
-              Number(window.sessionStorage.getItem('createBrandId')) || ''
+              parseInt(window.sessionStorage.getItem('createBrandId')) || ''
             this.disableBrandId = true
           } else {
             this.brandList = res.data.brand
@@ -1685,6 +1685,9 @@ export default class CreateBranch extends Vue {
               '|'
             )[1]
           }
+
+          this.mapPosition.lat = parseInt(this.latitude)
+          this.mapPosition.lng = parseInt(this.longitude)
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
@@ -2037,7 +2040,7 @@ export default class CreateBranch extends Vue {
   mappingOpeningHour(values: any[]) {
     return values.map((value: any) => {
       return {
-        dayOfWeek: Number(value.dayOfWeek),
+        dayOfWeek: parseInt(value.dayOfWeek),
         day: getDay(value.dayOfWeek) || '',
         openTime: this.getTime(value.openingTime, 0),
         openMeridiem: this.getTime(value.openingTime, 1),

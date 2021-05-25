@@ -33,8 +33,8 @@ export default class Main extends Vue {
 
   get mapPosition(): MapPosition {
     return {
-      lng: Number(this.infoData.lng || 100.5285094),
-      lat: Number(this.infoData.lat || 13.7249499)
+      lng: this.infoData.lng || 100.5285094,
+      lat: this.infoData.lat || 13.7249499
     }
   }
 

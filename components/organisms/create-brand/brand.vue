@@ -783,10 +783,10 @@ export default class CreateBrand extends Vue {
         }
       )
       const companyId = this.companyId
-        ? Number(this.companyId)
+        ? parseInt(this.companyId)
         : window.sessionStorage.getItem('createCompanyId')
       const brandId = this.brandId
-        ? Number(this.brandId)
+        ? parseInt(this.brandId)
         : window.sessionStorage.getItem('createBrandId')
 
       const brandFeatureFormatedList: any[] = []
