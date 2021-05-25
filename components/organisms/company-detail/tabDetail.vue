@@ -10,14 +10,22 @@
       <div class="line" :class="tab === 'branch' && 'select'"></div>
       <div class="line" :class="tab === 'partnerCode' && 'select'"></div>
     </div>
-    <tab-brand :id="id" v-if="tab === 'brand'" />
-    <tab-branch :id="id" v-if="tab === 'branch'" />
+    <tab-brand
+      :id="id"
+      v-if="tab === 'brand'"
+      :viewBranchCallBack="viewBranchCallBack"
+    />
+    <tab-branch
+      :id="id"
+      v-if="tab === 'branch'"
+      :brandIdSearch="brandIdSearch"
+    />
     <tab-partner-code :id="id" v-if="tab === 'partnerCode'" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import TextInfo from '@/components/atoms/TextInfo.vue'
 import Service from '@/components/atoms/service/service.vue'
 import TabBrand from '@/components/organisms/company-detail/tab/brand.vue'
@@ -43,6 +51,17 @@ export default class TabDetail extends Vue {
 
   services: ServiceType[] = []
   tab: string = 'brand'
+  brandIdSearch: number = 0
+
+  @Watch('tab')
+  changeTab() {
+    if (this.tab !== 'branch') this.brandIdSearch = 0
+  }
+
+  viewBranchCallBack(data: any) {
+    this.tab = 'branch'
+    this.brandIdSearch = data
+  }
 
   async getService(): Promise<void> {
     try {

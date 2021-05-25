@@ -76,6 +76,12 @@ export default class TabBrand extends Vue {
   })
   private id?: string
 
+  @Prop({
+    required: false,
+    type: Function
+  })
+  private viewBranchCallBack?: any
+
   get language(): any {
     return this.$i18n.locale
   }
@@ -213,7 +219,7 @@ export default class TabBrand extends Vue {
   ]
 
   viewBranch(param: any) {
-    // TO DO
+    this.viewBranchCallBack(param)
   }
 
   private async search() {
@@ -246,13 +252,13 @@ export default class TabBrand extends Vue {
     let path: String = `/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy !== '') {
-      path = path + `&keywordOf=${this.filterData.search.searchBy}`
+      path = `${path}&keywordOf=${this.filterData.search.searchBy}`
     }
     if (this.filterData.search.keyword !== '') {
-      path = path + `&keyword=${this.filterData.search.keyword}`
+      path = `${path}&keyword=${this.filterData.search.keyword}`
     }
     if (this.filterData.compantStatus > 0) {
-      path = path + `&statusId=${this.filterData.compantStatus}`
+      path = `${path}&statusId=${this.filterData.compantStatus}`
     }
 
     try {

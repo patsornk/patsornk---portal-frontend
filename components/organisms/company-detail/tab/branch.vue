@@ -100,7 +100,13 @@ export default class TabBranch extends Vue {
     required: true,
     type: String
   })
-  private id?: string
+  private id!: string
+
+  @Prop({
+    default: '',
+    type: Number
+  })
+  private brandIdSearch?: number
 
   get language(): any {
     return this.$i18n.locale
@@ -272,7 +278,11 @@ export default class TabBranch extends Vue {
 
   async mounted(): Promise<void> {
     await this.getBrands()
-    await this.getBranches('1', '10')
+    if (this.brandIdSearch !== 0) {
+      await this.filterBranches('1', '10')
+    } else {
+      await this.getBranches('1', '10')
+    }
   }
 
   changePage(page: number) {
@@ -286,17 +296,17 @@ export default class TabBranch extends Vue {
   async filterBranches(page: String, limit: String): Promise<void> {
     let path: String = `/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`
 
-    if (this.filterData.search.searchBy !== '') {
-      path = path + `&keywordOf=${this.filterData.search.searchBy}`
+    if (this.filterData.search.searchBy) {
+      path = `${path}&keywordOf=${this.filterData.search.searchBy}`
     }
-    if (this.filterData.search.keyword !== '') {
-      path = path + `&keyword=${this.filterData.search.keyword}`
+    if (this.filterData.search.keyword) {
+      path = `${path}&keyword=${this.filterData.search.keyword}`
     }
     if (this.filterData.brandId) {
-      path = path + `&companyTypeId=${this.filterData.brandId}`
+      path = `${path}&brandId=${this.filterData.brandId}`
     }
     if (this.filterData.compantStatus > 0) {
-      path = path + `&statusId=${this.filterData.compantStatus}`
+      path = `${path}&statusId=${this.filterData.compantStatus}`
     }
 
     try {
@@ -353,6 +363,7 @@ export default class TabBranch extends Vue {
       )
       if (res.successful) {
         this.mappingBrand(res.data)
+        this.filterData.brandId = this.brandIdSearch || 0
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
