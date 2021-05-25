@@ -80,7 +80,7 @@
           v-model="dataValue"
           :type="type"
           class="input-field-input"
-          :class="errorMessage ? 'no-border' : ''"
+          :class="disable ? 'disable' : errorMessage ? 'no-border' : ''"
           :inputmode="inputmode"
           :placeholder="placeholder"
           :maxlength="maxlength"
@@ -430,6 +430,10 @@ export default class InputField extends Vue {
     border-radius: 4px;
     width: 100%;
   }
+  .input-field-input.disable {
+    background: $disabled-for-textbox;
+    color: $gray-disable;
+  }
 
   .input-field-input:focus {
     outline: none !important;
@@ -447,6 +451,7 @@ export default class InputField extends Vue {
   .input-field-input-error .vs__dropdown-toggle {
     border: 1px solid $primary;
   }
+
   .input-icon-validate-danger .input-icon-validate {
     background: none;
   }
