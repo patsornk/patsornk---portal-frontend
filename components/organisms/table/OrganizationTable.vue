@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
