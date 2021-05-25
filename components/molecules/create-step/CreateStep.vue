@@ -23,7 +23,7 @@
       <t-1-button type="black-transparent" @click.native="cancleOrgHandler">
         {{$t('common.cancel')}}
       </t-1-button>
-      <t-1-button :type="btnStatus" @click.native="createOrgHandler">
+      <t-1-button :type="btnStatus" @click.native="createNewCompany">
         {{$t('common.createNewCompany')}}
       </t-1-button>
     </div>
@@ -36,8 +36,8 @@
       rightButtonTitle="Create New Organization "
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
-      leftStyle="flex: 0.25"
-      rightStyle="flex: 0.67"
+      leftStyle="width: 120px;"
+      rightStyle="width: 210px;"
     />
   </div>
 </template>
@@ -92,7 +92,7 @@ export default class CreateStep extends Vue {
   private dialogDisplay = false
 
   get btnStatus() {
-    return this.$store.getters['stepbar/maxState'] === 4 ? '' : 'disable'
+    return this.$store.getters['stepbar/maxState'] == 4 ? '' : 'disable'
   }
 
   cancleOrgHandler() {
