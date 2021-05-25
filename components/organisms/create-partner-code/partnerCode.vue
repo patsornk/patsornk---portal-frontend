@@ -191,16 +191,17 @@ export default class CreatePartnerCode extends Vue {
   }
 
   async clickEditNewSiebelPartner(event: any) {
-    if (this.checkDuplicate(event)) {
+    const data = event.value
+    if (this.checkDuplicate(data)) {
       this.partnerCodeError = this.$t(
         'createPartnerCode.duplicatePartnerCode'
       ).toString()
     } else {
       try {
         const payload = {
-          partnerId: event.value.partnerId,
-          partnerCode: event.value.partnerCode,
-          partnerName: event.value.partnerName,
+          partnerId: data.partnerId,
+          partnerCode: data.partnerCode,
+          partnerName: data.partnerName,
           companyId: this.companyId
         }
 
@@ -233,17 +234,17 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
-  async clickAddNewSiebelPartner(data: any) {
-    const event = data.value
-    if (this.checkDuplicate(event)) {
+  async clickAddNewSiebelPartner(event: any) {
+    const data = event.value
+    if (this.checkDuplicate(data)) {
       this.partnerCodeError = this.$t(
         'createPartnerCode.duplicatePartnerCode'
       ).toString()
     } else {
       try {
         const payload = {
-          partnerCode: this.newSiebelPartner.partnerCode,
-          partnerName: this.newSiebelPartner.partnerName,
+          partnerCode: data.partnerCode,
+          partnerName: data.partnerName,
           companyId: this.companyId
         }
 
@@ -274,7 +275,7 @@ export default class CreatePartnerCode extends Vue {
         }
       }
     }
-    data?.callback()
+    event?.callback()
   }
 
   checkDuplicate(event: SiebelPartnerType): boolean {

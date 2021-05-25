@@ -3,36 +3,31 @@
     <input-field
       class="sp-code"
       :maxlength="9"
-      v-model="dataValue.partnerCode"
+      v-model="$v.partnerCode.$model"
       :placeholder="$t('createPartnerCode.sieabelPartner')"
-      :errorMessage="error.partnerCode ? error.partnerCode : undefined"
-      @onChange="checkPartnerCode"
+      :errorMessage="error.partnerCode"
       required
     />
 
     <input-field
       class="sp-name"
-      v-model="dataValue.partnerName"
+      v-model="$v.partnerName.$model"
       :maxlength="100"
       :placeholder="$t('createPartnerCode.sieabelPartnerName')"
-      :errorMessage="error.partnerName ? error.partnerName : undefined"
-      @onChange="checkPartnerName"
+      :errorMessage="error.partnerName"
       required
     />
     <t1-button
       v-if="action === 'add'"
       class="submit"
       :class="
-        error.partnerCode ||
-        error.partnerName ||
-        dataValue.partnerCode === '' ||
-        dataValue.partnerName === ''
+        $v.validationGroup.$invalid || partnerCode === '' || partnerName === ''
           ? 'disable'
           : ''
       "
       @click.native="clickAddSiebelPartner"
     >
-      {{$t('common.add')}}
+      {{ $t('common.add') }}
     </t1-button>
     <img
       v-else
@@ -60,8 +55,25 @@ import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '@/components/atoms/button.vue'
 import { isRequiredEmpty, validateError } from '~/helper'
 import { getAssetsPath } from '~/helper/images'
+import { validationMixin } from 'vuelidate'
+import { required, minLength } from 'vuelidate/lib/validators'
+
+const validations = {
+  partnerCode: {
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value),
+    minLength: minLength(3)
+  },
+  partnerName: {
+    required,
+    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value)
+  },
+  validationGroup: ['partnerCode', 'partnerName']
+}
 
 @Component({
+  mixins: [validationMixin],
+  validations,
   components: {
     InputField,
     T1Button
@@ -72,7 +84,7 @@ export default class CreatePartnerCode extends Vue {
     required: true,
     type: Object
   })
-  private value: SiebelPartnerType | undefined
+  private value!: SiebelPartnerType
 
   @Prop({
     required: true,
@@ -93,18 +105,18 @@ export default class CreatePartnerCode extends Vue {
   })
   private partnerCodeError: string | undefined
 
+  isLoading = false
+  partnerCode = this.value.partnerCode
+  partnerName = this.value.partnerName
+  partnerId = this.value.partnerId
+
+  private error: ErrorSiebelPartner = {
+    partnerCode: '',
+    partnerName: ''
+  }
+
   assets(name: string) {
     return getAssetsPath(name)
-  }
-
-  isLoading = false
-
-  get dataValue(): SiebelPartnerType | undefined {
-    return this.value
-  }
-
-  set dataValue(value) {
-    this.dataValue = value
   }
 
   @Watch('partnerCodeError')
@@ -112,43 +124,46 @@ export default class CreatePartnerCode extends Vue {
     this.error.partnerCode = this.partnerCodeError
   }
 
-  private error: ErrorSiebelPartner = {
-    partnerCode: '',
-    partnerName: ''
+  @Watch('partnerCode')
+  checkPartnerCode(): void {
+    this.error.partnerCode = !this.$v.partnerCode.required
+      ? this.$t('createBrand.brandNameEnInput').toString()
+      : !this.$v.partnerCode.mustBe
+      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      : !this.$v.partnerCode.minLength
+      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      : ''
   }
 
-  private checkPartnerCode(): void {
-    if (isRequiredEmpty(this.dataValue?.partnerCode)) {
-      this.error.partnerCode = this.$t('createPartnerCode.inputSieabelPartner').toString()
-    } else if (this.dataValue?.partnerCode && this.dataValue?.partnerCode.length < 3) {
-      this.error.partnerCode = 'minlength'
-    } else {
-      this.$emit('changePartnerCode', this.dataValue)
-      this.error.partnerCode = this.partnerCodeError
-    }
+  @Watch('partnerName')
+  checkPartnerName(): void {
+    this.error.partnerName = !this.$v.partnerName.required
+      ? this.$t('createBrand.brandNameEnInput').toString()
+      : ''
   }
-
-  private checkPartnerName(): void {
-    if (isRequiredEmpty(this.dataValue?.partnerName)) {
-      this.error.partnerName = this.$t('createPartnerCode.inputSieabelPartnerName').toString()
-    } else {
-      this.error.partnerName = ''
-    }
+  async mounted(): Promise<void> {
+    console.log('value', this.value)
+    console.log('partnerCode', this.partnerCode)
+    console.log('partnerName', this.partnerName)
   }
 
   private clickAddSiebelPartner() {
-    if(!this.isLoading) {
+    console.log('partnerCode', this.partnerCode)
+    console.log('partnerName', this.partnerName)
+    if (!this.isLoading) {
       this.isLoading = true
-      if (
-        this.dataValue?.partnerCode === '' ||
-        this.dataValue?.partnerName === ''
-      ) {
-        return
-      }
-      this.checkPartnerCode()
-      this.checkPartnerName()
+
       if (validateError(this.error)) {
-        this.$emit('clickAdd', { value: this.dataValue, callback: ()=>{ this.isLoading = false}})
+        this.$emit('clickAdd', {
+          value: {
+            partnerCode: this.$v.partnerCode.$model,
+            partnerName: this.$v.partnerName.$model,
+            partnerId: this.partnerId
+          },
+          callback: () => {
+            this.isLoading = false
+          }
+        })
       } else {
         this.isLoading = false
       }
