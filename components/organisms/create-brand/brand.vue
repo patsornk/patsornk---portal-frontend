@@ -425,7 +425,7 @@ export default class CreateBrand extends Vue {
     this.error.brandCode = !this.$v.brandCode.required
       ? this.$t('createBrand.brandCodeInput').toString()
       : !this.$v.brandCode.mustBe
-      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.brandCode.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -436,7 +436,7 @@ export default class CreateBrand extends Vue {
     this.error.brandNameTh = !this.$v.brandNameTh.required
       ? this.$t('createBrand.brandNameThInput').toString()
       : !this.$v.brandNameTh.mustBe
-      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.brandNameTh.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -447,7 +447,7 @@ export default class CreateBrand extends Vue {
     this.error.brandNameEn = !this.$v.brandNameEn.required
       ? this.$t('createBrand.brandNameEnInput').toString()
       : !this.$v.brandNameEn.mustBe
-      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.brandNameEn.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -458,7 +458,7 @@ export default class CreateBrand extends Vue {
     this.error.email = !this.$v.email.required
       ? this.$t('createCompany.emailInput').toString()
       : !this.$v.email.email
-      ? this.$t('createBrand.common.invalidEmailFormat').toString()
+      ? this.$t('common.invalidEmailFormat').toString()
       : !this.$v.email.maxLength
       ? this.$t('createBrand.error.maxLength').toString()
       : ''
@@ -469,7 +469,7 @@ export default class CreateBrand extends Vue {
     this.error.phoneNo = !this.$v.phoneNo.required
       ? this.$t('createCompany.phoneNoInput').toString()
       : !this.$v.phoneNo.numeric
-      ? this.$t('createBrand.common.invalidPhoneFormat').toString()
+      ? this.$t('common.invalidPhoneFormat').toString()
       : !this.$v.phoneNo.minLength
       ? this.$t('createBrand.error.minLength').toString()
       : !this.$v.phoneNo.maxLength

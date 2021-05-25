@@ -67,13 +67,13 @@ export default class CompanyEditBrand extends Vue {
         url: '/'
       },
       {
-        title: `Brand - ${brand}`,
+        title: `${this.$t('common.brandTitle').toString()} - ${brand}`,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', `Brand - ${brand}`)
+    this.$store.dispatch('breadcrumb/setPageTitle', `${this.$t('common.brandTitle').toString()} - ${brand}`)
   }
 
   async getBrand(): Promise<void> {

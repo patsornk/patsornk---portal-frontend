@@ -3,7 +3,7 @@
     <div class="filter-container">
       <input-search
         v-model="filterData.search"
-        placeholder="Search..."
+        :placeholder="$t('common.searchFromCompany')"
         :options="searchList"
       />
 
@@ -99,6 +99,22 @@ export default class OrganizationTable extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  @Watch('language')
+  changeSerchSelect() {
+    this.searchList = [
+      {
+        id: 'company',
+        label: `${this.$t('common.searchBy')} ${this.$t('common.companyTitle')}`
+      },
+      {
+        id: 'partner',
+        label: `${this.$t('common.searchBy')} ${this.$t(
+          'common.partnerCodeTitle'
+        )}`
+      }
+    ]
   }
 
   frameworkComponents = {

@@ -266,9 +266,14 @@
           style="width: 100%"
           v-model="$v.mallDescription.$model"
         />
-        <div class="mall-description">
+        <div v-if="language === 'th'" class="mall-description">
+          {{ $t('common.charaterLeftS') }}
           {{ 255 - $v.mallDescription.$model.length }}
-          {{ $t('createBrand.limitCharacters') }}
+          {{ $t('common.charaterLeftE') }}
+        </div>
+        <div v-else class="mall-description">
+          {{ 255 - $v.mallDescription.$model.length }}
+          {{ $t('common.charaterLeftS') }}
         </div>
       </div>
 
@@ -466,7 +471,8 @@ import {
   BrandInitialData,
   BranchTypeDataType,
   MallDataType,
-  SiebelPartnerType
+  SiebelPartnerType,
+  BranchDataType
 } from '~/constants'
 import { validationMixin } from 'vuelidate'
 import {
@@ -667,6 +673,12 @@ export default class CreateBranch extends Vue {
     default: 'onboard'
   })
   readonly componetMode!: string
+
+  @Prop({
+    type: Function,
+    required: false
+  })
+  readonly setBranch?: Function
 
   brandId: any = ''
   branchCode = ''
@@ -966,71 +978,98 @@ export default class CreateBranch extends Vue {
     lng: Number(100.5371002)
   }
 
+  @Watch('language')
+  switchOpeningHourList() {
+    if (this.language === 'th') {
+      this.openingHourList = [
+        {
+          id: '1',
+          label: 'เปิดทุกวัน'
+        },
+        {
+          id: '2',
+          label: 'ปรับแต่งเอง'
+        }
+      ]
+    } else {
+      this.openingHourList = [
+        {
+          id: '1',
+          label: 'Open Daily'
+        },
+        {
+          id: '2',
+          label: 'Customize'
+        }
+      ]
+    }
+  }
+
   @Watch('brandId')
   checkBrandId(): void {
     this.error.brandId = !this.$v.brandId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.selectBrand').toString()
       : ''
   }
 
   @Watch('branchCode')
   checkBranchCode(): void {
     this.error.branchCode = !this.$v.branchCode.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputBranchCode').toString()
       : ''
   }
 
   @Watch('branchNameTh')
   checkBranchNameTh(): void {
     this.error.branchNameTh = !this.$v.branchNameTh.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputBranchNameTh').toString()
       : !this.$v.branchNameTh.mustBe
-      ? this.$t('createBranch.error.thaiAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 
   @Watch('branchNameEn')
   checkBranchNameEn(): void {
     this.error.branchNameEn = !this.$v.branchNameEn.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputBranchNameEn').toString()
       : !this.$v.branchNameEn.mustBe
-      ? this.$t('createBranch.error.characterAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 
   @Watch('siebelBranchCode')
   checkSiebelBranchCode(): void {
     this.error.siebelBranchCode = !this.$v.siebelBranchCode.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputSiebelBranchCode').toString()
       : !this.$v.branchNameEn.mustBe
-      ? this.$t('createBranch.error.characterAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 
   @Watch('siebelBranchName')
   checkSiebelBranchName(): void {
     this.error.siebelBranchName = !this.$v.siebelBranchName.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputSiebelBranchName').toString()
       : !this.$v.branchNameEn.mustBe
-      ? this.$t('createBranch.error.characterAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 
   @Watch('email')
   checkEmail(): void {
     this.error.email = !this.$v.email.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createCompany.emailInput').toString()
       : !this.$v.email.email
-      ? this.$t('createBranch.error.email').toString()
+      ? this.$t('common.invalidEmailFormat').toString()
       : ''
   }
 
   @Watch('phoneNumber')
   checkPhoneNumber(): void {
     this.error.phoneNumber = !this.$v.phoneNumber.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createCompany.phoneNoInput').toString()
       : !this.$v.phoneNumber.numeric
-      ? this.$t('createBranch.error.numeric').toString()
+      ? this.$t('common.invalidPhoneFormat').toString()
       : !this.$v.phoneNumber.minLength
       ? this.$t('createBranch.error.minLength').toString()
       : ''
@@ -1039,114 +1078,114 @@ export default class CreateBranch extends Vue {
   @Watch('partnerCodeId')
   checkPartnerCode(): void {
     this.error.partnerCodeId = !this.$v.partnerCodeId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputPartnerCode').toString()
       : ''
   }
 
   @Watch('branchTypeId')
   checkBranchTypeId(): void {
     this.error.branchTypeId = !this.$v.branchTypeId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputBranchType').toString()
       : ''
   }
 
   @Watch('mallId')
   checkMallId(): void {
     this.error.mallId = !this.$v.mallId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.inputMall').toString()
       : ''
   }
 
   @Watch('address')
   checkAddress(): void {
     this.error.address = !this.$v.address.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.address').toString()
       : ''
   }
 
   checkCountryId(): void {
     this.error.countryId = !this.$v.countryId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.country').toString()
       : ''
   }
 
   checkProvinceId(): void {
     this.error.provinceId = !this.$v.provinceId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.province').toString()
       : ''
   }
 
   checkDistrictId(): void {
     this.error.districtId = !this.$v.districtId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.district').toString()
       : ''
   }
 
   checkSubDistrictId(): void {
     this.error.subDistrictId = !this.$v.subDistrictId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.subDistrict').toString()
       : ''
   }
 
   checkPostalCode(): void {
     this.error.postalCode = !this.$v.postalCode.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.postalCode').toString()
       : ''
   }
 
   @Watch('latitude')
   checkLatitude(): void {
     this.error.latitude = !this.$v.latitude.mustBe
-      ? this.$t('createBranch.error.characterAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 
   @Watch('longitude')
   checkLongitude(): void {
     this.error.longitude = !this.$v.longitude.mustBe
-      ? this.$t('createBranch.error.characterAndNumber').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 
   @Watch('categoryId')
   checkCategoryId(): void {
     this.error.categoryId = !this.$v.categoryId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('createBranch.error.category').toString()
       : ''
   }
 
   @Watch('openingHourId')
   checkOpeningHourId(): void {
     this.error.openingHourId = !this.$v.openingHourId.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('common.pleaseSelect').toString()
       : ''
   }
 
   @Watch('openTime')
   checkOpenTime(): void {
     this.error.openTime = !this.$v.openTime.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('common.pleaseSelect').toString()
       : ''
   }
 
   @Watch('openMeridiem')
   checkOpenMeridiem(): void {
     this.error.openMeridiem = !this.$v.openMeridiem.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('common.pleaseSelect').toString()
       : ''
   }
 
   @Watch('closeTime')
   checkCloseTime(): void {
     this.error.closeTime = !this.$v.closeTime.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('common.pleaseSelect').toString()
       : ''
   }
 
   @Watch('closeMeridiem')
   checkCloseMeridiem(): void {
     this.error.closeMeridiem = !this.$v.closeMeridiem.required
-      ? this.$t('createBranch.error.require').toString()
+      ? this.$t('common.pleaseSelect').toString()
       : ''
   }
 
@@ -1166,7 +1205,9 @@ export default class CreateBranch extends Vue {
         item.time === 'open' &&
         this.openCusTomList[item.index].openTime === ''
       ) {
-        this.openCusTomList[item.index].openError = 'error'
+        this.openCusTomList[item.index].openError = this.$t(
+          'common.pleaseSelect'
+        ).toString()
       } else {
         this.openCusTomList[item.index].openError = ''
         this.openCusTomList[item.index].openMeridiemError = ''
@@ -1175,7 +1216,9 @@ export default class CreateBranch extends Vue {
         item.time === 'close' &&
         this.openCusTomList[item.index].closeTime === ''
       ) {
-        this.openCusTomList[item.index].closeError = 'error'
+        this.openCusTomList[item.index].closeError = this.$t(
+          'common.pleaseSelect'
+        ).toString()
       } else {
         this.openCusTomList[item.index].closeError = ''
         this.openCusTomList[item.index].closeMeridiemError = ''
@@ -1216,10 +1259,10 @@ export default class CreateBranch extends Vue {
           item.closeMeridiemError = ''
         } else {
           if (item.openTime === '') {
-            item.openError = 'error'
+            item.openError = this.$t('common.pleaseSelect').toString()
           }
           if (item.closeTime === '') {
-            item.closeError = 'error'
+            item.closeError = this.$t('common.pleaseSelect').toString()
           }
           if (
             item.openTime === item.closeTime &&
@@ -1257,11 +1300,15 @@ export default class CreateBranch extends Vue {
         if (data.file) {
           this.error.logo = ''
         } else {
-          this.error.logo = this.$t('createBranch.error.require').toString()
+          this.error.logo = this.$t(
+            'createBrand.brandFeature.error.image'
+          ).toString()
         }
       }
     } else {
-      this.error.logo = this.$t('createBranch.error.require').toString()
+      this.error.logo = this.$t(
+        'createBrand.brandFeature.error.image'
+      ).toString()
     }
   }
 
@@ -1274,11 +1321,15 @@ export default class CreateBranch extends Vue {
         if (data.file) {
           this.error.cover = ''
         } else {
-          this.error.cover = this.$t('createBranch.error.require').toString()
+          this.error.cover = this.$t(
+            'createBrand.brandFeature.error.image'
+          ).toString()
         }
       }
     } else {
-      this.error.cover = this.$t('createBranch.error.require').toString()
+      this.error.cover = this.$t(
+        'createBrand.brandFeature.error.image'
+      ).toString()
     }
   }
 
@@ -1520,6 +1571,7 @@ export default class CreateBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
+    this.switchOpeningHourList()
     await this.getBrand()
     await this.getPartnerCode()
     await this.getBranchType()
@@ -1546,6 +1598,14 @@ export default class CreateBranch extends Vue {
         )
         if (res.successful) {
           const data = res.data
+          if (this.setBranch) {
+            const branchData: BranchDataType = {
+              branchId: data.branchNameEnId,
+              branchNameEn: data.branchNameEn,
+              branchNameTh: data.branchNameTh
+            }
+            this.setBranch(branchData)
+          }
           this.brandId = data.brand.brandId
           this.branchCode = data.branchCode
           this.branchNameTh = data.branchNameTh

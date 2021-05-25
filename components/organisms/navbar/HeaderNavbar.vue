@@ -82,15 +82,15 @@ export default class HeaderNav extends Vue {
     //mock data should get by role
     return [
       {
-        title: 'By feature',
+        title: this.$t('common.byFeature'),
         value: Organization.FEATURE
       },
       {
-        title: 'By member',
+        title: this.$t('common.branchTitle'),
         value: Organization.MAMBER
       },
       {
-        title: 'By request',
+        title: this.$t('common.branchTitle'),
         value: Organization.REQUEST
       }
     ]

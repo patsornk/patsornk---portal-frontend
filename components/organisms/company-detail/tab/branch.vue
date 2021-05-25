@@ -3,7 +3,7 @@
     <div class="filter-container">
       <input-search
         v-model="filterData.search"
-        placeholder="Search..."
+        :placeholder="$t('common.search')"
         :options="searchList"
       />
 
@@ -25,12 +25,14 @@
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
-            placeholder="Status"
+            :placeholder="$t('common.status')"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> Search </t1-button>
+        <t1-button class="black" @click.native="search">
+          {{ $t('common.search') }}
+        </t1-button>
       </div>
     </div>
     <table-component
@@ -40,7 +42,7 @@
       isShowHeaderTable
       isShowCheckBox
       isCreateNew
-      createNewTitle="Create New Branch"
+      :createNewTitle="$t('common.createBranch')"
       @clickNew="clickNewBranch"
       headerTitle="Branch list"
       :pageCount="pageSize"
@@ -72,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import InputSearch from '~/components/atoms/InputSearch.vue'
@@ -102,6 +104,22 @@ export default class TabBranch extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  @Watch('language')
+  changeSerchSelect() {
+    this.searchList = [
+      {
+        id: 'branch',
+        label: `${this.$t('common.searchBy')} ${this.$t('common.branchTitle')}`
+      },
+      {
+        id: 'partner',
+        label: `${this.$t('common.searchBy')} ${this.$t(
+          'common.partnerCodeTitle'
+        )}`
+      }
+    ]
   }
 
   status = ''
@@ -282,9 +300,12 @@ export default class TabBranch extends Vue {
     }
 
     try {
-      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
-        data: null
-      })
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}${path}`,
+        {
+          data: null
+        }
+      )
       if (res.successful) {
         this.mappingBranch(res.data)
       }

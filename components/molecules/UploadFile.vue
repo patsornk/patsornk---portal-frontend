@@ -234,7 +234,7 @@ export default class UploadImage extends Vue {
       font-size: 14px;
       font-weight: 700;
       padding: 6px 20px 9px 20px;
-      margin-left: 13px;
+      // margin-left: 13px;
       box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       background: $white;

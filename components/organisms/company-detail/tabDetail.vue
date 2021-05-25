@@ -1,9 +1,9 @@
 <template>
   <div class="company-tab-container">
     <div class="tab-header">
-      <div class="tab" @click="tab = 'brand'">Brand</div>
-      <div class="tab" @click="tab = 'branch'">Branch</div>
-      <div class="tab" @click="tab = 'partnerCode'">Partner Code</div>
+      <div class="tab" @click="tab = 'brand'">{{$t('common.brandTitle')}}</div>
+      <div class="tab" @click="tab = 'branch'">{{$t('common.branchTitle')}}</div>
+      <div class="tab" @click="tab = 'partnerCode'">{{$t('common.partnerCodeTitle')}}</div>
     </div>
     <div class="tab-line">
       <div class="line" :class="tab === 'brand' && 'select'"></div>

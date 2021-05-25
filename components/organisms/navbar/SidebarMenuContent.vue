@@ -8,7 +8,7 @@
     </div>
     <nav-menu-item
       class="logout"
-      label="Logout"
+      :label="$t('common.logout')"
       :active="false"
       icon="logout.png"
     />

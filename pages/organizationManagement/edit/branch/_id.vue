@@ -2,7 +2,8 @@
   <div class="create-branch-container">
     <create-new-branch
     :parentCompantId="companyId"
-    componetMode="edit" />
+    componetMode="edit"
+    :setBranch="setBranch" />
   </div>
 </template>
 
@@ -43,7 +44,20 @@ export default class CreateBranch extends Vue {
     this.setupBreadcrumb()
   }
 
+  setBranch(branch: any) {
+    this.branch = branch
+    this.setupBreadcrumb()
+  }
+
   private setupBreadcrumb(): void {
+    const company = this.language === 'th'
+      ? this.company.companyNameTh
+      : this.company.companyNameEn
+
+    const branch = this.language === 'th'
+      ? this.branch.branchNameTh
+      : this.branch.branchNameEn
+
     const breadcrumb: BreadcrumbType[] = [
       {
         title: this.$t('home.landing.organiztionMng').toString(),
@@ -57,10 +71,7 @@ export default class CreateBranch extends Vue {
         url: '/'
       },
       {
-        title:
-          this.language === 'th'
-            ? this.branch.branchNameTh
-            : this.branch.branchNameEn,
+        title: `${this.$t('common.branchTitle').toString()} - ${branch}`,
         url: '/',
         active: true
       }
@@ -69,11 +80,7 @@ export default class CreateBranch extends Vue {
 
     //set Page title
     this.$store.dispatch(
-      'breadcrumb/setPageTitle',
-      this.language === 'th'
-        ? this.branch.branchNameTh
-        : this.branch.branchNameEn
-    )
+      'breadcrumb/setPageTitle', `${this.$t('common.branchTitle').toString()} - ${branch}`)
   }
 
   async getCompany(): Promise<void> {

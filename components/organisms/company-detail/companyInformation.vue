@@ -12,7 +12,7 @@
       <text-info :title="$t('createCompany.companyNameTh')" :value="company.companyNameTh" />
       <text-info :title="$t('createCompany.companyNameEn')" :value="company.companyNameEn" />
       <text-info
-        title="Company Type"
+        :title="$t('createCompany.companyType')"
         :value="
           language === 'en'
             ? company.companyType.companyTypeEn
@@ -36,9 +36,9 @@
         "
       />
       <text-info :title="$t('createCompany.assignee')" :value="company.assignee" />
-      <text-info title="Email" :value="company.companyEmail" />
+      <text-info :title="$t('createCompany.email')" :value="company.companyEmail" />
       <text-info
-        title="Phone Number"
+        :title="$t('createCompany.phoneNo')"
         :value="company.companyPhonePrefix + company.companyPhoneNumber"
       />
     </div>

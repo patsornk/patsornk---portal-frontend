@@ -12,7 +12,7 @@
               :src="assets('table/active.png')"
               @click="clickAction('clickActive')"
             />
-            <span class="tooltiptext">Active</span>
+            <span class="tooltiptext">{{$t('common.active')}}</span>
           </div>
           <div class="icon-container" v-if="isShowIconHold">
             <img
@@ -101,7 +101,7 @@
         :pageRange="5"
       />
       <div class="footer-container">
-        <div>Show:</div>
+        <div>{{$t('common.show')}}:</div>
         <v-select
           class="dropdown"
           v-model="pagination"

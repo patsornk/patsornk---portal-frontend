@@ -1,11 +1,11 @@
 <template>
   <div class="create-company-container">
     <div class="partner-code-container">
-      <span class="siebel-title"> Partner Code Information </span>
+      <span class="siebel-title"> {{$t('createPartnerCode.partnerInfo')}} </span>
       <div class="siebel-container">
         <input-field
           :disable="true"
-          :title="'Siebel Partner Code'"
+          :title="$t('createPartnerCode.sieabelPartner')"
           class="sp-code"
           :maxlength="50"
           v-model="$v.partnerCode.$model"
@@ -15,7 +15,7 @@
           required
         />
         <input-field
-          :title="'Siebel Partner Name'"
+          :title="$t('createPartnerCode.sieabelPartnerName')"
           class="sp-name"
           v-model="$v.partnerName.$model"
           :maxlength="50"
@@ -29,7 +29,7 @@
         <input-field
           class="status-dropdown"
           v-model="$v.status.$model"
-          title="Status"
+          :title="$t('common.status')"
           required
           type="select"
           :options="statusOption"
@@ -48,7 +48,7 @@
       isShowHeaderTable
       isShowCheckBox
       isShowPaginate
-      headerTitle="Brand List"
+      :headerTitle="$t('createPartnerCode.brandList')"
       v-model="selectData"
       :frameworkComponents="frameworkComponents"
       @clickDelete="clickDeleteList"

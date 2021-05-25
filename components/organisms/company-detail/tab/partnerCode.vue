@@ -5,7 +5,7 @@
         :type="inputType"
         class="input-field-input"
         v-model="filterData.keyword"
-        placeholder="Search from  Partner code"
+        :placeholder="$t('common.searchFromPartner')"
         @blur="$emit('onBlur')"
         :required="false"
       />
@@ -18,12 +18,12 @@
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
-            placeholder="Status"
+            :placeholder="$t('common.status')"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> Search </t1-button>
+        <t1-button class="black" @click.native="search"> {{$t('common.search')}} </t1-button>
       </div>
     </div>
     <table-component
@@ -33,7 +33,7 @@
       isShowHeaderTable
       isShowCheckBox
       isCreateNew
-      createNewTitle="Create New Partner Code"
+      :createNewTitle="$t('common.createPartnerCode')"
       @clickNew="clickNewPartnerCode"
       :onRowClicked="onRowClicked"
       :headerTitle="$t('common.partnerCodeList')"

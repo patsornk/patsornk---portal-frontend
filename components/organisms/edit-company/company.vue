@@ -74,7 +74,7 @@
       />
       <input-field
         v-model="$v.companyStatus.$model"
-        title="Status"
+        :title="$t('common.status')"
         required
         type="select"
         :options="companyStatusOption"

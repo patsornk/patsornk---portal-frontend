@@ -1,7 +1,7 @@
 <template>
   <div class="services-selection-container">
-    <span>Services Selection (Optional)</span>
-    <div class="text-header">Applied Services</div>
+    <span>{{$t('common.serviceSelection')}}</span>
+    <div class="text-header">{{$t('applyService.appliesService')}}</div>
     <div v-if="appliedServices.length > 0" class="list-section">
       <div v-for="(item, index) in appliedServices" :key="index">
         <service
@@ -13,8 +13,8 @@
         />
       </div>
     </div>
-    <div class="no-applied" v-else>No Applied Service chosen </div>
-    <div class="text-header">Available Services</div>
+    <div class="no-applied" v-else>{{$t('applyService.noAppliesServiceChose')}} </div>
+    <div class="text-header">{{$t('applyService.availableService')}}</div>
     <div class="list-section">
       <div v-for="(item, index) in availableServices" :key="index">
         <service
@@ -42,10 +42,15 @@ import { ServiceType } from '~/constants'
   }
 })
 export default class ServiceSelection extends Vue {
+  $i18n: any
   appliedServices: ServiceType[] = []
   availableServices: ServiceType[] = []
 
   companyId = window.sessionStorage.getItem('createCompanyId')
+
+  get language(): any {
+    return this.$i18n.locale
+  }
 
   async mounted() {
     if (this.$route.params.currentStep === 'service' && this.companyId) {

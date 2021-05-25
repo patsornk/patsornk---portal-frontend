@@ -10,7 +10,7 @@
         :src="assets('service/close.png')"
         @click="$emit('unApply')"
       />
-      <div class="active" v-if="isActive">Active</div>
+      <div class="active" v-if="isActive">{{$t('common.active')}}</div>
     </div>
     <div class="title-box">
       <div>{{ title }}</div>
@@ -19,7 +19,7 @@
     <div class="detail">{{ detail }}</div>
     <div class="footer">
       <button class="apply" v-if="!isApply" @click="$emit('onApply')">
-        Apply
+        {{$t('common.apply')}}
       </button>
     </div>
   </div>
@@ -60,6 +60,12 @@ export default class Service extends Vue {
     default: false
   })
   readonly isActive!: boolean
+
+  $i18n: any
+
+  get language(): any {
+    return this.$i18n.locale
+  }
 
   assets(name: string) {
     return getAssetsPath(name)

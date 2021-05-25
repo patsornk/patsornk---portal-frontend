@@ -3,7 +3,7 @@
     <div class="filter-container">
       <input-search
         v-model="filterData.search"
-        placeholder="Search from Brand code, Brand name  or Partner code"
+        :placeholder="$t('common.searchFromBrand')"
         :options="searchList"
       />
 
@@ -15,12 +15,12 @@
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
-            placeholder="Status"
+            :placeholder="$t('common.status')"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> Search </t1-button>
+        <t1-button class="black" @click.native="search"> {{$t('common.search')}} </t1-button>
       </div>
     </div>
     <table-component
@@ -30,7 +30,7 @@
       isShowHeaderTable
       isShowCheckBox
       isCreateNew
-      createNewTitle="Create New Brand"
+      :createNewTitle="$t('common.createBrand')"
       @clickNew="clickNewBrand"
       headerTitle="Brand list"
       :pageCount="pageSize"
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import InputSearch from '~/components/atoms/InputSearch.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
@@ -78,6 +78,22 @@ export default class TabBrand extends Vue {
 
   get language(): any {
     return this.$i18n.locale
+  }
+
+  @Watch('language')
+  changeSerchSelect() {
+    this.searchList = [
+      {
+        id: 'company',
+        label: `${this.$t('common.searchBy')} ${this.$t('common.brandTitle')}`
+      },
+      {
+        id: 'partner',
+        label: `${this.$t('common.searchBy')} ${this.$t(
+          'common.partnerCodeTitle'
+        )}`
+      }
+    ]
   }
 
   selectData = []
