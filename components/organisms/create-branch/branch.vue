@@ -1420,7 +1420,7 @@ export default class CreateBranch extends Vue {
           if (this.componetMode == 'onboard') {
             this.brandList = res.data.brand
             this.brandId =
-              parseInt(window.sessionStorage.getItem('createBrandId')) || ''
+              parseInt(window.sessionStorage.getItem('createBrandId') ?? '') || ''
             this.disableBrandId = true
           } else {
             this.brandList = res.data.brand
