@@ -1,0 +1,117 @@
+@import '@/assets/scss/_variables.scss';
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+
+  .add-new-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: $primary;
+    color: $white;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    height: 40px;
+    margin-right: 24px;
+    padding: 0px 23px;
+
+    &:focus {
+      outline: none;
+    }
+
+    .icon {
+      font-size: 13px;
+      margin-right: 6px;
+    }
+
+    .text {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .icon-list {
+    margin-left: 18px;
+
+    .icon-container {
+      position: relative;
+      display: inline-block;
+
+      &:hover &.tooltiptext {
+        background: $grey-hover;
+        border-radius: 50%;
+      }
+
+      &:hover .tooltiptext {
+        visibility: visible;
+      }
+
+      .icon {
+        align-items: center;
+        width: 26px;
+        height: 26px;
+        padding: 5px;
+      }
+      .tooltiptext {
+        visibility: hidden;
+        width: 50px;
+        background-color: $grey-text;
+        color: $white;
+        font-size: 12px;
+        text-align: center;
+        border-radius: 6px;
+
+        position: absolute;
+        z-index: 1;
+        top: calc(100% + 4px);
+        left: 50%;
+        margin-left: -25px;
+      }
+    }
+  }
+}
+
+.pagination-container {
+  width: 50%;
+}
+
+.footer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 23px;
+
+  .dropdown {
+    width: 80px;
+    height: 30px;
+    padding: 2px 10px;
+    margin-left: 13px;
+    padding: 0;
+    border: 0px;
+
+    .dropdown-option {
+      display: flex;
+      width: 100%;
+    }
+
+    ::v-deep .vs__clear {
+      display: none;
+    }
+
+    ::v-deep .vs__selected {
+      position: inherit;
+    }
+
+    ::v-deep .vs__dropdown-toggle {
+      height: 100%;
+      border: 1px solid $gray-disable !important;
+    }
+
+    .dropbtn {
+      font-size: 14px;
+    }
+  }
+}

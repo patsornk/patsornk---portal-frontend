@@ -5,8 +5,8 @@
         <span v-if="headerTitle != ''">
           {{ headerTitle }}
         </span>
-        <span class="icon-list" v-if="selectedRows">
-          <div class="icon-container" v-if="isShowActive">
+        <span v-if="selectedRows" class="icon-list">
+          <div v-if="isShowActive" class="icon-container">
             <img
               class="icon"
               :src="assets('table/active.png')"
@@ -14,7 +14,7 @@
             />
             <span class="tooltiptext">{{$t('common.active')}}</span>
           </div>
-          <div class="icon-container" v-if="isShowIconHold">
+          <div v-if="isShowIconHold" class="icon-container">
             <img
               class="icon"
               :src="assets('table/hold.png')"
@@ -22,7 +22,7 @@
             />
             <span class="tooltiptext">On hold</span>
           </div>
-          <div class="icon-container" v-if="isShowInactive">
+          <div v-if="isShowInactive" class="icon-container">
             <img
               class="icon"
               :src="assets('table/inactive.png')"
@@ -30,7 +30,7 @@
             />
             <span class="tooltiptext">Inactive</span>
           </div>
-          <div class="icon-container" v-if="isShowDelete">
+          <div v-if="isShowDelete" class="icon-container">
             <img
               class="icon"
               :src="assets('table/delete.png')"
@@ -39,7 +39,7 @@
             <span class="tooltiptext">Delete</span>
           </div>
         </span>
-        <span class="icon-list" v-else>
+        <span v-else class="icon-list">
           <img
             v-if="isShowActive"
             class="icon-container icon"
@@ -64,47 +64,47 @@
       </div>
       <div v-if="isCreateNew">
         <button class="add-new-btn" @click="$emit('clickNew')">
-          <span class="material-icons icon" v-if="isShowAddIcon"> add </span>
+          <span v-if="isShowAddIcon" class="material-icons icon"> add </span>
           <span class="text">{{ createNewTitle }}</span>
         </button>
       </div>
     </div>
     <ag-grid-vue
       ref="agGridTable"
-      :class="`num-${rawData.length}`"
-      :animateRows="true"
-      :columnDefs="columnDefsData"
-      :defaultColDef="defaultColDef"
-      :floatingFilter="false"
-      :gridOptions="gridOptions"
-      :pagination="true"
-      :paginationPageSize="paginationPageSize"
-      :rowData="rawData"
-      :suppressPaginationPanel="true"
-      :suppressRowClickSelection="isShowCheckBox"
       class="ag-theme-material w-100 ag-grid-table"
-      colResizeDefault="shift"
-      rowSelection="multiple"
-      @row-selected="onRowSelected"
+      col-resize-default="shift"
+      row-selection="multiple"
+      :class="`num-${rawData.length}`"
+      :row-data="rawData"
+      :animate-rows="true"
+      :column-defs="columnDefsData"
+      :default-col-def="defaultColDef"
+      :floating-filter="false"
+      :grid-options="gridOptions"
+      :pagination="true"
+      :pagination-page-size="paginationPageSize"
+      :suppress-pagination-panel="true"
+      :suppress-row-click-selection="isShowCheckBox"
+      :framework-components="frameworkComponents"
       @selection-changed="onSelectionChanged"
-      :frameworkComponents="frameworkComponents"
+      @row-selected="onRowSelected"
     >
     </ag-grid-vue>
-    <div class="footer-container" v-if="isShowPaginate">
+    <div v-if="isShowPaginate" class="footer-container">
       <span>{{ selectedRows }} / {{ totalItem }}</span>
       <t1-pagination
-        class="pagination-container"
         v-model="currentPage"
+        class="pagination-container"
+        :page-count="totalPage"
+        :margin-pages="2"
+        :page-range="5"
         @input="onChenagePage"
-        :pageCount="totalPage"
-        :marginPages="2"
-        :pageRange="5"
       />
       <div class="footer-container">
         <div>{{$t('common.show')}}:</div>
         <v-select
-          class="dropdown"
           v-model="pagination"
+          class="dropdown"
           :options="lists"
           :label="'value'"
           :reduce="(item) => item.value"
@@ -151,7 +151,7 @@ export default class TableComponent extends Vue {
     type: Number,
     default: 0
   })
-  readonly totalItem?: string
+  readonly totalItem?: number
 
   @Prop({
     type: Number,
@@ -232,16 +232,14 @@ export default class TableComponent extends Vue {
   value!: Array<object>
 
   @Prop({
-    type: Function,
-    default: () => {}
+    type: Function
   })
-  readonly onRowClicked!: Function
+  readonly onRowClicked!: () => void
 
   @Prop({
-    type: Function,
-    default: () => {}
+    type: Function
   })
-  readonly onCellClicked!: Function
+  readonly onCellClicked!: () => void
 
   @Prop({
     type: Object,
@@ -278,7 +276,7 @@ export default class TableComponent extends Vue {
     default: 1,
     required: false
   })
-  currentPage?: Number
+  currentPage?: number
 
   @Prop({
     type: String,
@@ -301,7 +299,6 @@ export default class TableComponent extends Vue {
     rowHeight: this.rowHeight,
     headerHeight: this.isShowHeaderTable ? 52 : 0
   }
-  private maxPageNumbers = 7
   private gridApi: any = null
   private defaultColDef = {
     resizable: true
@@ -313,27 +310,25 @@ export default class TableComponent extends Vue {
     this.gridApi.setQuickFilter(val)
   }
 
-  public onSelectionChanged(value: any): void {
+  private onSelectionChanged() {
     this.isCheckboxSelection = true
-    const selectedRows = this.gridApi.getSelectedRows()
-    const currentSelectedIds = selectedRows.map((row: any) => row[this.itemKey])
-    this.rawData.forEach((data: any) => {
-      this.selectData[data[this.itemKey]] = currentSelectedIds.includes(
-        data[this.itemKey]
-      )
-    })
 
-    this.selectedRows = this.selectedItemNumber()
-
-    this.$emit('input', selectedRows)
+    this.selectedRows = this.value.length
     this.$nextTick(() => {
       this.isCheckboxSelection = false
     })
   }
 
-  @Watch('pagination')
-  private onChangePagination() {
-    this.$emit('pagination', this.pagination)
+  onRowSelected(event: any): void {
+    const isSelected = event.node.isSelected()
+    const index = this.value.findIndex(
+      (data: any) => event.node.data[this.itemKey] === data[this.itemKey]
+    )
+    if (index > -1 && !isSelected) {
+      this.value.splice(index, 1)
+    } else if (index < 0 && isSelected) {
+      this.value.push(event.node.data)
+    }
   }
 
   private onInnerWidthChanged() {
@@ -346,9 +341,10 @@ export default class TableComponent extends Vue {
 
   private setSelectedEachNode() {
     this.gridApi.forEachNode((node: any) => {
-      node.setSelected(
-        this.value.findIndex((data: any) => node.data.id === data.id) !== -1
+      const index = this.value.findIndex(
+        (data: any) => node.data[this.itemKey] === data[this.itemKey]
       )
+      node.setSelected(index > -1)
     })
   }
 
@@ -378,35 +374,29 @@ export default class TableComponent extends Vue {
       : this.columnDefs
   }
 
-  selectedItemNumber(): number {
-    let count = 0
-    for (var key in this.selectData) {
-      console.log('selectData', this.selectData[key])
-      count += this.selectData[key] ? 1 : 0
-    }
-    console.log('count', count)
-    return count
-  }
-
-  @Watch('value')
-  async chengeValue(): Promise<void> {
-    if (!this.isCheckboxSelection) {
-      this.setSelectedEachNode()
-    }
-  }
-
-  @Watch('pagination')
-  async chengePagination(): Promise<void> {
-    this.gridApi.paginationSetPageSize(this.pagination)
-  }
-
-  deleteHandler(map: any, vm: any) {
+  deleteHandler(map: any, vm: any): any {
     return {
       ...map,
       8: (e: any) => {
         e.preventDefault()
       }
     }
+  }
+
+  clickAction(action: string): void {
+    this.$emit(action)
+  }
+
+  @Watch('value')
+  chengeValue(): void {
+    if (!this.isCheckboxSelection) {
+      this.setSelectedEachNode()
+    }
+  }
+
+  @Watch('pagination')
+  chengePagination(): void {
+    this.gridApi.paginationSetPageSize(this.pagination)
   }
 
   @Watch('language')
@@ -422,135 +412,12 @@ export default class TableComponent extends Vue {
     this.gridApi.paginationSetPageSize(10)
   }
 
-  updated() {
-    this.gridApi.forEachNode((node: any) => {
-      node.setSelected(this.selectData[node.data[this.itemKey]])
-    })
-  }
-
-  clickAction(emit: string) {
-    this.selectData = {}
-    this.$emit(emit, this.gridApi.getSelectedRows())
+  updated(): void {
+    this.setSelectedEachNode()
   }
 }
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/_variables.scss';
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-
-  .add-new-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: $primary;
-    color: $white;
-    border-radius: 6px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-    height: 40px;
-    margin-right: 24px;
-    padding: 0px 23px;
-
-    &:focus {
-      outline: none;
-    }
-
-    .icon {
-      font-size: 13px;
-      margin-right: 6px;
-    }
-
-    .text {
-      font-size: 16px;
-      line-height: 24px;
-      font-weight: bold;
-    }
-  }
-
-  .icon-list {
-    margin-left: 18px;
-
-    .icon-container {
-      position: relative;
-      display: inline-block;
-
-      &:hover &.tooltiptext {
-        background: $grey-hover;
-        border-radius: 50%;
-      }
-
-      &:hover .tooltiptext {
-        visibility: visible;
-      }
-
-      .icon {
-        align-items: center;
-        width: 26px;
-        height: 26px;
-        padding: 5px;
-      }
-      .tooltiptext {
-        visibility: hidden;
-        width: 50px;
-        background-color: $grey-text;
-        color: $white;
-        font-size: 12px;
-        text-align: center;
-        border-radius: 6px;
-
-        position: absolute;
-        z-index: 1;
-        top: calc(100% + 4px);
-        left: 50%;
-        margin-left: -25px;
-      }
-    }
-  }
-}
-
-.pagination-container {
-  width: 50%;
-}
-
-.footer-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 23px;
-
-  .dropdown {
-    width: 80px;
-    height: 30px;
-    padding: 2px 10px;
-    margin-left: 13px;
-    padding: 0;
-    border: 0px;
-
-    .dropdown-option {
-      display: flex;
-      width: 100%;
-    }
-
-    ::v-deep .vs__clear {
-      display: none;
-    }
-
-    ::v-deep .vs__selected {
-      position: inherit;
-    }
-
-    ::v-deep .vs__dropdown-toggle {
-      height: 100%;
-      border: 1px solid $gray-disable !important;
-    }
-
-    .dropbtn {
-      font-size: 14px;
-    }
-  }
-}
+@import './TableComponent.scss';
 </style>

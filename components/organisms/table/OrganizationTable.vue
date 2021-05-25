@@ -46,43 +46,43 @@
       </div>
     </div>
     <table-component
-      :rawData="dataList"
-      :columnDefs="columnDefs"
-      isShowPaginate
-      isShowHeaderTable
-      isShowCheckBox
-      :headerTitle="$t('home.createNewOrganiztion').toString()"
-      :onRowClicked="onRowClicked"
-      :pageCount="pageSize"
       v-model="selectData"
-      :selectedItem="selectData.length"
-      :totalItem="totalItem"
-      :totalPage="pageSize"
+      item-key="companyId"
+      :header-title="$t('home.createNewOrganiztion').toString()"
+      :raw-data="dataList"
+      is-show-paginate
+      is-show-header-table
+      is-show-check-box
+      :column-defs="columnDefs"
+      :current-page="currentPage"
+      :on-row-clicked="onRowClicked"
+      :page-count="pageSize"
+      :selected-item="selectData.length"
+      :total-item="totalItem"
+      :total-page="pageSize"
+      :framework-components="frameworkComponents"
       @onChenagePage="changePage"
-      :frameworkComponents="frameworkComponents"
       @pagination="changPageSize"
-      :currentPage="currentPage"
-      itemKey="companyId"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
-import CustomHeader from '~/components/atoms/AgCustomHeader'
+import { Component, Vue } from 'vue-property-decorator'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import CustomHeader from '~/components/atoms/AgCustomHeader'
 import InputSearch from '~/components/atoms/InputSearch.vue'
 
 enum OrganizationTableCol {
-  NameTh = "companyNameTh",
-  NameEn = "companyNameEn",
-  CompCat = "companyCategoryId",
-  CompType = "companyTypeId",
-  CompSize = "companySizeId",
-  CompStatus = "status"
+  NameTh = 'companyNameTh',
+  NameEn = 'companyNameEn',
+  CompCat = 'companyCategoryId',
+  CompType = 'companyTypeId',
+  CompSize = 'companySizeId',
+  CompStatus = 'status'
 }
 
 @Component({
@@ -140,6 +140,7 @@ export default class OrganizationTable extends Vue {
       label: 'Search by PartnerCode'
     }
   ]
+
   filterData = {
     search: {
       searchBy: 'company',
@@ -149,7 +150,8 @@ export default class OrganizationTable extends Vue {
     companyCategoryId: 0,
     compantStatus: 0
   }
-  private pagination: String = '10'
+
+  private pagination = '10'
   private companyType: any = []
   private companySize: any = []
   private companyCategory: any = []
@@ -175,11 +177,12 @@ export default class OrganizationTable extends Vue {
       status: 'Onhold'
     }
   ]
+
   dataList0 = []
   dataList = []
   columnDefs = [
     {
-      headerValueGetter: () => {
+      headerValueGetter: (): string => {
         return this.$t('createCompany.companyNameTh').toString()
       },
       // headerName: this.$t('createCompany.companyNameTh').toString(),
@@ -191,7 +194,7 @@ export default class OrganizationTable extends Vue {
         }
       },
       sortable: true,
-      cellRenderer: (params: any) => {
+      cellRenderer: (params: any): string => {
         return `<div class="custom-row">
                   ${params.data.regioCompanyNameTh}
                 </div>`
@@ -207,7 +210,7 @@ export default class OrganizationTable extends Vue {
         }
       },
       sortable: true,
-      cellRenderer: (params: any) => {
+      cellRenderer: (params: any): string => {
         return `<div class="custom-row">
                   ${params.data.regioCompanyNameEn}
                 </div>`
@@ -223,7 +226,7 @@ export default class OrganizationTable extends Vue {
         }
       },
       sortable: true,
-      cellRenderer: (params: any) => {
+      cellRenderer: (params: any): string => {
         return `<div class="custom-row">
                   ${params.data.companyCategory}
                 </div>`
@@ -239,7 +242,7 @@ export default class OrganizationTable extends Vue {
         }
       },
       sortable: true,
-      cellRenderer: (params: any) => {
+      cellRenderer: (params: any): string => {
         return `<div class="custom-row">
                   ${params.data.companyType}
                 </div>`
@@ -255,7 +258,7 @@ export default class OrganizationTable extends Vue {
         }
       },
       sortable: true,
-      cellRenderer: (params: any) => {
+      cellRenderer: (params: any): string => {
         return `<div class="custom-row">
                   ${params.data.businessSize}
                 </div>`
@@ -300,6 +303,7 @@ export default class OrganizationTable extends Vue {
       this.tableOderBy = 'asc'
     }
     this.currentPage = 1
+    this.selectData = []
     this.filterCompanies('1',this.pagination, this.tableOderField, this.tableOderBy)
   }
 
@@ -369,7 +373,7 @@ export default class OrganizationTable extends Vue {
   //   ]
   // }
 
-  private async search() {
+  private search() {
     this.clickSearch = true
     this.clickSort = false
     this.tableOderField = ''
@@ -378,17 +382,22 @@ export default class OrganizationTable extends Vue {
     this.filterCompanies('1', this.pagination)
   }
 
-  async changPageSize(pagination: String) {
+  changPageSize(pagination: string): void {
     this.pagination = pagination
     this.currentPage = 1
     if (this.clickSearch || this.clickSort) {
-      this.filterCompanies('1', pagination, this.tableOderField, this.tableOderBy)
+      this.filterCompanies(
+        '1',
+        pagination,
+        this.tableOderField,
+        this.tableOderBy
+      )
     } else {
       this.getCompanies('1', pagination)
     }
   }
 
-  async onRowClicked(row: any) {
+  onRowClicked(row: any): void {
     this.$router.push(`/organizationManagement/${row.data.companyId}`)
   }
 
@@ -400,17 +409,27 @@ export default class OrganizationTable extends Vue {
     this.getCompanies('1', '10')
   }
 
-  changePage(page: number) {
+  changePage(page: number): void {
     this.currentPage = page
     if (this.clickSearch || this.clickSort) {
-      this.filterCompanies(page.toString(), this.pagination, this.tableOderField, this.tableOderBy)
+      this.filterCompanies(
+        page.toString(),
+        this.pagination,
+        this.tableOderField,
+        this.tableOderBy
+      )
     } else {
       this.getCompanies(page.toString(), this.pagination)
     }
   }
 
-  async filterCompanies(page: String, limit: String, sortBy?: String, sortDirection?: String): Promise<void> {
-    let path: String = `/list_company?page=${page}&limit=${limit}`
+  async filterCompanies(
+    page: string,
+    limit: string,
+    sortBy?: string,
+    sortDirection?: string
+  ): Promise<void> {
+    let path = `/list_company?page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy !== '') {
       path = path + `&keywordOf=${this.filterData.search.searchBy}`
@@ -449,9 +468,9 @@ export default class OrganizationTable extends Vue {
     }
   }
 
-  async getCompanies(page: String, limit: String): Promise<void> {
+  async getCompanies(page: string, limit: string): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_company?page=${page}&limit=${limit}`,
         { data: null }
       )
@@ -465,7 +484,7 @@ export default class OrganizationTable extends Vue {
 
   async getCompanyType(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company_type`,
         { data: null }
       )
@@ -519,7 +538,7 @@ export default class OrganizationTable extends Vue {
     }
   }
 
-  mappingCompany(data: any) {
+  mappingCompany(data: any): void {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.company.map((item: any) => {
@@ -547,7 +566,7 @@ export default class OrganizationTable extends Vue {
     })
   }
 
-  deleteHandler(map: any, vm: any) {
+  deleteHandler(map: any, vm: any): any {
     return {
       ...map,
       8: (e: any) => {

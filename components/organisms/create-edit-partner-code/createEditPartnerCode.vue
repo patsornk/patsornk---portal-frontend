@@ -357,11 +357,11 @@ export default class CreateEditPartnerCode extends Vue {
     }
   }
 
-  async getBrandList(page: string, limit: string) {
+  async getBrandList(page: string, limit: string): Promise<any> {
     try {
-      let path: String = `/list_brand?page=${page}&limit=${limit}&companyId=${this.compantId}`
+      const path = `/list_brand?page=${page}&limit=${limit}&companyId=${this.compantId}`
 
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,
         { data: null }
       )

@@ -139,17 +139,18 @@
     </div>
     <div class="partner-code-list">
       <table-component
-        :rawData="partnerCodeDataList"
-        :columnDefs="columnDefs"
-        :isShowIconHold="false"
-        :isShowInactive="false"
-        :isShowDelete="false"
-        :isShowPaginate="false"
-        isShowHeaderTable
-        isShowCheckBox
-        :headerTitle="$t('createBrand.partnerCodeList')"
         v-model="$v.partnerCodeList.$model"
-        itemKey="id"
+        item-key="id"
+        :raw-data="partnerCodeDataList"
+        :column-defs="columnDefs"
+        :is-show-icon-hold="false"
+        :is-show-in-active="false"
+        :is-show-delete="false"
+        :is-show-paginate="true"
+        :header-title="$t('createBrand.partnerCodeList')"
+        :total-item="partnerCodeDataList.length"
+        is-show-header-table
+        is-show-check-box
       />
     </div>
     <div class="submit-section">
@@ -358,23 +359,23 @@ export default class CreateBrand extends Vue {
         this.getBrand()
       }
       if (window.sessionStorage.getItem('createCompanyId')) {
-        this.getListPartnerCode()
+        this.getListPartnerCode(1, 10)
       }
     } else if (this.mode === 'create') {
-      this.getListPartnerCode()
+      this.getListPartnerCode(1, 10)
     } else if (this.mode === 'edit') {
       this.getBrand()
-      this.getListPartnerCode()
+      this.getListPartnerCode(1, 10)
     }
   }
 
-  async getListPartnerCode(): Promise<void> {
+  async getListPartnerCode(page: number, limit: number): Promise<any> {
     try {
       const companyId = this.companyId
         ? this.companyId
         : window.sessionStorage.getItem('createCompanyId')
       const res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${companyId}`,
+        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${companyId}&page=${page}&limit=${limit}`,
         { data: null }
       )
       if (res.successful) {
@@ -395,8 +396,8 @@ export default class CreateBrand extends Vue {
     }
   }
 
-  get validateLogo() {
-    return this.logoUrl ? true : false
+  get validateLogo(): boolean {
+    return !!this.logoUrl
   }
 
   onChangedLogo(data: any) {
