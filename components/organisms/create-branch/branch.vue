@@ -466,6 +466,7 @@ import AddSocialView from '@/components/molecules/create-branch/AddSocialView.vu
 import OpenHourCustom from '@/components/molecules/create-branch/OpenHourCustom.vue'
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
 import { getAssetsPath } from '~/helper/images'
+import { getImagePath } from '~/helper/images'
 import { getDay } from '~/helper/date'
 import {
   BrandInitialData,
@@ -591,8 +592,6 @@ const validations = {
     'latitude',
     'longitude',
     'showDisplay',
-    'logo',
-    'cover',
     'mallDescription',
     'websiteList',
     'socialList',
@@ -964,6 +963,10 @@ export default class CreateBranch extends Vue {
   isSetDistrict = false
   isSetSubDistrict = false
   isSetPostalCode = false
+
+  get branchId() {
+    return this.$route.params.id || ''
+  }
 
   get language(): any {
     return this.$i18n.locale
@@ -1588,12 +1591,14 @@ export default class CreateBranch extends Vue {
   async getBranch(): Promise<void> {
     if (window.sessionStorage.getItem('createBranchId')) {
       try {
+        let id = ''
+        if (this.branchId) {
+          id = this.branchId
+        } else {
+          id = window.sessionStorage.getItem('createBranchId') || ''
+        }
         let res = await this.$axios.$get(
-          `${
-            process.env.PORTAL_ENDPOINT
-          }/get_branch?branchId=${window.sessionStorage.getItem(
-            'createBranchId'
-          )}`,
+          `${process.env.PORTAL_ENDPOINT}/get_branch?branchId=${id}`,
           { data: null }
         )
         if (res.successful) {
@@ -1627,8 +1632,13 @@ export default class CreateBranch extends Vue {
           this.latitude = data.location.latitude
           this.longitude = data.location.longitude
           this.showDisplay = data.showInApp
-          this.logo = data.mall.mallLogoImg
-          this.cover = data.mall.mallCoverPageImg
+          this.logoUrl = data.mall.mallLogoImg
+            ? getImagePath(data.mall.mallLogoImg)
+            : undefined
+          this.coverUrl = data.mall.mallCoverPageImg
+            ? getImagePath(data.mall.mallCoverPageImg)
+            : undefined
+
           this.mallDescription = data.mall.mallShortDesc
             ? data.mall.mallShortDesc
             : ''
@@ -1672,16 +1682,16 @@ export default class CreateBranch extends Vue {
             )
           } else if (data.mall.mallInfo.openingHour.length === 1) {
             this.openingHourId = '1'
-            this.openTime = data.mall.mallInfo.openingHour.openingTime.split(
+            this.openTime = data.mall.mallInfo.openingHour[0].openingTime.split(
               '|'
             )[0]
-            this.OpenHourCustom = data.mall.mallInfo.openingHour.openingTime.split(
+            this.OpenHourCustom = data.mall.mallInfo.openingHour[0].openingTime.split(
               '|'
             )[1]
-            this.closeTime = data.mall.mallInfo.openingHour.closingTime.split(
+            this.closeTime = data.mall.mallInfo.openingHour[0].closingTime.split(
               '|'
             )[0]
-            this.closeMeridiem = data.mall.mallInfo.openingHour.closingTime.split(
+            this.closeMeridiem = data.mall.mallInfo.openingHour[0].closingTime.split(
               '|'
             )[1]
           }
@@ -1706,6 +1716,14 @@ export default class CreateBranch extends Vue {
     }
   }
 
+  get validateLogo() {
+    return this.logoUrl ? true : false
+  }
+
+  get validateCover() {
+    return this.coverUrl ? true : false
+  }
+
   validateInfoAndLocation(): void {
     this.checkBrandId()
     this.checkBranchCode()
@@ -1728,8 +1746,6 @@ export default class CreateBranch extends Vue {
   }
 
   validateMall(): void {
-    this.checkLogo(this.$v.logo.$model)
-    this.checkCover(this.$v.cover.$model)
     // this.checkCategoryId()
     this.checkOpeningHourId()
   }
@@ -1785,8 +1801,10 @@ export default class CreateBranch extends Vue {
       case 3:
         if (this.openingHourId === '1') {
           if (
-            this.$v.validationBranchInfoGroup.$invalid ||
-            this.$v.validationMallOpenDailyGroup.$invalid
+            (this.$v.validationBranchInfoGroup.$invalid ||
+              this.$v.validationMallOpenDailyGroup.$invalid) &&
+            !this.validateLogo &&
+            !this.validateCover
           ) {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
@@ -1799,7 +1817,6 @@ export default class CreateBranch extends Vue {
             this.checkSocial()
             const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
             const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
-
             let mallFacebook: string[] = []
             this.$v.socialList.$model.forEach((item: any) => {
               if (item.type === 'Facebook') {
@@ -1872,8 +1889,10 @@ export default class CreateBranch extends Vue {
           }
         } else if (this.openingHourId === '2') {
           if (
-            this.$v.validationBranchInfoGroup.$invalid ||
-            this.$v.validationMallOpenCustomizeGroup.$invalid
+            (this.$v.validationBranchInfoGroup.$invalid ||
+              this.$v.validationMallOpenCustomizeGroup.$invalid) &&
+            !this.validateLogo &&
+            !this.validateCover
           ) {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
@@ -1960,8 +1979,10 @@ export default class CreateBranch extends Vue {
           }
         } else {
           if (
-            this.$v.validationBranchInfoGroup.$invalid ||
-            this.$v.validationMallGroup.$invalid
+            (this.$v.validationBranchInfoGroup.$invalid ||
+              this.$v.validationMallGroup.$invalid) &&
+            !this.validateLogo &&
+            !this.validateCover
           ) {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
@@ -2057,9 +2078,17 @@ export default class CreateBranch extends Vue {
 
   async update() {
     let payload = await this.setPayload()
+    let branchId = ''
+
+    if (this.branchId) {
+      branchId = this.branchId
+    } else {
+      branchId = window.sessionStorage.getItem('createBranchId') || ''
+    }
+
     if (payload) {
       Object.assign(payload, {
-        branchId: window.sessionStorage.getItem('createBranchId')
+        branchId
       })
     } else {
       return

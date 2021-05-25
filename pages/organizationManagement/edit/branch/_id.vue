@@ -27,6 +27,10 @@ export default class CreateBranch extends Vue {
     return window.sessionStorage.getItem('parentCompanyId')
   }
 
+  get branchId() {
+    return this.$route.params.id
+  }
+
   private company: CompanyDataType = {
     companyId: 0,
     companyNameEn: '',
@@ -86,9 +90,7 @@ export default class CreateBranch extends Vue {
   async getCompany(): Promise<void> {
     try {
       let res = await this.$axios.$get(
-        `${
-          process.env.PORTAL_ENDPOINT
-        }/get_company?companyId=${this.companyId}`,
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
         { data: null }
       )
       if (res.successful) {
@@ -100,20 +102,15 @@ export default class CreateBranch extends Vue {
   }
 
   async getBranch(): Promise<void> {
+    console.log('getBranch id')
     try {
-      // let res = await this.$axios.$get(
-      //   `${
-      //     process.env.PORTAL_ENDPOINT
-      //   }/get_company?companyId=${window.sessionStorage.getItem('companyId')}`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      this.branch = {
-        branchId: 1,
-        branchNameEn: 'branchNameEn',
-        branchNameTh: 'branchNameTh'
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_branch?branchId=${this.branchId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.branch = res.data
       }
-      // }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }

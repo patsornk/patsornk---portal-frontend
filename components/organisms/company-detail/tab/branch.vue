@@ -490,7 +490,7 @@ export default class TabBranch extends Vue {
   onRowClicked(row: any) {
     window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '')
     this.$router.push(
-      `/organizationManagement/edit/branch/${row.data.partnerId}`
+      `/organizationManagement/edit/branch/${row.data.branchId}`
     )
   }
 

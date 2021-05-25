@@ -154,7 +154,7 @@
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="clickSave">{{$t('common.save')}}</button>
+      <button class="submit" @click="clickSave">{{ $t('common.save') }}</button>
     </div>
     <modal v-show="isShowImage" class="show-image">
       <template v-slot:header>
@@ -409,11 +409,15 @@ export default class CreateBrand extends Vue {
         if (data.file) {
           this.error.logo = ''
         } else {
-          this.error.logo = this.$t('createBrand.brandFeature.error.image').toString()
+          this.error.logo = this.$t(
+            'createBrand.brandFeature.error.image'
+          ).toString()
         }
       }
     } else {
-      this.error.logo = this.$t('createBrand.brandFeature.error.image').toString()
+      this.error.logo = this.$t(
+        'createBrand.brandFeature.error.image'
+      ).toString()
     }
   }
 
@@ -715,7 +719,9 @@ export default class CreateBrand extends Vue {
               'createBrandId',
               response.data.brandId
             )
-            this.$toast.global.success(this.$t('common.successfully').toString())
+            this.$toast.global.success(
+              this.$t('common.successfully').toString()
+            )
             this.$router.push('/organizationManagement/create/branch')
           } else {
             this.$router.push(`/organizationManagement/${this.companyId}`)
@@ -836,10 +842,14 @@ export default class CreateBrand extends Vue {
               'createCompanyId',
               response.data.brandId
             )
-            this.$toast.global.success(this.$t('common.successfully').toString())
+            this.$toast.global.success(
+              this.$t('common.successfully').toString()
+            )
           } else {
             this.$router.push(`/organizationManagement/${companyId}`)
-            this.$toast.global.success(this.$t('common.successfully').toString())
+            this.$toast.global.success(
+              this.$t('common.successfully').toString()
+            )
           }
         }
       } catch (error) {
