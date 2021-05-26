@@ -102,7 +102,6 @@ export default class CreateBranch extends Vue {
   }
 
   async getBranch(): Promise<void> {
-    console.log('getBranch id')
     try {
       let res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_branch?branchId=${this.branchId}`,

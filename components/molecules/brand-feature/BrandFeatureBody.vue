@@ -129,7 +129,6 @@ export default class BrandFeatureBody extends Vue {
 
   @Watch('dataValue')
   onChangedData(): void {
-    console.log('data change')
   }
 
   onUploadImage(value: any) {

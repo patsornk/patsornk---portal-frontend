@@ -151,6 +151,11 @@
         :total-item="partnerCodeDataList.length"
         is-show-header-table
         is-show-check-box
+        :totalPage="partnerTotalPage"
+        :totalItem="partnerTotalItem"
+        :current-page="currentPage"
+        @onChenagePage="onChenagePartnerPage"
+        @pagination="changPageSize"
       />
     </div>
     <div class="submit-section">
@@ -301,6 +306,10 @@ export default class CreateBrand extends Vue {
   brandInfo = ''
   partnerCodeList: SiebelPartnerType[] = []
   partnerCodeDataList: SiebelPartnerType[] = []
+  currentPage = 1
+  partnerTotalPage = 1
+  partnerTotalItem = 10
+  pagination = '10'
 
   brandFeatureError: any = ''
   currentBrandFeatureKey = 1
@@ -369,6 +378,17 @@ export default class CreateBrand extends Vue {
     }
   }
 
+  changPageSize(pagination: string): void {
+    this.pagination = pagination
+    this.currentPage = 1
+    this.getListPartnerCode(1, parseInt(this.pagination))
+  }
+
+  onChenagePartnerPage(page: number): void {
+    this.currentPage = page
+    this.getListPartnerCode(page, parseInt(this.pagination))
+  }
+
   async getListPartnerCode(page: number, limit: number): Promise<any> {
     try {
       const companyId = this.companyId
@@ -379,6 +399,8 @@ export default class CreateBrand extends Vue {
         { data: null }
       )
       if (res.successful) {
+        this.partnerTotalPage = res.data.totalPage
+        this.partnerTotalItem = res.data.total
         this.partnerCodeDataList = res.data.partner.map(
           (item: { partnerId: any; partnerCode: any; partnerName: any }) => {
             return {

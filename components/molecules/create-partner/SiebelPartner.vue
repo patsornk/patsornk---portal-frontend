@@ -142,14 +142,9 @@ export default class CreatePartnerCode extends Vue {
       : ''
   }
   async mounted(): Promise<void> {
-    console.log('value', this.value)
-    console.log('partnerCode', this.partnerCode)
-    console.log('partnerName', this.partnerName)
   }
 
   private clickAddSiebelPartner() {
-    console.log('partnerCode', this.partnerCode)
-    console.log('partnerName', this.partnerName)
     if (!this.isLoading) {
       this.isLoading = true
 
