@@ -17,18 +17,18 @@ import CreateBrand from '@/components/organisms/create-brand/brand.vue'
   components: {
     T1Button,
     OrganizationTable,
-    CreateBrand,
+    CreateBrand
   }
 })
 export default class CompanyEditBrand extends Vue {
   private brand: any = {
     nameEn: '',
-    nameTh: '',
+    nameTh: ''
   }
 
   private company: any = {
     nameEn: '',
-    nameTh: '',
+    nameTh: ''
   }
 
   get language(): any {
@@ -49,13 +49,10 @@ export default class CompanyEditBrand extends Vue {
   }
 
   private setupBreadcrumb(): void {
-    const company = this.language === 'th'
-      ? this.company.nameTh
-      : this.company.nameEn
+    const company =
+      this.language === 'th' ? this.company.nameTh : this.company.nameEn
 
-    const brand = this.language === 'th'
-      ? this.brand.nameTh
-      : this.brand.nameEn
+    const brand = this.language === 'th' ? this.brand.nameTh : this.brand.nameEn
 
     const breadcrumb: BreadcrumbType[] = [
       {
@@ -73,16 +70,21 @@ export default class CompanyEditBrand extends Vue {
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', `${this.$t('common.brandTitle').toString()} - ${brand}`)
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      `${this.$t('common.brandTitle').toString()} - ${brand}`
+    )
   }
 
   async getBrand(): Promise<void> {
     try {
-      const brandId = this.brandId ? this.brandId : window.sessionStorage.getItem('createBrandId')
-        let res = await this.$axios.$get(
-          `${process.env.PORTAL_ENDPOINT}/get_brand?brandId=${brandId}&brandAdditional=true&partners=true`,
-          { data: null }
-        )
+      const brandId = this.brandId
+        ? this.brandId
+        : window.sessionStorage.getItem('createBrandId')
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_brand?brandId=${brandId}&brandAdditional=true&partners=true`,
+        { data: null }
+      )
       if (res.successful) {
         const data = res.data
         this.brand = {
@@ -111,12 +113,31 @@ export default class CompanyEditBrand extends Vue {
     }
   }
 
-  async mounted() {
-    await this.getCompany()
-    await this.getBrand()
-    this.setupBreadcrumb()
+  async checkBelongTo(): Promise<boolean | undefined> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.companyId}&brandId=${this.brandId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        return res.data.belongTo
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
   }
 
+  async mounted() {
+    if (this.companyId && await this.checkBelongTo()) {
+      await this.getCompany()
+      await this.getBrand()
+      this.setupBreadcrumb()
+    } else {
+      this.$router.push('/landing')
+    }
+  }
 }
 </script>
 

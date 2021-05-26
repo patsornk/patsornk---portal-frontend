@@ -83,13 +83,20 @@ export default class CompanyEditPartnerCode extends Vue {
         url: '/'
       },
       {
-        title: `${this.$t('common.partnerCodeTitle').toString()} - ${partnerCode ?? 'Edit partner code'}`,
+        title: `${this.$t('common.partnerCodeTitle').toString()} - ${
+          partnerCode ?? 'Edit partner code'
+        }`,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', `${this.$t('common.partnerCodeTitle').toString()} - ${partnerCode ?? 'Edit partner code'}`)
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      `${this.$t('common.partnerCodeTitle').toString()} - ${
+        partnerCode ?? 'Edit partner code'
+      }`
+    )
   }
 
   async getCpmpany(): Promise<void> {
@@ -107,7 +114,7 @@ export default class CompanyEditPartnerCode extends Vue {
           this.language === 'th'
             ? this.company.companyNameTh
             : this.company.companyNameEn,
-            partnerCode
+          partnerCode
         )
       }
     } catch (error) {
@@ -130,8 +137,28 @@ export default class CompanyEditPartnerCode extends Vue {
     }
   }
 
-  mounted() {
-    this.getCpmpany()
+  async checkBelongTo(): Promise<boolean | undefined> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.compantId}&partnerId=${this.id}`,
+        { data: null }
+      )
+      if (res.successful) {
+        return res.data.belongTo
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+  }
+
+  async mounted() {
+    if (this.compantId && await this.checkBelongTo()) {
+      this.getCpmpany()
+    } else {
+      this.$router.push('/landing')
+    }
   }
 }
 </script>

@@ -1,9 +1,10 @@
 <template>
   <div class="create-branch-container">
     <create-new-branch
-    :parentCompantId="companyId"
-    componetMode="edit"
-    :setBranch="setBranch" />
+      :parentCompantId="companyId"
+      componetMode="edit"
+      :setBranch="setBranch"
+    />
   </div>
 </template>
 
@@ -54,13 +55,15 @@ export default class CreateBranch extends Vue {
   }
 
   private setupBreadcrumb(): void {
-    const company = this.language === 'th'
-      ? this.company.companyNameTh
-      : this.company.companyNameEn
+    const company =
+      this.language === 'th'
+        ? this.company.companyNameTh
+        : this.company.companyNameEn
 
-    const branch = this.language === 'th'
-      ? this.branch.branchNameTh
-      : this.branch.branchNameEn
+    const branch =
+      this.language === 'th'
+        ? this.branch.branchNameTh
+        : this.branch.branchNameEn
 
     const breadcrumb: BreadcrumbType[] = [
       {
@@ -84,7 +87,9 @@ export default class CreateBranch extends Vue {
 
     //set Page title
     this.$store.dispatch(
-      'breadcrumb/setPageTitle', `${this.$t('common.branchTitle').toString()} - ${branch}`)
+      'breadcrumb/setPageTitle',
+      `${this.$t('common.branchTitle').toString()} - ${branch}`
+    )
   }
 
   async getCompany(): Promise<void> {
@@ -115,10 +120,30 @@ export default class CreateBranch extends Vue {
     }
   }
 
+  async checkBelongTo(): Promise<boolean | undefined> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.companyId}&brandId=${this.branchId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        return res.data.belongTo
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+  }
+
   async mounted() {
-    await this.getCompany()
-    await this.getBranch()
-    this.setupBreadcrumb()
+    if (this.companyId && await this.checkBelongTo()) {
+      await this.getCompany()
+      await this.getBranch()
+      this.setupBreadcrumb()
+    } else {
+      this.$router.push('/landing')
+    }
   }
 }
 </script>
