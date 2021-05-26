@@ -31,10 +31,7 @@
             <div class="icon-box" :class="{ 'circle-style': circleStyle }">
               <div class="icon-padding" @click="viewFile">
                 <div class="icon-container">
-                  <img
-                    class="view-file"
-                    :src="assets('login/eye-white.png')"
-                  />
+                  <img class="view-file" :src="assets('login/eye-white.png')" />
                 </div>
                 <span class="view-file-text" @click="viewFile">
                   View File
@@ -56,10 +53,10 @@
           <div class="upload-input">
             <span class="material-icons icon-upload"> cloud_upload </span>
             <div>
-              <span class="drop-text">{{$t('common.dragAndDrop')}}</span>
-              <span class="btn-upload">{{$t('common.upload')}}</span>
+              <span class="drop-text">{{ $t('common.dragAndDrop') }}</span>
+              <span class="btn-upload">{{ $t('common.upload') }}</span>
               <div class="drop-text-description">
-                {{$t('common.fileType')}}
+                {{ $t('common.fileType') }}
               </div>
             </div>
           </div>
@@ -157,16 +154,18 @@ export default class UploadImage extends Vue {
   private fileChange(event: any): void {
     const regexFileType = /(\jpg|\jpeg|\png)$/g
     this.file = event ? event.target.files[0] : this.filelist[0]
-    event.target.value = ''
-    if (!this.file) return
-    if (this.file.size > 20 * 1024 * 1024) {
-      this.file = undefined
-      this.$toast.error(`File is too big!`, {
-        icon: {
-          name: 'cancel',
-          after: false
-        }
-      })
+    if (event) {
+      event.target.value = ''
+      if (!this.file) return
+      if (this.file.size > 20 * 1024 * 1024) {
+        this.file = undefined
+        this.$toast.error(`File is too big!`, {
+          icon: {
+            name: 'cancel',
+            after: false
+          }
+        })
+      }
     }
 
     if (!regexFileType.test(this.file.type)) {
