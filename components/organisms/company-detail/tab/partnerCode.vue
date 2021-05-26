@@ -156,10 +156,10 @@ export default class TabPartnerCode extends Vue {
     },
     {
       headerName: 'Number of Brand',
-      field: 'numberOfBrand',
+      field: 'numberOfBrands',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
-                  ${params.data.numberOfBrand}
+                  ${params.data.numberOfBrands}
                 </div>`
       }
     },
@@ -248,6 +248,8 @@ export default class TabPartnerCode extends Vue {
     this.totalItem = data.total
     this.dataList = data.partner.map((item: any) => {
       return {
+        ...item,
+        status: item.statusDesc,
         partnerCode: item.partnerCode,
         partnerId: item.partnerId,
         partnerName: item.partnerName
