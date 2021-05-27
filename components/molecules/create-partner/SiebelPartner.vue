@@ -129,9 +129,9 @@ export default class CreatePartnerCode extends Vue {
     this.error.partnerCode = !this.$v.partnerCode.required
       ? this.$t('createBrand.brandNameEnInput').toString()
       : !this.$v.partnerCode.mustBe
-      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.partnerCode.minLength
-      ? this.$t('createBrand.common.invalidInputInformation').toString()
+      ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
 

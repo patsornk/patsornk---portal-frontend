@@ -66,6 +66,13 @@ export default class CreatePartnerCode extends Vue {
     type: String
   })
   companyIdParent!: string
+  
+  @Prop({
+    required: false,
+    type: String,
+    default: "onboard"
+  })
+  private stepMode?: string
 
   companyId = window.sessionStorage.getItem('createCompanyId')
 
@@ -132,7 +139,8 @@ export default class CreatePartnerCode extends Vue {
   mounted(): void {
     if (this.companyIdParent) {
       this.companyId = this.companyIdParent
-      this.getPartnerList()
+      // TO DO
+      // this.getPartnerList()
     } else if (
       this.$route.params.currentStep === 'partnercode' &&
       this.companyId

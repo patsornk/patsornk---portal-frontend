@@ -136,7 +136,6 @@ const validations = {
   validationGroup: [
     'companyNameTh',
     'companyNameEn',
-    'companyStatus',
     'typeId'
     // 'email',
     // 'phoneNumber'
@@ -147,7 +146,6 @@ const validations = {
     'companyNameEn',
     'typeId',
     'categoryId',
-    'companyStatus',
     'sizeId',
     'assignee'
     // 'email',
