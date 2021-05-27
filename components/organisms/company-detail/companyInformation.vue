@@ -36,11 +36,11 @@
         "
       />
       <text-info :title="$t('createCompany.assignee')" :value="company.assignee" />
-      <text-info :title="$t('createCompany.email')" :value="company.companyEmail" />
+      <!-- <text-info :title="$t('createCompany.email')" :value="company.companyEmail" />
       <text-info
         :title="$t('createCompany.phoneNo')"
         :value="company.companyPhonePrefix + company.companyPhoneNumber"
-      />
+      /> -->
     </div>
   </div>
 </template>
