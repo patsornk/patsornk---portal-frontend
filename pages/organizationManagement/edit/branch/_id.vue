@@ -123,7 +123,7 @@ export default class CreateBranch extends Vue {
   async checkBelongTo(): Promise<boolean | undefined> {
     try {
       let res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.companyId}&brandId=${this.branchId}`,
+        `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.companyId}&branchId=${this.branchId}`,
         { data: null }
       )
       if (res.successful) {
