@@ -694,12 +694,7 @@ export default class CreateBrand extends Vue {
       isPartnerCodeList = true
     }
 
-    if (
-      validationGroup &&
-      isPartnerCodeList &&
-      brandFeatureValidate &&
-      this.atLeastOneFieldBrandFeatureValidate
-    ) {
+    if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
@@ -749,8 +744,7 @@ export default class CreateBrand extends Vue {
             )
             this.$router.push('/organizationManagement/create/branch')
           } else {
-            this.$router.push(`/organizationManagement/${this.companyId}`)
-            this.$toast.global.success('Created successfully')
+            this.submitBrand(response.data.brandId)
           }
         }
       } catch (error) {
@@ -802,12 +796,7 @@ export default class CreateBrand extends Vue {
       isPartnerCodeList = true
     }
 
-    if (
-      validationGroup &&
-      isPartnerCodeList &&
-      brandFeatureValidate &&
-      this.atLeastOneFieldBrandFeatureValidate
-    ) {
+    if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
@@ -871,6 +860,26 @@ export default class CreateBrand extends Vue {
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
       }
+    }
+  }
+
+  async submitBrand(brandId: number | string | null): Promise<void> {
+    const payload = { brandId }
+    try {
+      const response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/submit_brand`,
+        payload
+      )
+      if (response.successful) {
+        const companyId = this.companyId
+          ? parseInt(this.companyId)
+          : window.sessionStorage.getItem('createCompanyId')
+
+        this.$router.push(`/organizationManagement/${companyId}`)
+        this.$toast.global.success(this.$t('common.successfully').toString())
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
     }
   }
 
