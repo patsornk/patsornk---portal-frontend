@@ -1,34 +1,35 @@
 <template>
   <div class="create-company-container">
     <table-component
-      :rawData="dataList"
-      :columnDefs="columnDefs"
-      isShowHeaderTable
-      isShowCheckBox
-      :headerTitle="$t('common.partnerCodeList')"
       v-model="selectData"
-      :isShowIconHold="false"
-      :isShowInactive="false"
-      :frameworkComponents="frameworkComponents"
+      item-key="partnerId"
+      is-show-header-table
+      is-show-check-box
+      :is-show-icon-hold="false"
+      :is-show-inactive="false"
+      :is-show-active="false"
+      :raw-data="dataList"
+      :column-defs="columnDefs"
+      :header-title="$t('common.partnerCodeList')"
+      :framework-components="frameworkComponents"
       @clickDelete="clickDeleteList"
-      itemKey="partnerId"
     />
 
     <siebel-partner
       v-if="isShowEditForm"
       v-model="editSiebelPartner"
-      action="edit"
+      :action="$t('common.edit')"
       @clickAdd="clickEditNewSiebelPartner"
-      @clickDelete="clickDeleteSiebelPartner(editSiebelPartner)"
+      @clickDelete="clickCancelSiebelPartner"
     />
     <siebel-partner
       v-if="isShowNewForm"
       v-model="newSiebelPartner"
-      action="add"
-      :deleteAble="deleteAble"
+      :action="$t('common.add')"
+      :delete-able="deleteAble"
+      :partner-code-error="partnerCodeError"
       @clickAdd="clickAddNewSiebelPartner"
       @clickDelete="clearData"
-      :partnerCodeError="partnerCodeError"
       @changePartnerCode="changePartnerCode"
     />
 
@@ -73,23 +74,27 @@ export default class CreatePartnerCode extends Vue {
   frameworkComponents = {
     agActionField: AgActionField
   }
+
   defaultSiebelPartner: SiebelPartnerType = {
     id: 0,
     partnerId: 0,
     partnerCode: '',
     partnerName: ''
   }
+
   partnerCodeError = ''
   newSiebelPartner: SiebelPartnerType = JSON.parse(
     JSON.stringify(this.defaultSiebelPartner)
   )
+
   editSiebelPartner: SiebelPartnerType = JSON.parse(
     JSON.stringify(this.defaultSiebelPartner)
   )
 
-  isShowNewForm: boolean = true
-  isShowEditForm: boolean = false
+  isShowNewForm = true
+  isShowEditForm = false
   selectData: SiebelPartnerType[] = []
+  refList: SiebelPartnerType[] = []
   dataList: SiebelPartnerType[] = []
   columnDefs = [
     {
@@ -124,7 +129,7 @@ export default class CreatePartnerCode extends Vue {
     }
   ]
 
-  async mounted() {
+  mounted(): void {
     if (this.companyIdParent) {
       this.companyId = this.companyIdParent
       this.getPartnerList()
@@ -136,15 +141,16 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
-  async getPartnerList() {
+  async getPartnerList(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.companyId}`,
         { data: null }
       )
 
       if (res.successful) {
         this.dataList = res.data.partner
+        this.refList = [...res.data.partner]
         if (this.dataList.length > 0) {
           this.deleteAble = true
           this.isShowNewForm = false
@@ -158,7 +164,7 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
-  clickEditSiebelPartner(param: string) {
+  clickEditSiebelPartner(param: string): boolean | void {
     if (this.isShowNewForm) {
       this.$toast.global.error(
         'Please finish current action before click another.'
@@ -166,14 +172,16 @@ export default class CreatePartnerCode extends Vue {
       return
     }
     this.isShowEditForm = true
-    this.dataList.forEach((item) => {
+    this.dataList.forEach((item: any) => {
       if (item.partnerCode === param) {
         this.editSiebelPartner = item
       }
     })
+    this.dataList = [...this.refList]
     this.deleteItem(this.editSiebelPartner)
   }
-  clickAdd() {
+
+  clickAdd(): void | boolean {
     if (this.isShowEditForm) {
       this.$toast.global.error(
         'Please finish current action before click another.'
@@ -183,14 +191,15 @@ export default class CreatePartnerCode extends Vue {
     this.isShowNewForm = true
   }
 
-  deleteItem(item: SiebelPartnerType) {
+  deleteItem(item: SiebelPartnerType): void {
     const index = this.dataList.indexOf(item)
+    this.refList = [...this.dataList]
     if (index > -1) {
       this.dataList.splice(index, 1)
     }
   }
 
-  async clickEditNewSiebelPartner(event: any) {
+  async clickEditNewSiebelPartner(event: any): Promise<void> {
     const data = event.value
     if (this.checkDuplicate(data)) {
       this.partnerCodeError = this.$t(
@@ -205,7 +214,7 @@ export default class CreatePartnerCode extends Vue {
           companyId: this.companyId
         }
 
-        let res = await this.$axios.$post(
+        const res = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
           payload
         )
@@ -234,7 +243,7 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
-  async clickAddNewSiebelPartner(event: any) {
+  async clickAddNewSiebelPartner(event: any): Promise<void> {
     const data = event.value
     if (this.checkDuplicate(data)) {
       this.partnerCodeError = this.$t(
@@ -248,7 +257,7 @@ export default class CreatePartnerCode extends Vue {
           companyId: this.companyId
         }
 
-        let res = await this.$axios.$post(
+        const res = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/create_partner_code`,
           payload
         )
@@ -264,6 +273,7 @@ export default class CreatePartnerCode extends Vue {
           this.dataList.sort((a, b) => {
             return a.partnerId - b.partnerId
           })
+          this.refList = [...this.dataList]
           this.clearData()
         }
       } catch (error) {
@@ -286,7 +296,7 @@ export default class CreatePartnerCode extends Vue {
     )
   }
 
-  changePartnerCode(event: SiebelPartnerType) {
+  changePartnerCode(event: SiebelPartnerType): void {
     if (this.checkDuplicate(event)) {
       this.partnerCodeError = this.$t(
         'createPartnerCode.duplicatePartnerCode'
@@ -296,14 +306,18 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
+  clickCancelSiebelPartner(): void {
+    this.dataList = this.refList
+    this.clearData()
+  }
+
   async clickDeleteSiebelPartner(data: any) {
-    const partner = data.value
+    const partner = data
     try {
       const payload = {
-        partnerCode: [partner.partnerCode]
+        partnerId: [partner.partnerId]
       }
-
-      let res = await this.$axios.$delete(
+      const res = await this.$axios.$delete(
         `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
         { data: payload }
       )
@@ -318,7 +332,7 @@ export default class CreatePartnerCode extends Vue {
     data?.callback()
   }
 
-  clearData() {
+  clearData(): void {
     this.newSiebelPartner = JSON.parse(
       JSON.stringify(this.defaultSiebelPartner)
     )
@@ -329,13 +343,13 @@ export default class CreatePartnerCode extends Vue {
     this.isShowEditForm = false
   }
 
-  clickDeleteList() {
+  clickDeleteList(): void {
     this.selectData.forEach((item) => {
       this.clickDeleteSiebelPartner(item)
     })
   }
 
-  clickSave() {
+  clickSave(): void {
     if (this.dataList.length === 0) {
       this.$toast.global.error(
         'One or more field have an error. Please check and try again.'

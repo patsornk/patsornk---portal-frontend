@@ -38,7 +38,7 @@
     <div v-if="deleteAble">
       <img
         class="icon"
-        :src="assets('table/delete.png')"
+        :src="assets('icon/close.png')"
         @click="$emit('clickDelete')"
       />
     </div>
@@ -141,7 +141,12 @@ export default class CreatePartnerCode extends Vue {
       ? this.$t('createBrand.brandNameEnInput').toString()
       : ''
   }
-  async mounted(): Promise<void> {
+
+  @Watch('value')
+  updateValue(): void {
+    this.partnerCode = this.value.partnerCode
+    this.partnerName = this.value.partnerName
+    this.partnerId = this.value.partnerId
   }
 
   private clickAddSiebelPartner() {
