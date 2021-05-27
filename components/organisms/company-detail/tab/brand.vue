@@ -6,12 +6,11 @@
         :placeholder="$t('common.searchFromBrand')"
         :options="searchList"
       />
-
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
-            class="dropdown"
             v-model="filterData.compantStatus"
+            class="dropdown"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -20,43 +19,61 @@
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> {{$t('common.search')}} </t1-button>
+        <t1-button class="black" @click.native="search">{{
+          $t('common.search')
+        }}</t1-button>
       </div>
     </div>
     <table-component
-      :rawData="dataList"
-      :columnDefs="columnDefs"
-      isShowPaginate
-      isShowHeaderTable
-      isShowCheckBox
-      isCreateNew
-      :createNewTitle="$t('common.createBrand')"
-      @clickNew="clickNewBrand"
-      headerTitle="Brand list"
-      :pageCount="pageSize"
       v-model="selectData"
-      :totalItem="totalItem"
-      :totalPage="pageSize"
-      @onChenagePage="changePage"
-      :onRowClicked="onRowClicked"
-      @pagination="changPageSize"
-      :frameworkComponents="frameworkComponents"
-      :rowHeight="80"
       class="row-h-80"
-      itemKey="brandId"
+      item-key="brandId"
+      is-show-check-box
+      is-create-new
+      is-show-header-table
+      is-show-paginate
+      :raw-data="dataList"
+      :column-defs="columnDefs"
+      :current-page="currentPage"
+      :create-new-title="$t('common.createBrand')"
+      :header-title="$t('common.createBrand')"
+      :page-count="pageSize"
+      :total-item="totalItem"
+      :total-page="pageSize"
+      :on-row-clicked="onRowClicked"
+      :framework-components="frameworkComponents"
+      :row-height="80"
+      @onChenagePage="changePage"
+      @pagination="changPageSize"
+      @clickNew="clickNewBrand"
+      @clickActive="onTableIconClick"
+      @clickHold="onTableIconClick"
+      @clickInActive="onTableIconClick"
+      @clickDelete="onTableIconClick"
+    />
+    <dialog-popup
+      :display="dialogDisplay"
+      :title="dialogTitle"
+      :description="dialogDescription"
+      :left-button-title="dialogLeftButtonText"
+      :right-button-title="dialogRightButtonText"
+      @onLeftButtonClick="onLeftDialogPopupClick"
+      @onRightButtonClick="onRightDialogPopupClick"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
-import InputSearch from '~/components/atoms/InputSearch.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import InputSearch from '~/components/atoms/InputSearch.vue'
+import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import AgBranchButton from '~/components/atoms/AgBranchButton.js'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import { getImagePath } from '~/helper/images'
+import { OrganizationManagementStatus } from '~/constants'
 
 @Component({
   components: {
@@ -64,7 +81,8 @@ import { getImagePath } from '~/helper/images'
     InputField,
     T1Dropdown,
     T1Button,
-    InputSearch
+    InputSearch,
+    DialogPopup
   }
 })
 export default class TabBrand extends Vue {
@@ -87,7 +105,7 @@ export default class TabBrand extends Vue {
   }
 
   @Watch('language')
-  changeSerchSelect() {
+  changeSerchSelect(): void {
     this.searchList = [
       {
         id: 'company',
@@ -102,7 +120,15 @@ export default class TabBrand extends Vue {
     ]
   }
 
+  dialogAction = ''
+  dialogDisplay = false
+  dialogTitle = ''
+  dialogDescription = ''
+  dialogLeftButtonText = ''
+  dialogRightButtonText = 'ee'
+
   selectData = []
+  currentPage = 1
   pageSize = 0
   totalItem = 0
   inputType = 'text'
@@ -117,6 +143,7 @@ export default class TabBrand extends Vue {
       label: 'Search by PartnerCode'
     }
   ]
+
   filterData = {
     search: {
       searchBy: 'brand',
@@ -124,7 +151,8 @@ export default class TabBrand extends Vue {
     },
     compantStatus: 0
   }
-  private pagination: String = '10'
+
+  private pagination = 10
   private compantStatus = [
     {
       id: -1,
@@ -149,8 +177,9 @@ export default class TabBrand extends Vue {
   ]
 
   frameworkComponents = {
-    AgBranchButton: AgBranchButton
+    AgBranchButton
   }
+
   dataList = []
   readonly columnDefs = [
     {
@@ -218,38 +247,38 @@ export default class TabBrand extends Vue {
     }
   ]
 
-  viewBranch(param: any) {
+  viewBranch(param: any): void {
     this.viewBranchCallBack(param)
   }
 
-  private async search() {
+  private search(): void {
     this.clickSearch = true
-    this.filterBrands('1', this.pagination)
+    this.filterBrands(1, this.pagination)
   }
 
-  async changPageSize(pagination: String) {
+  changPageSize(pagination: number): void {
     this.pagination = pagination
     if (this.clickSearch) {
-      this.filterBrands('1', pagination)
+      this.filterBrands(1, this.pagination)
     } else {
-      this.getBrands('1', pagination)
+      this.getBrands(1, this.pagination)
     }
   }
 
-  async mounted(): Promise<void> {
-    this.getBrands('1', '10')
+  mounted(): void {
+    this.getBrands(1, 10)
   }
 
-  changePage(page: number) {
+  changePage(page: number): void {
     if (this.clickSearch) {
-      this.filterBrands(page.toString(), this.pagination)
+      this.filterBrands(page, this.pagination)
     } else {
-      this.getBrands(page.toString(), this.pagination)
+      this.getBrands(page, this.pagination)
     }
   }
 
-  async filterBrands(page: String, limit: String): Promise<void> {
-    let path: String = `/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`
+  async filterBrands(page: number, limit: number): Promise<void> {
+    let path = `/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy !== '') {
       path = `${path}&keywordOf=${this.filterData.search.searchBy}`
@@ -262,32 +291,35 @@ export default class TabBrand extends Vue {
     }
 
     try {
-      let res = await this.$axios.$get(`${process.env.PORTAL_ENDPOINT}${path}`, {
-        data: null
-      })
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}${path}`,
+        { data: null }
+      )
       if (res.successful) {
         this.mappingBrand(res.data)
+        this.currentPage = page
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  async getBrands(page: String, limit: String): Promise<void> {
+  async getBrands(page: number, limit: number): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`,
         { data: null }
       )
       if (res.successful) {
         this.mappingBrand(res.data)
+        this.currentPage = page
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  mappingBrand(data: any) {
+  mappingBrand(data: any): void {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.brand.map((item: any) => {
@@ -302,20 +334,116 @@ export default class TabBrand extends Vue {
     })
   }
 
-  clickNewBrand(){
+  clickNewBrand(): void {
     this.$router.push(`/organizationManagement/${this.id}/create/brand`)
   }
 
-  onRowClicked(row: any) {
-    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '' )
+  onRowClicked(row: any): void {
+    window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '')
     this.$router.push(`/organizationManagement/edit/brand/${row.data.brandId}`)
   }
 
-  deleteHandler(map: any, vm: any) {
+  async changeBrandStatus(brands: any, statusId: number): Promise<void> {
+    const brandIds: number[] = []
+    brands.forEach((brand: any) => {
+      brandIds.push(brand.brandId)
+    })
+    const payload = {
+      brandIds,
+      statusId
+    }
+    try {
+      const response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/update_brand_status`,
+        payload
+      )
+      if (response.successful) {
+        this.getBrands(1, this.pagination)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.message)
+    }
+  }
+
+  async deleteBrand(brands: any): Promise<void> {
+    const brandIds: any = []
+    brands.forEach((brand: any) => {
+      brandIds.push(brand.brandId)
+    })
+    const payload = { brandIds }
+    try {
+      const response = await this.$axios.$delete(
+        `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
+        { data: { payload } }
+      )
+      if (response.successful) {
+        this.getBrands(1, this.pagination)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  onTableIconClick(action: string): void {
+    this.dialogDisplay = true
+    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
+    this.dialogLeftButtonText = this.$t('table.dialogPopup.cancel').toString()
+    let title = ''
+
+    if (action === 'clickActive') {
+      title = this.$t('table.status.active').toString()
+      this.dialogAction = OrganizationManagementStatus.ACTIVE
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.confirm'
+      ).toString()
+    } else if (action === 'clickInActive') {
+      title = this.$t('table.status.inactive').toString()
+      this.dialogAction = OrganizationManagementStatus.INACTIVE
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.confirm'
+      ).toString()
+    } else if (action === 'clickHold') {
+      title = this.$t('table.status.hold').toString()
+      this.dialogAction = OrganizationManagementStatus.HOLD
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.confirm'
+      ).toString()
+    } else if (action === 'clickDelete') {
+      title = this.$t('table.status.delete').toString()
+      this.dialogAction = OrganizationManagementStatus.DELETE
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.delete'
+      ).toString()
+    }
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${title} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')}`
+  }
+
+  onLeftDialogPopupClick(): void {
+    this.dialogDisplay = false
+  }
+
+  onRightDialogPopupClick(): void {
+    if (this.dialogAction === OrganizationManagementStatus.ACTIVE) {
+      this.changeBrandStatus(this.selectData, 2)
+    } else if (this.dialogAction === OrganizationManagementStatus.INACTIVE) {
+      this.changeBrandStatus(this.selectData, 3)
+    } else if (this.dialogAction === OrganizationManagementStatus.HOLD) {
+      this.changeBrandStatus(this.selectData, 4)
+    } else if (this.dialogAction === OrganizationManagementStatus.DELETE) {
+      this.deleteBrand(this.selectData)
+    }
+    this.selectData = []
+    this.dialogDisplay = false
+  }
+
+  deleteHandler(map: any, vm: any): any {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        e.preventDefault()
+      }
     }
   }
 }

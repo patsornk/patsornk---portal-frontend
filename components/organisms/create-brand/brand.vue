@@ -148,12 +148,11 @@
         :is-show-delete="false"
         :is-show-paginate="true"
         :header-title="$t('createBrand.partnerCodeList')"
-        :total-item="partnerCodeDataList.length"
+        :total-item="partnerTotalItem"
+        :total-page="partnerTotalPage"
+        :current-page="currentPage"
         is-show-header-table
         is-show-check-box
-        :totalPage="partnerTotalPage"
-        :totalItem="partnerTotalItem"
-        :current-page="currentPage"
         @onChenagePage="onChenagePartnerPage"
         @pagination="changPageSize"
       />

@@ -5,14 +5,14 @@
         <span v-if="headerTitle != ''">
           {{ headerTitle }}
         </span>
-        <span v-if="selectedRows" class="icon-list">
+        <span v-if="currentSelectedRows" class="icon-list">
           <div v-if="isShowActive" class="icon-container">
             <img
               class="icon"
               :src="assets('table/active.png')"
               @click="clickAction('clickActive')"
             />
-            <span class="tooltiptext">{{$t('common.active')}}</span>
+            <span class="tooltiptext">{{ $t('common.active') }}</span>
           </div>
           <div v-if="isShowIconHold" class="icon-container">
             <img
@@ -26,7 +26,7 @@
             <img
               class="icon"
               :src="assets('table/inactive.png')"
-              @click="clickAction('clickInactive')"
+              @click="clickAction('clickInActive')"
             />
             <span class="tooltiptext">Inactive</span>
           </div>
@@ -91,7 +91,7 @@
     >
     </ag-grid-vue>
     <div v-if="isShowPaginate" class="footer-container">
-      <span>{{ selectedRows }} / {{ totalItem }}</span>
+      <span>{{ currentSelectedRows }} / {{ totalItem }}</span>
       <t1-pagination
         v-model="currentPage"
         class="pagination-container"
@@ -101,7 +101,7 @@
         @input="onChenagePage"
       />
       <div class="footer-container">
-        <div>{{$t('common.show')}}:</div>
+        <div>{{ $t('common.show') }}:</div>
         <v-select
           v-model="pagination"
           class="dropdown"
@@ -133,7 +133,6 @@ import '@/assets/scss/agGridStyleOverride.scss'
   }
 })
 export default class TableComponent extends Vue {
-  
   $i18n: any
   get language(): any {
     return this.$i18n.locale
@@ -169,7 +168,7 @@ export default class TableComponent extends Vue {
     type: Array,
     required: true
   })
-  readonly columnDefs!: Array<object>
+  readonly columnDefs!: Array<any>
 
   @Prop({
     type: Boolean,
@@ -187,7 +186,7 @@ export default class TableComponent extends Vue {
     type: Array,
     required: true
   })
-  readonly rawData!: Array<object>
+  readonly rawData!: Array<any>
 
   @Prop({
     type: Boolean,
@@ -229,7 +228,7 @@ export default class TableComponent extends Vue {
     type: Array,
     default: []
   })
-  value!: Array<object>
+  value!: Array<any>
 
   @Prop({
     type: Function
@@ -245,7 +244,7 @@ export default class TableComponent extends Vue {
     type: Object,
     default: null
   })
-  readonly frameworkComponents!: Object
+  readonly frameworkComponents!: any
 
   @Prop({
     type: Number,
@@ -312,11 +311,13 @@ export default class TableComponent extends Vue {
 
   private onSelectionChanged() {
     this.isCheckboxSelection = true
-
-    this.selectedRows = this.value.length
     this.$nextTick(() => {
       this.isCheckboxSelection = false
     })
+  }
+
+  get currentSelectedRows(): number {
+    return this.value.length
   }
 
   onRowSelected(event: any): void {
@@ -335,7 +336,7 @@ export default class TableComponent extends Vue {
     this.gridApi.sizeColumnsToFit()
   }
 
-  onChenagePage(currentPage: number) {
+  onChenagePage(currentPage: number): void {
     this.$emit('onChenagePage', currentPage)
   }
 
@@ -384,7 +385,7 @@ export default class TableComponent extends Vue {
   }
 
   clickAction(action: string): void {
-    this.$emit(action)
+    this.$emit(action, action)
   }
 
   @Watch('value')
@@ -400,7 +401,7 @@ export default class TableComponent extends Vue {
   }
 
   @Watch('language')
-  refreshHeader() {
+  refreshHeader(): void {
     this.gridApi.redrawRows()
   }
 

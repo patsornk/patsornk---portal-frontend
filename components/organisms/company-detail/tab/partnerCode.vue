@@ -2,19 +2,19 @@
   <div>
     <div class="filter-container">
       <input-field
-        :type="inputType"
-        class="input-field-input"
         v-model="filterData.keyword"
+        class="input-field-input"
+        :required="false"
+        :type="inputType"
         :placeholder="$t('common.searchFromPartner')"
         @blur="$emit('onBlur')"
-        :required="false"
       />
 
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
-            class="dropdown"
             v-model="filterData.compantStatus"
+            class="dropdown"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -27,36 +27,38 @@
       </div>
     </div>
     <table-component
-      :rawData="dataList"
-      :columnDefs="columnDefs"
-      isShowPaginate
-      isShowHeaderTable
-      isShowCheckBox
-      isCreateNew
-      :createNewTitle="$t('common.createPartnerCode')"
-      @clickNew="clickNewPartnerCode"
-      :onRowClicked="onRowClicked"
-      :headerTitle="$t('common.partnerCodeList')"
-      :pageCount="pageSize"
       v-model="selectData"
-      :totalItem="totalItem"
-      :totalPage="pageSize"
+      class="row-h-80"
+      item-key="partnerId"
+      is-show-paginate
+      is-show-header-table
+      is-show-check-box
+      is-create-new
+      :raw-data="dataList"
+      :create-new-title="$t('common.createPartnerCode')"
+      :column-defs="columnDefs"
+      :on-row-clicked="onRowClicked"
+      :header-title="$t('common.partnerCodeList')"
+      :page-count="pageSize"
+      :total-item="totalItem"
+      :total-page="pageSize"
+      :row-height="80"
+      :current-page="currentPage"
+      @clickNew="clickNewPartnerCode"
       @onChenagePage="changePage"
       @pagination="changPageSize"
-      :rowHeight="80"
-      class="row-h-80"
+      @clickActive="clickActive"
       @clickHold="clickHold"
-      @clickInactive="clickInactive"
+      @clickInActive="clickInActive"
       @clickDelete="clickDelete"
-      itemKey="partnerId"
     />
 
     <dialog-popup
       :display="dialogDisplay"
       :title="dialogTitle"
       :description="dialogDescription"
-      :leftButtonTitle="$t('common.cancel')"
-      :rightButtonTitle="dialogRightButtonText"
+      :left-button-title="$t('common.cancel')"
+      :right-button-title="dialogRightButtonText"
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
     />
@@ -65,11 +67,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
-import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
+import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import { OrganizationManagementStatus } from '~/constants'
 
 @Component({
@@ -101,6 +103,7 @@ export default class TabPartnerCode extends Vue {
   dialogLeftButtonText = 'Cancel'
   dialogRightButtonText = ''
 
+  currentPage = 1
   selectData = []
   pageSize = 0
   totalItem = 0
@@ -110,7 +113,8 @@ export default class TabPartnerCode extends Vue {
     keyword: '',
     compantStatus: 0
   }
-  private pagination: String = '10'
+
+  private pagination = 10
   private compantStatus = [
     {
       id: -1,
@@ -171,8 +175,8 @@ export default class TabPartnerCode extends Vue {
         params.data.status === 'Active'
           ? (strFormat = 'active')
           : params.data.status === 'On hold'
-          ? (strFormat = 'hold')
-          : (strFormat = 'in-active')
+            ? (strFormat = 'hold')
+            : (strFormat = 'in-active')
         return `<div class="custom-row-80">
                   <span class='row-status ${strFormat}'>${params.data.status}</span>
                 </div>`
@@ -180,42 +184,43 @@ export default class TabPartnerCode extends Vue {
     }
   ]
 
-  private async search() {
+  private search() {
     this.clickSearch = true
-    this.filterPartnerCode('1', this.pagination)
+    this.filterPartnerCode(1, this.pagination)
   }
 
-  async changPageSize(pagination: String) {
+  changPageSize(pagination: number): void {
     this.pagination = pagination
     if (this.clickSearch) {
-      this.filterPartnerCode('1', pagination)
+      this.filterPartnerCode(1, pagination)
     } else {
-      this.getPartnarCode('1', pagination)
+      this.getPartnerCode(1, pagination)
     }
   }
 
-  async mounted(): Promise<void> {
-    this.getPartnarCode('1', '10')
+  mounted(): void {
+    this.getPartnerCode(1, 10)
   }
 
-  changePage(page: number) {
+  changePage(page: number): void {
+    this.currentPage = page
     if (this.clickSearch) {
-      this.filterPartnerCode(page.toString(), this.pagination)
+      this.filterPartnerCode(page, this.pagination)
     } else {
-      this.getPartnarCode(page.toString(), this.pagination)
+      this.getPartnerCode(page, this.pagination)
     }
   }
 
-  async filterPartnerCode(page: String, limit: String): Promise<void> {
-    let path: String = `/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`
+  async filterPartnerCode(page: number, limit: number): Promise<void> {
+    let path = `/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`
     if (this.filterData.keyword !== '') {
-      path = path + `&keyword=${this.filterData.keyword}`
+      path = `${path}&keyword=${this.filterData.keyword}`
     }
     if (this.filterData.compantStatus > 0) {
-      path = path + `&statusId=${this.filterData.compantStatus}`
+      path = `${path}&statusId=${this.filterData.compantStatus}`
     }
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,
         {
           data: null
@@ -229,21 +234,22 @@ export default class TabPartnerCode extends Vue {
     }
   }
 
-  async getPartnarCode(page: String, limit: String): Promise<void> {
+  async getPartnerCode(page: number, limit: number): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`,
         { data: null }
       )
       if (res.successful) {
         this.mappingPartnerCode(res.data)
+        this.currentPage = page
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  mappingPartnerCode(data: any) {
+  mappingPartnerCode(data: any): void {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.partner.map((item: any) => {
@@ -257,38 +263,51 @@ export default class TabPartnerCode extends Vue {
     })
   }
 
-  async clickHold(event: any) {
-    this.status = OrganizationManagementStatus.HOLD
+  clickActive(): void {
+    this.status = OrganizationManagementStatus.ACTIVE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${event.length} items seletection status to on hold  ?`
+    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to active  ?`
     this.dialogDescription =
       'This account will be temporarity disabled. Are you sure you want to change account status?'
     this.dialogRightButtonText = 'Confirm'
   }
 
-  async clickInactive(event: any) {
+  clickHold(): void {
+    this.status = OrganizationManagementStatus.HOLD
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to on hold  ?`
+    this.dialogDescription =
+      'This account will be temporarity disabled. Are you sure you want to change account status?'
+    this.dialogRightButtonText = 'Confirm'
+  }
+
+  clickInActive(): void {
     this.status = OrganizationManagementStatus.INACTIVE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${event.length} items seletection status to inctive   ?`
+    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to inctive   ?`
     this.dialogDescription =
       'This account will be disabled. Are you sure you want to change account status?'
     this.dialogRightButtonText = 'Confirm'
   }
 
-  async clickDelete(event: any) {
+  clickDelete(): void {
     this.status = OrganizationManagementStatus.DELETE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to delete ${event.length} items selection   ?`
-    this.dialogDescription = `Please check the information before click to confirm button. The information will lose and never get back.`
+    this.dialogTitle = `Want to delete ${this.selectData.length} items selection   ?`
+    this.dialogDescription =
+      'Please check the information before click to confirm button. The information will lose and never get back.'
     this.dialogRightButtonText = 'Delete'
   }
 
-  dialogCancelAction() {
+  dialogCancelAction(): void {
     this.setDialogDisplay(false)
   }
 
-  dialogAction() {
+  dialogAction(): void {
     switch (this.status) {
+      case OrganizationManagementStatus.ACTIVE:
+        this.changeStatus(this.selectData, 2)
+        break
       case OrganizationManagementStatus.HOLD:
         this.changeStatus(this.selectData, 4)
         break
@@ -299,71 +318,73 @@ export default class TabPartnerCode extends Vue {
         this.deletePartnerCode(this.selectData)
         break
     }
+    this.selectData = []
+    this.setDialogDisplay(false)
   }
 
-  setDialogDisplay(value: boolean) {
+  setDialogDisplay(value: boolean): void {
     this.dialogDisplay = value
   }
 
-  async changeStatus(event: any, statusId: number) {
-    let partnerId: number[] = []
+  async changeStatus(event: any, statusId: number): Promise<void> {
+    let partnerIds: number[] = []
 
     event.forEach((item: any) => {
-      partnerId.push(item.partnerId)
+      partnerIds.push(item.partnerId)
     })
 
     const payload = {
-      partnerId,
+      partnerIds,
       statusId
     }
 
     try {
-      let response = await this.$axios.$post(
+      const response = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/update_partner_code_status`,
         payload
       )
       if (response.successful) {
-        this.getPartnarCode('1', this.pagination)
+        this.getPartnerCode(1, this.pagination)
       }
     } catch (error) {
       this.$toast.global.error(error.message)
     }
   }
 
-  async deletePartnerCode(event: any) {
-    let payload: any = []
+  async deletePartnerCode(event: any): Promise<void> {
+    const partnerIds: any = []
 
     event.forEach((item: any) => {
-      payload.push(item.partnerId)
+      partnerIds.push(item.partnerId)
     })
 
     try {
-      let response = await this.$axios.$delete(
+      const response = await this.$axios.$delete(
         `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
         {
-          data: { partnerId: payload }
+          data: { partnerId: partnerIds }
         }
       )
       if (response.successful) {
-        this.getPartnarCode('1', this.pagination)
+        this.getPartnerCode(1, this.pagination)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  clickNewPartnerCode() {
+  clickNewPartnerCode(): void {
     this.$router.push(`/organizationManagement/${this.id}/create/partnercode`)
   }
 
-  onRowClicked(row: any) {
+  onRowClicked(row: any): void {
     window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '')
     this.$router.push(
       `/organizationManagement/edit/partnercode/${row.data.partnerId}`
     )
   }
 
-  deleteHandler(map: any, vm: any) {
+  deleteHandler(map: any, vm: any): any {
     return {
       ...map,
       8: (e: any) => {

@@ -64,7 +64,7 @@
     />
     <div class="footer">
       <t-1-button class="black" @click.native="clickSave"> 
-        {{$t('common.save')}}
+        {{ $t('common.save') }}
       </t-1-button>
     </div>
 
@@ -104,13 +104,13 @@
                 type="black-transparent"
                 @click.native="clickCloseModel"
               >
-                {{$t('common.cancel')}}
+                {{ $t('common.cancel') }}
               </t-1-button>
               <t-1-button
                 :class="modalSelectData.length === 0 ? 'disable' : ''"
                 @click.native="clickSubmitModel"
               >
-                {{$t('createCompany.assign')}}
+                {{ $t('createCompany.assign') }}
               </t-1-button>
             </div>
           </div>
@@ -121,8 +121,8 @@
       :display="dialogDisplay"
       :title="dialogTitle"
       :description="dialogDescription"
-      :leftButtonTitle="dialogLeftButtonText"
-      :rightButtonTitle="dialogRightButtonText"
+      :left-button-title="dialogLeftButtonText"
+      :right-button-title="dialogRightButtonText"
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
     />
@@ -134,16 +134,13 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import InputField from '@/components/atoms/InputField.vue'
 import TableComponent from '@/components/molecules/table-component/TableComponent.vue'
 import SiebelPartner from '@/components/molecules/create-partner/SiebelPartner.vue'
-import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import Modal from '@/components/atoms/Modal.vue'
-import { PartnerCodeMode } from '~/constants/CreateEditPartnerCode'
 import T1Button from '@/components/atoms/button.vue'
-import {
-  ErrorSiebelPartner,
-  SiebelPartnerType
-} from '@/constants/types/PartnerCodeType'
+import { SiebelPartnerType } from '@/constants/types/PartnerCodeType'
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
+import { PartnerCodeMode } from '~/constants/CreateEditPartnerCode'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 
 const validations = {
   partnerCode: {
@@ -164,7 +161,7 @@ const validations = {
 
 @Component({
   mixins: [validationMixin],
-  validations: validations,
+  validations,
   components: {
     InputField,
     TableComponent,
@@ -307,13 +304,14 @@ export default class CreateEditPartnerCode extends Vue {
   dialogTitle = ''
   dialogDescription =
     'Please check the information before click to confirm button. The information will lose and never get back.'
+
   dialogLeftButtonText = 'Cancel'
   dialogRightButtonText = 'Remove'
 
-  mounted() {
+  mounted(): void {
     this.getPartnercode()
-    this.getAssignedBrand('1', '10')
-    this.getAssignBrand('1', '10')
+    this.getAssignedBrand(1, 10)
+    this.getAssignBrand(1, 10)
   }
 
   async editPartnerCode() {
@@ -323,7 +321,7 @@ export default class CreateEditPartnerCode extends Vue {
         partnerName: this.partnerName,
         companyId: this.companyId
       }
-      let res = await this.$axios.$post(
+      const res = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
         payload
       )
@@ -357,7 +355,7 @@ export default class CreateEditPartnerCode extends Vue {
     }
   }
 
-  async getBrandList(page: string, limit: string): Promise<any> {
+  async getBrandList(page: number, limit: number): Promise<any> {
     try {
       const path = `/list_brand?page=${page}&limit=${limit}&companyId=${this.compantId}`
 
@@ -389,7 +387,7 @@ export default class CreateEditPartnerCode extends Vue {
     }
   }
 
-  async getAssignedBrand(page: string, limit: string): Promise<void> {
+  async getAssignedBrand(page: number, limit: number): Promise<void> {
     try {
       let res = await this.$axios.$get(
         `${
@@ -422,16 +420,16 @@ export default class CreateEditPartnerCode extends Vue {
     }
   }
 
-  async getAssignBrand(page: string, limit: string): Promise<any> {
+  async getAssignBrand(page: number, limit: number): Promise<any> {
     try {
-      let path: String = `/list_brand_by_partner?page=${page}&limit=${limit}&partnerId=${
+      let path = `/list_brand_by_partner?page=${page}&limit=${limit}&partnerId=${
         this.editId
       }&assigned=${false}`
       if (this.keyword !== '') {
-        path = path + `&keyword=${this.keyword}`
+        path = `${path}&keyword=${this.keyword}`
       }
 
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,
         { data: null }
       )
@@ -440,9 +438,9 @@ export default class CreateEditPartnerCode extends Vue {
         this.modalDataList = res.data.brand.map(
           (item: {
             brandId: number
-            brandCode: any
-            brandNameTh: any
-            brandNameEn: any
+            brandCode: string
+            brandNameTh: string
+            brandNameEn: string
           }) => {
             return {
               brandId: item.brandId,
@@ -459,7 +457,7 @@ export default class CreateEditPartnerCode extends Vue {
   }
 
   @Watch('partnerCode')
-  checkPartnerCode() {
+  checkPartnerCode(): void {
     this.error.partnerCode = !this.$v.partnerCode.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.partnerCode.mustBe
@@ -470,7 +468,7 @@ export default class CreateEditPartnerCode extends Vue {
   }
 
   @Watch('partnerName')
-  checkPartnerName() {
+  checkPartnerName(): void {
     this.error.partnerName = !this.$v.partnerName.required
       ? this.$t('createBrand.error.require').toString()
       : !this.$v.partnerName.mustBe
@@ -479,30 +477,30 @@ export default class CreateEditPartnerCode extends Vue {
   }
 
   @Watch('status')
-  checkStatus() {
+  checkStatus(): void {
     this.error.status = !this.$v.status.required
       ? this.$t('createBrand.error.require').toString()
       : ''
   }
 
-  chengeKeyword(event: any) {
-    this.getAssignBrand('1', '10')
+  chengeKeyword(event: any): void {
+    this.getAssignBrand(1, 10)
   }
 
-  cancleHandler() {
+  cancleHandler(): void {
     this.$router.push(`/organizationManagement/${this.compantId}`)
   }
 
-  dialogCancelAction() {
+  dialogCancelAction(): void {
     this.dialogDisplay = false
   }
 
-  clickDeleteList() {
+  clickDeleteList(): void {
     this.dialogDisplay = true
     this.dialogTitle = `Want to remove ${this.selectData.length} selected items from assigned partner code?`
   }
 
-  async dialogAction() {
+  async dialogAction(): Promise<void> {
     const brandId = this.selectData.map((item: { brandId: any }) => {
       return item.brandId
     })
@@ -512,35 +510,37 @@ export default class CreateEditPartnerCode extends Vue {
     }
 
     try {
-      let res = await this.$axios.$post(
+      const res = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/unassign_partner_from_brand`,
         payload
       )
       if (res.successful) {
-        await this.getBrandList('1', '10')
-        await this.getAssignedBrand('1', '10')
-        await this.getAssignBrand('1', '10')
+        await this.getBrandList(1, 10)
+        await this.getAssignedBrand(1, 10)
+        await this.getAssignBrand(1, 10)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.dialogDisplay = false
+    this.selectData = []
   }
 
-  clickAssignNew() {
+  clickAssignNew(): void {
     this.isShowBrand = true
   }
 
-  setModalDefalut() {
+  setModalDefalut(): void {
     this.isShowBrand = false
     this.modalSelectData = []
     this.keyword = ''
   }
 
-  clickCloseModel() {
+  clickCloseModel(): void {
     this.setModalDefalut()
   }
 
-  async clickSubmitModel() {
+  async clickSubmitModel(): Promise<void> {
     if (this.modalSelectData.length === 0) return
 
     const brandId = this.modalSelectData.map((item: { brandId: any }) => {
@@ -552,14 +552,14 @@ export default class CreateEditPartnerCode extends Vue {
     }
 
     try {
-      let res = await this.$axios.$post(
+      const res = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/assign_partner_to_brand`,
         payload
       )
       if (res.successful) {
-        await this.getBrandList('1', '10')
-        await this.getAssignedBrand('1', '10')
-        await this.getAssignBrand('1', '10')
+        await this.getBrandList(1, 10)
+        await this.getAssignedBrand(1, 10)
+        await this.getAssignBrand(1, 10)
         this.setModalDefalut()
       }
     } catch (error) {
@@ -567,7 +567,7 @@ export default class CreateEditPartnerCode extends Vue {
     }
   }
 
-  clickSave() {
+  clickSave(): void {
     if (this.$v.editGroup.$invalid) {
       this.$toast.global.error('Error')
       this.checkPartnerCode()

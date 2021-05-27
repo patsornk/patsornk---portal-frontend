@@ -5,6 +5,7 @@ import createCompany from './en/createCompany'
 import common from './en/common'
 import createPartnerCode from './en/createPartnercode'
 import applyService from './en/applyService'
+import table from './en/table'
 
 module.exports = {
   home,
@@ -13,5 +14,6 @@ module.exports = {
   createBranch,
   createCompany,
   createPartnerCode,
-  applyService
+  applyService,
+  table
 }

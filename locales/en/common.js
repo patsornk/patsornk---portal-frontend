@@ -8,6 +8,7 @@ module.exports = {
     companyTitle: 'Company',
     partnerCodeTitle: 'Partner Code',
     brandTitle: 'Brand',
+    brandList: 'Brand List',
     branchTitle: 'Branch',
     serviceSelection: 'Service Selection',
     serviceTitle: 'Service',

@@ -6,12 +6,11 @@
         :placeholder="$t('common.search')"
         :options="searchList"
       />
-
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
-            class="dropdown"
             v-model="filterData.brandId"
+            class="dropdown"
             :options="brandList"
             :label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
             :reduce="(item) => item.brandId"
@@ -20,8 +19,8 @@
             :map-keydown="deleteHandler"
           />
           <v-select
-            class="dropdown"
             v-model="filterData.compantStatus"
+            class="dropdown"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -36,37 +35,38 @@
       </div>
     </div>
     <table-component
-      :rawData="dataList"
-      :columnDefs="columnDefs"
-      isShowPaginate
-      isShowHeaderTable
-      isShowCheckBox
-      isCreateNew
-      :createNewTitle="$t('common.createBranch')"
-      @clickNew="clickNewBranch"
-      headerTitle="Branch list"
-      :pageCount="pageSize"
       v-model="selectData"
-      :totalItem="totalItem"
-      :totalPage="pageSize"
-      :onRowClicked="onRowClicked"
+      :rawData="dataList"
+      class="row-h-80"
+      item-key="brandId"
+      header-title="Branch list"
+      is-show-paginate
+      is-show-header-table
+      is-show-check-box
+      is-create-new
+      :create-new-title="$t('common.createBranch')"
+      :raw-data="dataList"
+      :column-defs="columnDefs"
+      :current-page="currentPage"
+      :page-count="pageSize"
+      :total-item="totalItem"
+      :total-page="pageSize"
+      :on-row-clicked="onRowClicked"
+      :row-height="80"
+      @clickNew="clickNewBranch"
       @onChenagePage="changePage"
       @pagination="changPageSize"
-      :rowHeight="80"
-      class="row-h-80"
       @clickActive="clickActive"
       @clickHold="clickHold"
-      @clickInactive="clickInactive"
+      @clickInActive="clickInActive"
       @clickDelete="clickDelete"
-      itemKey="brandId"
     />
-
     <dialog-popup
       :display="dialogDisplay"
       :title="dialogTitle"
       :description="dialogDescription"
-      :leftButtonTitle="$t('common.cancel')"
-      :rightButtonTitle="dialogRightButtonText"
+      :left-button-title="$t('common.cancel')"
+      :right-button-title="dialogRightButtonText"
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
     />
@@ -75,12 +75,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
-import DialogPopup from '~/components/molecules/DialogPopup.vue'
-import InputSearch from '~/components/atoms/InputSearch.vue'
 import T1Dropdown from '@/components/atoms/dropdown.vue'
 import T1Button from '@/components/atoms/button.vue'
 import InputField from '@/components/atoms/InputField.vue'
+import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
+import InputSearch from '~/components/atoms/InputSearch.vue'
 import { OrganizationManagementStatus } from '~/constants'
 
 @Component({
@@ -136,6 +136,7 @@ export default class TabBranch extends Vue {
   dialogRightButtonText = ''
 
   selectData = []
+  currentPage = 1
   pageSize = 0
   totalItem = 0
   inputType = 'text'
@@ -150,6 +151,7 @@ export default class TabBranch extends Vue {
       label: 'Search by PartnerCode'
     }
   ]
+
   filterData = {
     search: {
       searchBy: 'branch',
@@ -158,7 +160,8 @@ export default class TabBranch extends Vue {
     brandId: 0,
     compantStatus: 0
   }
-  private pagination: String = '10'
+
+  private pagination = 10
   private brandId: any = []
   private compantStatus = [
     {
@@ -235,7 +238,7 @@ export default class TabBranch extends Vue {
       headerName: 'Branch Type',
       field: 'branchType',
       cellRenderer: (params: any) => {
-        let branchType =
+        const branchType =
           this.language === 'th'
             ? params.data.branchType.branchTypeTh
             : params.data.branchType.branchTypeEn
@@ -262,39 +265,40 @@ export default class TabBranch extends Vue {
     }
   ]
 
-  private async search() {
+  private search(): void {
     this.clickSearch = true
-    this.filterBranches('1', this.pagination)
+    this.filterBranches(1, this.pagination)
   }
 
-  async changPageSize(pagination: String) {
+  changPageSize(pagination: number): void {
     this.pagination = pagination
     if (this.clickSearch) {
-      this.filterBranches('1', pagination)
+      this.filterBranches(1, pagination)
     } else {
-      this.getBranches('1', pagination)
+      this.getBranches(1, pagination)
     }
   }
 
   async mounted(): Promise<void> {
     await this.getBrands()
     if (this.brandIdSearch !== 0) {
-      await this.filterBranches('1', '10')
+      await this.filterBranches(1, 10)
     } else {
-      await this.getBranches('1', '10')
+      await this.getBranches(1, 10)
     }
   }
 
-  changePage(page: number) {
+  changePage(page: number): void {
+    this.currentPage = page
     if (this.clickSearch) {
-      this.filterBranches(page.toString(), this.pagination)
+      this.filterBranches(page, this.pagination)
     } else {
-      this.getBranches(page.toString(), this.pagination)
+      this.getBranches(page, this.pagination)
     }
   }
 
-  async filterBranches(page: String, limit: String): Promise<void> {
-    let path: String = `/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`
+  async filterBranches(page: number, limit: number): Promise<void> {
+    let path = `/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy) {
       path = `${path}&keywordOf=${this.filterData.search.searchBy}`
@@ -310,24 +314,8 @@ export default class TabBranch extends Vue {
     }
 
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,
-        {
-          data: null
-        }
-      )
-      if (res.successful) {
-        this.mappingBranch(res.data)
-      }
-    } catch (error) {
-      this.$toast.global.error(error.response.data.message)
-    }
-  }
-
-  async getBranches(page: String, limit: String): Promise<void> {
-    try {
-      let res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/list_branch?companyId=${this.id}`,
         { data: null }
       )
       if (res.successful) {
@@ -338,7 +326,22 @@ export default class TabBranch extends Vue {
     }
   }
 
-  mappingBranch(data: any) {
+  async getBranches(page: number, limit: number): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.mappingBranch(res.data)
+        this.currentPage = page
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  mappingBranch(data: any): void {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.branch.map((item: any) => {
@@ -384,71 +387,77 @@ export default class TabBranch extends Vue {
     this.$router.push(`/organizationManagement/${this.id}/create/branch`)
   }
 
-  async changeStatus(event: any, statusId: number) {
-    let partnerId: number[] = []
+  async changeStatus(event: any, statusId: number): Promise<void> {
+    const branchIds: number[] = []
 
     event.forEach((item: any) => {
-      partnerId.push(item.partnerId)
+      branchIds.push(item.branchId)
     })
 
     const payload = {
-      partnerId,
+      branchIds,
       statusId
     }
 
     try {
-      // let response = await this.$axios.$post(
-      //   `${process.env.PORTAL_ENDPOINT}/update_partner_code_status`,
-      //   payload
-      // )
-      // if (response.successful) {
-      //   this.getPartnarCode('1', this.pagination)
-      // }
+      const response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/update_branch_status`,
+        payload
+      )
+      if (response.successful) {
+        this.getBranches(1, this.pagination)
+      }
     } catch (error) {
       this.$toast.global.error(error.message)
     }
   }
 
-  async clickActive(event: any) {
-    await this.changeStatus(event, 2)
+  clickActive(): void {
+    this.status = OrganizationManagementStatus.ACTIVE
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to active  ?`
+    this.dialogDescription =
+      'This account will be temporarity disabled. Are you sure you want to change account status?'
+    this.dialogRightButtonText = 'Confirm'
   }
 
-  async clickHold(event: any) {
-    await this.changeStatus(event, 4)
+  clickHold(): void {
+    this.status = OrganizationManagementStatus.HOLD
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to on hold  ?`
+    this.dialogDescription =
+      'This account will be temporarity disabled. Are you sure you want to change account status?'
+    this.dialogRightButtonText = 'Confirm'
   }
 
-  async clickInactive(event: any) {
-    await this.changeStatus(event, 3)
+  clickInActive(): void {
+    this.status = OrganizationManagementStatus.INACTIVE
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to inctive   ?`
+    this.dialogDescription =
+      'This account will be disabled. Are you sure you want to change account status?'
+    this.dialogRightButtonText = 'Confirm'
+    // await this.changeStatus(event, 3)
   }
 
-  async clickDelete(event: any) {
-    let payload: any = []
-
-    event.forEach((item: any) => {
-      payload.push(item.branchId)
-    })
-
-    try {
-      // let response = await this.$axios.$delete(
-      //   `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
-      //   {
-      //     data: { partnerId: payload }
-      //   }
-      // )
-      // if (response.successful) {
-      //   this.getPartnarCode('1', this.pagination)
-      // }
-    } catch (error) {
-      this.$toast.global.error(error.response.data.message)
-    }
+  clickDelete(): void {
+    this.status = OrganizationManagementStatus.DELETE
+    this.setDialogDisplay(true)
+    this.dialogTitle = `Want to delete ${this.selectData.length} items selection   ?`
+    this.dialogDescription =
+      'Please check the information before click to confirm button. The information will lose and never get back.'
+    this.dialogRightButtonText = 'Delete'
   }
 
-  dialogCancelAction() {
+  dialogCancelAction(): void {
     this.setDialogDisplay(false)
   }
 
-  dialogAction() {
+  dialogAction(): void {
     switch (this.status) {
+      case OrganizationManagementStatus.ACTIVE:
+        this.changeStatus(this.selectData, 2)
+        break
       case OrganizationManagementStatus.HOLD:
         this.changeStatus(this.selectData, 4)
         break
@@ -459,42 +468,46 @@ export default class TabBranch extends Vue {
         this.deletePartnerCode(this.selectData)
         break
     }
+    this.selectData = []
+    this.setDialogDisplay(false)
   }
 
-  setDialogDisplay(value: boolean) {
+  setDialogDisplay(value: boolean): void {
     this.dialogDisplay = value
   }
 
-  async deletePartnerCode(event: any) {
-    let payload: any = []
+  async deletePartnerCode(branchs: any): Promise<void> {
+    const branchIds: number[] = []
 
-    event.forEach((item: any) => {
-      payload.push(item.partnerId)
+    branchs.forEach((branch: any) => {
+      branchIds.push(branch.branchId)
     })
 
+    const payload = {
+      branchIds
+    }
+
     try {
-      // let response = await this.$axios.$delete(
-      //   `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
-      //   {
-      //     data: { partnerId: payload }
-      //   }
-      // )
-      // if (response.successful) {
-      //   this.getPartnarCode('1', this.pagination)
-      // }
+      const response = await this.$axios.$delete(
+        `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
+        { data: payload }
+      )
+      if (response.successful) {
+        this.getBranches(1, this.pagination)
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  onRowClicked(row: any) {
+  onRowClicked(row: any): void {
     window.sessionStorage.setItem('parentCompanyId', this.id?.toString() ?? '')
     this.$router.push(
       `/organizationManagement/edit/branch/${row.data.branchId}`
     )
   }
 
-  deleteHandler(map: any, vm: any) {
+  deleteHandler(map: any, vm: any): any {
     return {
       ...map,
       8: (e: any) => {
