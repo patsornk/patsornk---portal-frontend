@@ -209,12 +209,12 @@ const validations = {
   },
   brandNameTh: {
     required,
-    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value),
+    mustBe: (value: any) => /^([ก-๛0-9 (),.&+@])*$/g.test(value),
     maxLength: maxLength(50)
   },
   brandNameEn: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9 (),.&+@])*$/g.test(value),
     maxLength: maxLength(50)
   },
   email: {

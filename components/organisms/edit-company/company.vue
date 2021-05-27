@@ -1,10 +1,11 @@
 <template>
   <div class="edit-company-container">
-    <span class="header">Company Information</span>
+    <span class="header">{{ $t('createCompany.companyInfo') }}</span>
     <div class="input-section">
       <input-field
         v-model="$v.companyNameTh.$model"
         :title="$t('createCompany.companyNameTh')"
+        :placeholder="$t('createCompany.companyNameInput')"
         :maxlength="50"
         required
         :errorMessage="error.companyNameTh"
@@ -13,6 +14,7 @@
         v-model="$v.companyNameEn.$model"
         required
         :title="$t('createCompany.companyNameEn')"
+        :placeholder="$t('createCompany.companyNameInput')"
         :maxlength="50"
         :errorMessage="error.companyNameEn"
       />
@@ -29,6 +31,7 @@
         @onBlur="checkTypeId()"
       />
       <input-field
+        :disable="$v.typeId.$model != 3"
         v-model="$v.categoryId.$model"
         :title="$t('createCompany.partnerCategory')"
         required
@@ -42,6 +45,7 @@
         :errorMessage="error.categoryId"
       />
       <input-field
+        :disable="$v.typeId.$model != 3"
         v-model="$v.sizeId.$model"
         :title="$t('createCompany.businessSize')"
         required
@@ -53,25 +57,29 @@
         :errorMessage="error.sizeId"
       />
       <input-field
+        :disable="$v.typeId.$model != 3"
         v-model="$v.assignee.$model"
         :title="$t('createCompany.assignee')"
+        :placeholder="$t('common.pleaseSelect')"
         required
         :errorMessage="error.assignee"
       />
-      <input-field
+      <!-- Keep for restore in future -->
+      <!-- <input-field
         v-model="$v.email.$model"
         :title="$t('createCompany.email')"
+        :placeholder="$t('createCompany.emailInput')"
         :maxlength="100"
         required
         :errorMessage="error.email"
       />
-      <phone-num-input
+      <phone-num-inpu
         v-model="$v.phoneNumber.$model"
         :title="$t('createCompany.phoneNo')"
         required
         :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
-      />
+      /> -->
       <input-field
         v-model="$v.companyStatus.$model"
         :title="$t('common.status')"
@@ -85,7 +93,7 @@
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="submit">{{$t('common.save')}}</button>
+      <button class="submit" @click="submit">{{ $t('common.save') }}</button>
     </div>
   </div>
 </template>
@@ -106,12 +114,12 @@ import {
 const validations = {
   companyNameTh: {
     required,
-    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value),
+    mustBe: (value: any) => /^([ก-๛0-9 (),.&+@])*$/g.test(value),
     maxLength: maxLength(50)
   },
   companyNameEn: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9 (),.&+@])*$/g.test(value),
     maxLength: maxLength(50)
   },
   typeId: {
@@ -142,13 +150,22 @@ const validations = {
   validationGroup: [
     'companyNameTh',
     'companyNameEn',
+    'companyStatus',
+    'typeId'
+    // 'email',
+    // 'phoneNumber'
+  ],
+
+  validationPartnerGroup: [
+    'companyNameTh',
+    'companyNameEn',
     'typeId',
     'categoryId',
     'companyStatus',
     'sizeId',
-    'assignee',
-    'email',
-    'phoneNumber'
+    'assignee'
+    // 'email',
+    // 'phoneNumber'
   ]
 }
 
@@ -207,9 +224,9 @@ export default class EditCompany extends Vue {
     companyStatus: '',
     sizeId: '',
     assignee: '',
-    email: '',
-    companyPhonePrefix: '',
-    phoneNumber: ''
+    // email: '',
+    // companyPhonePrefix: '',
+    // phoneNumber: ''
   }
 
   private companyTypeList = []
@@ -275,31 +292,43 @@ export default class EditCompany extends Vue {
     this.error.assignee = !this.$v.assignee.required
       ? this.$t('createCompany.error.require').toString()
       : ''
+  }  
+
+  @Watch('typeId')
+  clearError(): void {
+    this.error = {
+      ...this.error,
+      companyNameEn: '',
+      companyNameTh: '',
+      categoryId: '',
+      sizeId: '',
+      assignee: ''
+    }
   }
 
-  @Watch('email')
-  checkEmail(): void {
-    this.error.email = !this.$v.email.required
-      ? this.$t('createCompany.error.require').toString()
-      : !this.$v.email.email
-      ? this.$t('createCompany.characterAndNumber').toString()
-      : !this.$v.email.maxLength
-      ? this.$t('createCompany.maxLength').toString()
-      : ''
-  }
+  // @Watch('email')
+  // checkEmail(): void {
+  //   this.error.email = !this.$v.email.required
+  //     ? this.$t('createCompany.error.require').toString()
+  //     : !this.$v.email.email
+  //     ? this.$t('createCompany.characterAndNumber').toString()
+  //     : !this.$v.email.maxLength
+  //     ? this.$t('createCompany.maxLength').toString()
+  //     : ''
+  // }
 
-  @Watch('phoneNumber')
-  checkPhoneNumber(): void {
-    this.error.phoneNumber = !this.$v.phoneNumber.required
-      ? this.$t('createCompany.error.require').toString()
-      : !this.$v.phoneNumber.numeric
-      ? this.$t('createCompany.number').toString()
-      : !this.$v.phoneNumber.minLength
-      ? this.$t('createCompany.minLength').toString()
-      : !this.$v.phoneNumber.maxLength
-      ? this.$t('createCompany.maxLength').toString()
-      : ''
-  }
+  // @Watch('phoneNumber')
+  // checkPhoneNumber(): void {
+  //   this.error.phoneNumber = !this.$v.phoneNumber.required
+  //     ? this.$t('createCompany.error.require').toString()
+  //     : !this.$v.phoneNumber.numeric
+  //     ? this.$t('createCompany.number').toString()
+  //     : !this.$v.phoneNumber.minLength
+  //     ? this.$t('createCompany.minLength').toString()
+  //     : !this.$v.phoneNumber.maxLength
+  //     ? this.$t('createCompany.maxLength').toString()
+  //     : ''
+  // }
 
   private onChangedPrefixNumber(value: string): void {
     this.companyPhonePrefix = value
@@ -314,28 +343,26 @@ export default class EditCompany extends Vue {
 
   async getCompany(): Promise<void> {
     try {
-        let res = await this.$axios.$get(
-          `${
-            process.env.PORTAL_ENDPOINT
-          }/get_company?companyId=${this.companyId}`,
-          { data: null }
-        )
-        if (res.successful) {
-          const data = res.data
-          this.companyNameTh = data.companyNameTh
-          this.companyNameEn = data.companyNameEn
-          this.typeId = data.companyType.companyTypeId
-          this.categoryId = data.companyCategory.companyCategoryId
-          this.sizeId = data.companySize.companySizeId
-          this.assignee = data.assignee
-          this.email = data.companyEmail
-          this.companyPhonePrefix = data.companyPhonePrefix
-          this.phoneNumber = data.companyPhoneNumber
-          this.companyStatus = data.status
-        }
-      } catch (error) {
-        this.$toast.global.error(error.response.data.message)
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
+        { data: null }
+      )
+      if (res.successful) {
+        const data = res.data
+        this.companyNameTh = data.companyNameTh
+        this.companyNameEn = data.companyNameEn
+        this.typeId = data.companyType.companyTypeId
+        this.categoryId = data.companyCategory.companyCategoryId
+        this.sizeId = data.companySize.companySizeId
+        this.assignee = data.assignee
+        this.email = data.companyEmail
+        this.companyPhonePrefix = data.companyPhonePrefix
+        this.phoneNumber = data.companyPhoneNumber
+        this.companyStatus = data.status
       }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   async getCompanyType(): Promise<void> {
@@ -384,51 +411,91 @@ export default class EditCompany extends Vue {
   }
 
   async submit(): Promise<void> {
-    if (this.$v.validationGroup.$invalid) {
-      this.$toast.global.error(this.$t('createCompany.fieldError'))
-      this.checkCompanyNameEn()
-      this.checkCompanyNameTh()
-      this.checkTypeId()
-      this.checkCategoryId()
-      this.checkcompanyStatus()
-      this.checkSizeId()
-      this.checkAssignee()
-      this.checkEmail()
-      this.checkPhoneNumber()
-    } else {
-      const payload = {
-        companyNameTh: this.$v.companyNameTh.$model,
-        companyNameEn: this.$v.companyNameEn.$model,
-        companyTypeId: this.$v.typeId.$model,
-        companyCategoryId: this.$v.categoryId.$model,
-        companySizeId: this.$v.sizeId.$model,
-        assignee: this.$v.assignee.$model,
-        companyEmail: this.$v.email.$model,
-        companyPhonePrefix: this.companyPhonePrefix,
-        companyPhoneNumber: this.$v.phoneNumber.$model
-      }
-      try {
-        let response = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/update_company`,
-          {
-            companyId: this.companyId,
-            ...payload
-          }
-        )
-        if (response.successful) {
-          this.$store.dispatch(
-            'organizartion/setCompanyId',
-            response.data.companyId
-          )
-          window.sessionStorage.setItem(
-            'createCompanyId',
-            response.data.companyId
-          )
-          this.$toast.global.success(this.$t('common.successfully').toString())
-          window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+    if (this.$v.typeId.$model == 3) {
+      if (this.$v.validationPartnerGroup.$invalid) {
+        this.$toast.global.error(this.$t('createCompany.fieldError'))
+        this.checkCompanyNameEn()
+        this.checkCompanyNameTh()
+        this.checkTypeId()
+        this.checkCategoryId()
+        this.checkcompanyStatus()
+        this.checkSizeId()
+        this.checkAssignee()
+      } else {
+        const payload = {
+          companyNameTh: this.$v.companyNameTh.$model,
+          companyNameEn: this.$v.companyNameEn.$model,
+          companyTypeId: this.$v.typeId.$model,
+          companyCategoryId: this.$v.categoryId.$model,
+          companySizeId: this.$v.sizeId.$model,
+          assignee: this.$v.assignee.$model,
+          stauts: this.$v.companyStatus.$model
         }
-      } catch (error) {
-        this.$toast.global.error(error.response.data.message)
+        try {
+          let response = await this.$axios.$post(
+            `${process.env.PORTAL_ENDPOINT}/update_company`,
+            {
+              companyId: this.companyId,
+              ...payload
+            }
+          )
+          if (response.successful) {
+            this.$store.dispatch(
+              'organizartion/setCompanyId',
+              response.data.companyId
+            )
+            window.sessionStorage.setItem(
+              'createCompanyId',
+              response.data.companyId
+            )
+            this.$toast.global.success(
+              this.$t('common.successfully').toString()
+            )
+            window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+          }
+        } catch (error) {
+          this.$toast.global.error(error.response.data.message)
+        }
+      }
+    } else {
+      if (this.$v.validationGroup.$invalid) {
+        this.$toast.global.error(this.$t('createCompany.fieldError'))
+        this.checkCompanyNameEn()
+        this.checkCompanyNameTh()
+        this.checkTypeId()
+        this.checkcompanyStatus()
+      } else {
+        const payload = {
+          companyNameTh: this.$v.companyNameTh.$model,
+          companyNameEn: this.$v.companyNameEn.$model,
+          companyTypeId: this.$v.typeId.$model,
+          stauts: this.$v.companyStatus.$model
+        }
+        try {
+          let response = await this.$axios.$post(
+            `${process.env.PORTAL_ENDPOINT}/update_company`,
+            {
+              companyId: this.companyId,
+              ...payload
+            }
+          )
+          if (response.successful) {
+            this.$store.dispatch(
+              'organizartion/setCompanyId',
+              response.data.companyId
+            )
+            window.sessionStorage.setItem(
+              'createCompanyId',
+              response.data.companyId
+            )
+            this.$toast.global.success(
+              this.$t('common.successfully').toString()
+            )
+            window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+          }
+        } catch (error) {
+          this.$toast.global.error(error.response.data.message)
+        }
       }
     }
   }

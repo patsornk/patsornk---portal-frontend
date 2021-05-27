@@ -495,11 +495,11 @@ const validations = {
   },
   branchNameTh: {
     required,
-    mustBe: (value: any) => /^([ก-๛0-9 ])*$/g.test(value)
+    mustBe: (value: any) => /^([ก-๛0-9 (),.&+@])*$/g.test(value)
   },
   branchNameEn: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value)
+    mustBe: (value: any) => /^([A-Za-z0-9 (),.&+@])*$/g.test(value)
   },
   siebelBranchCode: {
     required,
