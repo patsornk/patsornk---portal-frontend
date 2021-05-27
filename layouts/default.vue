@@ -89,7 +89,6 @@ export default class Default extends Vue {
     switch (this.pageTitle) {
       case 'การจัดการองค์กร':
       case 'Organization Management':
-        this.$router.push('/organizationManagement/create')
         window.sessionStorage.removeItem('createCompanyFirstTime')
         window.sessionStorage.removeItem('companyFirstTime')
         window.sessionStorage.removeItem('createCompanyId')
@@ -99,6 +98,7 @@ export default class Default extends Vue {
         window.sessionStorage.removeItem('createBranchId')
         window.sessionStorage.removeItem('maxStepbar')
         this.$store.dispatch('stepbar/setMaxState', 0)
+        this.$router.push('/organizationManagement/create')
       default:
         return
     }

@@ -42,7 +42,9 @@
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> {{$t('common.search').toString()}} </t1-button>
+        <t1-button class="black" @click.native="search">
+          {{ $t('common.search').toString() }}
+        </t1-button>
       </div>
     </div>
     <table-component
@@ -291,7 +293,9 @@ export default class OrganizationTable extends Vue {
   private async sortingList(data: any, order: any) {
     this.clickSort = true
     this.clickSearch = false
-    if (data.colKey == 'status') { return }
+    if (data.colKey == 'status') {
+      return
+    }
     if (this.tableOderField == data.colKey) {
       if (this.tableOderBy == 'asc') {
         this.tableOderBy = 'desc'
@@ -304,7 +308,12 @@ export default class OrganizationTable extends Vue {
     }
     this.currentPage = 1
     this.selectData = []
-    this.filterCompanies('1',this.pagination, this.tableOderField, this.tableOderBy)
+    this.filterCompanies(
+      '1',
+      this.pagination,
+      this.tableOderField,
+      this.tableOderBy
+    )
   }
 
   // @Watch('language')
@@ -398,7 +407,43 @@ export default class OrganizationTable extends Vue {
   }
 
   onRowClicked(row: any): void {
-    this.$router.push(`/organizationManagement/${row.data.companyId}`)
+    if (row.data.status == 'Draft') {
+      this.getOnboardStep(row.data.companyId)
+    } else {
+      this.$router.push(`/organizationManagement/${row.data.companyId}`)
+    }
+  }
+
+  async getOnboardStep(id: number): Promise<void> {
+    try {
+      let res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_onboard_step?companyId=${id}`,
+        { data: null }
+      )
+      if (res.successful) {
+        const data = res.data
+        if (data.companyId) {
+          window.sessionStorage.setItem('createCompanyFirstTime', data.companyId)
+          window.sessionStorage.setItem('createCompanyId', data.companyId)
+          window.sessionStorage.setItem('companyFirstTime', 'no')
+        }
+        if (data.brandId) {
+          window.sessionStorage.setItem('createBrandId', data.brandId)
+          window.sessionStorage.setItem('createBrandFirstTime', 'no')
+        }
+        if (data.branchId) {
+          window.sessionStorage.setItem('createBranchId', data.branchId)
+          window.sessionStorage.setItem('createBranchFirstTime', 'no')
+        }
+        if (data.nextStep) {
+          window.sessionStorage.setItem('maxStepbar', data.nextStep)
+          this.$store.dispatch('stepbar/setMaxState', data.nextStep)
+        }
+        this.$router.push('/organizationManagement/create')
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   async mounted(): Promise<void> {

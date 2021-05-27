@@ -865,7 +865,7 @@ export default class CreateBrand extends Vue {
           if (!this.mode) {
             window.sessionStorage.setItem('createBrandFirstTime', 'no')
             window.sessionStorage.setItem(
-              'createCompanyId',
+              'createBrandId',
               response.data.brandId
             )
             this.$toast.global.success(
