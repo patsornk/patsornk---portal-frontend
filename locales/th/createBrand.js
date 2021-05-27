@@ -33,9 +33,13 @@ module.exports = {
     ctaType: 'ประเภทของ CTA',
     ctaFeature: 'ฟีเจอร์ CTA',
     error: {
-      toastOneFieldRequired: 'ต้องระบุข้อมูลอย่างน้อย 1 ช่อง กรุณาตรวจสอบข้อมูล และลองใหม่อีกครั้ง',
+      toastOneFieldRequired:
+        'ต้องระบุข้อมูลอย่างน้อย 1 ช่อง กรุณาตรวจสอบข้อมูล และลองใหม่อีกครั้ง',
+      toastRequiredField:
+        'Please input the required field for Display on the 1 app',
       oneFieldRequired: 'ต้องระบุอย่างน้อย 1 ช่อง',
-      featureCannotDisplay: 'ฟีเจอร์ไม่สามารถแสดงบน The 1 app ได้กรุณาระบุข้อมูลที่จำเป็น',
+      featureCannotDisplay:
+        'ฟีเจอร์ไม่สามารถแสดงบน The 1 app ได้กรุณาระบุข้อมูลที่จำเป็น',
       image: 'ไม่มีไฟล์ที่เลือกไว้',
       ctaLabel: 'ระบุข้อความ CTA',
       ctaType: 'ระบุประเภทของ CTA',

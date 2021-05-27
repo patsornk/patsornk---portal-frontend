@@ -33,7 +33,10 @@ module.exports = {
     ctaType: 'Feature CTA Type',
     ctaFeature: 'Feature CTA',
     error: {
-      toastOneFieldRequired: 'At least one field required. Please check and try again.',
+      toastOneFieldRequired:
+        'At least one field required. Please check and try again.',
+      toastRequiredField:
+        'Please input the required field for Display on the 1 app',
       oneFieldRequired: 'At least one field required',
       featureCannotDisplay: 'The feature cannot display on The 1 App. Please input required field(s).',
       image: 'No file chosen',

@@ -667,9 +667,7 @@ export default class CreateBrand extends Vue {
   }
 
   async save(): Promise<void> {
-    const brandFeatureValidate = !!this.brandFeatureList.find(
-      (brandFeature: any) => brandFeature.isValid === false
-    )
+    const brandFeatureValidate = this.brandFeatureValidate
 
     let validationGroup = false
     let isPartnerCodeList = false
@@ -696,7 +694,12 @@ export default class CreateBrand extends Vue {
       isPartnerCodeList = true
     }
 
-    if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
+    if (
+      validationGroup &&
+      isPartnerCodeList &&
+      brandFeatureValidate &&
+      this.atLeastOneFieldBrandFeatureValidate
+    ) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
@@ -706,16 +709,9 @@ export default class CreateBrand extends Vue {
         ? this.companyId
         : window.sessionStorage.getItem('createCompanyId')
 
-      const brandFeatureFormatedList: any[] = []
-      for (const brandFeature of this.brandFeatureList) {
-        brandFeatureFormatedList.push({
-          brandFeatureLabel: brandFeature.ctaLabel,
-          brandFeatureTypeId: brandFeature.ctaType,
-          brandFeatureValue: brandFeature.ctaFeature,
-          brandFeatureLogoImg: await this.getBase64(brandFeature.image),
-          showInApp: brandFeature.showDisplay
-        })
-      }
+      const brandFeatureFormatedList = await this.getBrandFeaturePayload(
+        this.brandFeatureList
+      )
 
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
@@ -764,9 +760,7 @@ export default class CreateBrand extends Vue {
   }
 
   async update(): Promise<void> {
-    const brandFeatureValidate = !!this.brandFeatureList.find(
-      (brandFeature: any) => brandFeature.isValid === false
-    )
+    const brandFeatureValidate = this.brandFeatureValidate
 
     let validationGroup = false
     let isPartnerCodeList = false
@@ -808,7 +802,12 @@ export default class CreateBrand extends Vue {
       isPartnerCodeList = true
     }
 
-    if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
+    if (
+      validationGroup &&
+      isPartnerCodeList &&
+      brandFeatureValidate &&
+      this.atLeastOneFieldBrandFeatureValidate
+    ) {
       const partnerId = this.$v.partnerCodeList.$model.map(
         (item: { id: any }) => {
           return item.id
@@ -821,18 +820,9 @@ export default class CreateBrand extends Vue {
         ? parseInt(this.brandId)
         : window.sessionStorage.getItem('createBrandId')
 
-      const brandFeatureFormatedList: any[] = []
-      for (const brandFeature of this.brandFeatureList) {
-        const imageUrl = await this.getBase64(brandFeature.image)
-        brandFeatureFormatedList.push({
-          brandFeatureId: brandFeature?.id,
-          brandFeatureLogoImg: brandFeature.imageUrl ? imageUrl : '',
-          brandFeatureLabel: brandFeature.ctaLabel,
-          brandFeatureTypeId: brandFeature.ctaType,
-          brandFeatureValue: brandFeature.ctaFeature,
-          showInApp: brandFeature.showDisplay
-        })
-      }
+      const brandFeatureFormatedList = await this.getBrandFeaturePayload(
+        this.brandFeatureList
+      )
 
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
@@ -884,19 +874,24 @@ export default class CreateBrand extends Vue {
     }
   }
 
-  get createBrandFeatureValidate(): boolean {
+  get atLeastOneFieldBrandFeatureValidate(): boolean {
     const currentIndex = this.currentBrandFeatureIndex - 1
     const validate =
-      this.brandFeatureList[currentIndex].ctaLabel !== '' ||
-      this.brandFeatureList[currentIndex].ctaType !== '' ||
-      this.brandFeatureList[currentIndex].ctaFeature !== '' ||
-      (this.brandFeatureList[currentIndex].imageUrl !== '' &&
-        this.brandFeatureList[currentIndex].imageUrl !== undefined)
+      this.brandFeatureList[currentIndex].ctaLabel ||
+      this.brandFeatureList[currentIndex].ctaType ||
+      this.brandFeatureList[currentIndex].ctaFeature ||
+      this.brandFeatureList[currentIndex].imageUrl
     return validate
   }
 
+  get brandFeatureValidate(): boolean {
+    return !this.brandFeatureList.find(
+      (brandFeature: any) => brandFeature.isValid === false
+    )
+  }
+
   createBrandFeature(): void {
-    if (this.createBrandFeatureValidate) {
+    if (this.atLeastOneFieldBrandFeatureValidate && this.brandFeatureValidate) {
       this.brandFeatureError = ''
       this.brandFeatureList.push({
         image: undefined,
@@ -908,12 +903,16 @@ export default class CreateBrand extends Vue {
         isValid: true
       })
       this.currentBrandFeatureIndex = this.brandFeatureList.length
-    } else {
+    } else if (!this.atLeastOneFieldBrandFeatureValidate) {
       this.brandFeatureError = this.$t(
         'createBrand.brandFeature.error.oneFieldRequired'
       )
       this.$toast.global.error(
         this.$t('createBrand.brandFeature.error.toastOneFieldRequired')
+      )
+    } else if (!this.brandFeatureValidate) {
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastRequiredField')
       )
     }
   }
@@ -923,15 +922,19 @@ export default class CreateBrand extends Vue {
       return false
     }
 
-    if (this.createBrandFeatureValidate) {
+    if (this.atLeastOneFieldBrandFeatureValidate && this.brandFeatureValidate) {
       this.brandFeatureError = ''
       this.currentBrandFeatureIndex = index
-    } else {
+    } else if (!this.atLeastOneFieldBrandFeatureValidate) {
       this.brandFeatureError = this.$t(
         'createBrand.brandFeature.error.oneFieldRequired'
       )
       this.$toast.global.error(
         this.$t('createBrand.brandFeature.error.toastOneFieldRequired')
+      )
+    } else if (!this.brandFeatureValidate) {
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastRequiredField')
       )
     }
   }
@@ -954,6 +957,30 @@ export default class CreateBrand extends Vue {
       this.brandFeatureError = ''
     }
     this.brandFeatureList[index][key] = value
+  }
+
+  async getBrandFeaturePayload(datas: any): Promise<any> {
+    const brandFeatureFormatedList: any[] = []
+    for (const brandFeature of datas) {
+      const imageUrl = await this.getBase64(brandFeature.image)
+      if (
+        brandFeature?.id ||
+        brandFeature.imageUrl ||
+        brandFeature.ctaLabel ||
+        brandFeature.ctaType ||
+        brandFeature.ctaFeature
+      ) {
+        brandFeatureFormatedList.push({
+          brandFeatureId: brandFeature?.id,
+          brandFeatureLogoImg: brandFeature.imageUrl ? imageUrl : '',
+          brandFeatureLabel: brandFeature.ctaLabel,
+          brandFeatureTypeId: brandFeature.ctaType,
+          brandFeatureValue: brandFeature.ctaFeature,
+          showInApp: brandFeature.showDisplay
+        })
+      }
+    }
+    return brandFeatureFormatedList
   }
 }
 </script>
