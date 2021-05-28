@@ -122,7 +122,7 @@ export default class TabBranch extends Vue {
         label: `${this.$t('common.searchBy')} ${this.$t('common.branchTitle')}`
       },
       {
-        id: 'partner',
+        id: 'partnerCode',
         label: `${this.$t('common.searchBy')} ${this.$t(
           'common.partnerCodeTitle'
         )}`
@@ -151,7 +151,7 @@ export default class TabBranch extends Vue {
       label: 'Search by Branch'
     },
     {
-      id: 'partner',
+      id: 'partnerCode',
       label: 'Search by PartnerCode'
     }
   ]

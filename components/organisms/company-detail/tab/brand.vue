@@ -112,7 +112,7 @@ export default class TabBrand extends Vue {
         label: `${this.$t('common.searchBy')} ${this.$t('common.brandTitle')}`
       },
       {
-        id: 'partner',
+        id: 'partnerCode',
         label: `${this.$t('common.searchBy')} ${this.$t(
           'common.partnerCodeTitle'
         )}`
@@ -139,7 +139,7 @@ export default class TabBrand extends Vue {
       label: 'Search by Brand'
     },
     {
-      id: 'partner',
+      id: 'partnerCode',
       label: 'Search by PartnerCode'
     }
   ]

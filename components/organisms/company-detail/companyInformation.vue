@@ -1,7 +1,7 @@
 <template>
   <div class="company-info-container">
     <div class="header-box">
-      <div class="text-header">{{$t('createCompany.companyInfo')}}</div>
+      <div class="text-header">{{ $t('createCompany.companyInfo') }}</div>
       <img
         class="edit"
         :src="assets('company-detail/edit.png')"
@@ -9,8 +9,14 @@
       />
     </div>
     <div class="data-box">
-      <text-info :title="$t('createCompany.companyNameTh')" :value="company.companyNameTh" />
-      <text-info :title="$t('createCompany.companyNameEn')" :value="company.companyNameEn" />
+      <text-info
+        :title="$t('createCompany.companyNameTh')"
+        :value="company.companyNameTh"
+      />
+      <text-info
+        :title="$t('createCompany.companyNameEn')"
+        :value="company.companyNameEn"
+      />
       <text-info
         :title="$t('createCompany.companyType')"
         :value="
@@ -20,22 +26,32 @@
         "
       />
       <text-info
+        v-if="company.companyCategory"
         :title="$t('createCompany.partnerCategory')"
         :value="
-          language === 'en'
-            ? company.companyCategory.companyCategoryEn
-            : company.companyCategory.companyCategoryTh
+          company.companyCategory
+            ? language === 'en'
+              ? company.companyCategory.companyCategoryEn
+              : company.companyCategory.companyCategoryTh
+            : ''
         "
       />
       <text-info
+        v-if="company.companySize"
         :title="$t('createCompany.businessSize')"
         :value="
-          language === 'en'
-            ? company.companySize.companySizeEn
-            : company.companySize.companySizeTh
+          company.companySize
+            ? language === 'en'
+              ? company.companySize.companySizeEn
+              : company.companySize.companySizeTh
+            : ''
         "
       />
-      <text-info :title="$t('createCompany.assignee')" :value="company.assignee" />
+      <text-info
+        v-if="company.assignee"
+        :title="$t('createCompany.assignee')"
+        :value="company.assignee"
+      />
       <!-- <text-info :title="$t('createCompany.email')" :value="company.companyEmail" />
       <text-info
         :title="$t('createCompany.phoneNo')"
@@ -68,7 +84,9 @@ export default class CompanyInformation extends Vue {
   }
 
   editCompany() {
-    this.$router.push(`/organizationManagement/edit/company/${this.company?.companyId}`)
+    this.$router.push(
+      `/organizationManagement/edit/company/${this.company?.companyId}`
+    )
   }
 
   assets(name: string) {

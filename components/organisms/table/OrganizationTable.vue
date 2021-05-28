@@ -127,7 +127,7 @@ export default class OrganizationTable extends Vue {
         label: `${this.$t('common.searchBy')} ${this.$t('common.companyTitle')}`
       },
       {
-        id: 'partner',
+        id: 'partnerCode',
         label: `${this.$t('common.searchBy')} ${this.$t(
           'common.partnerCodeTitle'
         )}`
@@ -161,7 +161,7 @@ export default class OrganizationTable extends Vue {
       label: 'Search by Company'
     },
     {
-      id: 'partner',
+      id: 'partnerCode',
       label: 'Search by PartnerCode'
     }
   ]
