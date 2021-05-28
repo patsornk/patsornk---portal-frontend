@@ -18,15 +18,14 @@
     <siebel-partner
       v-if="isShowEditForm"
       v-model="editSiebelPartner"
-      :action="$t('common.edit')"
       @clickAdd="clickEditNewSiebelPartner"
       @clickDelete="clickCancelSiebelPartner"
     />
     <siebel-partner
       v-if="isShowNewForm"
       v-model="newSiebelPartner"
-      :action="$t('common.add')"
-      :delete-able="deleteAble"
+      action="add"
+      :delete-able="dataList.length > 0"
       :partner-code-error="partnerCodeError"
       @clickAdd="clickAddNewSiebelPartner"
       @clickDelete="clearData"
@@ -75,8 +74,6 @@ export default class CreatePartnerCode extends Vue {
   private stepMode?: string
 
   companyId = window.sessionStorage.getItem('createCompanyId')
-
-  deleteAble = false
 
   frameworkComponents = {
     agActionField: AgActionField
@@ -163,7 +160,6 @@ export default class CreatePartnerCode extends Vue {
         this.dataList = this.mappingPartners(res.data.partner)
         this.refList = [...this.dataList]
         if (this.dataList.length > 0) {
-          this.deleteAble = true
           this.isShowNewForm = false
           this.isShowEditForm = false
         }
@@ -204,7 +200,7 @@ export default class CreatePartnerCode extends Vue {
   }
 
   clickAdd(): void | boolean {
-    if (this.isShowEditForm) {
+    if (this.isShowNewForm || this.isShowEditForm) {
       this.$toast.global.error(
         'Please finish current action before click another.'
       )
@@ -353,6 +349,7 @@ export default class CreatePartnerCode extends Vue {
       )
 
       if (res.successful) {
+        this.selectData = []
         this.$toast.global.success(this.$t('common.deletedSuccessfully'))
         this.getPartnerList()
         this.clearData()
@@ -408,7 +405,13 @@ export default class CreatePartnerCode extends Vue {
     this.isShowEditForm = false
   }
 
-  clickDeleteList(): void {
+  clickDeleteList(): void | boolean {
+    if (this.isShowNewForm || this.isShowEditForm) {
+      this.$toast.global.error(
+        'Please finish current action before click another.'
+      )
+      return
+    }
     this.selectData.forEach((item) => {
       this.clickDeleteSiebelPartner(item)
     })

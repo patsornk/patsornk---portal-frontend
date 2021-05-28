@@ -38,7 +38,7 @@
     <div v-if="deleteAble">
       <img
         class="icon"
-        :src="assets('icon/close.png')"
+        :src="assets(action === 'add' ? 'table/delete.png' : 'icon/close.png')"
         @click="$emit('clickDelete')"
       />
     </div>
