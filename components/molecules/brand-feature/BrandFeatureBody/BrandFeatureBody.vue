@@ -376,7 +376,12 @@ export default class BrandFeatureBody extends Vue {
   }
 
   deleteBrandFeature(): void {
-    if (!this.showDisplay) {
+    if (this.showDisplay) {
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastDelete')
+      )
+      return
+    } else {
       this.dialogDisplay = true
     }
   }

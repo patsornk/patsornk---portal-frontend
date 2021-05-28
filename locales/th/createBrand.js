@@ -37,6 +37,7 @@ module.exports = {
         'ต้องระบุข้อมูลอย่างน้อย 1 ช่อง กรุณาตรวจสอบข้อมูล และลองใหม่อีกครั้ง',
       toastRequiredField:
         'Please input the required field for Display on the 1 app',
+      toastDelete: 'ไม่สามารถลบได้ขณะที่เปิดใช้งาน ‘แสดงผลบน The 1 แอปพลิเคชัน’',
       oneFieldRequired: 'ต้องระบุอย่างน้อย 1 ช่อง',
       featureCannotDisplay:
         'ฟีเจอร์ไม่สามารถแสดงบน The 1 app ได้กรุณาระบุข้อมูลที่จำเป็น',
