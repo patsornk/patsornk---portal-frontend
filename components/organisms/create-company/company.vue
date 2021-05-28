@@ -404,7 +404,8 @@ export default class CreateCompany extends Vue {
           window.sessionStorage.getItem('companyFirstTime') === 'no'
         ) {
           try {
-            const response = await this.$axios.$post(
+            this.$nuxt.$loading.start()
+            let response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/update_company`,
               {
                 companyId: window.sessionStorage.getItem('createCompanyId'),
@@ -426,12 +427,15 @@ export default class CreateCompany extends Vue {
               window.sessionStorage.setItem('createCompanyFirstTime', 'no')
               this.$store.dispatch('stepbar/setEnableSubmit', 1)
             }
+            this.$nuxt.$loading.finish()
           } catch (error) {
+            this.$nuxt.$loading.finish()
             this.$toast.global.error(error.response.data.message)
           }
         } else {
           try {
-            const response = await this.$axios.$post(
+            this.$nuxt.$loading.start()
+            let response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/create_company`,
               payload
             )
@@ -450,7 +454,9 @@ export default class CreateCompany extends Vue {
               )
               this.$router.push('/organizationManagement/create/partnercode')
             }
+            this.$nuxt.$loading.finish()
           } catch (error) {
+            this.$nuxt.$loading.finish()
             this.$toast.global.error(error.response.data.message)
           }
         }
@@ -479,7 +485,8 @@ export default class CreateCompany extends Vue {
           window.sessionStorage.getItem('companyFirstTime') === 'no'
         ) {
           try {
-            const response = await this.$axios.$post(
+            this.$nuxt.$loading.start()
+            let response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/update_company`,
               {
                 companyId: window.sessionStorage.getItem('createCompanyId'),
@@ -501,12 +508,15 @@ export default class CreateCompany extends Vue {
               window.sessionStorage.setItem('createCompanyFirstTime', 'no')
               this.$store.dispatch('stepbar/setEnableSubmit', 1)
             }
+            this.$nuxt.$loading.finish()
           } catch (error) {
+            this.$nuxt.$loading.finish()
             this.$toast.global.error(error.response.data.message)
           }
         } else {
           try {
-            const response = await this.$axios.$post(
+            this.$nuxt.$loading.start()
+            let response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/create_company`,
               payload
             )
@@ -525,7 +535,9 @@ export default class CreateCompany extends Vue {
               )
               this.$router.push('/organizationManagement/create/partnercode')
             }
+            this.$nuxt.$loading.finish()
           } catch (error) {
+            this.$nuxt.$loading.finish()
             this.$toast.global.error(error.response.data.message)
           }
         }

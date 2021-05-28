@@ -6,6 +6,7 @@ export default {
   // target: 'static',
 
   mode:'spa',
+  loading: '~/components/atoms/Loading.vue',
 
   server: {
     port: 3000, // default: 3000

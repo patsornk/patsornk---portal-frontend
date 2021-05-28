@@ -5,7 +5,7 @@
       <create-company v-show="param === step.COMPANY" />
       <create-partner-code v-show="param === step.PARTNERCODE" />
       <create-brand v-show="param === step.BRAND" />
-      <create-branch v-show="param === step.BRANCH" />
+      <create-branch v-show="param === step.BRANCH" componetMode="onboard"/>
       <service-selection v-show="param === step.SERVICE" />
     </div>
     <!-- for debug stepbar (action is next stepbar)-->

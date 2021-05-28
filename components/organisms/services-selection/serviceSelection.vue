@@ -1,7 +1,7 @@
 <template>
   <div class="services-selection-container">
-    <span>{{$t('common.serviceSelection')}}</span>
-    <div class="text-header">{{$t('applyService.appliesService')}}</div>
+    <span>{{ $t('common.serviceSelection') }}</span>
+    <div class="text-header">{{ $t('applyService.appliesService') }}</div>
     <div v-if="appliedServices.length > 0" class="list-section">
       <div v-for="(item, index) in appliedServices" :key="index">
         <service
@@ -13,8 +13,10 @@
         />
       </div>
     </div>
-    <div class="no-applied" v-else>{{$t('applyService.noAppliesServiceChose')}} </div>
-    <div class="text-header">{{$t('applyService.availableService')}}</div>
+    <div class="no-applied" v-else>
+      {{ $t('applyService.noAppliesServiceChose') }}
+    </div>
+    <div class="text-header">{{ $t('applyService.availableService') }}</div>
     <div class="list-section">
       <div v-for="(item, index) in availableServices" :key="index">
         <service
@@ -147,10 +149,12 @@ export default class ServiceSelection extends Vue {
       serviceId: [serviceId]
     }
     try {
+      this.$nuxt.$loading.start()
       let response = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/apply_service`,
         payload
       )
+      this.$nuxt.$loading.finish()
       if (response.successful) {
         this.$toast.global.success(this.$t('common.successfully').toString())
         return true
@@ -158,6 +162,7 @@ export default class ServiceSelection extends Vue {
         return false
       }
     } catch (error) {
+      this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
       return false
     }

@@ -803,6 +803,7 @@ export default class CreateBrand extends Vue {
       }
 
       try {
+        this.$nuxt.$loading.start()
         const response = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/create_brand`,
           payload
@@ -822,7 +823,9 @@ export default class CreateBrand extends Vue {
             this.submitBrand(response.data.brandId)
           }
         }
+        this.$nuxt.$loading.finish()
       } catch (error) {
+        this.$nuxt.$loading.finish()
         this.$toast.global.error(error.response.data.message)
       }
     }
@@ -983,6 +986,7 @@ export default class CreateBrand extends Vue {
       }
 
       try {
+        this.$nuxt.$loading.start()
         const response = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/update_brand`,
           payload
@@ -1021,7 +1025,9 @@ export default class CreateBrand extends Vue {
             )
           }
         }
+        this.$nuxt.$loading.finish()
       } catch (error) {
+        this.$nuxt.$loading.finish()
         this.$toast.global.error(error.response.data.message)
       }
     }

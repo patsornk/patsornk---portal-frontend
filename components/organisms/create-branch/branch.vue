@@ -38,7 +38,7 @@
       <input-field
         v-model="$v.siebelBranchCode.$model"
         :title="$t('createBranch.branchInfo.siebelBranchCode')"
-        :maxlength="50"
+        :maxlength="15"
         required
         :errorMessage="error.siebelBranchCode"
       />
@@ -692,7 +692,7 @@ export default class CreateBranch extends Vue {
   @Prop({
     type: String,
     required: false,
-    default: ''
+    default: 'onboard'
   })
   readonly componetMode!: string
 
@@ -1630,7 +1630,7 @@ export default class CreateBranch extends Vue {
     await this.getMallList()
     await this.getProvinceList()
 
-    if (!this.componetMode) {
+    if (this.componetMode === 'onboard') {
       if (
         window.sessionStorage.getItem('createBranchFirstTime') &&
         window.sessionStorage.getItem('createBranchFirstTime') === 'no'
@@ -1777,10 +1777,10 @@ export default class CreateBranch extends Vue {
   }
 
   clickSave(): void {
-    if (!this.componetMode) {
+    if (this.componetMode === 'onboard') {
       if (
-        window.sessionStorage.getItem('createBrandFirstTime') &&
-        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+        window.sessionStorage.getItem('createBranchFirstTime') &&
+        window.sessionStorage.getItem('createBranchFirstTime') === 'no'
       ) {
         this.update()
       } else {
@@ -2397,12 +2397,13 @@ export default class CreateBranch extends Vue {
     }
 
     try {
+      this.$nuxt.$loading.start()
       let response = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/create_branch`,
         payload
       )
       if (response.successful) {
-        if (!this.componetMode) {
+        if (this.componetMode === 'onboard') {
           this.$store.dispatch(
             'organizartion/setBranchId',
             response.data.branchId
@@ -2416,9 +2417,15 @@ export default class CreateBranch extends Vue {
           this.$router.push('/organizationManagement/create/service')
         } else if (this.componetMode === 'create') {
           this.submitBranch(response.data.branchId)
+        } else if (this.componetMode === 'onboard') {
+          window.sessionStorage.setItem('createBranchFirstTime', 'no')
+          this.$toast.global.success(this.$t('common.successfully').toString())
+          this.$router.push('/organizationManagement/create/service')
         }
       }
+      this.$nuxt.$loading.finish()
     } catch (error) {
+      this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
     }
   }
@@ -2485,6 +2492,7 @@ export default class CreateBranch extends Vue {
     }
 
     try {
+      this.$nuxt.$loading.start()
       let response = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/update_branch`,
         payload
@@ -2497,7 +2505,9 @@ export default class CreateBranch extends Vue {
         } else {
         }
       }
+      this.$nuxt.$loading.finish()
     } catch (error) {
+      this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
     }
   }

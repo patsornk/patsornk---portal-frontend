@@ -238,6 +238,7 @@ export default class CreatePartnerCode extends Vue {
           companyId: this.companyId
         }
 
+        this.$nuxt.$loading.start()
         const res = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
           payload
@@ -256,7 +257,9 @@ export default class CreatePartnerCode extends Vue {
           })
           this.clearData()
         }
+        this.$nuxt.$loading.finish()
       } catch (error) {
+        this.$nuxt.$loading.finish()
         this.$toast.global.error(error.response.data.message)
         if (error.response.data.code === '07') {
           this.partnerCodeError = this.$t(
@@ -286,6 +289,7 @@ export default class CreatePartnerCode extends Vue {
           payload
         )
 
+        this.$nuxt.$loading.start()
         if (res.successful) {
           this.partnerCodeError = ''
           this.dataList.push({
@@ -300,7 +304,9 @@ export default class CreatePartnerCode extends Vue {
           this.refList = [...this.dataList]
           this.clearData()
         }
+        this.$nuxt.$loading.finish()
       } catch (error) {
+        this.$nuxt.$loading.finish()
         this.$toast.global.error(error.response.data.message)
         if (error.response.data.code === '07') {
           this.partnerCodeError = this.$t(
