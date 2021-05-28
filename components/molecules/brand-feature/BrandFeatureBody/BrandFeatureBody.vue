@@ -51,6 +51,7 @@
         :title="$t('createBrand.brandFeature.ctaLabel')"
         :required="showDisplay"
         :error-message="error.ctaLabel"
+        :maxlength="50"
         :placeholder="$t('createBrand.brandFeature.ctaLabel')"
       />
       <input-field
