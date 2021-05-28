@@ -66,11 +66,11 @@ export default class CreatePartnerCode extends Vue {
     type: String
   })
   companyIdParent!: string
-  
+
   @Prop({
     required: false,
     type: String,
-    default: "onboard"
+    default: 'onboard'
   })
   private stepMode?: string
 
@@ -160,8 +160,8 @@ export default class CreatePartnerCode extends Vue {
       )
 
       if (res.successful) {
-        this.dataList = res.data.partner
-        this.refList = [...res.data.partner]
+        this.dataList = this.mappingPartners(res.data.partner)
+        this.refList = [...this.dataList]
         if (this.dataList.length > 0) {
           this.deleteAble = true
           this.isShowNewForm = false
@@ -175,8 +175,19 @@ export default class CreatePartnerCode extends Vue {
     }
   }
 
+  mappingPartners(partners: any[]): any[] {
+    return partners.map((partner: any) => {
+      return {
+        id: partner.partnerId,
+        partnerId: partner.partnerId,
+        partnerCode: partner.partnerCode,
+        partnerName: partner.partnerName
+      }
+    })
+  }
+
   clickEditSiebelPartner(param: string): boolean | void {
-    if (this.isShowNewForm) {
+    if (this.isShowNewForm || this.isShowEditForm) {
       this.$toast.global.error(
         'Please finish current action before click another.'
       )
@@ -203,7 +214,9 @@ export default class CreatePartnerCode extends Vue {
   }
 
   deleteItem(item: SiebelPartnerType): void {
-    const index = this.dataList.indexOf(item)
+    const index = this.dataList.findIndex((data: any) => {
+      return data.partnerId === item.partnerId
+    })
     this.refList = [...this.dataList]
     if (index > -1) {
       this.dataList.splice(index, 1)
