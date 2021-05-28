@@ -37,6 +37,15 @@ export default class OrganizationManagement extends Vue {
   }
 
   mounted() {
+    window.sessionStorage.removeItem('createCompanyFirstTime')
+    window.sessionStorage.removeItem('companyFirstTime')
+    window.sessionStorage.removeItem('createCompanyId')
+    window.sessionStorage.removeItem('createBrandFirstTime')
+    window.sessionStorage.removeItem('createBrandId')
+    window.sessionStorage.removeItem('createBranchFirstTime')
+    window.sessionStorage.removeItem('createBranchId')
+    window.sessionStorage.removeItem('maxStepbar')
+    this.$store.dispatch('stepbar/setMaxState', 0)
     this.setupBreadcrumb()
   }
 
