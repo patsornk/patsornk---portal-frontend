@@ -125,7 +125,7 @@ export default class TabBrand extends Vue {
   dialogTitle = ''
   dialogDescription = ''
   dialogLeftButtonText = ''
-  dialogRightButtonText = 'ee'
+  dialogRightButtonText = ''
 
   selectData = []
   currentPage = 1

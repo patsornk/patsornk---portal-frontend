@@ -65,6 +65,19 @@
       :framework-components="frameworkComponents"
       @onChenagePage="changePage"
       @pagination="changPageSize"
+      @clickActive="onTableIconClick"
+      @clickHold="onTableIconClick"
+      @clickInActive="onTableIconClick"
+      @clickDelete="onTableIconClick"
+    />
+    <dialog-popup
+      :display="dialogDisplay"
+      :title="dialogTitle"
+      :description="dialogDescription"
+      :left-button-title="dialogLeftButtonText"
+      :right-button-title="dialogRightButtonText"
+      @onLeftButtonClick="onLeftDialogPopupClick"
+      @onRightButtonClick="onRightDialogPopupClick"
     />
   </div>
 </template>
@@ -77,6 +90,8 @@ import InputField from '@/components/atoms/InputField.vue'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import CustomHeader from '~/components/atoms/AgCustomHeader'
 import InputSearch from '~/components/atoms/InputSearch.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
+import { OrganizationManagementStatus } from '~/constants'
 
 enum OrganizationTableCol {
   NameTh = 'companyNameTh',
@@ -93,7 +108,8 @@ enum OrganizationTableCol {
     InputField,
     T1Dropdown,
     T1Button,
-    InputSearch
+    InputSearch,
+    DialogPopup
   }
 })
 export default class OrganizationTable extends Vue {
@@ -122,6 +138,13 @@ export default class OrganizationTable extends Vue {
   frameworkComponents = {
     agColumnHeader: CustomHeader
   }
+
+  dialogAction = ''
+  dialogDisplay = false
+  dialogTitle = ''
+  dialogDescription = ''
+  dialogLeftButtonText = ''
+  dialogRightButtonText = ''
 
   tableOderField = ''
   tableOderBy = ''
@@ -153,7 +176,7 @@ export default class OrganizationTable extends Vue {
     compantStatus: 0
   }
 
-  private pagination = '10'
+  private pagination = 10
   private companyType: any = []
   private companySize: any = []
   private companyCategory: any = []
@@ -309,100 +332,29 @@ export default class OrganizationTable extends Vue {
     this.currentPage = 1
     this.selectData = []
     this.filterCompanies(
-      '1',
+      1,
       this.pagination,
       this.tableOderField,
       this.tableOderBy
     )
   }
 
-  // @Watch('language')
-  // changeCollHeader() {
-  //   this.columnDefs = [
-  //     {
-  //       headerName: this.$t('createCompany.companyNameTh').toString(),
-  //       field: 'regioCompanyNameTh',
-  //       cellRenderer: (params: any) => {
-  //         return `<div class="custom-row">
-  //                 ${params.data.regioCompanyNameTh}
-  //               </div>`
-  //       }
-  //     },
-  //     {
-  //       headerName: this.$t('createCompany.companyNameEn').toString(),
-  //       field: 'regioCompanyNameEn',
-  //       cellRenderer: (params: any) => {
-  //         return `<div class="custom-row">
-  //                 ${params.data.regioCompanyNameEn}
-  //               </div>`
-  //       }
-  //     },
-  //     {
-  //       headerName: this.$t('createCompany.partnerCategory').toString(),
-  //       field: 'companyCategory',
-  //       cellRenderer: (params: any) => {
-  //         return `<div class="custom-row">
-  //                 ${params.data.companyCategory}
-  //               </div>`
-  //       }
-  //     },
-  //     {
-  //       headerName: this.$t('createCompany.companyType').toString(),
-  //       field: 'companyType',
-  //       cellRenderer: (params: any) => {
-  //         return `<div class="custom-row">
-  //                 ${params.data.companyType}
-  //               </div>`
-  //       }
-  //     },
-  //     {
-  //       headerName: this.$t('createCompany.businessSize').toString(),
-  //       field: 'businessSize',
-  //       cellRenderer: (params: any) => {
-  //         return `<div class="custom-row">
-  //                 ${params.data.businessSize}
-  //               </div>`
-  //       }
-  //     },
-  //     {
-  //       headerName: this.$t('common.status').toString(),
-  //       field: 'status',
-  //       cellRenderer: (params: any) => {
-  //         let strFormat = ''
-  //         params.data.status === 'Active'
-  //           ? (strFormat = 'active')
-  //           : params.data.status === 'On hold'
-  //           ? (strFormat = 'hold')
-  //           : (strFormat = 'in-active')
-  //         return `<div class="custom-row">
-  //                 <span class='row-status ${strFormat}'>${params.data.status}</span>
-  //               </div>`
-  //       }
-  //     }
-  //   ]
-  // }
-
-  private search() {
+  private search(): void {
     this.clickSearch = true
     this.clickSort = false
     this.tableOderField = ''
     this.tableOderBy = ''
     this.currentPage = 1
-    this.filterCompanies('1', this.pagination)
+    this.filterCompanies(1, this.pagination)
   }
 
-  changPageSize(pagination: string): void {
+  changPageSize(pagination: number): void {
     this.pagination = pagination
     this.currentPage = 1
     if (this.clickSearch || this.clickSort) {
-      this.filterCompanies(
-        '1',
-        pagination,
-        this.tableOderField,
-        this.tableOderBy
-      )
+      this.filterCompanies(1, pagination, this.tableOderField, this.tableOderBy)
     } else {
-      this.getCompanies('1', pagination)
+      this.getCompanies(1, pagination)
     }
   }
 
@@ -454,69 +406,68 @@ export default class OrganizationTable extends Vue {
     await this.getCompanySize()
     await this.getCompanyCategory()
     this.currentPage = 1
-    this.getCompanies('1', '10')
+    this.getCompanies(1, 10)
   }
 
   changePage(page: number): void {
     this.currentPage = page
     if (this.clickSearch || this.clickSort) {
       this.filterCompanies(
-        page.toString(),
+        page,
         this.pagination,
         this.tableOderField,
         this.tableOderBy
       )
     } else {
-      this.getCompanies(page.toString(), this.pagination)
+      this.getCompanies(page, this.pagination)
     }
   }
 
   async filterCompanies(
-    page: string,
-    limit: string,
+    page: number,
+    limit: number,
     sortBy?: string,
     sortDirection?: string
   ): Promise<void> {
     let path = `/list_company?page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy !== '') {
-      path = path + `&keywordOf=${this.filterData.search.searchBy}`
+      path = `${path}&keywordOf=${this.filterData.search.searchBy}`
     }
     if (sortBy) {
-      path = path + `&sortBy=${sortBy}`
+      path = `${path}&sortBy=${sortBy}`
     }
     if (sortDirection) {
-      path = path + `&sortDirection=${sortDirection}`
+      path = `${path}&sortDirection=${sortDirection}`
     }
     if (this.filterData.search.keyword !== '') {
-      path = path + `&keyword=${this.filterData.search.keyword}`
+      path = `${path}&keyword=${this.filterData.search.keyword}`
     }
     if (this.filterData.compantStatus > 0) {
-      path = path + `&statusId=${this.filterData.compantStatus}`
+      path = `${path}&statusId=${this.filterData.compantStatus}`
     }
     if (this.filterData.companyCategoryId > 0) {
-      path = path + `&companyCategoryId=${this.filterData.companyCategoryId}`
+      path = `${path}&companyCategoryId=${this.filterData.companyCategoryId}`
     }
     if (this.filterData.companyTypeId && this.filterData.companyTypeId !== 1) {
-      path = path + `&companyTypeId=${this.filterData.companyTypeId}`
+      path = `${path}&companyTypeId=${this.filterData.companyTypeId}`
     }
 
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,
-        {
-          data: null
-        }
+        { data: null }
       )
       if (res.successful) {
         this.mappingCompany(res.data)
+        this.currentPage = page
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
   }
 
-  async getCompanies(page: string, limit: string): Promise<void> {
+  async getCompanies(page: number, limit: number): Promise<void> {
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_company?page=${page}&limit=${limit}`,
@@ -524,6 +475,7 @@ export default class OrganizationTable extends Vue {
       )
       if (res.successful) {
         this.mappingCompany(res.data)
+        this.currentPage = page
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -586,6 +538,47 @@ export default class OrganizationTable extends Vue {
     }
   }
 
+  async changeCompanyStatus(companies: any[], statusId: number): Promise<void> {
+    const companyIds: any[] = []
+    companies.forEach((company: any) => {
+      companyIds.push(company.companyId)
+    })
+    const payload = {
+      companyIds,
+      statusId
+    }
+    try {
+      const response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/update_company_status`,
+        payload
+      )
+      if (response.successful) {
+        this.getCompanies(1, this.pagination)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.message)
+    }
+  }
+
+  async deleteCompany(companies: any[]): Promise<void> {
+    const companyIds: any[] = []
+    companies.forEach((company: any) => {
+      companyIds.push(company.companyId)
+    })
+    const payload = { companyIds }
+    try {
+      const response = await this.$axios.$delete(
+        `${process.env.PORTAL_ENDPOINT}/delete_company`,
+        { data: { payload } }
+      )
+      if (response.successful) {
+        this.getCompanies(1, this.pagination)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
   mappingCompany(data: any): void {
     this.pageSize = data.totalPage
     this.totalItem = data.total
@@ -624,6 +617,60 @@ export default class OrganizationTable extends Vue {
         e.preventDefault()
       }
     }
+  }
+
+  onTableIconClick(action: string): void {
+    this.dialogDisplay = true
+    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
+    this.dialogLeftButtonText = this.$t('table.dialogPopup.cancel').toString()
+    let title = ''
+
+    if (action === 'clickActive') {
+      title = this.$t('table.status.active').toString()
+      this.dialogAction = OrganizationManagementStatus.ACTIVE
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.confirm'
+      ).toString()
+    } else if (action === 'clickInActive') {
+      title = this.$t('table.status.inactive').toString()
+      this.dialogAction = OrganizationManagementStatus.INACTIVE
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.confirm'
+      ).toString()
+    } else if (action === 'clickHold') {
+      title = this.$t('table.status.hold').toString()
+      this.dialogAction = OrganizationManagementStatus.HOLD
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.confirm'
+      ).toString()
+    } else if (action === 'clickDelete') {
+      title = this.$t('table.status.delete').toString()
+      this.dialogAction = OrganizationManagementStatus.DELETE
+      this.dialogRightButtonText = this.$t(
+        'table.dialogPopup.delete'
+      ).toString()
+    }
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${title} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')}`
+  }
+
+  onLeftDialogPopupClick(): void {
+    this.dialogDisplay = false
+  }
+
+  onRightDialogPopupClick(): void {
+    if (this.dialogAction === OrganizationManagementStatus.ACTIVE) {
+      this.changeCompanyStatus(this.selectData, 2)
+    } else if (this.dialogAction === OrganizationManagementStatus.INACTIVE) {
+      this.changeCompanyStatus(this.selectData, 3)
+    } else if (this.dialogAction === OrganizationManagementStatus.HOLD) {
+      this.changeCompanyStatus(this.selectData, 4)
+    } else if (this.dialogAction === OrganizationManagementStatus.DELETE) {
+      this.deleteCompany(this.selectData)
+    }
+    this.selectData = []
+    this.dialogDisplay = false
   }
 }
 </script>
