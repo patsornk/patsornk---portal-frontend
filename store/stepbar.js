@@ -1,7 +1,8 @@
 export const state = () => ({
   currentState: 0,
   nextState: 0,
-  maxState: window.sessionStorage.getItem('maxStepbar') || 0
+  maxState: window.sessionStorage.getItem('maxStepbar') || 0,
+  enableSubmit: 0,
 })
 
 export const mutations = {
@@ -19,11 +20,15 @@ export const mutations = {
   SET_MAX_STATE(state, num) {
     state.maxState = num
     window.sessionStorage.setItem('maxStepbar', num)
+  },
+  SET_ENABLE_SUBMIT(state, num) {
+    state.enableSubmit = num
   }
 }
 
 export const getters = {
   maxState: (state) => state.maxState,
+  enableSubmit: (state) => state.enableSubmit
 }
 
 export const actions = {
@@ -35,5 +40,8 @@ export const actions = {
   },
   setMaxState({ commit }, data) {
     commit('SET_MAX_STATE', data)
+  },
+  setEnableSubmit({ commit }, data) {
+    commit('SET_ENABLE_SUBMIT', data)
   }
 }

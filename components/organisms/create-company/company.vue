@@ -339,6 +339,9 @@ export default class CreateCompany extends Vue {
     this.getCompanyType()
     this.getCompanySize()
     this.getCompanyCategory()
+    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+      this.$store.dispatch('stepbar/setEnableSubmit', 1)
+    }
   }
 
   async getCompany(): Promise<void> {
@@ -378,6 +381,7 @@ export default class CreateCompany extends Vue {
         this.checkCompanyNameEn()
         this.checkCompanyNameTh()
         this.checkTypeId()
+        this.$store.dispatch('stepbar/setEnableSubmit', 0)
       } else {
         const payload = {
           companyNameTh: this.$v.companyNameTh.$model,
@@ -409,6 +413,7 @@ export default class CreateCompany extends Vue {
                 this.$t('common.successfully').toString()
               )
               window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+              this.$store.dispatch('stepbar/setEnableSubmit', 1)
             }
           } catch (error) {
             this.$toast.global.error(error.response.data.message)
@@ -447,6 +452,7 @@ export default class CreateCompany extends Vue {
         this.checkTypeId()
         this.checkCategoryId()
         this.checkSizeId()
+        this.$store.dispatch('stepbar/setEnableSubmit', 0)
         this.checkAssignee()
       } else {
         const payload = {
@@ -482,6 +488,7 @@ export default class CreateCompany extends Vue {
                 this.$t('common.successfully').toString()
               )
               window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+              this.$store.dispatch('stepbar/setEnableSubmit', 1)
             }
           } catch (error) {
             this.$toast.global.error(error.response.data.message)

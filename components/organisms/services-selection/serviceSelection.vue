@@ -57,6 +57,9 @@ export default class ServiceSelection extends Vue {
       this.getAppliedServices()
       this.getAvailableServices()
     }
+    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+      this.$store.dispatch('stepbar/setEnableSubmit', 1)
+    }
   }
 
   async getAppliedServices() {

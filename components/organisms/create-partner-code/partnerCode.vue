@@ -137,6 +137,9 @@ export default class CreatePartnerCode extends Vue {
   ]
 
   mounted(): void {
+    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+      this.$store.dispatch('stepbar/setEnableSubmit', 1)
+    }
     if (this.companyIdParent) {
       this.companyId = this.companyIdParent
       // TO DO
@@ -359,6 +362,7 @@ export default class CreatePartnerCode extends Vue {
 
   clickSave(): void {
     if (this.dataList.length === 0) {
+      this.$store.dispatch('stepbar/setEnableSubmit', 0)
       this.$toast.global.error(
         'One or more field have an error. Please check and try again.'
       )

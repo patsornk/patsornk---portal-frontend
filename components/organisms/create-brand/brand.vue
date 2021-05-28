@@ -348,6 +348,9 @@ export default class CreateBrand extends Vue {
   }
 
   async mounted(): Promise<void> {
+    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+      this.$store.dispatch('stepbar/setEnableSubmit', 1)
+    }
     this.brandFeatureList = [
       {
         image: undefined,
@@ -768,10 +771,12 @@ export default class CreateBrand extends Vue {
         this.onChangedBrandNameEn()
         this.onChangedEmail()
         this.onChangedPhoneNo()
+        this.$store.dispatch('stepbar/setEnableSubmit', 0)
       } else {
         validationGroup = true
         if (!brandFeatureValidate) {
           this.$toast.global.error(this.$t('createBrand.fieldError'))
+          this.$store.dispatch('stepbar/setEnableSubmit', 0)
         }
       }
     } else if (this.$v.validationGroup.$invalid && !this.validateLogo) {
@@ -783,16 +788,19 @@ export default class CreateBrand extends Vue {
       this.onChangedEmail()
       this.onChangedPhoneNo()
       this.onChangedLogo(this.$v.logo.$model)
+      this.$store.dispatch('stepbar/setEnableSubmit', 0)
     } else {
       validationGroup = true
       if (!brandFeatureValidate) {
         this.$toast.global.error(this.$t('createBrand.fieldError'))
+        this.$store.dispatch('stepbar/setEnableSubmit', 0)
       }
     }
 
     if (!this.$v.partnerCodeList.required) {
       isPartnerCodeList = false
       this.$toast.global.error(this.$t('createBrand.partnerCode'))
+      this.$store.dispatch('stepbar/setEnableSubmit', 0)
     } else {
       isPartnerCodeList = true
     }
@@ -842,6 +850,7 @@ export default class CreateBrand extends Vue {
           payload
         )
         if (response.successful) {
+          this.$store.dispatch('stepbar/setEnableSubmit', 1)
           if (!this.mode) {
             window.sessionStorage.setItem('createBrandFirstTime', 'no')
             window.sessionStorage.setItem(

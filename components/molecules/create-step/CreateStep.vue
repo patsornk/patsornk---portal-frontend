@@ -21,10 +21,10 @@
     </button> -->
     <div class="footer">
       <t-1-button type="black-transparent" @click.native="cancleOrgHandler">
-        {{$t('common.cancel')}}
+        {{ $t('common.cancel') }}
       </t-1-button>
       <t-1-button :type="btnStatus" @click.native="createNewCompany">
-        {{$t('common.createNewCompany')}}
+        {{ $t('common.createNewCompany') }}
       </t-1-button>
     </div>
 
@@ -81,8 +81,14 @@ export default class CreateStep extends Vue {
 
   get stepTitle() {
     return [
-      { title: this.$t('createCompany.createCompany').toString(), value: 'company' },
-      { title: this.$t('common.createPartnerCode').toString(), value: 'partnercode' },
+      {
+        title: this.$t('createCompany.createCompany').toString(),
+        value: 'company'
+      },
+      {
+        title: this.$t('common.createPartnerCode').toString(),
+        value: 'partnercode'
+      },
       { title: this.$t('common.createBrand').toString(), value: 'brand' },
       { title: this.$t('common.createBranch').toString(), value: 'branch' },
       { title: this.$t('common.serviceSelection').toString(), value: 'service' }
@@ -92,7 +98,15 @@ export default class CreateStep extends Vue {
   private dialogDisplay = false
 
   get btnStatus() {
-    return this.$store.getters['stepbar/maxState'] == 4 ? '' : 'disable'
+    return this.isEnableSubmit && this.isMaxState ? '' : 'disable'
+  }
+
+  get isEnableSubmit() {
+    return this.$store.getters['stepbar/enableSubmit'] == 1 ? true : false
+  }
+
+  get isMaxState() {
+    return this.$store.getters['stepbar/maxState'] == 4 ? true : false
   }
 
   cancleOrgHandler() {
@@ -122,7 +136,9 @@ export default class CreateStep extends Vue {
   }
 
   createNewCompany() {
-    this.dialogDisplay = true
+    if (this.isEnableSubmit && this.isMaxState) {
+      this.dialogDisplay = true
+    }
   }
 
   dialogCancelAction() {

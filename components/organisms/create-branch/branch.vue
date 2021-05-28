@@ -1575,6 +1575,9 @@ export default class CreateBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
+    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+      this.$store.dispatch('stepbar/setEnableSubmit', 1)
+    }
     this.switchOpeningHourList()
     await this.getBrand()
     await this.getPartnerCode()
@@ -1781,6 +1784,7 @@ export default class CreateBranch extends Vue {
           this.$v.validationBranchInfoGroup.$invalid ||
           this.$v.validationInMallGroup.$invalid
         ) {
+          this.$store.dispatch('stepbar/setEnableSubmit', 0)
           this.$toast.global.error(this.$t('createBranch.fieldError'))
           this.validateInfoAndLocation()
           this.checkBranchTypeId()
@@ -1820,6 +1824,7 @@ export default class CreateBranch extends Vue {
             !this.validateLogo &&
             !this.validateCover
           ) {
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
             this.validateMall()
@@ -2009,6 +2014,7 @@ export default class CreateBranch extends Vue {
           this.$v.validationBranchInfoGroup.$invalid ||
           this.$v.validationNotInMallGroup.$invalid
         ) {
+          this.$store.dispatch('stepbar/setEnableSubmit', 0)
           this.$toast.global.error(this.$t('createBranch.fieldError'))
           this.validateInfoAndLocation()
           this.checkBranchTypeId()
@@ -2141,6 +2147,7 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
+        this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
         if (this.componetMode === 'edit') {
           this.$router.push(`/organizationManagement/${this.parentCompantId}`)
