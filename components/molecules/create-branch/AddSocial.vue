@@ -68,7 +68,7 @@ export default class AddSocial extends Vue {
     },
     {
       id: 2,
-      label: 'Instragram'
+      label: 'Instagram'
     },
     {
       id: 3,
