@@ -350,6 +350,40 @@ export default class CreatePartnerCode extends Vue {
         this.$toast.global.success(this.$t('common.deletedSuccessfully'))
         this.getPartnerList()
         this.clearData()
+        if (window.sessionStorage.getItem('createBrandId')) {
+          const res = await this.$axios.$get(
+            `${
+              process.env.PORTAL_ENDPOINT
+            }/get_brand?brandId=${window.sessionStorage.getItem(
+              'createBrandId'
+            )}&brandAdditional=true&partners=true`,
+            { data: null }
+          )
+          if (res.successful) {
+            if (res.data.partners.length) {
+              this.$store.dispatch('stepbar/setEnableSubmit', 1)
+            } else {
+              this.$store.dispatch('stepbar/setEnableSubmit', 0)
+            }
+          }
+        }
+        if (window.sessionStorage.getItem('createBranchId')) {
+          const res = await this.$axios.$get(
+            `${
+              process.env.PORTAL_ENDPOINT
+            }/get_branch?branchId=${window.sessionStorage.getItem(
+              'createBranchId'
+            )}`,
+            { data: null }
+          )
+          if (res.successful) {
+            if (res.data.partners.length) {
+              this.$store.dispatch('stepbar/setEnableSubmit', 1)
+            } else {
+              this.$store.dispatch('stepbar/setEnableSubmit', 0)
+            }
+          }
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

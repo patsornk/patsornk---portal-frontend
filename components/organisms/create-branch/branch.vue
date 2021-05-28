@@ -728,7 +728,7 @@ export default class CreateBranch extends Vue {
   email = ''
   phonePrefix = '+66'
   phoneNumber = ''
-  partnerCodeId = ''
+  partnerCodeId? = ''
   branchTypeId: any = ''
   mallId: any = ''
   address = ''
@@ -1623,12 +1623,6 @@ export default class CreateBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
-    if (
-      window.sessionStorage.getItem('maxStepbar') &&
-      window.sessionStorage.getItem('maxStepbar') == '4'
-    ) {
-      this.$store.dispatch('stepbar/setEnableSubmit', 1)
-    }
     this.switchOpeningHourList()
     await this.getBrand()
     await this.getPartnerCode()
@@ -1674,6 +1668,18 @@ export default class CreateBranch extends Vue {
           if (this.componetMode === 'edit') {
             this.status = data.status
           }
+          if (data.partners[0]) {
+            this.partnerCodeId = data.partners[0].partnerId
+            if (
+              window.sessionStorage.getItem('maxStepbar') &&
+              window.sessionStorage.getItem('maxStepbar') == '4'
+            ) {
+              this.$store.dispatch('stepbar/setEnableSubmit', 1)
+            }
+          } else {
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+            this.partnerCodeId = undefined
+          }
           this.brandId = data.brand.brandId
           this.branchCode = data.branchCode
           this.branchNameTh = data.branchNameTh
@@ -1683,9 +1689,6 @@ export default class CreateBranch extends Vue {
           this.email = data.branchEmail
           this.phonePrefix = data.branchPhonePrefix
           this.phoneNumber = data.branchPhoneNumber
-          this.partnerCodeId = data.partners[0]
-            ? data.partners[0].partnerId
-            : undefined
           this.branchTypeId = data.branchType.branchTypeId
           this.mallId = data.mall.mallId
           this.address = data.address.address
@@ -2346,7 +2349,7 @@ export default class CreateBranch extends Vue {
               branchPhoneNumber: this.$v.phoneNumber.$model,
               branchEmail: this.$v.email.$model,
               showInApp: this.$v.showDisplay.$model,
-              statusId: this.$v.status.$model,
+              statusId: this.$v.status.$model
             }
           }
         } else {

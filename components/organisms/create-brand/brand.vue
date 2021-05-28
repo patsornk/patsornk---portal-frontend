@@ -400,12 +400,6 @@ export default class CreateBrand extends Vue {
   }
 
   async mounted(): Promise<void> {
-    if (
-      window.sessionStorage.getItem('maxStepbar') &&
-      window.sessionStorage.getItem('maxStepbar') == '4'
-    ) {
-      this.$store.dispatch('stepbar/setEnableSubmit', 1)
-    }
     this.brandFeatureList = [
       {
         image: undefined,
@@ -643,16 +637,30 @@ export default class CreateBrand extends Vue {
         )
         if (res.successful) {
           const data = res.data
-          data.partners.forEach(
-            (item: { partnerCode: any; partnerId: any; partnerName: any }) => {
-              this.partnerCodeList.push({
-                partnerId: item.partnerId,
-                partnerCode: item.partnerCode,
-                id: item.partnerId,
-                partnerName: item.partnerName
-              })
+          if (data.partners.length > 0) {
+            if (
+              window.sessionStorage.getItem('maxStepbar') &&
+              window.sessionStorage.getItem('maxStepbar') == '4'
+            ) {
+              this.$store.dispatch('stepbar/setEnableSubmit', 1)
             }
-          )
+            data.partners.forEach(
+              (item: {
+                partnerCode: any
+                partnerId: any
+                partnerName: any
+              }) => {
+                this.partnerCodeList.push({
+                  partnerId: item.partnerId,
+                  partnerCode: item.partnerCode,
+                  id: item.partnerId,
+                  partnerName: item.partnerName
+                })
+              }
+            )
+          } else {
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+          }
           this.status = data.status
           if (data.brandAdditional) {
             if (this.mode === 'edit') {
@@ -980,7 +988,23 @@ export default class CreateBrand extends Vue {
           payload
         )
         if (response.successful) {
-          this.$store.dispatch('stepbar/setEnableSubmit', 1)
+          if (window.sessionStorage.getItem('createBranchId')) {
+            const res = await this.$axios.$get(
+              `${
+                process.env.PORTAL_ENDPOINT
+              }/get_branch?branchId=${window.sessionStorage.getItem(
+                'createBranchId'
+              )}`,
+              { data: null }
+            )
+            if (res.successful) {
+              if (res.data.partners.length) {
+                this.$store.dispatch('stepbar/setEnableSubmit', 1)
+              } else {
+                this.$store.dispatch('stepbar/setEnableSubmit', 0)
+              }
+            }
+          }
           if (!this.mode) {
             window.sessionStorage.setItem('createBrandFirstTime', 'no')
             window.sessionStorage.setItem(
