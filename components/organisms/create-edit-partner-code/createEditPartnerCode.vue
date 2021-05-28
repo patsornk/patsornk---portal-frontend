@@ -43,24 +43,29 @@
     <div class="spector-line" />
 
     <table-component
-      :rawData="dataList"
-      :columnDefs="columnDefs"
-      isShowHeaderTable
-      isShowCheckBox
-      isShowPaginate
-      :headerTitle="$t('createPartnerCode.brandList')"
       v-model="selectData"
-      :frameworkComponents="frameworkComponents"
-      @clickDelete="clickDeleteList"
-      :isCreateNew="true"
-      :isShowAddIcon="false"
-      :isShowIconHold="false"
-      :isShowActive="false"
-      :isShowInactive="false"
-      createNewTitle="Assign More Brand"
+      item-key="brandId"
+      create-new-title="Assign More Brand"
+      is-show-header-table
+      is-show-check-box
+      is-show-paginate
+      :is-create-new="true"
+      :is-show-add-icon="false"
+      :is-show-icon-hold="false"
+      :is-show-active="false"
+      :is-show-inactive="false"
+      :framework-components="frameworkComponents"
+      :header-title="$t('createPartnerCode.brandList')"
+      :column-defs="columnDefs"
+      :raw-data="dataList"
+      :total-item="totalItem"
+      :current-page="currentPage"
+      :page-count="pageSize"
+      :total-page="pageSize"
       @clickNew="clickAssignNew"
-      :totalItem="dataList.length"
-      itemKey="brandId"
+      @clickDelete="clickDeleteList"
+      @onChenagePage="changePage"
+      @pagination="changPageSize"
     />
     <div class="footer">
       <t-1-button class="black" @click.native="clickSave"> 
@@ -83,19 +88,24 @@
               @onChange="chengeKeyword"
             />
             <table-component
-              :rawData="modalDataList"
-              :columnDefs="modalColumnDefs"
               v-model="modalSelectData"
-              isShowHeaderTable
-              isShowCheckBox
-              isShowPaginate
-              :isShowIconHold="false"
-              :isShowActive="false"
-              :isShowInactive="false"
-              :isShowDelete="false"
-              :frameworkComponents="modalFrameworkComponents"
-              itemKey="brandId"
-              :totalItem="modalDataList.length"
+              item-key="brandId"
+              :raw-data="modalDataList"
+              :column-defs="modalColumnDefs"
+              is-show-header-table
+              is-show-check-box
+              is-show-paginate
+              :is-show-icon-hold="false"
+              :is-show-active="false"
+              :is-show-inactive="false"
+              :is-show-delete="false"
+              :framework-components="modalFrameworkComponents"
+              :total-item="modalTotalItem"
+              :current-page="modalCurrentPage"
+              :page-count="modalPageSize"
+              :total-page="modalPageSize"
+              @onChenagePage="modalChangePage"
+              @pagination="changPageSize"
             />
           </div>
           <div class="modal-footer">
@@ -234,6 +244,10 @@ export default class CreateEditPartnerCode extends Vue {
 
   isShowBrand = false
 
+  pagination = 10
+  currentPage = 1
+  pageSize = 0
+  totalItem = 0
   selectData = []
   dataList: any = []
   frameworkComponents = {}
@@ -267,6 +281,10 @@ export default class CreateEditPartnerCode extends Vue {
     }
   ]
 
+  modalPagination = 10
+  modalCurrentPage = 1
+  modalPageSize = 0
+  modalTotalItem = 0
   modalSelectData = []
   modalDataList: any = []
   modalFrameworkComponents = {}
@@ -389,7 +407,7 @@ export default class CreateEditPartnerCode extends Vue {
 
   async getAssignedBrand(page: number, limit: number): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${
           process.env.PORTAL_ENDPOINT
         }/list_brand_by_partner?page=${page}&limit=${limit}&partnerId=${
@@ -399,21 +417,9 @@ export default class CreateEditPartnerCode extends Vue {
       )
       if (res.successful) {
         const data = res.data
-        this.dataList = data.brand.map(
-          (item: {
-            brandId: number
-            brandCode: any
-            brandNameTh: any
-            brandNameEn: any
-          }) => {
-            return {
-              brandId: item.brandId,
-              brandCode: item.brandCode,
-              brandNameTh: item.brandNameTh,
-              brandNameEn: item.brandNameEn
-            }
-          }
-        )
+        this.dataList = this.mapBrand(data.brand)
+        this.pageSize = data.totalPage
+        this.totalItem = data.total
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -435,25 +441,25 @@ export default class CreateEditPartnerCode extends Vue {
       )
 
       if (res.successful) {
-        this.modalDataList = res.data.brand.map(
-          (item: {
-            brandId: number
-            brandCode: string
-            brandNameTh: string
-            brandNameEn: string
-          }) => {
-            return {
-              brandId: item.brandId,
-              brandCode: item.brandCode,
-              brandNameTh: item.brandNameTh,
-              brandNameEn: item.brandNameEn
-            }
-          }
-        )
+        const data = res.data
+        this.modalDataList = this.mapBrand(data.brand)
+        this.modalPageSize = data.totalPage
+        this.modalTotalItem = data.total
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+  }
+
+  mapBrand(brands: any[]): any[] {
+    return brands.map((brand: any) => {
+      return {
+        brandId: brand.brandId,
+        brandCode: brand.brandCode,
+        brandNameTh: brand.brandNameTh,
+        brandNameEn: brand.brandNameEn
+      }
+    })
   }
 
   @Watch('partnerCode')
@@ -576,6 +582,28 @@ export default class CreateEditPartnerCode extends Vue {
     } else {
       this.editPartnerCode()
     }
+  }
+
+  changePage(page: number): void {
+    this.currentPage = page
+    this.getAssignedBrand(page, this.pagination)
+  }
+
+  changPageSize(pagination: number): void {
+    this.pagination = pagination
+    this.currentPage = 1
+    this.getAssignedBrand(1, pagination)
+  }
+
+  modalChangePage(page: number): void {
+    this.modalCurrentPage = page
+    this.getAssignBrand(page, this.modalPagination)
+  }
+
+  modalChangPageSize(pagination: number): void {
+    this.modalPagination = pagination
+    this.modalCurrentPage = 1
+    this.getAssignBrand(1, pagination)
   }
 }
 </script>
