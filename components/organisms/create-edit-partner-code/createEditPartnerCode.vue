@@ -527,6 +527,7 @@ export default class CreateEditPartnerCode extends Vue {
         await this.getBrandList(1, 10)
         await this.getAssignedBrand(1, 10)
         await this.getAssignBrand(1, 10)
+        this.$toast.global.success(this.$t('createPartnerCode.toastUnAssign'))
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -570,6 +571,7 @@ export default class CreateEditPartnerCode extends Vue {
         await this.getAssignedBrand(1, 10)
         await this.getAssignBrand(1, 10)
         this.setModalDefalut()
+        this.$toast.global.success(this.$t('createPartnerCode.toastAssign'))
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
