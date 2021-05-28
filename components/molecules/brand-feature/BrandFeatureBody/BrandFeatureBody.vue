@@ -145,7 +145,7 @@ export default class BrandFeatureBody extends Vue {
   dialogLeftButtonText = 'Cancel'
   dialogRightButtonText = 'Delete'
 
-  ctaTypeOptions = []
+  ctaTypeOptions: object[] = []
 
   currentfeatureNo = 0
   image = null
@@ -209,6 +209,11 @@ export default class BrandFeatureBody extends Vue {
       )
       if (res.successful) {
         this.ctaTypeOptions = res.data.featureType
+        const pleaseSelect = {
+          featureTypeId: '',
+          featureTypeValue: 'Please select...'
+        }
+        this.ctaTypeOptions.unshift(pleaseSelect)
       }
     } catch (error) {
       if (error.response.data.code !== '04') {
