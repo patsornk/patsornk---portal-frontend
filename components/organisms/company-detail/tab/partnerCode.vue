@@ -23,7 +23,9 @@
             :map-keydown="deleteHandler"
           />
         </div>
-        <t1-button class="black" @click.native="search"> {{$t('common.search')}} </t1-button>
+        <t1-button class="black" @click.native="search">
+          {{ $t('common.search') }}
+        </t1-button>
       </div>
     </div>
     <table-component
@@ -345,6 +347,7 @@ export default class TabPartnerCode extends Vue {
       )
       if (response.successful) {
         this.getPartnerCode(1, this.pagination)
+        this.$toast.global.success(this.$t('common.changeStatusSuccessfully'))
       }
     } catch (error) {
       this.$toast.global.error(error.message)
@@ -367,6 +370,7 @@ export default class TabPartnerCode extends Vue {
       )
       if (response.successful) {
         this.getPartnerCode(1, this.pagination)
+        this.$toast.global.success(this.$t('common.deletedSuccessfully'))
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

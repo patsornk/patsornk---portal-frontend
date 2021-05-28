@@ -406,6 +406,7 @@ export default class TabBranch extends Vue {
       )
       if (response.successful) {
         this.getBranches(1, this.pagination)
+        this.$toast.global.success(this.$t('common.changeStatusSuccessfully'))
       }
     } catch (error) {
       this.$toast.global.error(error.message)
@@ -437,7 +438,6 @@ export default class TabBranch extends Vue {
     this.dialogDescription =
       'This account will be disabled. Are you sure you want to change account status?'
     this.dialogRightButtonText = 'Confirm'
-    // await this.changeStatus(event, 3)
   }
 
   clickDelete(): void {
@@ -465,7 +465,7 @@ export default class TabBranch extends Vue {
         this.changeStatus(this.selectData, 3)
         break
       case OrganizationManagementStatus.DELETE:
-        this.deletePartnerCode(this.selectData)
+        this.deleteBranchs(this.selectData)
         break
     }
     this.selectData = []
@@ -476,24 +476,25 @@ export default class TabBranch extends Vue {
     this.dialogDisplay = value
   }
 
-  async deletePartnerCode(branchs: any): Promise<void> {
-    const branchIds: number[] = []
+  async deleteBranchs(branchs: any): Promise<void> {
+    const branchId: number[] = []
 
     branchs.forEach((branch: any) => {
-      branchIds.push(branch.branchId)
+      branchId.push(branch.branchId)
     })
 
     const payload = {
-      branchIds
+      branchId
     }
 
     try {
       const response = await this.$axios.$delete(
-        `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
+        `${process.env.PORTAL_ENDPOINT}/delete_branch`,
         { data: payload }
       )
       if (response.successful) {
         this.getBranches(1, this.pagination)
+        this.$toast.global.success(this.$t('common.deletedSuccessfully'))
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

@@ -334,6 +334,7 @@ export default class CreatePartnerCode extends Vue {
       )
 
       if (res.successful) {
+        this.$toast.global.success(this.$t('common.deletedSuccessfully'))
         this.getPartnerList()
         this.clearData()
       }

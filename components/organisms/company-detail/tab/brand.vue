@@ -359,6 +359,7 @@ export default class TabBrand extends Vue {
       )
       if (response.successful) {
         this.getBrands(1, this.pagination)
+        this.$toast.global.success(this.$t('common.changeStatusSuccessfully'))
       }
     } catch (error) {
       this.$toast.global.error(error.message)
@@ -370,14 +371,15 @@ export default class TabBrand extends Vue {
     brands.forEach((brand: any) => {
       brandIds.push(brand.brandId)
     })
-    const payload = { brandIds }
+    const payload = { brandId: brandIds }
     try {
       const response = await this.$axios.$delete(
-        `${process.env.PORTAL_ENDPOINT}/delete_partner_code`,
-        { data: { payload } }
+        `${process.env.PORTAL_ENDPOINT}/delete_brand`,
+        { data: payload }
       )
       if (response.successful) {
         this.getBrands(1, this.pagination)
+        this.$toast.global.success(this.$t('common.deletedSuccessfully'))
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
