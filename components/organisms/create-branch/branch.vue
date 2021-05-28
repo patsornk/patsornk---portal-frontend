@@ -1413,7 +1413,7 @@ export default class CreateBranch extends Vue {
     if (companyId) {
       try {
         let res = await this.$axios.$get(
-          `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${companyId}`,
+          `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${companyId}&page=1&limit=1000`,
           { data: null }
         )
         if (res.successful) {
@@ -1439,7 +1439,7 @@ export default class CreateBranch extends Vue {
     if (this.brandId) {
       try {
         let res = await this.$axios.$get(
-          `${process.env.PORTAL_ENDPOINT}/partner_code?brandId=${this.brandId}`,
+          `${process.env.PORTAL_ENDPOINT}/partner_code?brandId=${this.brandId}&page=1&limit=1000`,
           { data: null }
         )
         if (res.successful) {
