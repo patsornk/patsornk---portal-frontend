@@ -112,6 +112,8 @@ export default class TabBranch extends Vue {
     return this.$i18n.locale
   }
 
+  listBranch = []
+
   @Watch('language')
   changeSerchSelect() {
     this.searchList = [
@@ -126,6 +128,8 @@ export default class TabBranch extends Vue {
         )}`
       }
     ]
+
+    this.mappingBranch(this.listBranch)
   }
 
   status = ''
@@ -333,6 +337,7 @@ export default class TabBranch extends Vue {
         { data: null }
       )
       if (res.successful) {
+        this.listBranch = res.data
         this.mappingBranch(res.data)
         this.currentPage = page
       }
@@ -350,7 +355,11 @@ export default class TabBranch extends Vue {
         branchNameTh: item.branchNameTh,
         branchNameEn: item.branchNameEn,
         branchCode: item.branchCode,
-        fromWhichBrand: item.brandId,
+        brand: item.brand,
+        fromWhichBrand:
+          this.language === 'th'
+            ? item.brand.brandNameTh
+            : item.brand.brandNameEn,
         partnerCode: item.partners[0].partnerCode,
         branchType: item.branchType,
         status: item.statusDesc
