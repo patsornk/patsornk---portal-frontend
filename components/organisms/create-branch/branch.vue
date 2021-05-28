@@ -609,8 +609,6 @@ const validations = {
     'latitude',
     'longitude',
     'showDisplay',
-    'logo',
-    'cover',
     // 'categoryId',
     'openingHourId',
     'openTime',
@@ -629,8 +627,6 @@ const validations = {
     'latitude',
     'longitude',
     'showDisplay',
-    'logo',
-    'cover',
     'mallDescription',
     'websiteList',
     'socialList',
@@ -1733,12 +1729,26 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  get validateLogo() {
-    return this.logoUrl ? true : false
+  get inValidateLogo() {
+    if (this.logoUrl) {
+      return false
+    } else {
+      this.error.logo = this.$t(
+        'createBrand.brandFeature.error.image'
+      ).toString()
+      return true
+    }
   }
 
-  get validateCover() {
-    return this.coverUrl ? true : false
+  get inValidateCover() {
+    if (this.coverUrl) {
+      return false
+    } else {
+      this.error.cover = this.$t(
+        'createBrand.brandFeature.error.image'
+      ).toString()
+      return true
+    }
   }
 
   validateInfoAndLocation(): void {
@@ -1819,10 +1829,10 @@ export default class CreateBranch extends Vue {
       case 3:
         if (this.openingHourId === '1') {
           if (
-            (this.$v.validationBranchInfoGroup.$invalid ||
-              this.$v.validationMallOpenDailyGroup.$invalid) &&
-            !this.validateLogo &&
-            !this.validateCover
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationMallOpenDailyGroup.$invalid ||
+            this.inValidateLogo ||
+            this.inValidateCover
           ) {
             this.$store.dispatch('stepbar/setEnableSubmit', 0)
             this.$toast.global.error(this.$t('createBranch.fieldError'))
@@ -1908,10 +1918,10 @@ export default class CreateBranch extends Vue {
           }
         } else if (this.openingHourId === '2') {
           if (
-            (this.$v.validationBranchInfoGroup.$invalid ||
-              this.$v.validationMallOpenCustomizeGroup.$invalid) &&
-            !this.validateLogo &&
-            !this.validateCover
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationMallOpenCustomizeGroup.$invalid ||
+            this.inValidateLogo ||
+            this.inValidateCover
           ) {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
@@ -1998,10 +2008,10 @@ export default class CreateBranch extends Vue {
           }
         } else {
           if (
-            (this.$v.validationBranchInfoGroup.$invalid ||
-              this.$v.validationMallGroup.$invalid) &&
-            !this.validateLogo &&
-            !this.validateCover
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationMallGroup.$invalid ||
+            this.inValidateLogo ||
+            this.inValidateCover
           ) {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
