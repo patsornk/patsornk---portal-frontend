@@ -669,7 +669,7 @@ export default class CreateBranch extends Vue {
   @Prop({
     type: String,
     required: false,
-    default: 'onboard'
+    default: ''
   })
   readonly componetMode!: string
 
@@ -977,8 +977,8 @@ export default class CreateBranch extends Vue {
   }
 
   mapPosition: MapPosition = {
-    lat: parseInt(this.latitude) || 13.7457381,
-    lng: parseInt(this.longitude) || 100.5371002
+    lat: Number(this.latitude) || 13.7457381,
+    lng: Number(this.longitude) || 100.5371002
   }
 
   @Watch('language')
@@ -1367,8 +1367,8 @@ export default class CreateBranch extends Vue {
 
   private findInMap() {
     if (this.$v.latitude.$model && this.$v.longitude.$model) {
-      this.mapPosition.lat = parseInt(this.$v.latitude.$model)
-      this.mapPosition.lng = parseInt(this.$v.longitude.$model)
+      this.mapPosition.lat = Number(this.$v.latitude.$model)
+      this.mapPosition.lng = Number(this.$v.longitude.$model)
     }
   }
 
@@ -1702,8 +1702,8 @@ export default class CreateBranch extends Vue {
             )[1]
           }
 
-          this.mapPosition.lat = parseInt(this.latitude)
-          this.mapPosition.lng = parseInt(this.longitude)
+          this.mapPosition.lat = Number(this.latitude)
+          this.mapPosition.lng = Number(this.longitude)
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
@@ -1712,7 +1712,6 @@ export default class CreateBranch extends Vue {
   }
 
   clickSave(): void {
-    console.log('componetMode', this.componetMode)
     if (!this.componetMode) {
       if (
         window.sessionStorage.getItem('createBrandFirstTime') &&
@@ -1723,8 +1722,7 @@ export default class CreateBranch extends Vue {
         this.save()
       }
     } else if (
-      this.componetMode === 'create' ||
-      this.componetMode === 'onboard'
+      this.componetMode === 'create'
     ) {
       this.save()
     } else if (this.componetMode === 'edit') {
@@ -2069,10 +2067,6 @@ export default class CreateBranch extends Vue {
           this.$router.push('/organizationManagement/create/service')
         } else if (this.componetMode === 'create') {
           this.submitBranch(response.data.branchId)
-        } else if (this.componetMode === 'onboard') {
-          window.sessionStorage.setItem('createBranchFirstTime', 'no')
-          this.$toast.global.success(this.$t('common.successfully').toString())
-          this.$router.push('/organizationManagement/create/service')
         }
       }
     } catch (error) {
