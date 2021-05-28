@@ -76,6 +76,18 @@
         :errorMessage="error.partnerCodeId"
         @onBlur="checkPartnerCode"
       />
+      <input-field
+        v-if="componetMode === 'edit'"
+        v-model="$v.status.$model"
+        :title="$t('common.status')"
+        required
+        type="select"
+        :options="statusOption"
+        :optionsReduce="(item) => item.id"
+        :optionsLabel="'status'"
+        :placeholder="$t('common.pleaseSelect')"
+        :errorMessage="error.status"
+      />
     </div>
 
     <span class="header">{{ $t('createBranch.locationHeader') }}</span>
@@ -546,6 +558,9 @@ const validations = {
   closeTime: { required },
   closeMeridiem: { required },
   openCusTomList: { required },
+  status: {
+    required
+  },
 
   validationBranchInfoGroup: [
     'brandId',
@@ -557,6 +572,18 @@ const validations = {
     'email',
     'phoneNumber',
     'partnerCodeId'
+  ],
+  validationEditBranchInfoGroup: [
+    'brandId',
+    'branchCode',
+    'branchNameTh',
+    'branchNameEn',
+    'siebelBranchCode',
+    'siebelBranchName',
+    'email',
+    'phoneNumber',
+    'partnerCodeId',
+    'status'
   ],
   validationNotInMallGroup: [
     'branchTypeId',
@@ -674,6 +701,23 @@ export default class CreateBranch extends Vue {
     required: false
   })
   readonly setBranch?: Function
+
+  private statusOption = [
+    {
+      id: 2,
+      status: 'Active'
+    },
+    {
+      id: 3,
+      status: 'Inactive'
+    },
+    {
+      id: 4,
+      status: 'Onhold'
+    }
+  ]
+
+  status = 0
 
   brandId: any = ''
   branchCode = ''
@@ -803,6 +847,7 @@ export default class CreateBranch extends Vue {
   ]
 
   private error = {
+    status: '',
     brandId: '',
     branchCode: '',
     branchNameTh: '',
@@ -973,8 +1018,8 @@ export default class CreateBranch extends Vue {
   }
 
   mapPosition: MapPosition = {
-    lat: Number(this.latitude) || 13.7457381,
-    lng: Number(this.longitude) || 100.5371002
+    lat: this.latitude !== '' ? Number(this.latitude) : 13.7457381,
+    lng: this.longitude !== '' ? Number(this.longitude) : 100.5371002
   }
 
   @Watch('language')
@@ -1430,6 +1475,13 @@ export default class CreateBranch extends Vue {
     }
   }
 
+  @Watch('status')
+  checkcompanyStatus(): void {
+    this.error.status = !this.$v.status.required
+      ? this.$t('createCompany.error.require').toString()
+      : ''
+  }
+
   @Watch('brandId')
   async getPartnerCode(): Promise<any> {
     if (this.brandId) {
@@ -1571,7 +1623,10 @@ export default class CreateBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
-    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+    if (
+      window.sessionStorage.getItem('maxStepbar') &&
+      window.sessionStorage.getItem('maxStepbar') == '4'
+    ) {
       this.$store.dispatch('stepbar/setEnableSubmit', 1)
     }
     this.switchOpeningHourList()
@@ -1616,6 +1671,9 @@ export default class CreateBranch extends Vue {
             }
             this.setBranch(branchData)
           }
+          if (this.componetMode === 'edit') {
+            this.status = data.status
+          }
           this.brandId = data.brand.brandId
           this.branchCode = data.branchCode
           this.branchNameTh = data.branchNameTh
@@ -1625,7 +1683,9 @@ export default class CreateBranch extends Vue {
           this.email = data.branchEmail
           this.phonePrefix = data.branchPhonePrefix
           this.phoneNumber = data.branchPhoneNumber
-          this.partnerCodeId = data.partners[0].partnerId
+          this.partnerCodeId = data.partners[0]
+            ? data.partners[0].partnerId
+            : undefined
           this.branchTypeId = data.branchType.branchTypeId
           this.mallId = data.mall.mallId
           this.address = data.address.address
@@ -1700,9 +1760,12 @@ export default class CreateBranch extends Vue {
               '|'
             )[1]
           }
-
-          this.mapPosition.lat = Number(this.latitude)
-          this.mapPosition.lng = Number(this.longitude)
+          this.mapPosition.lat = this.latitude
+            ? Number(this.latitude)
+            : 13.7457381
+          this.mapPosition.lng = this.longitude
+            ? Number(this.longitude)
+            : 100.5371002
         }
       } catch (error) {
         this.$toast.global.error(error.response.data.message)
@@ -1720,9 +1783,7 @@ export default class CreateBranch extends Vue {
       } else {
         this.save()
       }
-    } else if (
-      this.componetMode === 'create'
-    ) {
+    } else if (this.componetMode === 'create') {
       this.save()
     } else if (this.componetMode === 'edit') {
       this.update()
@@ -1790,95 +1851,19 @@ export default class CreateBranch extends Vue {
   async setPayload() {
     switch (this.branchTypeId) {
       case 1:
-        if (
-          this.$v.validationBranchInfoGroup.$invalid ||
-          this.$v.validationInMallGroup.$invalid
-        ) {
-          this.$store.dispatch('stepbar/setEnableSubmit', 0)
-          this.$toast.global.error(this.$t('createBranch.fieldError'))
-          this.validateInfoAndLocation()
-          this.checkBranchTypeId()
-          this.checkMallId()
-          return
-        } else {
-          return {
-            brandId: this.$v.brandId.$model,
-            branchCode: this.$v.branchCode.$model,
-            branchNameEn: this.$v.branchNameEn.$model,
-            branchNameTh: this.$v.branchNameTh.$model,
-            partnerId: [this.$v.partnerCodeId.$model],
-            siebelBranchCode: this.$v.siebelBranchCode.$model,
-            siebelBranchName: this.$v.siebelBranchName.$model,
-            branchTypeId: this.$v.branchTypeId.$model,
-            address: this.$v.address.$model,
-            subDistrictId: this.$v.subDistrictId.$model,
-            districtId: this.$v.districtId.$model,
-            provinceId: this.$v.provinceId.$model,
-            postalCode: this.$v.postalCode.$model,
-            country: this.$v.countryId.$model,
-            latitude: this.$v.latitude.$model,
-            longitude: this.$v.longitude.$model,
-            branchPhonePrefix: this.phonePrefix,
-            branchPhoneNumber: this.$v.phoneNumber.$model,
-            branchEmail: this.$v.email.$model,
-            showInApp: this.$v.showDisplay.$model,
-            mallId: this.$v.mallId.$model
-          }
-          break
-        }
-      case 3:
-        if (this.openingHourId === '1') {
+        if (this.componetMode === 'edit') {
           if (
-            this.$v.validationBranchInfoGroup.$invalid ||
-            this.$v.validationMallOpenDailyGroup.$invalid ||
-            this.inValidateLogo ||
-            this.inValidateCover
+            this.$v.validationEditBranchInfoGroup.$invalid ||
+            this.$v.validationInMallGroup.$invalid
           ) {
             this.$store.dispatch('stepbar/setEnableSubmit', 0)
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
-            this.validateMall()
-            this.validateOpenDaily()
-
+            this.checkBranchTypeId()
+            this.checkMallId()
+            this.checkcompanyStatus()
             return
           } else {
-            this.checkWebsite()
-            this.checkSocial()
-            const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
-            const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
-            let mallFacebook: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Facebook') {
-                mallFacebook.push(item.link)
-              }
-            })
-            let mallInstagram: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Instagram') {
-                mallInstagram.push(item.link)
-              }
-            })
-            let mallLine: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Line') {
-                mallLine.push(item.link)
-              }
-            })
-            let mallTwitter: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Twitter') {
-                mallTwitter.push(item.link)
-              }
-            })
-            const openingHour = [
-              {
-                dayOfWeek: 0,
-                openingTime: this.openTime + '|' + this.openMeridiem,
-                closingTime: this.closeTime + '|' + this.closeMeridiem,
-                dayOff: false,
-                allDay: false
-              }
-            ]
             return {
               brandId: this.$v.brandId.$model,
               branchCode: this.$v.branchCode.$model,
@@ -1900,158 +1885,503 @@ export default class CreateBranch extends Vue {
               branchPhoneNumber: this.$v.phoneNumber.$model,
               branchEmail: this.$v.email.$model,
               showInApp: this.$v.showDisplay.$model,
-
-              mallLogoImg: getLogoBase64,
-              mallCoverPageImg: getCoverBase64,
-              mallShortDesc: this.$v.mallDescription.$model,
-              mallWebsiteUrl: this.$v.websiteList.$model,
-              mallFacebook,
-              mallInstagram,
-              mallLine,
-              mallTwitter,
-              openingHour,
-              mallCategoryId: this.$v.categoryId.$model
-                ? this.$v.categoryId.$model
-                : null
+              mallId: this.$v.mallId.$model,
+              statusId: this.$v.status.$model
             }
-            break
-          }
-        } else if (this.openingHourId === '2') {
-          if (
-            this.$v.validationBranchInfoGroup.$invalid ||
-            this.$v.validationMallOpenCustomizeGroup.$invalid ||
-            this.inValidateLogo ||
-            this.inValidateCover
-          ) {
-            this.$toast.global.error(this.$t('createBranch.fieldError'))
-            this.validateInfoAndLocation()
-            this.validateMall()
-            this.validateOpenCustomize()
-
-            return
-          } else {
-            this.checkWebsite()
-            this.checkSocial()
-            const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
-            const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
-
-            let mallFacebook: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Facebook') {
-                mallFacebook.push(item.link)
-              }
-            })
-            let mallInstagram: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Instagram') {
-                mallInstagram.push(item.link)
-              }
-            })
-            let mallLine: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Line') {
-                mallLine.push(item.link)
-              }
-            })
-            let mallTwitter: string[] = []
-            this.$v.socialList.$model.forEach((item: any) => {
-              if (item.type === 'Twitter') {
-                mallTwitter.push(item.link)
-              }
-            })
-
-            let openingHour: any = []
-            this.$v.openCusTomList.$model.forEach((item: any) => {
-              openingHour.push({
-                dayOfWeek: item.dayOfWeek,
-                openingTime: item.openTime + '|' + item.openMeridiem,
-                closingTime: item.closeTime + '|' + item.closeMeridiem,
-                dayOff: item.isDayOff,
-                allDay: false
-              })
-            })
-
-            return {
-              brandId: this.$v.brandId.$model,
-              branchCode: this.$v.branchCode.$model,
-              branchNameEn: this.$v.branchNameEn.$model,
-              branchNameTh: this.$v.branchNameTh.$model,
-              partnerId: [this.$v.partnerCodeId.$model],
-              siebelBranchCode: this.$v.siebelBranchCode.$model,
-              siebelBranchName: this.$v.siebelBranchName.$model,
-              branchTypeId: this.$v.branchTypeId.$model,
-              address: this.$v.address.$model,
-              subDistrictId: this.$v.subDistrictId.$model,
-              districtId: this.$v.districtId.$model,
-              provinceId: this.$v.provinceId.$model,
-              postalCode: this.$v.postalCode.$model,
-              country: this.$v.countryId.$model,
-              latitude: this.$v.latitude.$model,
-              longitude: this.$v.longitude.$model,
-              branchPhonePrefix: this.phonePrefix,
-              branchPhoneNumber: this.$v.phoneNumber.$model,
-              branchEmail: this.$v.email.$model,
-              showInApp: this.$v.showDisplay.$model,
-
-              mallLogoImg: getLogoBase64,
-              mallCoverPageImg: getCoverBase64,
-              mallShortDesc: this.$v.mallDescription.$model,
-              mallWebsiteUrl: this.$v.websiteList.$model,
-              mallFacebook,
-              mallInstagram,
-              mallLine,
-              mallTwitter,
-              openingHour,
-              mallCategoryId: this.$v.categoryId.$model
-            }
-            break
           }
         } else {
           if (
             this.$v.validationBranchInfoGroup.$invalid ||
-            this.$v.validationMallGroup.$invalid ||
-            this.inValidateLogo ||
-            this.inValidateCover
+            this.$v.validationInMallGroup.$invalid
           ) {
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
-            this.validateMall()
+            this.checkBranchTypeId()
+            this.checkMallId()
+            return
+          } else {
+            return {
+              brandId: this.$v.brandId.$model,
+              branchCode: this.$v.branchCode.$model,
+              branchNameEn: this.$v.branchNameEn.$model,
+              branchNameTh: this.$v.branchNameTh.$model,
+              partnerId: [this.$v.partnerCodeId.$model],
+              siebelBranchCode: this.$v.siebelBranchCode.$model,
+              siebelBranchName: this.$v.siebelBranchName.$model,
+              branchTypeId: this.$v.branchTypeId.$model,
+              address: this.$v.address.$model,
+              subDistrictId: this.$v.subDistrictId.$model,
+              districtId: this.$v.districtId.$model,
+              provinceId: this.$v.provinceId.$model,
+              postalCode: this.$v.postalCode.$model,
+              country: this.$v.countryId.$model,
+              latitude: this.$v.latitude.$model,
+              longitude: this.$v.longitude.$model,
+              branchPhonePrefix: this.phonePrefix,
+              branchPhoneNumber: this.$v.phoneNumber.$model,
+              branchEmail: this.$v.email.$model,
+              showInApp: this.$v.showDisplay.$model,
+              mallId: this.$v.mallId.$model
+            }
           }
-          return
+        }
+      case 3:
+        if (this.componetMode === 'edit') {
+          if (this.openingHourId === '1') {
+            if (
+              this.$v.validationEditBranchInfoGroup.$invalid ||
+              this.$v.validationMallOpenDailyGroup.$invalid ||
+              this.inValidateLogo ||
+              this.inValidateCover
+            ) {
+              this.$store.dispatch('stepbar/setEnableSubmit', 0)
+              this.$toast.global.error(this.$t('createBranch.fieldError'))
+              this.validateInfoAndLocation()
+              this.validateMall()
+              this.validateOpenDaily()
+
+              return
+            } else {
+              this.checkWebsite()
+              this.checkSocial()
+              const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+              const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
+              let mallFacebook: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Facebook') {
+                  mallFacebook.push(item.link)
+                }
+              })
+              let mallInstagram: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Instagram') {
+                  mallInstagram.push(item.link)
+                }
+              })
+              let mallLine: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Line') {
+                  mallLine.push(item.link)
+                }
+              })
+              let mallTwitter: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Twitter') {
+                  mallTwitter.push(item.link)
+                }
+              })
+              const openingHour = [
+                {
+                  dayOfWeek: 0,
+                  openingTime: this.openTime + '|' + this.openMeridiem,
+                  closingTime: this.closeTime + '|' + this.closeMeridiem,
+                  dayOff: false,
+                  allDay: false
+                }
+              ]
+              return {
+                brandId: this.$v.brandId.$model,
+                branchCode: this.$v.branchCode.$model,
+                branchNameEn: this.$v.branchNameEn.$model,
+                branchNameTh: this.$v.branchNameTh.$model,
+                partnerId: [this.$v.partnerCodeId.$model],
+                siebelBranchCode: this.$v.siebelBranchCode.$model,
+                siebelBranchName: this.$v.siebelBranchName.$model,
+                branchTypeId: this.$v.branchTypeId.$model,
+                address: this.$v.address.$model,
+                subDistrictId: this.$v.subDistrictId.$model,
+                districtId: this.$v.districtId.$model,
+                provinceId: this.$v.provinceId.$model,
+                postalCode: this.$v.postalCode.$model,
+                country: this.$v.countryId.$model,
+                latitude: this.$v.latitude.$model,
+                longitude: this.$v.longitude.$model,
+                branchPhonePrefix: this.phonePrefix,
+                branchPhoneNumber: this.$v.phoneNumber.$model,
+                branchEmail: this.$v.email.$model,
+                showInApp: this.$v.showDisplay.$model,
+                statusId: this.$v.status.$model,
+
+                mallLogoImg: getLogoBase64,
+                mallCoverPageImg: getCoverBase64,
+                mallShortDesc: this.$v.mallDescription.$model,
+                mallWebsiteUrl: this.$v.websiteList.$model,
+                mallFacebook,
+                mallInstagram,
+                mallLine,
+                mallTwitter,
+                openingHour,
+                mallCategoryId: this.$v.categoryId.$model
+                  ? this.$v.categoryId.$model
+                  : null
+              }
+            }
+          } else if (this.openingHourId === '2') {
+            if (
+              this.$v.validationEditBranchInfoGroup.$invalid ||
+              this.$v.validationMallOpenCustomizeGroup.$invalid ||
+              this.inValidateLogo ||
+              this.inValidateCover
+            ) {
+              this.$toast.global.error(this.$t('createBranch.fieldError'))
+              this.validateInfoAndLocation()
+              this.validateMall()
+              this.validateOpenCustomize()
+
+              return
+            } else {
+              this.checkWebsite()
+              this.checkSocial()
+              const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+              const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
+
+              let mallFacebook: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Facebook') {
+                  mallFacebook.push(item.link)
+                }
+              })
+              let mallInstagram: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Instagram') {
+                  mallInstagram.push(item.link)
+                }
+              })
+              let mallLine: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Line') {
+                  mallLine.push(item.link)
+                }
+              })
+              let mallTwitter: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Twitter') {
+                  mallTwitter.push(item.link)
+                }
+              })
+
+              let openingHour: any = []
+              this.$v.openCusTomList.$model.forEach((item: any) => {
+                openingHour.push({
+                  dayOfWeek: item.dayOfWeek,
+                  openingTime: item.openTime + '|' + item.openMeridiem,
+                  closingTime: item.closeTime + '|' + item.closeMeridiem,
+                  dayOff: item.isDayOff,
+                  allDay: false
+                })
+              })
+
+              return {
+                brandId: this.$v.brandId.$model,
+                branchCode: this.$v.branchCode.$model,
+                branchNameEn: this.$v.branchNameEn.$model,
+                branchNameTh: this.$v.branchNameTh.$model,
+                partnerId: [this.$v.partnerCodeId.$model],
+                siebelBranchCode: this.$v.siebelBranchCode.$model,
+                siebelBranchName: this.$v.siebelBranchName.$model,
+                branchTypeId: this.$v.branchTypeId.$model,
+                address: this.$v.address.$model,
+                subDistrictId: this.$v.subDistrictId.$model,
+                districtId: this.$v.districtId.$model,
+                provinceId: this.$v.provinceId.$model,
+                postalCode: this.$v.postalCode.$model,
+                country: this.$v.countryId.$model,
+                latitude: this.$v.latitude.$model,
+                longitude: this.$v.longitude.$model,
+                branchPhonePrefix: this.phonePrefix,
+                branchPhoneNumber: this.$v.phoneNumber.$model,
+                branchEmail: this.$v.email.$model,
+                showInApp: this.$v.showDisplay.$model,
+                statusId: this.$v.status.$model,
+
+                mallLogoImg: getLogoBase64,
+                mallCoverPageImg: getCoverBase64,
+                mallShortDesc: this.$v.mallDescription.$model,
+                mallWebsiteUrl: this.$v.websiteList.$model,
+                mallFacebook,
+                mallInstagram,
+                mallLine,
+                mallTwitter,
+                openingHour,
+                mallCategoryId: this.$v.categoryId.$model
+              }
+            }
+          } else {
+            if (
+              this.$v.validationEditBranchInfoGroup.$invalid ||
+              this.$v.validationMallGroup.$invalid ||
+              this.inValidateLogo ||
+              this.inValidateCover
+            ) {
+              this.$toast.global.error(this.$t('createBranch.fieldError'))
+              this.validateInfoAndLocation()
+              this.validateMall()
+            }
+            return
+          }
+        } else {
+          if (this.openingHourId === '1') {
+            if (
+              this.$v.validationBranchInfoGroup.$invalid ||
+              this.$v.validationMallOpenDailyGroup.$invalid ||
+              this.inValidateLogo ||
+              this.inValidateCover
+            ) {
+              this.$store.dispatch('stepbar/setEnableSubmit', 0)
+              this.$toast.global.error(this.$t('createBranch.fieldError'))
+              this.validateInfoAndLocation()
+              this.validateMall()
+              this.validateOpenDaily()
+
+              return
+            } else {
+              this.checkWebsite()
+              this.checkSocial()
+              const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+              const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
+              let mallFacebook: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Facebook') {
+                  mallFacebook.push(item.link)
+                }
+              })
+              let mallInstagram: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Instagram') {
+                  mallInstagram.push(item.link)
+                }
+              })
+              let mallLine: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Line') {
+                  mallLine.push(item.link)
+                }
+              })
+              let mallTwitter: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Twitter') {
+                  mallTwitter.push(item.link)
+                }
+              })
+              const openingHour = [
+                {
+                  dayOfWeek: 0,
+                  openingTime: this.openTime + '|' + this.openMeridiem,
+                  closingTime: this.closeTime + '|' + this.closeMeridiem,
+                  dayOff: false,
+                  allDay: false
+                }
+              ]
+              return {
+                brandId: this.$v.brandId.$model,
+                branchCode: this.$v.branchCode.$model,
+                branchNameEn: this.$v.branchNameEn.$model,
+                branchNameTh: this.$v.branchNameTh.$model,
+                partnerId: [this.$v.partnerCodeId.$model],
+                siebelBranchCode: this.$v.siebelBranchCode.$model,
+                siebelBranchName: this.$v.siebelBranchName.$model,
+                branchTypeId: this.$v.branchTypeId.$model,
+                address: this.$v.address.$model,
+                subDistrictId: this.$v.subDistrictId.$model,
+                districtId: this.$v.districtId.$model,
+                provinceId: this.$v.provinceId.$model,
+                postalCode: this.$v.postalCode.$model,
+                country: this.$v.countryId.$model,
+                latitude: this.$v.latitude.$model,
+                longitude: this.$v.longitude.$model,
+                branchPhonePrefix: this.phonePrefix,
+                branchPhoneNumber: this.$v.phoneNumber.$model,
+                branchEmail: this.$v.email.$model,
+                showInApp: this.$v.showDisplay.$model,
+
+                mallLogoImg: getLogoBase64,
+                mallCoverPageImg: getCoverBase64,
+                mallShortDesc: this.$v.mallDescription.$model,
+                mallWebsiteUrl: this.$v.websiteList.$model,
+                mallFacebook,
+                mallInstagram,
+                mallLine,
+                mallTwitter,
+                openingHour,
+                mallCategoryId: this.$v.categoryId.$model
+                  ? this.$v.categoryId.$model
+                  : null
+              }
+            }
+          } else if (this.openingHourId === '2') {
+            if (
+              this.$v.validationBranchInfoGroup.$invalid ||
+              this.$v.validationMallOpenCustomizeGroup.$invalid ||
+              this.inValidateLogo ||
+              this.inValidateCover
+            ) {
+              this.$toast.global.error(this.$t('createBranch.fieldError'))
+              this.validateInfoAndLocation()
+              this.validateMall()
+              this.validateOpenCustomize()
+
+              return
+            } else {
+              this.checkWebsite()
+              this.checkSocial()
+              const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+              const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
+
+              let mallFacebook: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Facebook') {
+                  mallFacebook.push(item.link)
+                }
+              })
+              let mallInstagram: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Instagram') {
+                  mallInstagram.push(item.link)
+                }
+              })
+              let mallLine: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Line') {
+                  mallLine.push(item.link)
+                }
+              })
+              let mallTwitter: string[] = []
+              this.$v.socialList.$model.forEach((item: any) => {
+                if (item.type === 'Twitter') {
+                  mallTwitter.push(item.link)
+                }
+              })
+
+              let openingHour: any = []
+              this.$v.openCusTomList.$model.forEach((item: any) => {
+                openingHour.push({
+                  dayOfWeek: item.dayOfWeek,
+                  openingTime: item.openTime + '|' + item.openMeridiem,
+                  closingTime: item.closeTime + '|' + item.closeMeridiem,
+                  dayOff: item.isDayOff,
+                  allDay: false
+                })
+              })
+
+              return {
+                brandId: this.$v.brandId.$model,
+                branchCode: this.$v.branchCode.$model,
+                branchNameEn: this.$v.branchNameEn.$model,
+                branchNameTh: this.$v.branchNameTh.$model,
+                partnerId: [this.$v.partnerCodeId.$model],
+                siebelBranchCode: this.$v.siebelBranchCode.$model,
+                siebelBranchName: this.$v.siebelBranchName.$model,
+                branchTypeId: this.$v.branchTypeId.$model,
+                address: this.$v.address.$model,
+                subDistrictId: this.$v.subDistrictId.$model,
+                districtId: this.$v.districtId.$model,
+                provinceId: this.$v.provinceId.$model,
+                postalCode: this.$v.postalCode.$model,
+                country: this.$v.countryId.$model,
+                latitude: this.$v.latitude.$model,
+                longitude: this.$v.longitude.$model,
+                branchPhonePrefix: this.phonePrefix,
+                branchPhoneNumber: this.$v.phoneNumber.$model,
+                branchEmail: this.$v.email.$model,
+                showInApp: this.$v.showDisplay.$model,
+
+                mallLogoImg: getLogoBase64,
+                mallCoverPageImg: getCoverBase64,
+                mallShortDesc: this.$v.mallDescription.$model,
+                mallWebsiteUrl: this.$v.websiteList.$model,
+                mallFacebook,
+                mallInstagram,
+                mallLine,
+                mallTwitter,
+                openingHour,
+                mallCategoryId: this.$v.categoryId.$model
+              }
+            }
+          } else {
+            if (
+              this.$v.validationBranchInfoGroup.$invalid ||
+              this.$v.validationMallGroup.$invalid ||
+              this.inValidateLogo ||
+              this.inValidateCover
+            ) {
+              this.$toast.global.error(this.$t('createBranch.fieldError'))
+              this.validateInfoAndLocation()
+              this.validateMall()
+            }
+            return
+          }
         }
       default:
-        if (
-          this.$v.validationBranchInfoGroup.$invalid ||
-          this.$v.validationNotInMallGroup.$invalid
-        ) {
-          this.$store.dispatch('stepbar/setEnableSubmit', 0)
-          this.$toast.global.error(this.$t('createBranch.fieldError'))
-          this.validateInfoAndLocation()
-          this.checkBranchTypeId()
-
-          return
+        if (this.componetMode === 'edit') {
+          if (
+            this.$v.validationEditBranchInfoGroup.$invalid ||
+            this.$v.validationNotInMallGroup.$invalid
+          ) {
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+            this.$toast.global.error(this.$t('createBranch.fieldError'))
+            this.validateInfoAndLocation()
+            this.checkBranchTypeId()
+            this.checkcompanyStatus()
+            return
+          } else {
+            return {
+              brandId: this.$v.brandId.$model,
+              branchCode: this.$v.branchCode.$model,
+              branchNameEn: this.$v.branchNameEn.$model,
+              branchNameTh: this.$v.branchNameTh.$model,
+              partnerId: [this.$v.partnerCodeId.$model],
+              siebelBranchCode: this.$v.siebelBranchCode.$model,
+              siebelBranchName: this.$v.siebelBranchName.$model,
+              branchTypeId: this.$v.branchTypeId.$model,
+              address: this.$v.address.$model,
+              subDistrictId: this.$v.subDistrictId.$model,
+              districtId: this.$v.districtId.$model,
+              provinceId: this.$v.provinceId.$model,
+              postalCode: this.$v.postalCode.$model,
+              country: this.$v.countryId.$model,
+              latitude: this.$v.latitude.$model,
+              longitude: this.$v.longitude.$model,
+              branchPhonePrefix: this.phonePrefix,
+              branchPhoneNumber: this.$v.phoneNumber.$model,
+              branchEmail: this.$v.email.$model,
+              showInApp: this.$v.showDisplay.$model,
+              statusId: this.$v.status.$model,
+            }
+          }
         } else {
-          return {
-            brandId: this.$v.brandId.$model,
-            branchCode: this.$v.branchCode.$model,
-            branchNameEn: this.$v.branchNameEn.$model,
-            branchNameTh: this.$v.branchNameTh.$model,
-            partnerId: [this.$v.partnerCodeId.$model],
-            siebelBranchCode: this.$v.siebelBranchCode.$model,
-            siebelBranchName: this.$v.siebelBranchName.$model,
-            branchTypeId: this.$v.branchTypeId.$model,
-            address: this.$v.address.$model,
-            subDistrictId: this.$v.subDistrictId.$model,
-            districtId: this.$v.districtId.$model,
-            provinceId: this.$v.provinceId.$model,
-            postalCode: this.$v.postalCode.$model,
-            country: this.$v.countryId.$model,
-            latitude: this.$v.latitude.$model,
-            longitude: this.$v.longitude.$model,
-            branchPhonePrefix: this.phonePrefix,
-            branchPhoneNumber: this.$v.phoneNumber.$model,
-            branchEmail: this.$v.email.$model,
-            showInApp: this.$v.showDisplay.$model
+          if (
+            this.$v.validationBranchInfoGroup.$invalid ||
+            this.$v.validationNotInMallGroup.$invalid
+          ) {
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+            this.$toast.global.error(this.$t('createBranch.fieldError'))
+            this.validateInfoAndLocation()
+            this.checkBranchTypeId()
+            return
+          } else {
+            return {
+              brandId: this.$v.brandId.$model,
+              branchCode: this.$v.branchCode.$model,
+              branchNameEn: this.$v.branchNameEn.$model,
+              branchNameTh: this.$v.branchNameTh.$model,
+              partnerId: [this.$v.partnerCodeId.$model],
+              siebelBranchCode: this.$v.siebelBranchCode.$model,
+              siebelBranchName: this.$v.siebelBranchName.$model,
+              branchTypeId: this.$v.branchTypeId.$model,
+              address: this.$v.address.$model,
+              subDistrictId: this.$v.subDistrictId.$model,
+              districtId: this.$v.districtId.$model,
+              provinceId: this.$v.provinceId.$model,
+              postalCode: this.$v.postalCode.$model,
+              country: this.$v.countryId.$model,
+              latitude: this.$v.latitude.$model,
+              longitude: this.$v.longitude.$model,
+              branchPhonePrefix: this.phonePrefix,
+              branchPhoneNumber: this.$v.phoneNumber.$model,
+              branchEmail: this.$v.email.$model,
+              showInApp: this.$v.showDisplay.$model
+            }
           }
         }
     }

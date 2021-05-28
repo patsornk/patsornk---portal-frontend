@@ -360,7 +360,7 @@ export default class TabBranch extends Vue {
           this.language === 'th'
             ? item.brand.brandNameTh
             : item.brand.brandNameEn,
-        partnerCode: item.partners[0].partnerCode,
+        partnerCode: item.partners[0] ? item.partners[0].partnerCode : '-',
         branchType: item.branchType,
         status: item.statusDesc
       }

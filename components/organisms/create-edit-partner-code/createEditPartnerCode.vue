@@ -1,7 +1,9 @@
 <template>
   <div class="create-company-container">
     <div class="partner-code-container">
-      <span class="siebel-title"> {{$t('createPartnerCode.partnerInfo')}} </span>
+      <span class="siebel-title">
+        {{ $t('createPartnerCode.partnerInfo') }}
+      </span>
       <div class="siebel-container">
         <input-field
           :disable="true"
@@ -34,9 +36,9 @@
           type="select"
           :options="statusOption"
           :optionsReduce="(item) => item.id"
-          optionsLabel="status"
+          :optionsLabel="'status'"
           :placeholder="$t('common.pleaseSelect')"
-          :errorMessage="error.status ? error.status : undefined"
+          :errorMessage="error.status"
         />
       </div>
     </div>
@@ -68,7 +70,7 @@
       @pagination="changPageSize"
     />
     <div class="footer">
-      <t-1-button class="black" @click.native="clickSave"> 
+      <t-1-button class="black" @click.native="clickSave">
         {{ $t('common.save') }}
       </t-1-button>
     </div>
@@ -208,15 +210,15 @@ export default class CreateEditPartnerCode extends Vue {
 
   private statusOption = [
     {
-      id: '2',
+      id: 2,
       status: 'Active'
     },
     {
-      id: '3',
+      id: 3,
       status: 'Inactive'
     },
     {
-      id: '4',
+      id: 4,
       status: 'Onhold'
     }
   ]
@@ -337,7 +339,8 @@ export default class CreateEditPartnerCode extends Vue {
       const payload = {
         partnerId: this.partnerId,
         partnerName: this.partnerName,
-        companyId: this.companyId
+        companyId: this.companyId,
+        statusId: this.status
       }
       const res = await this.$axios.$post(
         `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,

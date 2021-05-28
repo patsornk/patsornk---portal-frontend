@@ -45,6 +45,18 @@
         @prefix="onChangedPrefixNumber"
         :errorMessage="error.phoneNo"
       />
+      <input-field
+        v-if="mode === 'edit'"
+        v-model="$v.status.$model"
+        :title="$t('common.status')"
+        required
+        type="select"
+        :options="statusOption"
+        :optionsReduce="(item) => item.id"
+        :optionsLabel="'status'"
+        :placeholder="$t('common.pleaseSelect')"
+        :errorMessage="error.status"
+      />
     </div>
     <div class="brand-page">
       <div class="brand-head-box">
@@ -236,6 +248,9 @@ const validations = {
   },
   banner: {},
   brandInfo: {},
+  status: {
+    required
+  },
   partnerCodeList: {
     required
   },
@@ -249,6 +264,16 @@ const validations = {
     'showDisplay',
     'logo'
   ],
+  validationEditGroup: [
+    'brandCode',
+    'brandNameTh',
+    'brandNameEn',
+    'email',
+    'phoneNo',
+    'showDisplay',
+    'logo',
+    'status'
+  ],
   validationGroupWithoutLogo: [
     'brandCode',
     'brandNameTh',
@@ -256,6 +281,15 @@ const validations = {
     'email',
     'phoneNo',
     'showDisplay'
+  ],
+  validationEditWithoutLogo: [
+    'brandCode',
+    'brandNameTh',
+    'brandNameEn',
+    'email',
+    'phoneNo',
+    'showDisplay',
+    'status'
   ]
 }
 @Component({
@@ -295,6 +329,21 @@ export default class CreateBrand extends Vue {
     en: ''
   }
 
+  private statusOption = [
+    {
+      id: 2,
+      status: 'Active'
+    },
+    {
+      id: 3,
+      status: 'Inactive'
+    },
+    {
+      id: 4,
+      status: 'Onhold'
+    }
+  ]
+
   brandNameTh = ''
   brandNameEn = ''
   email = ''
@@ -310,6 +359,8 @@ export default class CreateBrand extends Vue {
   partnerTotalPage = 1
   partnerTotalItem = 10
   pagination = '10'
+
+  status = 0
 
   brandFeatureError: any = ''
   currentBrandFeatureKey = 1
@@ -328,7 +379,8 @@ export default class CreateBrand extends Vue {
     brandNameEn: '',
     email: '',
     phoneNo: '',
-    logo: ''
+    logo: '',
+    status: ''
   }
 
   isShowImage = false
@@ -348,7 +400,10 @@ export default class CreateBrand extends Vue {
   }
 
   async mounted(): Promise<void> {
-    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+    if (
+      window.sessionStorage.getItem('maxStepbar') &&
+      window.sessionStorage.getItem('maxStepbar') == '4'
+    ) {
       this.$store.dispatch('stepbar/setEnableSubmit', 1)
     }
     this.brandFeatureList = [
@@ -507,6 +562,13 @@ export default class CreateBrand extends Vue {
       : ''
   }
 
+  @Watch('status')
+  checkcompanyStatus(): void {
+    this.error.status = !this.$v.status.required
+      ? this.$t('createCompany.error.require').toString()
+      : ''
+  }
+
   private columnDefs = [
     {
       headerName: 'Siebel Partner code',
@@ -591,6 +653,7 @@ export default class CreateBrand extends Vue {
               })
             }
           )
+          this.status = data.status
           if (data.brandAdditional) {
             if (this.mode === 'edit') {
               this.brandName.th = data.brandNameTh
@@ -763,37 +826,78 @@ export default class CreateBrand extends Vue {
     let validationGroup = false
     let isPartnerCodeList = false
     if (this.logoUrl) {
-      if (this.$v.validationGroupWithoutLogo.$invalid) {
-        validationGroup = false
-        this.$toast.global.error(this.$t('createBrand.fieldError'))
-        this.onChangedBrandCode()
-        this.onChangedBrandNameTh()
-        this.onChangedBrandNameEn()
-        this.onChangedEmail()
-        this.onChangedPhoneNo()
-        this.$store.dispatch('stepbar/setEnableSubmit', 0)
-      } else {
-        validationGroup = true
-        if (!brandFeatureValidate) {
+      if (this.mode === 'edit') {
+        if (this.$v.validationEditWithoutLogo.$invalid) {
+          validationGroup = false
           this.$toast.global.error(this.$t('createBrand.fieldError'))
+          this.onChangedBrandCode()
+          this.onChangedBrandNameTh()
+          this.onChangedBrandNameEn()
+          this.onChangedEmail()
+          this.onChangedPhoneNo()
+          this.checkcompanyStatus()
+        } else {
+          validationGroup = true
+          if (!brandFeatureValidate) {
+            this.$toast.global.error(this.$t('createBrand.fieldError'))
+          }
+        }
+      } else {
+        if (this.$v.validationGroupWithoutLogo.$invalid) {
+          validationGroup = false
+          this.$toast.global.error(this.$t('createBrand.fieldError'))
+          this.onChangedBrandCode()
+          this.onChangedBrandNameTh()
+          this.onChangedBrandNameEn()
+          this.onChangedEmail()
+          this.onChangedPhoneNo()
           this.$store.dispatch('stepbar/setEnableSubmit', 0)
+        } else {
+          validationGroup = true
+          if (!brandFeatureValidate) {
+            this.$toast.global.error(this.$t('createBrand.fieldError'))
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+          }
         }
       }
-    } else if (this.$v.validationGroup.$invalid && !this.validateLogo) {
-      validationGroup = false
-      this.$toast.global.error(this.$t('createBrand.fieldError'))
-      this.onChangedBrandCode()
-      this.onChangedBrandNameTh()
-      this.onChangedBrandNameEn()
-      this.onChangedEmail()
-      this.onChangedPhoneNo()
-      this.onChangedLogo(this.$v.logo.$model)
-      this.$store.dispatch('stepbar/setEnableSubmit', 0)
     } else {
-      validationGroup = true
-      if (!brandFeatureValidate) {
-        this.$toast.global.error(this.$t('createBrand.fieldError'))
-        this.$store.dispatch('stepbar/setEnableSubmit', 0)
+      if (this.mode === 'edit') {
+        if (this.$v.validationEditGroup.$invalid && !this.validateLogo) {
+          validationGroup = false
+          this.$toast.global.error(this.$t('createBrand.fieldError'))
+          this.onChangedBrandCode()
+          this.onChangedBrandNameTh()
+          this.onChangedBrandNameEn()
+          this.onChangedEmail()
+          this.onChangedPhoneNo()
+          this.checkcompanyStatus()
+          this.onChangedLogo(this.$v.logo.$model)
+          this.$store.dispatch('stepbar/setEnableSubmit', 0)
+        } else {
+          validationGroup = true
+          if (!brandFeatureValidate) {
+            this.$toast.global.error(this.$t('createBrand.fieldError'))
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+          }
+        }
+      } else {
+        if (this.$v.validationGroup.$invalid && !this.validateLogo) {
+          validationGroup = false
+          this.$toast.global.error(this.$t('createBrand.fieldError'))
+          this.onChangedBrandCode()
+          this.onChangedBrandNameTh()
+          this.onChangedBrandNameEn()
+          this.onChangedEmail()
+          this.onChangedPhoneNo()
+          this.onChangedLogo(this.$v.logo.$model)
+          this.$store.dispatch('stepbar/setEnableSubmit', 0)
+        } else {
+          validationGroup = true
+          if (!brandFeatureValidate) {
+            this.$toast.global.error(this.$t('createBrand.fieldError'))
+            this.$store.dispatch('stepbar/setEnableSubmit', 0)
+          }
+        }
       }
     }
 
@@ -825,25 +929,51 @@ export default class CreateBrand extends Vue {
       const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
       const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
 
-      const payload = {
-        companyId,
-        brandId,
-        brandNameTh: this.$v.brandNameTh.$model,
-        brandNameEn: this.$v.brandNameEn.$model,
-        brandCode: this.$v.brandCode.$model,
-        brandLogoImg:
-          this.oldLogourl && !this.logoUrl ? undefined : getLogoBase64, // Wait for api
-        brandBannerImg:
-          this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
-        brandInfo: this.$v.brandInfo.$model,
-        brandLink: this.$v.brandCode.$model,
-        brandPhonePrefix: this.phonePrefix,
-        brandPhoneNumber: this.$v.phoneNo.$model,
-        brandEmail: this.$v.email.$model,
-        showInApp: this.$v.showDisplay.$model,
-        partnerId,
-        feature: brandFeatureFormatedList
+      let payload
+
+      if (this.mode === 'edit') {
+        payload = {
+          companyId,
+          brandId,
+          brandNameTh: this.$v.brandNameTh.$model,
+          brandNameEn: this.$v.brandNameEn.$model,
+          brandCode: this.$v.brandCode.$model,
+          brandLogoImg:
+            this.oldLogourl && !this.logoUrl ? undefined : getLogoBase64, // Wait for api
+          brandBannerImg:
+            this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
+          brandInfo: this.$v.brandInfo.$model,
+          brandLink: this.$v.brandCode.$model,
+          brandPhonePrefix: this.phonePrefix,
+          brandPhoneNumber: this.$v.phoneNo.$model,
+          brandEmail: this.$v.email.$model,
+          showInApp: this.$v.showDisplay.$model,
+          partnerId,
+          feature: brandFeatureFormatedList,
+          statusId: this.$v.status.$model
+        }
+      } else {
+        payload = {
+          companyId,
+          brandId,
+          brandNameTh: this.$v.brandNameTh.$model,
+          brandNameEn: this.$v.brandNameEn.$model,
+          brandCode: this.$v.brandCode.$model,
+          brandLogoImg:
+            this.oldLogourl && !this.logoUrl ? undefined : getLogoBase64, // Wait for api
+          brandBannerImg:
+            this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
+          brandInfo: this.$v.brandInfo.$model,
+          brandLink: this.$v.brandCode.$model,
+          brandPhonePrefix: this.phonePrefix,
+          brandPhoneNumber: this.$v.phoneNo.$model,
+          brandEmail: this.$v.email.$model,
+          showInApp: this.$v.showDisplay.$model,
+          partnerId,
+          feature: brandFeatureFormatedList
+        }
       }
+
       try {
         const response = await this.$axios.$post(
           `${process.env.PORTAL_ENDPOINT}/update_brand`,

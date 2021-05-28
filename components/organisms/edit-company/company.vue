@@ -188,10 +188,6 @@ export default class EditCompany extends Vue {
 
   private companyStatusOption = [
     {
-      id: 1,
-      status: 'Draft'
-    },
-    {
       id: 2,
       status: 'Active'
     },
@@ -352,12 +348,12 @@ export default class EditCompany extends Vue {
         this.companyNameTh = data.companyNameTh
         this.companyNameEn = data.companyNameEn
         this.typeId = data.companyType.companyTypeId
-        this.categoryId = data.companyCategory.companyCategoryId
-        this.sizeId = data.companySize.companySizeId
-        this.assignee = data.assignee
-        this.email = data.companyEmail
-        this.companyPhonePrefix = data.companyPhonePrefix
-        this.phoneNumber = data.companyPhoneNumber
+        this.categoryId = data.companyCategory ? data.companyCategory.companyCategoryId : ''
+        this.sizeId = data.companySize ? data.companySize.companySizeId : ''
+        this.assignee = data.assignee ? data.assignee : ''
+        // this.email = data.companyEmail
+        // this.companyPhonePrefix = data.companyPhonePrefix
+        // this.phoneNumber = data.companyPhoneNumber
         this.companyStatus = data.status
       }
     } catch (error) {
@@ -429,7 +425,7 @@ export default class EditCompany extends Vue {
           companyCategoryId: this.$v.categoryId.$model,
           companySizeId: this.$v.sizeId.$model,
           assignee: this.$v.assignee.$model,
-          stauts: this.$v.companyStatus.$model
+          statusId: this.$v.companyStatus.$model
         }
         try {
           let response = await this.$axios.$post(
@@ -469,7 +465,7 @@ export default class EditCompany extends Vue {
           companyNameTh: this.$v.companyNameTh.$model,
           companyNameEn: this.$v.companyNameEn.$model,
           companyTypeId: this.$v.typeId.$model,
-          stauts: this.$v.companyStatus.$model
+          statusId: this.$v.companyStatus.$model
         }
         try {
           let response = await this.$axios.$post(
