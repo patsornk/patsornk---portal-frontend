@@ -1082,16 +1082,16 @@ export default class CreateBrand extends Vue {
         isValid: true
       })
       this.currentBrandFeatureIndex = this.brandFeatureList.length
+    } else if (!this.brandFeatureValidate) {
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastRequiredField')
+      )
     } else if (!this.atLeastOneFieldBrandFeatureValidate) {
       this.brandFeatureError = this.$t(
         'createBrand.brandFeature.error.oneFieldRequired'
       )
       this.$toast.global.error(
         this.$t('createBrand.brandFeature.error.toastOneFieldRequired')
-      )
-    } else if (!this.brandFeatureValidate) {
-      this.$toast.global.error(
-        this.$t('createBrand.brandFeature.error.toastRequiredField')
       )
     }
   }
@@ -1132,7 +1132,10 @@ export default class CreateBrand extends Vue {
   }
 
   onBrandFeatureChange(index: number, key: string, value: any): void {
-    if (value && key !== 'showDisplay' && key !== 'isValid') {
+    if (
+      (value && key !== 'showDisplay' && key !== 'isValid') ||
+      (key === 'showDisplay' && value)
+    ) {
       this.brandFeatureError = ''
     }
     this.brandFeatureList[index][key] = value
