@@ -8,7 +8,7 @@
         :placeholder="$t('createCompany.companyNameInput')"
         :maxlength="50"
         required
-        :errorMessage="error.companyNameTh"
+        :error-message="error.companyNameTh"
       />
       <input-field
         v-model="$v.companyNameEn.$model"
@@ -16,7 +16,7 @@
         :title="$t('createCompany.companyNameEn')"
         :placeholder="$t('createCompany.companyNameInput')"
         :maxlength="50"
-        :errorMessage="error.companyNameEn"
+        :error-message="error.companyNameEn"
       />
       <input-field
         v-model="$v.typeId.$model"
@@ -24,45 +24,45 @@
         required
         type="select"
         :options="companyTypeList"
-        :optionsReduce="(item) => item.companyTypeId"
-        :optionsLabel="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
+        :options-reduce="(item) => item.companyTypeId"
+        :options-label="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
         :placeholder="$t('common.pleaseSelect')"
-        :errorMessage="error.typeId"
+        :error-message="error.typeId"
         @onBlur="checkTypeId()"
       />
       <input-field
-        :disable="$v.typeId.$model != 3"
         v-model="$v.categoryId.$model"
-        :title="$t('createCompany.partnerCategory')"
-        required
         type="select"
+        required
+        :disable="$v.typeId.$model !== 3"
+        :title="$t('createCompany.partnerCategory')"
         :options="companyTypeCategory"
-        :optionsReduce="(item) => item.companyCategoryId"
-        :optionsLabel="
+        :options-reduce="(item) => item.companyCategoryId"
+        :options-label="
           language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
         "
         :placeholder="$t('common.pleaseSelect')"
-        :errorMessage="error.categoryId"
+        :error-message="error.categoryId"
       />
       <input-field
-        :disable="$v.typeId.$model != 3"
         v-model="$v.sizeId.$model"
-        :title="$t('createCompany.businessSize')"
-        required
         type="select"
+        required
+        :disable="$v.typeId.$model !== 3"
+        :title="$t('createCompany.businessSize')"
         :options="companyTypeSize"
-        :optionsReduce="(item) => item.companySizeId"
-        :optionsLabel="language === 'th' ? 'companySizeTh' : 'companySizeEn'"
+        :options-reduce="(item) => item.companySizeId"
+        :options-label="language === 'th' ? 'companySizeTh' : 'companySizeEn'"
         :placeholder="$t('common.pleaseSelect')"
-        :errorMessage="error.sizeId"
+        :error-message="error.sizeId"
       />
       <input-field
-        :disable="$v.typeId.$model != 3"
         v-model="$v.assignee.$model"
+        :disable="$v.typeId.$model !== 3"
         :title="$t('createCompany.assignee')"
         :placeholder="$t('common.pleaseSelect')"
         required
-        :errorMessage="error.assignee"
+        :error-message="error.assignee"
       />
       <!-- Keep for restore in future -->
       <!-- <input-field
@@ -155,7 +155,7 @@ const validations = {
 
 @Component({
   mixins: [validationMixin],
-  validations: validations,
+  validations,
   components: {
     InputField,
     PhoneNumInput
@@ -225,6 +225,11 @@ export default class CreateCompany extends Vue {
 
   @Watch('typeId')
   clearError(): void {
+    if (parseInt(this.typeId) !== 3) {
+      this.sizeId = ''
+      this.categoryId = ''
+      this.assignee = ''
+    }
     this.error = {
       ...this.error,
       companyNameEn: '',
@@ -237,23 +242,29 @@ export default class CreateCompany extends Vue {
 
   @Watch('categoryId')
   checkCategoryId(): void {
-    this.error.categoryId = !this.$v.categoryId.required
-      ? this.$t('createCompany.pleaseEnter').toString()
-      : ''
+    if (this.$v.typeId.$model === 3) {
+      this.error.categoryId = !this.$v.categoryId.required
+        ? this.$t('createCompany.pleaseEnter').toString()
+        : ''
+    }
   }
 
   @Watch('sizeId')
   checkSizeId(): void {
-    this.error.sizeId = !this.$v.sizeId.required
-      ? this.$t('createCompany.pleaseEnter').toString()
-      : ''
+    if (this.$v.typeId.$model === 3) {
+      this.error.sizeId = !this.$v.sizeId.required
+        ? this.$t('createCompany.pleaseEnter').toString()
+        : ''
+    }
   }
 
   @Watch('assignee')
   checkAssignee(): void {
-    this.error.assignee = !this.$v.assignee.required
-      ? this.$t('createCompany.pleaseEnter').toString()
-      : ''
+    if (this.$v.typeId.$model === 3) {
+      this.error.assignee = !this.$v.assignee.required
+        ? this.$t('createCompany.pleaseEnter').toString()
+        : ''
+    }
   }
 
   // @Watch('email')
@@ -286,7 +297,7 @@ export default class CreateCompany extends Vue {
 
   async getCompanyType(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company_type`,
         { data: null }
       )
@@ -303,7 +314,7 @@ export default class CreateCompany extends Vue {
 
   async getCompanySize(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company_size`,
         { data: null }
       )
@@ -317,7 +328,7 @@ export default class CreateCompany extends Vue {
 
   async getCompanyCategory(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company_category`,
         { data: null }
       )
@@ -347,7 +358,7 @@ export default class CreateCompany extends Vue {
   async getCompany(): Promise<void> {
     if (window.sessionStorage.getItem('createCompanyId')) {
       try {
-        let res = await this.$axios.$get(
+        const res = await this.$axios.$get(
           `${
             process.env.PORTAL_ENDPOINT
           }/get_company?companyId=${window.sessionStorage.getItem(
@@ -375,7 +386,7 @@ export default class CreateCompany extends Vue {
 
   async submit(): Promise<void> {
     this.checkTypeId()
-    if (this.$v.typeId.$model != 3) {
+    if (this.$v.typeId.$model !== 3) {
       if (this.$v.validationGroup.$invalid) {
         this.$toast.global.error(this.$t('createCompany.fieldError'))
         this.checkCompanyNameEn()
@@ -393,7 +404,7 @@ export default class CreateCompany extends Vue {
           window.sessionStorage.getItem('companyFirstTime') === 'no'
         ) {
           try {
-            let response = await this.$axios.$post(
+            const response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/update_company`,
               {
                 companyId: window.sessionStorage.getItem('createCompanyId'),
@@ -420,7 +431,7 @@ export default class CreateCompany extends Vue {
           }
         } else {
           try {
-            let response = await this.$axios.$post(
+            const response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/create_company`,
               payload
             )
@@ -468,7 +479,7 @@ export default class CreateCompany extends Vue {
           window.sessionStorage.getItem('companyFirstTime') === 'no'
         ) {
           try {
-            let response = await this.$axios.$post(
+            const response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/update_company`,
               {
                 companyId: window.sessionStorage.getItem('createCompanyId'),
@@ -495,7 +506,7 @@ export default class CreateCompany extends Vue {
           }
         } else {
           try {
-            let response = await this.$axios.$post(
+            const response = await this.$axios.$post(
               `${process.env.PORTAL_ENDPOINT}/create_company`,
               payload
             )
