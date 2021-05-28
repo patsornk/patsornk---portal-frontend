@@ -41,7 +41,7 @@ module.exports = {
       featureCannotDisplay: 'The feature cannot display on The 1 App. Please input required field(s).',
       image: 'No file chosen',
       ctaLabel: 'Input Feature CTA Label',
-      ctaType: 'Input CTA Type',
+      ctaType: 'Select Feature CTA Type',
       ctaFeature: 'Input Feature CTA',
     }
   },
