@@ -1420,7 +1420,8 @@ export default class CreateBranch extends Vue {
           if (this.componetMode == 'onboard') {
             this.brandList = res.data.brand
             this.brandId =
-              parseInt(window.sessionStorage.getItem('createBrandId') ?? '') || ''
+              parseInt(window.sessionStorage.getItem('createBrandId') ?? '') ||
+              ''
             this.disableBrandId = true
           } else {
             this.brandList = res.data.brand
@@ -1580,16 +1581,21 @@ export default class CreateBranch extends Vue {
     await this.getBranchType()
     await this.getMallList()
     await this.getProvinceList()
-    if (
-      window.sessionStorage.getItem('createBranchFirstTime') &&
-      window.sessionStorage.getItem('createBranchFirstTime') === 'no'
-    ) {
+
+    if (!this.componetMode) {
+      if (
+        window.sessionStorage.getItem('createBranchFirstTime') &&
+        window.sessionStorage.getItem('createBranchFirstTime') === 'no'
+      ) {
+        this.getBranch()
+      }
+    } else if (this.componetMode === 'edit') {
       this.getBranch()
     }
   }
 
   async getBranch(): Promise<void> {
-    if (window.sessionStorage.getItem('createBranchId')) {
+    if (window.sessionStorage.getItem('createBranchId') || this.branchId) {
       try {
         let id = ''
         if (this.branchId) {
@@ -1706,13 +1712,23 @@ export default class CreateBranch extends Vue {
   }
 
   clickSave(): void {
-    if (
-      window.sessionStorage.getItem('createBranchFirstTime') &&
-      window.sessionStorage.getItem('createBranchFirstTime') === 'no'
+    console.log('componetMode', this.componetMode)
+    if (!this.componetMode) {
+      if (
+        window.sessionStorage.getItem('createBrandFirstTime') &&
+        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+      ) {
+        this.update()
+      } else {
+        this.save()
+      }
+    } else if (
+      this.componetMode === 'create' ||
+      this.componetMode === 'onboard'
     ) {
-      this.update()
-    } else {
       this.save()
+    } else if (this.componetMode === 'edit') {
+      this.update()
     }
   }
 
@@ -2039,14 +2055,45 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
-        this.$store.dispatch(
-          'organizartion/setBranchId',
-          response.data.branchId
-        )
-        window.sessionStorage.setItem('createBranchId', response.data.branchId)
-        window.sessionStorage.setItem('createBranchFirstTime', 'no')
+        if (!this.componetMode) {
+          this.$store.dispatch(
+            'organizartion/setBranchId',
+            response.data.branchId
+          )
+          window.sessionStorage.setItem(
+            'createBranchId',
+            response.data.branchId
+          )
+          window.sessionStorage.setItem('createBranchFirstTime', 'no')
+          this.$toast.global.success(this.$t('common.successfully').toString())
+          this.$router.push('/organizationManagement/create/service')
+        } else if (this.componetMode === 'create') {
+          this.submitBranch(response.data.branchId)
+        } else if (this.componetMode === 'onboard') {
+          window.sessionStorage.setItem('createBranchFirstTime', 'no')
+          this.$toast.global.success(this.$t('common.successfully').toString())
+          this.$router.push('/organizationManagement/create/service')
+        }
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async submitBranch(branchId: number | string | null): Promise<void> {
+    const payload = { branchId }
+    try {
+      const response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/submit_branch`,
+        payload
+      )
+      if (response.successful) {
+        const companyId = this.parentCompantId
+          ? parseInt(this.parentCompantId)
+          : window.sessionStorage.getItem('createCompanyId')
+
+        this.$router.push(`/organizationManagement/${companyId}`)
         this.$toast.global.success(this.$t('common.successfully').toString())
-        this.$router.push('/organizationManagement/create/service')
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -2101,6 +2148,10 @@ export default class CreateBranch extends Vue {
       )
       if (response.successful) {
         this.$toast.global.success(this.$t('common.successfully').toString())
+        if (this.componetMode === 'edit') {
+          this.$router.push(`/organizationManagement/${this.parentCompantId}`)
+        } else {
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

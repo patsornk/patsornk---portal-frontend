@@ -423,7 +423,10 @@ export default class OrganizationTable extends Vue {
       if (res.successful) {
         const data = res.data
         if (data.companyId) {
-          window.sessionStorage.setItem('createCompanyFirstTime', data.companyId)
+          window.sessionStorage.setItem(
+            'createCompanyFirstTime',
+            data.companyId
+          )
           window.sessionStorage.setItem('createCompanyId', data.companyId)
           window.sessionStorage.setItem('companyFirstTime', 'no')
         }
@@ -587,18 +590,21 @@ export default class OrganizationTable extends Vue {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.company.map((item: any) => {
-      const cat =
-        this.language === 'th'
+      const cat = item.companyCategory
+        ? this.language === 'th'
           ? item.companyCategory.companyCategoryTh
           : item.companyCategory.companyCategoryEn
+        : '-'
       const type =
         this.language === 'th'
           ? item.companyType.companyTypeTh
           : item.companyType.companyTypeEn
-      const size =
-        this.language === 'th'
+      const size = item.companySize
+        ? this.language === 'th'
           ? item.companySize.companySizeTh
           : item.companySize.companySizeEn
+        : '-'
+
       return {
         companyId: item.companyId,
         regioCompanyNameTh: item.companyNameTh,
