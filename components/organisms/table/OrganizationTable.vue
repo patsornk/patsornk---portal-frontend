@@ -565,11 +565,10 @@ export default class OrganizationTable extends Vue {
     companies.forEach((company: any) => {
       companyIds.push(company.companyId)
     })
-    const payload = { companyId: companyIds }
     try {
       const response = await this.$axios.$delete(
         `${process.env.PORTAL_ENDPOINT}/delete_company`,
-        { data: { payload } }
+        { data: { companyId: companyIds } }
       )
       if (response.successful) {
         this.getCompanies(1, this.pagination)
