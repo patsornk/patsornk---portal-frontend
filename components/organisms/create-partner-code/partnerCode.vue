@@ -134,7 +134,10 @@ export default class CreatePartnerCode extends Vue {
   ]
 
   mounted(): void {
-    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+    if (
+      window.sessionStorage.getItem('maxStepbar') &&
+      window.sessionStorage.getItem('maxStepbar') == '4'
+    ) {
       this.$store.dispatch('stepbar/setEnableSubmit', 1)
     }
     if (this.companyIdParent) {
@@ -351,39 +354,50 @@ export default class CreatePartnerCode extends Vue {
       if (res.successful) {
         this.selectData = []
         this.$toast.global.success(this.$t('common.deletedSuccessfully'))
-        this.getPartnerList()
         this.clearData()
-        if (window.sessionStorage.getItem('createBrandId')) {
-          const res = await this.$axios.$get(
-            `${
-              process.env.PORTAL_ENDPOINT
-            }/get_brand?brandId=${window.sessionStorage.getItem(
-              'createBrandId'
-            )}&brandAdditional=true&partners=true`,
-            { data: null }
-          )
-          if (res.successful) {
-            if (res.data.partners.length) {
-              this.$store.dispatch('stepbar/setEnableSubmit', 1)
-            } else {
-              this.$store.dispatch('stepbar/setEnableSubmit', 0)
+        if (this.companyIdParent) {
+          this.companyId = this.companyIdParent
+          // TO DO
+          // this.getPartnerList()
+          this.dataList = this.dataList.filter(
+            (item)=>{
+              return item.partnerId !== partner.partnerId
+          })
+          this.refList = [...this.dataList]
+        } else {
+          this.getPartnerList()
+          if (window.sessionStorage.getItem('createBrandId')) {
+            const res = await this.$axios.$get(
+              `${
+                process.env.PORTAL_ENDPOINT
+              }/get_brand?brandId=${window.sessionStorage.getItem(
+                'createBrandId'
+              )}&brandAdditional=true&partners=true`,
+              { data: null }
+            )
+            if (res.successful) {
+              if (res.data.partners.length) {
+                this.$store.dispatch('stepbar/setEnableSubmit', 1)
+              } else {
+                this.$store.dispatch('stepbar/setEnableSubmit', 0)
+              }
             }
           }
-        }
-        if (window.sessionStorage.getItem('createBranchId')) {
-          const res = await this.$axios.$get(
-            `${
-              process.env.PORTAL_ENDPOINT
-            }/get_branch?branchId=${window.sessionStorage.getItem(
-              'createBranchId'
-            )}`,
-            { data: null }
-          )
-          if (res.successful) {
-            if (res.data.partners.length) {
-              this.$store.dispatch('stepbar/setEnableSubmit', 1)
-            } else {
-              this.$store.dispatch('stepbar/setEnableSubmit', 0)
+          if (window.sessionStorage.getItem('createBranchId')) {
+            const res = await this.$axios.$get(
+              `${
+                process.env.PORTAL_ENDPOINT
+              }/get_branch?branchId=${window.sessionStorage.getItem(
+                'createBranchId'
+              )}`,
+              { data: null }
+            )
+            if (res.successful) {
+              if (res.data.partners.length) {
+                this.$store.dispatch('stepbar/setEnableSubmit', 1)
+              } else {
+                this.$store.dispatch('stepbar/setEnableSubmit', 0)
+              }
             }
           }
         }
