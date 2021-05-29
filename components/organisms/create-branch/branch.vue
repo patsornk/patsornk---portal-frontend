@@ -16,6 +16,7 @@
       />
       <input-field
         v-model="$v.branchCode.$model"
+        :disable="this.componetMode === 'edit'"
         :title="$t('createBranch.branchInfo.branchCode')"
         :maxlength="25"
         required
@@ -38,6 +39,7 @@
       <input-field
         v-model="$v.siebelBranchCode.$model"
         :title="$t('createBranch.branchInfo.siebelBranchCode')"
+        :disable="this.componetMode === 'edit'"
         :maxlength="15"
         required
         :errorMessage="error.siebelBranchCode"
@@ -45,6 +47,7 @@
       <input-field
         v-model="$v.siebelBranchName.$model"
         :title="$t('createBranch.branchInfo.siebelBranchName')"
+        :disable="this.componetMode === 'edit'"
         :maxlength="50"
         required
         :errorMessage="error.siebelBranchName"
@@ -1466,7 +1469,11 @@ export default class CreateBranch extends Vue {
             this.disableBrandId = true
           } else {
             this.brandList = res.data.brand
-            this.disableBrandId = false
+            if (this.componetMode === 'edit') {
+              this.disableBrandId = true
+            } else {
+              this.disableBrandId = false
+            }
           }
         }
       } catch (error) {
