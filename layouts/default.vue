@@ -10,17 +10,13 @@
         <div v-if="isShowTitleButton" class="title-contriner">
           <span class="page-title">{{ pageTitle }}</span>
           <div @click="onClickTitleButton" class="button-title">
-            <img
-            class="add-icon"
-            :src="getIcon('icon/add-white.png')"
-          />
-          <span class="btn" > 
-            {{ buttonTitle }} 
-          </span>
+            <img class="add-icon" :src="getIcon('icon/add-white.png')" />
+            <span class="btn">{{ buttonTitle }}</span>
           </div>
         </div>
         <div v-else class="title-contriner">
           <span class="page-title">{{ pageTitle }}</span>
+          <company-status v-if="companyStatus" :status="companyStatus" />
         </div>
         <transition name="zoom-fade" mode="out-in">
           <Nuxt class="content" />
@@ -32,11 +28,12 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
+import T1Button from '@/components/atoms/button.vue'
 import HeaderNav from '~/components/organisms/navbar/HeaderNavbar.vue'
 import SidebarNav from '~/components/organisms/navbar/SidebarNavbar.vue'
 import Breadcrumb from '~/components/atoms/Breadcrumb.vue'
-import T1Button from '@/components/atoms/button.vue'
-import { BreadcrumbType, Organization } from '~/constants'
+import CompanyStatus from '~/components/atoms/company-status.vue'
+import { BreadcrumbType } from '~/constants'
 import { getAssetsPath } from '~/helper/images'
 
 @Component({
@@ -44,10 +41,15 @@ import { getAssetsPath } from '~/helper/images'
     HeaderNav,
     SidebarNav,
     T1Button,
-    Breadcrumb
+    Breadcrumb,
+    CompanyStatus
   }
 })
 export default class Default extends Vue {
+  get companyStatus(): string {
+    return this.$store.getters['company/companyStatus']
+  }
+
   get isSidebar() {
     return this.$store.getters['nav/toggleSidebar']
   }

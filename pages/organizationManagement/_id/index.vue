@@ -89,12 +89,16 @@ export default class OrganizationManagementDetail extends Vue {
 
   async getCpmpany(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.id}`,
         { data: null }
       )
       if (res.successful) {
         this.company = res.data
+        this.$store.dispatch(
+          'company/setCompanyStatus',
+          this.company.statusDesc
+        )
 
         this.setupBreadcrumb(
           this.language === 'th'

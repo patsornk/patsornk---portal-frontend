@@ -341,6 +341,7 @@ export default class CreateCompany extends Vue {
   }
 
   async mounted(): Promise<void> {
+    this.$store.dispatch('company/setCompanyStatus', '')
     if (
       window.sessionStorage.getItem('companyFirstTime') &&
       window.sessionStorage.getItem('companyFirstTime') === 'no'
