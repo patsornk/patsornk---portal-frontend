@@ -2,6 +2,7 @@
   <div class="login-container">
     <change-lang class="position-lang" />
     <Nuxt class="content" />
+    <div class="version">Version {{ version }}</div>
   </div>
 </template>
 
@@ -14,7 +15,12 @@ import ChangeLang from '~/components/atoms/dropdown-lang/ChangeLang.vue'
     ChangeLang
   }
 })
-export default class LoginLayout extends Vue {}
+export default class LoginLayout extends Vue {
+  get version() {
+    const pkgVersion = JSON.stringify(require('../package.json').version);
+    return pkgVersion.replace(/["]/g, '')
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -28,6 +34,14 @@ export default class LoginLayout extends Vue {}
 
   width: 100vw;
   height: 100vh;
+
+  .version {
+    position: fixed;
+    right: 8px;
+    bottom: 8px;
+    color: $mid-black;
+    text-align: center;
+  }
 
   .position-lang {
     position: absolute;

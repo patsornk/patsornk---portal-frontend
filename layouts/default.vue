@@ -23,6 +23,9 @@
         </transition>
       </div>
     </div>
+    <div class="version"> 
+      Version {{version}}
+    </div>
   </div>
 </template>
 
@@ -48,6 +51,11 @@ import { getAssetsPath } from '~/helper/images'
 export default class Default extends Vue {
   get companyStatus(): string {
     return this.$store.getters['company/companyStatus']
+  }
+
+  get version() {
+    const pkgVersion = JSON.stringify(require('../package.json').version);
+    return pkgVersion.replace(/["]/g, '')
   }
 
   get isSidebar() {
@@ -128,6 +136,14 @@ html {
   -moz-osx-font-smoothing: greyscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+}
+
+.version {
+  position: fixed;
+  right: 8px;
+  bottom: 8px;
+  color: $mid-black;
+  text-align: center;
 }
 
 .main {
