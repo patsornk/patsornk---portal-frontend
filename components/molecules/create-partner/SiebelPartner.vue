@@ -105,7 +105,7 @@ export default class CreatePartnerCode extends Vue {
   })
   private partnerCodeError: string | undefined
 
-  isLoading = true
+  isAddingPartner = false
   partnerCode = this.value.partnerCode
   partnerName = this.value.partnerName
   partnerId = this.value.partnerId
@@ -151,8 +151,8 @@ export default class CreatePartnerCode extends Vue {
 
   private clickAddSiebelPartner() {
     const validate = !this.$v.validationGroup.$invalid
-    if (!this.isLoading && validate) {
-      this.isLoading = true
+    if (!this.isAddingPartner && validate) {
+      this.isAddingPartner = true
 
       if (validateError(this.error)) {
         this.$emit('clickAdd', {
@@ -162,11 +162,11 @@ export default class CreatePartnerCode extends Vue {
             partnerId: this.partnerId
           },
           callback: () => {
-            this.isLoading = false
+            this.isAddingPartner = false
           }
         })
       } else {
-        this.isLoading = false
+        this.isAddingPartner = false
       }
     }
   }
