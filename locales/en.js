@@ -6,6 +6,7 @@ import common from './en/common'
 import createPartnerCode from './en/createPartnercode'
 import applyService from './en/applyService'
 import table from './en/table'
+import error from './en/error'
 
 module.exports = {
   home,
@@ -15,5 +16,6 @@ module.exports = {
   createCompany,
   createPartnerCode,
   applyService,
-  table
+  table,
+  error
 }

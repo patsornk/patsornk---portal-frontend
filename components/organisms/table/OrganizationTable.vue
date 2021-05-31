@@ -10,8 +10,8 @@
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
-            class="dropdown"
             v-model="filterData.companyTypeId"
+            class="dropdown"
             :options="companyType"
             :label="language === 'th' ? 'companyTypeTh' : 'companyTypeEn'"
             :reduce="(item) => item.companyTypeId"
@@ -20,8 +20,8 @@
             :map-keydown="deleteHandler"
           />
           <v-select
-            class="dropdown"
             v-model="filterData.companyCategoryId"
+            class="dropdown"
             :options="companyCategory"
             :label="
               language === 'th' ? 'companyCategoryTh' : 'companyCategoryEn'
@@ -32,8 +32,8 @@
             :map-keydown="deleteHandler"
           />
           <v-select
-            class="dropdown"
             v-model="filterData.compantStatus"
+            class="dropdown"
             :options="compantStatus"
             :label="'status'"
             :reduce="(item) => item.id"
@@ -120,7 +120,7 @@ export default class OrganizationTable extends Vue {
   }
 
   @Watch('language')
-  changeSerchSelect() {
+  changeSerchSelect(): void {
     this.searchList = [
       {
         id: 'company',
@@ -313,14 +313,14 @@ export default class OrganizationTable extends Vue {
     }
   ]
 
-  private async sortingList(data: any, order: any) {
+  private sortingList(data: any, order: any): void {
     this.clickSort = true
     this.clickSearch = false
-    if (data.colKey == 'status') {
+    if (data.colKey === 'status') {
       return
     }
-    if (this.tableOderField == data.colKey) {
-      if (this.tableOderBy == 'asc') {
+    if (this.tableOderField === data.colKey) {
+      if (this.tableOderBy === 'asc') {
         this.tableOderBy = 'desc'
       } else {
         this.tableOderBy = 'asc'
@@ -360,7 +360,7 @@ export default class OrganizationTable extends Vue {
   }
 
   onRowClicked(row: any): void {
-    if (row.data.status == 'Draft') {
+    if (row.data.status === 'Draft') {
       this.getOnboardStep(row.data.companyId)
     } else {
       this.$router.push(`/organizationManagement/${row.data.companyId}`)
@@ -369,7 +369,7 @@ export default class OrganizationTable extends Vue {
 
   async getOnboardStep(id: number): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_onboard_step?companyId=${id}`,
         { data: null }
       )
@@ -557,7 +557,12 @@ export default class OrganizationTable extends Vue {
         this.getCompanies(this.currentPage, this.pagination)
       }
     } catch (error) {
-      this.$toast.global.error(error.message)
+      const code = error.response.data.code
+      if (code === '12') {
+        this.$toast.global.error(this.$t('error.errorCode.12'))
+      } else {
+        this.$toast.global.error(error.message)
+      }
     }
   }
 

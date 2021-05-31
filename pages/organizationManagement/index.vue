@@ -31,9 +31,10 @@ export default class OrganizationManagement extends Vue {
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-
-    //set Page title
-    this.$store.dispatch('breadcrumb/setPageTitle', this.$t('home.landing.organiztionMng').toString())
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      this.$t('home.landing.organiztionMng').toString()
+    )
   }
 
   mounted() {
