@@ -69,12 +69,14 @@ export default class DialogPopup extends Vue {
   readonly rightButtonTitle!: string
 
   @Prop({
-    type: String
+    type: String,
+    default: 'width: 163px;'
   })
   readonly leftStyle!: string
 
   @Prop({
-    type: String
+    type: String,
+    default: 'width: 163px;'
   })
   readonly rightStyle!: string
 
