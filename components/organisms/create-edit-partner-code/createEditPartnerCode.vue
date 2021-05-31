@@ -51,11 +51,14 @@
       is-show-header-table
       is-show-check-box
       is-show-paginate
+      is-show-data-not-found-text
       :is-create-new="true"
       :is-show-add-icon="false"
       :is-show-icon-hold="false"
       :is-show-active="false"
       :is-show-inactive="false"
+      :is-loading="isLoading"
+      :data-not-found-text="$t('table.noBrand')"
       :framework-components="frameworkComponents"
       :header-title="$t('createPartnerCode.brandList')"
       :column-defs="columnDefs"
@@ -75,7 +78,7 @@
       </t-1-button>
     </div>
 
-    <div class="ass-brand-modal" v-if="isShowBrand">
+    <div v-if="isShowBrand" class="ass-brand-modal">
       <div class="modal-backdrop">
         <div class="modal">
           <div class="modal-header">
@@ -86,7 +89,7 @@
               class="input-keyword"
               v-model="keyword"
               placeholder="Social Link"
-              :errorMessage="keywordError"
+              :error-message="keywordError"
               @onChange="chengeKeyword"
             />
             <table-component
@@ -97,6 +100,10 @@
               is-show-header-table
               is-show-check-box
               is-show-paginate
+              is-show-data-not-found-text
+              is-show-data-not-found-icon
+              :is-loading="isModalLoading"
+              :data-not-found-text="$t('table.noBrand')"
               :is-show-icon-hold="false"
               :is-show-active="false"
               :is-show-inactive="false"
@@ -243,6 +250,10 @@ export default class CreateEditPartnerCode extends Vue {
   status = ''
   keyword = ''
   keywordError = ''
+  debounce: any = null
+
+  isLoading = true
+  isModalLoading = true
 
   isShowBrand = false
 
@@ -361,7 +372,7 @@ export default class CreateEditPartnerCode extends Vue {
 
   async getPartnercode(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_partner_code?partnerId=${this.editId}`,
         { data: null }
       )
@@ -410,6 +421,7 @@ export default class CreateEditPartnerCode extends Vue {
   }
 
   async getAssignedBrand(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     try {
       const res = await this.$axios.$get(
         `${
@@ -428,9 +440,11 @@ export default class CreateEditPartnerCode extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   async getAssignBrand(page: number, limit: number): Promise<any> {
+    this.isModalLoading = true
     try {
       let path = `/list_brand_by_partner?page=${page}&limit=${limit}&partnerId=${
         this.editId
@@ -453,6 +467,7 @@ export default class CreateEditPartnerCode extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isModalLoading = false
   }
 
   mapBrand(brands: any[]): any[] {
@@ -494,8 +509,11 @@ export default class CreateEditPartnerCode extends Vue {
   }
 
   chengeKeyword(event: any): void {
-    this.getAssignBrand(1, 10)
-    this.modalSelectData = []
+    clearTimeout(this.debounce)
+    this.debounce = setTimeout(() => {
+      this.getAssignBrand(1, 10)
+      this.modalSelectData = []
+    }, 600)
   }
 
   cancleHandler(): void {

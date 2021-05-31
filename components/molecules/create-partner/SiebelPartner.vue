@@ -105,7 +105,7 @@ export default class CreatePartnerCode extends Vue {
   })
   private partnerCodeError: string | undefined
 
-  isLoading = false
+  isLoading = true
   partnerCode = this.value.partnerCode
   partnerName = this.value.partnerName
   partnerId = this.value.partnerId

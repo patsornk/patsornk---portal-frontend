@@ -36,6 +36,10 @@
       is-show-header-table
       is-show-check-box
       is-create-new
+      is-show-data-not-found-icon
+      is-show-data-not-found-text
+      :is-loading="isLoading"
+      :data-not-found-text="$t('table.dataNotFound')"
       :raw-data="dataList"
       :create-new-title="$t('common.createPartnerCode')"
       :column-defs="columnDefs"
@@ -104,6 +108,8 @@ export default class TabPartnerCode extends Vue {
   dialogDescription = ''
   dialogLeftButtonText = 'Cancel'
   dialogRightButtonText = ''
+
+  isLoading = true
 
   currentPage = 1
   selectData = []
@@ -215,6 +221,7 @@ export default class TabPartnerCode extends Vue {
   }
 
   async filterPartnerCode(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     let path = `/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`
     if (this.filterData.keyword !== '') {
       path = `${path}&keyword=${this.filterData.keyword}`
@@ -235,9 +242,11 @@ export default class TabPartnerCode extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   async getPartnerCode(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.id}&page=${page}&limit=${limit}`,
@@ -250,6 +259,7 @@ export default class TabPartnerCode extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   mappingPartnerCode(data: any): void {

@@ -32,6 +32,10 @@
       is-create-new
       is-show-header-table
       is-show-paginate
+      is-show-data-not-found-icon
+      is-show-data-not-found-text
+      :is-loading="isLoading"
+      :data-not-found-text="$t('table.dataNotFound')"
       :raw-data="dataList"
       :column-defs="columnDefs"
       :current-page="currentPage"
@@ -126,6 +130,8 @@ export default class TabBrand extends Vue {
   dialogDescription = ''
   dialogLeftButtonText = ''
   dialogRightButtonText = ''
+
+  isLoading = true
 
   selectData = []
   currentPage = 1
@@ -279,6 +285,7 @@ export default class TabBrand extends Vue {
   }
 
   async filterBrands(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     let path = `/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy !== '') {
@@ -303,9 +310,11 @@ export default class TabBrand extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   async getBrands(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${this.id}&page=${page}&limit=${limit}`,
@@ -318,6 +327,7 @@ export default class TabBrand extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   mappingBrand(data: any): void {

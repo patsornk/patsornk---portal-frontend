@@ -18,7 +18,6 @@
     <siebel-partner
       v-if="isShowEditForm"
       v-model="editSiebelPartner"
-      action="edit"
       :partner-code-error="partnerCodeError"
       @clickAdd="clickEditNewSiebelPartner"
       @clickDelete="clickCancelSiebelPartner"

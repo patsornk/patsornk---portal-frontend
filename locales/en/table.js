@@ -13,5 +13,7 @@ module.exports = {
     inactive: 'inactive',
     hold: 'hold',
     delete: 'delete'
-  }
+  },
+  dataNotFound: 'No result found',
+  noBrand: 'No brand(s) assigned'
 }

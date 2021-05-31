@@ -55,6 +55,10 @@
       is-show-paginate
       is-show-header-table
       is-show-check-box
+      is-show-data-not-found-icon
+      is-show-data-not-found-text
+      :is-loading="isLoading"
+      :data-not-found-text="$t('table.dataNotFound')"
       :column-defs="columnDefs"
       :current-page="currentPage"
       :on-row-clicked="onRowClicked"
@@ -145,6 +149,8 @@ export default class OrganizationTable extends Vue {
   dialogDescription = ''
   dialogLeftButtonText = ''
   dialogRightButtonText = ''
+
+  isLoading = true
 
   tableOderField = ''
   tableOderBy = ''
@@ -430,6 +436,7 @@ export default class OrganizationTable extends Vue {
     sortBy?: string,
     sortDirection?: string
   ): Promise<void> {
+    this.isLoading = true
     let path = `/list_company?page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy !== '') {
@@ -466,9 +473,11 @@ export default class OrganizationTable extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   async getCompanies(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_company?page=${page}&limit=${limit}`,
@@ -481,6 +490,7 @@ export default class OrganizationTable extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   async getCompanyType(): Promise<void> {

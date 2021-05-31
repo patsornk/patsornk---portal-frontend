@@ -13,5 +13,7 @@ module.exports = {
     inactive: 'ไม่ใช้งาน',
     hold: 'ระงับชั่วคราว',
     delete: 'ลบ'
-  }
+  },
+  dataNotFound: 'No result found',
+  noBrand: 'No brand(s) assigned'
 }

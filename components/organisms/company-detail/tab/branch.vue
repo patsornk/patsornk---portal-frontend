@@ -43,6 +43,10 @@
       is-show-header-table
       is-show-check-box
       is-create-new
+      is-show-data-not-found-icon
+      is-show-data-not-found-text
+      :is-loading="isLoading"
+      :data-not-found-text="$t('table.dataNotFound')"
       :create-new-title="$t('common.createBranch')"
       :raw-data="dataList"
       :column-defs="columnDefs"
@@ -137,6 +141,8 @@ export default class TabBranch extends Vue {
   dialogDescription = ''
   dialogLeftButtonText = 'Cancel'
   dialogRightButtonText = ''
+
+  isLoading = true
 
   selectData = []
   currentPage = 1
@@ -302,6 +308,7 @@ export default class TabBranch extends Vue {
   }
 
   async filterBranches(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     let path = `/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`
 
     if (this.filterData.search.searchBy) {
@@ -328,9 +335,11 @@ export default class TabBranch extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   async getBranches(page: number, limit: number): Promise<void> {
+    this.isLoading = true
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_branch?companyId=${this.id}&page=${page}&limit=${limit}`,
@@ -344,6 +353,7 @@ export default class TabBranch extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+    this.isLoading = false
   }
 
   mappingBranch(data: any): void {

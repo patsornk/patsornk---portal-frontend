@@ -90,6 +90,23 @@
       @row-selected="onRowSelected"
     >
     </ag-grid-vue>
+    <div
+      v-if="!isLoading && !rawData.length"
+      class="data-not-found-container"
+      :class="{ 'icon-margin': isShowDataNotFoundIcon }"
+    >
+      <img
+        v-if="!rawData.length && isShowDataNotFoundIcon"
+        class="data-not-found-icon"
+        :src="assets('table/data-not-found.png')"
+      />
+      <div
+        v-if="!rawData.length && isShowDataNotFoundText"
+        class="data-not-found-text"
+      >
+        {{ dataNotFoundText }}
+      </div>
+    </div>
     <div v-if="isShowPaginate" class="footer-container">
       <span>{{ currentSelectedRows }} / {{ totalItem }}</span>
       <t1-pagination
@@ -263,6 +280,30 @@ export default class TableComponent extends Vue {
     default: true
   })
   readonly isShowAddIcon!: boolean
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  readonly isShowDataNotFoundIcon?: boolean
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  readonly isShowDataNotFoundText?: boolean
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  readonly isLoading?: boolean
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  readonly dataNotFoundText?: string
 
   @Prop({
     type: String,
