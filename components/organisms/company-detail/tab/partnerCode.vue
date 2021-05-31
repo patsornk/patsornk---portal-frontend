@@ -321,7 +321,7 @@ export default class TabPartnerCode extends Vue {
         this.deletePartnerCode(this.selectData)
         break
     }
-    this.selectData = []
+    this.selectData = [] // comment this line for continues select after status changed
     this.setDialogDisplay(false)
   }
 
@@ -330,7 +330,7 @@ export default class TabPartnerCode extends Vue {
   }
 
   async changeStatus(event: any, statusId: number): Promise<void> {
-    let partnerIds: number[] = []
+    const partnerIds: number[] = []
 
     event.forEach((item: any) => {
       partnerIds.push(item.partnerId)
@@ -347,7 +347,7 @@ export default class TabPartnerCode extends Vue {
         payload
       )
       if (response.successful) {
-        this.getPartnerCode(1, this.pagination)
+        this.getPartnerCode(this.currentPage, this.pagination)
         this.$toast.global.success(this.$t('common.changeStatusSuccessfully'))
       }
     } catch (error) {
@@ -370,7 +370,7 @@ export default class TabPartnerCode extends Vue {
         }
       )
       if (response.successful) {
-        this.getPartnerCode(1, this.pagination)
+        this.getPartnerCode(this.currentPage, this.pagination)
         this.$toast.global.success(this.$t('common.deletedSuccessfully'))
       }
     } catch (error) {

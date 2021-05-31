@@ -415,7 +415,7 @@ export default class TabBranch extends Vue {
         payload
       )
       if (response.successful) {
-        this.getBranches(1, this.pagination)
+        this.getBranches(this.currentPage, this.pagination)
         this.$toast.global.success(this.$t('common.changeStatusSuccessfully'))
       }
     } catch (error) {
@@ -478,7 +478,7 @@ export default class TabBranch extends Vue {
         this.deleteBranchs(this.selectData)
         break
     }
-    this.selectData = []
+    this.selectData = [] // comment this line for continues select after status changed
     this.setDialogDisplay(false)
   }
 
@@ -503,7 +503,7 @@ export default class TabBranch extends Vue {
         { data: payload }
       )
       if (response.successful) {
-        this.getBranches(1, this.pagination)
+        this.getBranches(this.currentPage, this.pagination)
         this.$toast.global.success(this.$t('common.deletedSuccessfully'))
       }
     } catch (error) {

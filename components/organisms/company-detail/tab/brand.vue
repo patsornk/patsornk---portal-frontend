@@ -359,7 +359,7 @@ export default class TabBrand extends Vue {
         payload
       )
       if (response.successful) {
-        this.getBrands(1, this.pagination)
+        this.getBrands(this.currentPage, this.pagination)
         this.$toast.global.success(this.$t('common.changeStatusSuccessfully'))
       }
     } catch (error) {
@@ -379,7 +379,7 @@ export default class TabBrand extends Vue {
         { data: payload }
       )
       if (response.successful) {
-        this.getBrands(1, this.pagination)
+        this.getBrands(this.currentPage, this.pagination)
         this.$toast.global.success(this.$t('common.deletedSuccessfully'))
       }
     } catch (error) {
@@ -437,7 +437,7 @@ export default class TabBrand extends Vue {
     } else if (this.dialogAction === OrganizationManagementStatus.DELETE) {
       this.deleteBrand(this.selectData)
     }
-    this.selectData = []
+    this.selectData = [] // comment this line for continues select after status changed
     this.dialogDisplay = false
   }
 

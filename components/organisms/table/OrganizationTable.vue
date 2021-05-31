@@ -499,7 +499,7 @@ export default class OrganizationTable extends Vue {
 
   async getCompanySize(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company_size`,
         { data: null }
       )
@@ -520,7 +520,7 @@ export default class OrganizationTable extends Vue {
 
   async getCompanyCategory(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company_category`,
         { data: null }
       )
@@ -554,7 +554,7 @@ export default class OrganizationTable extends Vue {
         payload
       )
       if (response.successful) {
-        this.getCompanies(1, this.pagination)
+        this.getCompanies(this.currentPage, this.pagination)
       }
     } catch (error) {
       this.$toast.global.error(error.message)
@@ -572,7 +572,7 @@ export default class OrganizationTable extends Vue {
         { data: { companyId: companyIds } }
       )
       if (response.successful) {
-        this.getCompanies(1, this.pagination)
+        this.getCompanies(this.currentPage, this.pagination)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -669,7 +669,7 @@ export default class OrganizationTable extends Vue {
     } else if (this.dialogAction === OrganizationManagementStatus.DELETE) {
       this.deleteCompany(this.selectData)
     }
-    this.selectData = []
+    this.selectData = [] // comment this line for continues select after status changed
     this.dialogDisplay = false
   }
 }

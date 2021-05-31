@@ -573,6 +573,7 @@ export default class CreateEditPartnerCode extends Vue {
         await this.getAssignBrand(1, 10)
         this.setModalDefalut()
         this.$toast.global.success(this.$t('createPartnerCode.toastAssign'))
+        this.modalCurrentPage = 1
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
