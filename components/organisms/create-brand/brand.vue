@@ -1129,6 +1129,10 @@ export default class CreateBrand extends Vue {
       this.currentBrandFeatureIndex -= 1
       this.brandFeatureList.splice(index - 1, 1)
     }
+
+    if (this.brandFeatureError) {
+      this.brandFeatureError = ''
+    }
   }
 
   onBrandFeatureChange(index: number, key: string, value: any): void {
