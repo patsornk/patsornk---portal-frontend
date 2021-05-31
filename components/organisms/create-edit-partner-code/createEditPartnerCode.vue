@@ -713,6 +713,7 @@ export default class CreateEditPartnerCode extends Vue {
       position: relative;
       padding-top: 20px;
       font-size: 14px;
+      height: 700px;
 
       .input-keyword {
         width: 100%;
