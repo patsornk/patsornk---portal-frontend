@@ -406,7 +406,7 @@ export default class CreateBrand extends Vue {
         imageUrl: undefined,
         showDisplay: false,
         ctaLabel: '',
-        ctaType: '',
+        ctaType: undefined,
         ctaFeature: '',
         isValid: true
       }
@@ -621,7 +621,7 @@ export default class CreateBrand extends Vue {
         imageUrl: undefined,
         showDisplay: false,
         ctaLabel: '',
-        ctaType: '',
+        ctaType: undefined,
         ctaFeature: '',
         isValid: true
       }
@@ -1077,7 +1077,7 @@ export default class CreateBrand extends Vue {
         imageUrl: '',
         showDisplay: false,
         ctaLabel: '',
-        ctaType: '',
+        ctaType: undefined,
         ctaFeature: '',
         isValid: true
       })

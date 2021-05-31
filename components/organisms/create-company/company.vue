@@ -167,8 +167,8 @@ export default class CreateCompany extends Vue {
   companyNameTh = ''
   companyNameEn = ''
   typeId = ''
-  categoryId = ''
-  sizeId = ''
+  categoryId: string | undefined = undefined
+  sizeId:string | undefined = undefined
   assignee = ''
   email = ''
   companyPhonePrefix = '+66'
@@ -227,7 +227,7 @@ export default class CreateCompany extends Vue {
   clearError(): void {
     if (parseInt(this.typeId) !== 3) {
       this.sizeId = ''
-      this.categoryId = ''
+      this.categoryId = undefined
       this.assignee = ''
     }
     this.error = {
@@ -351,7 +351,10 @@ export default class CreateCompany extends Vue {
     this.getCompanyType()
     this.getCompanySize()
     this.getCompanyCategory()
-    if (window.sessionStorage.getItem('maxStepbar') && window.sessionStorage.getItem('maxStepbar') == '4') {
+    if (
+      window.sessionStorage.getItem('maxStepbar') &&
+      window.sessionStorage.getItem('maxStepbar') == '4'
+    ) {
       this.$store.dispatch('stepbar/setEnableSubmit', 1)
     }
   }

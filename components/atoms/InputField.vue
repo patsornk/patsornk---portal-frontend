@@ -288,6 +288,11 @@ export default class InputField extends Vue {
         height: 100%;
         border: 1px solid $gray-disable;
       }
+      &.vs--disabled {
+        ::v-deep .vs__search {
+          color: $gray-disable !important;
+        }
+      }
     }
 
     .switch-container {
@@ -430,9 +435,9 @@ export default class InputField extends Vue {
     border-radius: 4px;
     width: 100%;
   }
+
   .input-field-input.disable {
     background: $disabled-for-textbox;
-    color: $gray-disable;
   }
 
   .input-field-input:focus {
@@ -474,5 +479,9 @@ export default class InputField extends Vue {
       background: $secondary !important;
     }
   }
+}
+
+::placeholder {
+  color: $gray-disable;
 }
 </style>
