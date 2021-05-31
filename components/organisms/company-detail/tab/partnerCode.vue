@@ -189,6 +189,7 @@ export default class TabPartnerCode extends Vue {
   private search() {
     this.clickSearch = true
     this.filterPartnerCode(1, this.pagination)
+    this.selectData = []
   }
 
   changPageSize(pagination: number): void {

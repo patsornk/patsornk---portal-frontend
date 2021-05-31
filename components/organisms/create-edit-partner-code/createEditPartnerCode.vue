@@ -494,6 +494,7 @@ export default class CreateEditPartnerCode extends Vue {
 
   chengeKeyword(event: any): void {
     this.getAssignBrand(1, 10)
+    this.modalSelectData = []
   }
 
   cancleHandler(): void {

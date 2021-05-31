@@ -346,6 +346,7 @@ export default class OrganizationTable extends Vue {
     this.tableOderBy = ''
     this.currentPage = 1
     this.filterCompanies(1, this.pagination)
+    this.selectData = []
   }
 
   changPageSize(pagination: number): void {

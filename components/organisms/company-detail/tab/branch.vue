@@ -272,6 +272,7 @@ export default class TabBranch extends Vue {
   private search(): void {
     this.clickSearch = true
     this.filterBranches(1, this.pagination)
+    this.selectData = []
   }
 
   changPageSize(pagination: number): void {

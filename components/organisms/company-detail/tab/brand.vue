@@ -254,6 +254,7 @@ export default class TabBrand extends Vue {
   private search(): void {
     this.clickSearch = true
     this.filterBrands(1, this.pagination)
+    this.selectData = []
   }
 
   changPageSize(pagination: number): void {
