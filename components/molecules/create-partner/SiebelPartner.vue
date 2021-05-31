@@ -150,7 +150,8 @@ export default class CreatePartnerCode extends Vue {
   }
 
   private clickAddSiebelPartner() {
-    if (!this.isLoading) {
+    const validate = !this.$v.validationGroup.$invalid
+    if (!this.isLoading && validate) {
       this.isLoading = true
 
       if (validateError(this.error)) {
