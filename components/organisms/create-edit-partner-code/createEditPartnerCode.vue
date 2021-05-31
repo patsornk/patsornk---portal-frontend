@@ -73,9 +73,12 @@
       @pagination="changPageSize"
     />
     <div class="footer">
-      <t-1-button class="black" @click.native="clickSave">
+      <!-- <t-1-button class="black" @click.native="clickSave">
         {{ $t('common.save') }}
-      </t-1-button>
+      </t-1-button> -->
+      <t-1-button-ex class="black" @onClick="clickSave">
+        {{ $t('common.save') }}
+      </t-1-button-ex>
     </div>
 
     <div v-if="isShowBrand" class="ass-brand-modal">
@@ -155,6 +158,7 @@ import TableComponent from '@/components/molecules/table-component/TableComponen
 import SiebelPartner from '@/components/molecules/create-partner/SiebelPartner.vue'
 import Modal from '@/components/atoms/Modal.vue'
 import T1Button from '@/components/atoms/button.vue'
+import T1ButtonEx from '@/components/atoms/buttonEx.vue'
 import { SiebelPartnerType } from '@/constants/types/PartnerCodeType'
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
@@ -187,7 +191,8 @@ const validations = {
     SiebelPartner,
     Modal,
     T1Button,
-    DialogPopup
+    DialogPopup,
+    T1ButtonEx
   }
 })
 export default class CreateEditPartnerCode extends Vue {
