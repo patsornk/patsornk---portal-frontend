@@ -1697,7 +1697,7 @@ export default class CreateBranch extends Vue {
           this.phonePrefix = data.branchPhonePrefix
           this.phoneNumber = data.branchPhoneNumber
           this.branchTypeId = data.branchType.branchTypeId
-          this.mallId = data.mall.mallId
+          this.mallId = data.mall.mallId === 0 ? '' : data.mall.mallId
           this.address = data.address.address
           this.countryId = data.address.country
           this.provinceId = data.address.province.provinceId
