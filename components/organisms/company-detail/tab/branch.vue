@@ -36,9 +36,8 @@
     </div>
     <table-component
       v-model="selectData"
-      :rawData="dataList"
       class="row-h-80"
-      item-key="brandId"
+      item-key="branchId"
       header-title="Branch list"
       is-show-paginate
       is-show-header-table
