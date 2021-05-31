@@ -952,7 +952,7 @@ export default class CreateBrand extends Vue {
           brandLogoImg:
             this.oldLogourl && !this.logoUrl ? undefined : getLogoBase64, // Wait for api
           brandBannerImg:
-            this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
+            this.oldBannerurl && !this.bannerurl ? '' : getbannerBase64, // Wait for api
           brandInfo: this.$v.brandInfo.$model,
           brandLink: this.$v.brandCode.$model,
           brandPhonePrefix: this.phonePrefix,
@@ -973,7 +973,7 @@ export default class CreateBrand extends Vue {
           brandLogoImg:
             this.oldLogourl && !this.logoUrl ? undefined : getLogoBase64, // Wait for api
           brandBannerImg:
-            this.oldBannerurl && !this.bannerurl ? undefined : getbannerBase64, // Wait for api
+            this.oldBannerurl && !this.bannerurl ? '' : getbannerBase64, // Wait for api
           brandInfo: this.$v.brandInfo.$model,
           brandLink: this.$v.brandCode.$model,
           brandPhonePrefix: this.phonePrefix,
