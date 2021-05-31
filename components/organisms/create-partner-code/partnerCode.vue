@@ -18,6 +18,8 @@
     <siebel-partner
       v-if="isShowEditForm"
       v-model="editSiebelPartner"
+      action="edit"
+      :partner-code-error="partnerCodeError"
       @clickAdd="clickEditNewSiebelPartner"
       @clickDelete="clickCancelSiebelPartner"
     />
@@ -267,6 +269,7 @@ export default class CreatePartnerCode extends Vue {
         }
       }
     }
+    event?.callback()
   }
 
   async clickAddNewSiebelPartner(event: any): Promise<void> {
