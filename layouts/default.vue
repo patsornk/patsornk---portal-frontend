@@ -50,7 +50,7 @@ import { getAssetsPath } from '~/helper/images'
 })
 export default class Default extends Vue {
   get companyStatus(): string {
-    return this.$store.getters['company/companyStatus']
+    return this.$store.getters['company/status']
   }
 
   get version() {

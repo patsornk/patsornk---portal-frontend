@@ -1,7 +1,7 @@
 <template>
   <div class="create-step-container">
     <div class="w-full h-full">
-      <create-brand mode="create" :companyId="id" />
+      <create-brand mode="create" :company-id="id" />
     </div>
   </div>
 </template>
@@ -9,15 +9,15 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import T1Button from '@/components/atoms/button.vue'
+import CreateBrand from '@/components/organisms/create-brand/brand.vue'
 import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
 import { BreadcrumbType, CompanyType } from '~/constants'
-import CreateBrand from '@/components/organisms/create-brand/brand.vue'
 
 @Component({
   components: {
     T1Button,
     OrganizationTable,
-    CreateBrand,
+    CreateBrand
   }
 })
 export default class CompanyCreateBrand extends Vue {
@@ -56,12 +56,12 @@ export default class CompanyCreateBrand extends Vue {
     return this.$i18n.locale
   }
 
-  get id() {
+  get id(): string {
     return this.$route.params.id
   }
 
   @Watch('language')
-  setTitleBreadcrumb() {
+  setTitleBreadcrumb(): void {
     this.setupBreadcrumb(
       this.language === 'th'
         ? this.company.companyNameTh
@@ -89,9 +89,9 @@ export default class CompanyCreateBrand extends Vue {
     this.$store.dispatch('breadcrumb/setPageTitle', 'Create Brand')
   }
 
-  async getCpmpany(): Promise<void> {
+  async getCompany(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.id}`,
         { data: null }
       )
@@ -109,10 +109,10 @@ export default class CompanyCreateBrand extends Vue {
     }
   }
 
-  mounted() {
-    this.getCpmpany()
+  mounted(): void {
+    this.getCompany()
+    this.$store.dispatch('company/setStatus', '')
   }
-
 }
 </script>
 

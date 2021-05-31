@@ -1,17 +1,18 @@
 <template>
   <div class="create-branch-container">
     <create-new-branch
-      :parentCompantId="companyId"
-      componetMode="edit"
-      :setBranch="setBranch"
+      :parent-company-id="companyId"
+      :set-branch="setBranch"
+      componet-mode="edit"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { BranchDataType, BreadcrumbType, CompanyDataType } from '~/constants'
 import CreateNewBranch from '@/components/organisms/create-branch/branch.vue'
+import { BranchDataType, BreadcrumbType, CompanyDataType } from '~/constants'
+
 @Component({
   components: {
     CreateNewBranch
@@ -24,11 +25,11 @@ export default class CreateBranch extends Vue {
     return this.$i18n.locale
   }
 
-  get companyId(): any {
+  get companyId(): string | null {
     return window.sessionStorage.getItem('parentCompanyId')
   }
 
-  get branchId() {
+  get branchId(): string {
     return this.$route.params.id
   }
 
@@ -49,17 +50,12 @@ export default class CreateBranch extends Vue {
     this.setupBreadcrumb()
   }
 
-  setBranch(branch: any) {
+  setBranch(branch: any): void {
     this.branch = branch
     this.setupBreadcrumb()
   }
 
   private setupBreadcrumb(): void {
-    const company =
-      this.language === 'th'
-        ? this.company.companyNameTh
-        : this.company.companyNameEn
-
     const branch =
       this.language === 'th'
         ? this.branch.branchNameTh
@@ -84,8 +80,6 @@ export default class CreateBranch extends Vue {
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-
-    //set Page title
     this.$store.dispatch(
       'breadcrumb/setPageTitle',
       `${this.$t('common.branchTitle').toString()} - ${branch}`
@@ -94,7 +88,7 @@ export default class CreateBranch extends Vue {
 
   async getCompany(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
         { data: null }
       )
@@ -108,12 +102,13 @@ export default class CreateBranch extends Vue {
 
   async getBranch(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_branch?branchId=${this.branchId}`,
         { data: null }
       )
       if (res.successful) {
         this.branch = res.data
+        this.$store.dispatch('company/setStatus', res.data.statusDesc)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -122,7 +117,7 @@ export default class CreateBranch extends Vue {
 
   async checkBelongTo(): Promise<boolean | undefined> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.companyId}&branchId=${this.branchId}`,
         { data: null }
       )
@@ -136,8 +131,9 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  async mounted() {
-    if (this.companyId && await this.checkBelongTo()) {
+  async mounted(): Promise<void> {
+    this.$store.dispatch('company/setStatus', '')
+    if (this.companyId && (await this.checkBelongTo())) {
       await this.getCompany()
       await this.getBranch()
       this.setupBreadcrumb()

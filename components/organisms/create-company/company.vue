@@ -341,7 +341,7 @@ export default class CreateCompany extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.$store.dispatch('company/setCompanyStatus', '')
+    this.$store.dispatch('company/setStatus', '')
     if (
       window.sessionStorage.getItem('companyFirstTime') &&
       window.sessionStorage.getItem('companyFirstTime') === 'no'
@@ -353,7 +353,7 @@ export default class CreateCompany extends Vue {
     this.getCompanyCategory()
     if (
       window.sessionStorage.getItem('maxStepbar') &&
-      window.sessionStorage.getItem('maxStepbar') == '4'
+      window.sessionStorage.getItem('maxStepbar') === '4'
     ) {
       this.$store.dispatch('stepbar/setEnableSubmit', 1)
     }

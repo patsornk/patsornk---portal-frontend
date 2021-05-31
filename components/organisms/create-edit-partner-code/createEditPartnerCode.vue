@@ -352,6 +352,7 @@ export default class CreateEditPartnerCode extends Vue {
         this.partnerId = res.data.partnerId
         this.status = res.data.status
         this.$toast.global.success('Saved successfully')
+        this.$store.dispatch('company/setStatus', res.data.statusDesc)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

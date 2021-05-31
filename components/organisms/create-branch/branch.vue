@@ -690,7 +690,7 @@ export default class CreateBranch extends Vue {
     required: false,
     default: ''
   })
-  readonly parentCompantId!: string
+  readonly parentCompanyId!: string
 
   @Prop({
     type: String,
@@ -703,7 +703,7 @@ export default class CreateBranch extends Vue {
     type: Function,
     required: false
   })
-  readonly setBranch?: Function
+  readonly setBranch?: (value: any) => void
 
   private statusOption = [
     {
@@ -893,6 +893,7 @@ export default class CreateBranch extends Vue {
       countryNameTh: 'ไทย'
     }
   ]
+
   provinceList = []
   districtList = []
   subDistrictList: any = []
@@ -1008,7 +1009,7 @@ export default class CreateBranch extends Vue {
   isSetSubDistrict = false
   isSetPostalCode = false
 
-  get branchId() {
+  get branchId(): string {
     return this.$route.params.id || ''
   }
 
@@ -1016,7 +1017,7 @@ export default class CreateBranch extends Vue {
     return this.$i18n.locale
   }
 
-  assets(name: string) {
+  assets(name: string): string {
     return getAssetsPath(name)
   }
 
@@ -1026,7 +1027,7 @@ export default class CreateBranch extends Vue {
   }
 
   @Watch('language')
-  switchOpeningHourList() {
+  switchOpeningHourList(): void {
     if (this.language === 'th') {
       this.openingHourList = [
         {
@@ -1446,22 +1447,22 @@ export default class CreateBranch extends Vue {
     const maxStepbar = parseInt(
       window.sessionStorage.getItem('maxStepbar') ?? '0'
     )
-    if (this.componetMode == 'onboard' && maxStepbar && maxStepbar < 3) {
+    if (this.componetMode === 'onboard' && maxStepbar && maxStepbar < 3) {
       return
     }
-    const companyId = this.parentCompantId
-      ? this.parentCompantId
+    const companyId = this.parentCompanyId
+      ? this.parentCompanyId
       : window.sessionStorage.getItem('createCompanyId')
       ? window.sessionStorage.getItem('createCompanyId')
       : ''
     if (companyId) {
       try {
-        let res = await this.$axios.$get(
+        const res = await this.$axios.$get(
           `${process.env.PORTAL_ENDPOINT}/list_brand?companyId=${companyId}&page=1&limit=1000`,
           { data: null }
         )
         if (res.successful) {
-          if (this.componetMode == 'onboard') {
+          if (this.componetMode === 'onboard') {
             this.brandList = res.data.brand
             this.brandId =
               parseInt(window.sessionStorage.getItem('createBrandId') ?? '') ||
@@ -1493,7 +1494,7 @@ export default class CreateBranch extends Vue {
   async getPartnerCode(): Promise<any> {
     if (this.brandId) {
       try {
-        let res = await this.$axios.$get(
+        const res = await this.$axios.$get(
           `${process.env.PORTAL_ENDPOINT}/partner_code?brandId=${this.brandId}&page=1&limit=1000`,
           { data: null }
         )
@@ -1514,7 +1515,7 @@ export default class CreateBranch extends Vue {
 
   async getBranchType(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_branch_type`,
         { data: null }
       )
@@ -1528,7 +1529,7 @@ export default class CreateBranch extends Vue {
 
   async getMallList(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/list_mall`,
         { data: null }
       )
@@ -1536,9 +1537,7 @@ export default class CreateBranch extends Vue {
         this.mallList = res.data.mall
 
         const isMallInList =
-          this.mallList.filter((item) => {
-            item.mallId === this.mallId
-          }).length > 0
+          this.mallList.filter((item) => item.mallId === this.mallId).length > 0
 
         if (!isMallInList) {
           this.mallId = ''
@@ -1551,7 +1550,7 @@ export default class CreateBranch extends Vue {
 
   async getProvinceList(): Promise<any> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_province`,
         { data: null }
       )
@@ -1566,7 +1565,7 @@ export default class CreateBranch extends Vue {
   async getDistrictList(): Promise<any> {
     if (!this.provinceId) return
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_district?provinceId=${this.provinceId}`,
         { data: null }
       )
@@ -1594,7 +1593,7 @@ export default class CreateBranch extends Vue {
     if (!this.districtId) return
 
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_sub_district?districtId=${this.districtId}`,
         { data: null }
       )
@@ -1615,7 +1614,7 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  getPostalCode() {
+  getPostalCode(): void {
     let data = []
     if (this.subDistrictList.length > 0) {
       data = this.subDistrictList.filter((item: any) => {
@@ -1652,13 +1651,11 @@ export default class CreateBranch extends Vue {
   async getBranch(): Promise<void> {
     if (window.sessionStorage.getItem('createBranchId') || this.branchId) {
       try {
-        let id = ''
-        if (this.branchId) {
-          id = this.branchId
-        } else {
-          id = window.sessionStorage.getItem('createBranchId') || ''
-        }
-        let res = await this.$axios.$get(
+        const id = this.branchId
+          ? this.branchId
+          : window.sessionStorage.getItem('createBranchId') || ''
+
+        const res = await this.$axios.$get(
           `${process.env.PORTAL_ENDPOINT}/get_branch?branchId=${id}`,
           { data: null }
         )
@@ -1679,7 +1676,7 @@ export default class CreateBranch extends Vue {
             this.partnerCodeId = data.partners[0].partnerId
             if (
               window.sessionStorage.getItem('maxStepbar') &&
-              window.sessionStorage.getItem('maxStepbar') == '4'
+              window.sessionStorage.getItem('maxStepbar') === '4'
             ) {
               this.$store.dispatch('stepbar/setEnableSubmit', 1)
             }
@@ -1723,33 +1720,36 @@ export default class CreateBranch extends Vue {
 
           if (data.mall.mallInfo.facebook) {
             data.mall.mallInfo.facebook.forEach((link: string) => {
-              if (link !== '')
-                this.socialList.push({ type: 'Facebook', link: link })
+              if (link !== '') {
+                this.socialList.push({ type: 'Facebook', link })
+              }
             })
           }
 
           if (data.mall.mallInfo.instagram) {
             data.mall.mallInfo.instagram.forEach((link: string) => {
-              if (link !== '')
-                this.socialList.push({ type: 'Instagram', link: link })
+              if (link !== '') {
+                this.socialList.push({ type: 'Instagram', link })
+              }
             })
           }
 
           if (data.mall.mallInfo.line) {
             data.mall.mallInfo.line.forEach((link: string) => {
-              if (link !== '')
-                this.socialList.push({ type: 'Line', link: link })
+              if (link !== '') {
+                this.socialList.push({ type: 'Line', link })
+              }
             })
           }
 
           if (data.mall.mallInfo.twitter) {
             data.mall.mallInfo.twitter.forEach((link: string) => {
-              if (link !== '')
-                this.socialList.push({ type: 'Twitter', link: link })
+              if (link !== '') {
+                this.socialList.push({ type: 'Twitter', link })
+              }
             })
           }
 
-          // this.categoryId  = data.mall.mallInfo.mallCategory.mallCategoryId
           if (data.mall.mallInfo.openingHour.length === 7) {
             this.openingHourId = '2'
             this.openCusTomList = this.mappingOpeningHour(
@@ -1800,7 +1800,7 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  get inValidateLogo() {
+  get inValidateLogo(): boolean {
     if (this.logoUrl) {
       return false
     } else {
@@ -1811,7 +1811,7 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  get inValidateCover() {
+  get inValidateCover(): boolean {
     if (this.coverUrl) {
       return false
     } else {
@@ -1844,7 +1844,6 @@ export default class CreateBranch extends Vue {
   }
 
   validateMall(): void {
-    // this.checkCategoryId()
     this.checkOpeningHourId()
   }
 
@@ -2445,8 +2444,8 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
-        const companyId = this.parentCompantId
-          ? parseInt(this.parentCompantId)
+        const companyId = this.parentCompanyId
+          ? parseInt(this.parentCompanyId)
           : window.sessionStorage.getItem('createCompanyId')
 
         this.$router.push(`/organizationManagement/${companyId}`)
@@ -2508,7 +2507,7 @@ export default class CreateBranch extends Vue {
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
         if (this.componetMode === 'edit') {
-          this.$router.push(`/organizationManagement/${this.parentCompantId}`)
+          this.$router.push(`/organizationManagement/${this.parentCompanyId}`)
         } else {
         }
       }

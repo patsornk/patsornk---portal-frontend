@@ -428,7 +428,7 @@ export default class EditCompany extends Vue {
           statusId: this.$v.companyStatus.$model
         }
         try {
-          let response = await this.$axios.$post(
+          const response = await this.$axios.$post(
             `${process.env.PORTAL_ENDPOINT}/update_company`,
             {
               companyId: this.companyId,
@@ -440,6 +440,7 @@ export default class EditCompany extends Vue {
               'organizartion/setCompanyId',
               response.data.companyId
             )
+            this.$store.dispatch('company/setStatus', response.data.statusDesc)
             window.sessionStorage.setItem(
               'createCompanyId',
               response.data.companyId
@@ -476,6 +477,7 @@ export default class EditCompany extends Vue {
             }
           )
           if (response.successful) {
+            this.$store.dispatch('company/setStatus', response.data.statusDesc)
             this.$store.dispatch(
               'organizartion/setCompanyId',
               response.data.companyId

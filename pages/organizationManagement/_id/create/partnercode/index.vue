@@ -1,6 +1,6 @@
 <template>
   <div class="partner-container">
-    <partner-code :companyIdParent="id"/>
+    <partner-code :company-id-parent="id" />
   </div>
 </template>
 
@@ -56,12 +56,12 @@ export default class CompanyCreatePartnerCode extends Vue {
     return this.$i18n.locale
   }
 
-  get id() {
+  get id(): string {
     return this.$route.params.id
   }
 
   @Watch('language')
-  setTitleBreadcrumb() {
+  setTitleBreadcrumb(): void {
     this.setupBreadcrumb(
       this.language === 'th'
         ? this.company.companyNameTh
@@ -91,7 +91,7 @@ export default class CompanyCreatePartnerCode extends Vue {
 
   async getCpmpany(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.id}`,
         { data: null }
       )
@@ -109,7 +109,8 @@ export default class CompanyCreatePartnerCode extends Vue {
     }
   }
 
-  mounted() {
+  mounted(): void {
+    this.$store.dispatch('company/setStatus', '')
     this.getCpmpany()
   }
 }

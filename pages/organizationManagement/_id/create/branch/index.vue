@@ -1,15 +1,14 @@
 <template>
   <div class="create-branch-container">
-    <create-new-branch
-    :parentCompantId="companyId"
-    componetMode="create" />
+    <create-new-branch :parent-company-id="companyId" componet-mode="create" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { BreadcrumbType, CompanyDataType } from '~/constants'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import CreateNewBranch from '@/components/organisms/create-branch/branch.vue'
+import { BreadcrumbType, CompanyDataType } from '~/constants'
+
 @Component({
   components: {
     CreateNewBranch
@@ -57,17 +56,13 @@ export default class CreateBranch extends Vue {
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-
-    //set Page title
     this.$store.dispatch('breadcrumb/setPageTitle', 'Create New Branch')
   }
 
   async getCompany(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
-        `${
-          process.env.PORTAL_ENDPOINT
-        }/get_company?companyId=${this.companyId}`,
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.companyId}`,
         { data: null }
       )
       if (res.successful) {
@@ -78,7 +73,8 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
+    this.$store.dispatch('company/setStatus', '')
     await this.getCompany()
     this.setupBreadcrumb()
   }

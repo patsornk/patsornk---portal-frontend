@@ -1,21 +1,20 @@
 <template>
   <div>
     <CreateEditPartnerCode
-      :compantId="compantId"
-      :componentMode="mode"
-      :editId="id"
+      :compant-id="compantId"
+      :component-mode="mode"
+      :edit-id="id"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import T1Button from '@/components/atoms/button.vue'
 import OrganizationTable from '~/components/organisms/table/OrganizationTable.vue'
 import { BreadcrumbType, CompanyType } from '~/constants'
 import { PartnerCodeMode } from '~/constants/CreateEditPartnerCode'
 import CreateEditPartnerCode from '~/components/organisms/create-edit-partner-code/createEditPartnerCode.vue'
-import { partnerCode } from '~/locales/en/createBrand'
 
 @Component({
   components: {
@@ -56,7 +55,7 @@ export default class CompanyEditPartnerCode extends Vue {
     updatedBy: ''
   }
 
-  get mode() {
+  get mode(): string {
     return PartnerCodeMode.EDIT_MODE
   }
 
@@ -64,11 +63,11 @@ export default class CompanyEditPartnerCode extends Vue {
     return this.$i18n.locale
   }
 
-  get compantId() {
+  get compantId(): string | null {
     return window.sessionStorage.getItem('parentCompanyId')
   }
 
-  get id() {
+  get id(): string {
     return this.$route.params.id
   }
 
@@ -101,7 +100,7 @@ export default class CompanyEditPartnerCode extends Vue {
 
   async getCpmpany(): Promise<void> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.compantId}`,
         { data: null }
       )
@@ -124,12 +123,13 @@ export default class CompanyEditPartnerCode extends Vue {
 
   async getPartnercode(): Promise<string | undefined> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_partner_code?partnerId=${this.id}`,
         { data: null }
       )
       if (res.successful) {
         const data = res.data
+        this.$store.dispatch('company/setStatus', res.data.statusDesc)
         return data.partnerCode
       }
     } catch (error) {
@@ -139,7 +139,7 @@ export default class CompanyEditPartnerCode extends Vue {
 
   async checkBelongTo(): Promise<boolean | undefined> {
     try {
-      let res = await this.$axios.$get(
+      const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/check_belong_to?companyId=${this.compantId}&partnerId=${this.id}`,
         { data: null }
       )
@@ -153,8 +153,9 @@ export default class CompanyEditPartnerCode extends Vue {
     }
   }
 
-  async mounted() {
-    if (this.compantId && await this.checkBelongTo()) {
+  async mounted(): Promise<void> {
+    this.$store.dispatch('company/setStatus', '')
+    if (this.compantId && (await this.checkBelongTo())) {
       this.getCpmpany()
     } else {
       this.$router.push('/landing')
