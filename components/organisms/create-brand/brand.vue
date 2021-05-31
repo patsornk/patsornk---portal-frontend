@@ -1104,16 +1104,16 @@ export default class CreateBrand extends Vue {
     if (this.atLeastOneFieldBrandFeatureValidate && this.brandFeatureValidate) {
       this.brandFeatureError = ''
       this.currentBrandFeatureIndex = index
+    } else if (!this.brandFeatureValidate) {
+      this.$toast.global.error(
+        this.$t('createBrand.brandFeature.error.toastRequiredField')
+      )
     } else if (!this.atLeastOneFieldBrandFeatureValidate) {
       this.brandFeatureError = this.$t(
         'createBrand.brandFeature.error.oneFieldRequired'
       )
       this.$toast.global.error(
         this.$t('createBrand.brandFeature.error.toastOneFieldRequired')
-      )
-    } else if (!this.brandFeatureValidate) {
-      this.$toast.global.error(
-        this.$t('createBrand.brandFeature.error.toastRequiredField')
       )
     }
   }
