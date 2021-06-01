@@ -1563,6 +1563,7 @@ export default class CreateBranch extends Vue {
   }
 
   async getDistrictList(): Promise<any> {
+    this.error.provinceId = ''
     if (!this.provinceId) return
     try {
       const res = await this.$axios.$get(
@@ -1590,8 +1591,8 @@ export default class CreateBranch extends Vue {
   }
 
   async getSubDistrictList(): Promise<any> {
+    this.error.districtId = ''
     if (!this.districtId) return
-
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_sub_district?districtId=${this.districtId}`,
