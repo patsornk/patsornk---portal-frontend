@@ -93,7 +93,10 @@
     <div
       v-if="!isLoading && !rawData.length"
       class="data-not-found-container"
-      :class="{ 'icon-margin': isShowDataNotFoundIcon }"
+      :class="{
+        'icon-margin': isShowDataNotFoundIcon,
+        'text-margin': isShowDataNotFoundText
+      }"
     >
       <img
         v-if="!rawData.length && isShowDataNotFoundIcon"
