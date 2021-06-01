@@ -820,7 +820,13 @@ export default class CreateBrand extends Vue {
             )
             this.$router.push('/organizationManagement/create/branch')
           } else {
-            this.submitBrand(response.data.brandId)
+            const companyId = this.companyId
+              ? parseInt(this.companyId)
+              : window.sessionStorage.getItem('createCompanyId')
+            this.$router.push(`/organizationManagement/${companyId}`)
+            this.$toast.global.success(
+              this.$t('common.successfully').toString()
+            )
           }
         }
         this.$nuxt.$loading.finish()
