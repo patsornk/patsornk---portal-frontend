@@ -564,7 +564,9 @@ export default class OrganizationTable extends Vue {
         payload
       )
       if (response.successful) {
-        this.getCompanies(this.currentPage, this.pagination)
+        if (this.clickSearch)
+          this.filterCompanies(this.currentPage, this.pagination)
+        else this.getCompanies(this.currentPage, this.pagination)
       }
     } catch (error) {
       const code = error.response.data.code
