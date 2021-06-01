@@ -1760,7 +1760,7 @@ export default class CreateBranch extends Vue {
             this.openTime = data.mall.mallInfo.openingHour[0].openingTime.split(
               '|'
             )[0]
-            this.OpenHourCustom = data.mall.mallInfo.openingHour[0].openingTime.split(
+            this.openMeridiem = data.mall.mallInfo.openingHour[0].openingTime.split(
               '|'
             )[1]
             this.closeTime = data.mall.mallInfo.openingHour[0].closingTime.split(
