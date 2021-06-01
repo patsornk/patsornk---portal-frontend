@@ -103,7 +103,7 @@ export default class CreatePartnerCode extends Vue {
   dataList: SiebelPartnerType[] = []
   columnDefs = [
     {
-      headerName: 'Company Code',
+      headerName: this.$t('createPartnerCode.sieabelPartner'),
       field: 'partnerCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -112,7 +112,7 @@ export default class CreatePartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Company Registration Code',
+      headerName: this.$t('createPartnerCode.sieabelPartnerName'),
       field: 'partnerName',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">

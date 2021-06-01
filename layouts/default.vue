@@ -83,7 +83,7 @@ export default class Default extends Vue {
   get buttonTitle(): String {
     switch (this.pageTitle) {
       case 'การจัดการองค์กร':
-        return 'สร้างการองค์กรใหม่'
+        return 'สร้างองค์กรใหม่'
       case 'Organization Management':
         return 'Create New Organiztion'
       default:

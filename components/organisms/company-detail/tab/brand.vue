@@ -40,7 +40,7 @@
       :column-defs="columnDefs"
       :current-page="currentPage"
       :create-new-title="$t('common.createBrand')"
-      :header-title="$t('common.createBrand')"
+      :header-title="$t('common.brandList')"
       :page-count="pageSize"
       :total-item="totalItem"
       :total-page="pageSize"

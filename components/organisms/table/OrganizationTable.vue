@@ -50,7 +50,7 @@
     <table-component
       v-model="selectData"
       item-key="companyId"
-      :header-title="$t('home.createNewOrganiztion').toString()"
+      :header-title="$t('common.companyList').toString()"
       :raw-data="dataList"
       is-show-paginate
       is-show-header-table

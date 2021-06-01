@@ -6,6 +6,7 @@ module.exports = {
     createBrand: 'Create Brand',
     createBranch: 'Create Branch',
     companyTitle: 'Company',
+    companyList: 'Company List',
     partnerCodeTitle: 'Partner Code',
     brandTitle: 'Brand',
     brandList: 'Brand List',

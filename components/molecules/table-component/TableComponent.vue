@@ -111,7 +111,7 @@
       </div>
     </div>
     <div v-if="isShowPaginate" class="footer-container">
-      <span>{{ currentSelectedRows }} / {{ totalItem }}</span>
+      <span>{{ currentSelectedRows }} / {{ totalItem }} {{$t('common.itemSelected')}}</span>
       <t1-pagination
         v-model="currentPage"
         class="pagination-container"

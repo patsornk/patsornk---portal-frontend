@@ -6,6 +6,7 @@ module.exports = {
     createBrand: 'สร้างแบรนด์',
     createBranch: 'สร้างสาขา',
     companyTitle: 'บริษัท',
+    companyList: 'รายการองค์กร',
     partnerCodeTitle: 'รหัสพาร์ทเนอร์',
     brandTitle: 'แบรนด์',
     brandList: 'รายการแบรนด์',
