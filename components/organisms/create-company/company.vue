@@ -167,8 +167,8 @@ export default class CreateCompany extends Vue {
   companyNameTh = ''
   companyNameEn = ''
   typeId = ''
-  categoryId: string | undefined = undefined
-  sizeId:string | undefined = undefined
+  categoryId: string = ''
+  sizeId:string = ''
   assignee = ''
   email = ''
   companyPhonePrefix = '+66'
@@ -227,7 +227,7 @@ export default class CreateCompany extends Vue {
   clearError(): void {
     if (parseInt(this.typeId) !== 3) {
       this.sizeId = ''
-      this.categoryId = undefined
+      this.categoryId = ''
       this.assignee = ''
     }
     this.error = {

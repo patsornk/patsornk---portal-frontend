@@ -32,7 +32,7 @@ export default class TextInfo extends Vue {
 .text-info {
   font-size: 16px;
   display: grid;
-  grid-template-columns: 180px auto;
+  grid-template-columns: 200px auto;
 
   .text-info-title {
     font-weight: 700;

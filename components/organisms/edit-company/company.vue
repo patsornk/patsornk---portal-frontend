@@ -219,7 +219,7 @@ export default class EditCompany extends Vue {
     categoryId: '',
     companyStatus: '',
     sizeId: '',
-    assignee: '',
+    assignee: ''
     // email: '',
     // companyPhonePrefix: '',
     // phoneNumber: ''
@@ -264,9 +264,11 @@ export default class EditCompany extends Vue {
 
   @Watch('categoryId')
   checkCategoryId(): void {
-    this.error.categoryId = !this.$v.categoryId.required
-      ? this.$t('createCompany.error.require').toString()
-      : ''
+    if (this.$v.typeId.$model === 3) {
+      this.error.categoryId = !this.$v.categoryId.required
+        ? this.$t('createCompany.error.require').toString()
+        : ''
+    }
   }
 
   @Watch('companyStatus')
@@ -278,20 +280,29 @@ export default class EditCompany extends Vue {
 
   @Watch('sizeId')
   checkSizeId(): void {
-    this.error.sizeId = !this.$v.sizeId.required
-      ? this.$t('createCompany.error.require').toString()
-      : ''
+    if (this.$v.typeId.$model === 3) {
+      this.error.sizeId = !this.$v.sizeId.required
+        ? this.$t('createCompany.error.require').toString()
+        : ''
+    }
   }
 
   @Watch('assignee')
   checkAssignee(): void {
-    this.error.assignee = !this.$v.assignee.required
-      ? this.$t('createCompany.error.require').toString()
-      : ''
-  }  
+    if (this.$v.typeId.$model === 3) {
+      this.error.assignee = !this.$v.assignee.required
+        ? this.$t('createCompany.error.require').toString()
+        : ''
+    }
+  }
 
   @Watch('typeId')
   clearError(): void {
+    if (parseInt(this.typeId) !== 3) {
+      this.sizeId = ''
+      this.categoryId = ''
+      this.assignee = ''
+    }
     this.error = {
       ...this.error,
       companyNameEn: '',
@@ -348,7 +359,9 @@ export default class EditCompany extends Vue {
         this.companyNameTh = data.companyNameTh
         this.companyNameEn = data.companyNameEn
         this.typeId = data.companyType.companyTypeId
-        this.categoryId = data.companyCategory ? data.companyCategory.companyCategoryId : ''
+        this.categoryId = data.companyCategory
+          ? data.companyCategory.companyCategoryId
+          : ''
         this.sizeId = data.companySize ? data.companySize.companySizeId : ''
         this.assignee = data.assignee ? data.assignee : ''
         // this.email = data.companyEmail

@@ -66,7 +66,7 @@ const validations = {
   },
   partnerName: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value)
+    mustBe: (value: any) => /^([A-Za-z0-9 ])*$/g.test(value)
   },
   validationGroup: ['partnerCode', 'partnerName']
 }
