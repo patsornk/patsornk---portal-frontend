@@ -2452,7 +2452,6 @@ export default class CreateBranch extends Vue {
         const companyId = this.parentCompanyId
           ? parseInt(this.parentCompanyId)
           : window.sessionStorage.getItem('createCompanyId')
-
         this.$router.push(`/organizationManagement/${companyId}`)
         this.$toast.global.success(this.$t('common.successfully').toString())
       }
@@ -2511,10 +2510,6 @@ export default class CreateBranch extends Vue {
       if (response.successful) {
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
-        if (this.componetMode === 'edit') {
-          this.$router.push(`/organizationManagement/${this.parentCompanyId}`)
-        } else {
-        }
       }
       this.$nuxt.$loading.finish()
     } catch (error) {

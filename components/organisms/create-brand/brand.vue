@@ -814,6 +814,7 @@ export default class CreateBrand extends Vue {
             this.$toast.global.success(
               this.$t('createBrand.createNewBrandSuccess').toString()
             )
+
             this.$router.push('/organizationManagement/create/branch')
           } else {
             const companyId = this.companyId
@@ -1021,7 +1022,6 @@ export default class CreateBrand extends Vue {
               this.$t('common.successfully').toString()
             )
           } else {
-            this.$router.push(`/organizationManagement/${companyId}`)
             this.$toast.global.success(
               this.$t('common.successfully').toString()
             )
@@ -1046,7 +1046,6 @@ export default class CreateBrand extends Vue {
         const companyId = this.companyId
           ? parseInt(this.companyId)
           : window.sessionStorage.getItem('createCompanyId')
-
         this.$router.push(`/organizationManagement/${companyId}`)
         this.$toast.global.success(this.$t('common.successfully').toString())
       }
