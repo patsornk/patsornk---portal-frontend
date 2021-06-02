@@ -32,7 +32,7 @@ module.exports = {
     add: 'Add',
     dragAndDrop: 'Drag and drop your file here',
     selectFile: 'Select a file from your computer',
-    charaterLeftS: 'character(s) left',
+    charaterLeftS: '',
     charaterLeftE: 'character(s) left',
     duplicatedBrandCode: 'Duplicated Brand Code',
     invalidBrandNameInput: 'Input invalid brand name',

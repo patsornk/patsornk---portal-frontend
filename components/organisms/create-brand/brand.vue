@@ -114,14 +114,10 @@
           style="width: 100%"
           v-model="$v.brandInfo.$model"
         />
-        <div v-if="language === 'th'" class="info-description">
+        <div class="info-description">
           {{ $t('common.charaterLeftS') }}
           {{ 255 - $v.brandInfo.$model.length }}
           {{ $t('common.charaterLeftE') }}
-        </div>
-        <div v-else class="info-description">
-          {{ 255 - $v.brandInfo.$model.length }}
-          {{ $t('common.charaterLeftS') }}
         </div>
       </div>
       <div class="brand-feature-box">

@@ -77,8 +77,9 @@
         :placeholder="$t('createBrand.brandFeature.ctaFeature')"
       />
       <div class="info-description">
-        {{ 256 - $v.ctaFeature.$model.length }}
-        {{ $t('createBrand.limitCharacters') }}
+        {{ $t('common.charaterLeftS') }}
+        {{ 255 - $v.ctaFeature.$model.length }}
+        {{ $t('common.charaterLeftE') }}
       </div>
     </div>
   </div>
