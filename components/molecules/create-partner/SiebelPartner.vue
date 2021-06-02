@@ -127,18 +127,20 @@ export default class CreatePartnerCode extends Vue {
   @Watch('partnerCode')
   checkPartnerCode(): void {
     this.error.partnerCode = !this.$v.partnerCode.required
-      ? this.$t('createBrand.brandNameEnInput').toString()
+      ? this.$t('createPartnerCode.inputSieabelPartner').toString()
       : !this.$v.partnerCode.mustBe
-      ? this.$t('common.invalidInputInformation').toString()
+      ? this.$t('createPartnerCode.inputSiebelPartnerCodeInEnglishLanguage').toString()
       : !this.$v.partnerCode.minLength
-      ? this.$t('common.invalidInputInformation').toString()
+      ? this.$t('createPartnerCode.inputSiebelPartnerCodeAtLeast3Digits').toString()
       : ''
   }
 
   @Watch('partnerName')
   checkPartnerName(): void {
     this.error.partnerName = !this.$v.partnerName.required
-      ? this.$t('createBrand.brandNameEnInput').toString()
+      ? this.$t('createPartnerCode.inputSieabelPartnerName').toString()
+      : !this.$v.partnerName.mustBe
+      ? this.$t('createPartnerCode.inputSiebelPartnerNameInEnglishLanguage').toString()
       : ''
   }
 

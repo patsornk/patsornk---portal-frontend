@@ -10,6 +10,7 @@
       :is-show-active="false"
       :raw-data="dataList"
       :column-defs="columnDefs"
+      :current-page-size="100"
       :header-title="$t('common.partnerCodeList')"
       :framework-components="frameworkComponents"
       @clickDelete="clickDeleteList"
@@ -33,7 +34,7 @@
       @changePartnerCode="changePartnerCode"
     />
 
-    <div class="add-container" @click="clickAdd">
+    <div class="add-container" @click="clickAdd" v-if="dataList.length < 100">
       <span class="material-icons icon-add"> add </span>
       <span class="text-add">
         {{ $t('createPartnerCode.addSieabelPartner') }}
@@ -156,7 +157,7 @@ export default class CreatePartnerCode extends Vue {
   async getPartnerList(): Promise<void> {
     try {
       const res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.companyId}`,
+        `${process.env.PORTAL_ENDPOINT}/partner_code?companyId=${this.companyId}&limit=100`,
         { data: null }
       )
 
@@ -361,9 +362,8 @@ export default class CreatePartnerCode extends Vue {
           this.companyId = this.companyIdParent
           // TO DO
           // this.getPartnerList()
-          this.dataList = this.dataList.filter(
-            (item)=>{
-              return item.partnerId !== partner.partnerId
+          this.dataList = this.dataList.filter((item) => {
+            return item.partnerId !== partner.partnerId
           })
           this.refList = [...this.dataList]
         } else {

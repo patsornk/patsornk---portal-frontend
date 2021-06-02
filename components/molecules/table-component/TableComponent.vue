@@ -179,6 +179,13 @@ export default class TableComponent extends Vue {
   readonly totalPage?: string
 
   @Prop({
+    type: Number,
+    default: 10,
+    required: false
+  })
+  readonly currentPageSize?: number
+
+  @Prop({
     type: String,
     default: ''
   })
@@ -454,7 +461,7 @@ export default class TableComponent extends Vue {
 
     window.onresize = this.onInnerWidthChanged
     this.gridApi.sizeColumnsToFit()
-    this.gridApi.paginationSetPageSize(10)
+    this.gridApi.paginationSetPageSize(this.currentPageSize)
   }
 
   updated(): void {
