@@ -111,7 +111,10 @@
       </div>
     </div>
     <div v-if="isShowPaginate" class="footer-container">
-      <span>{{ currentSelectedRows }} / {{ totalItem }} {{$t('common.itemSelected')}}</span>
+      <span
+        >{{ currentSelectedRows }} / {{ totalItem }}
+        {{ $t('common.itemSelected') }}</span
+      >
       <t1-pagination
         v-model="currentPage"
         class="pagination-container"
@@ -448,6 +451,7 @@ export default class TableComponent extends Vue {
 
   @Watch('pagination')
   chengePagination(): void {
+    this.$emit('pagination', this.pagination)
     this.gridApi.paginationSetPageSize(this.pagination)
   }
 

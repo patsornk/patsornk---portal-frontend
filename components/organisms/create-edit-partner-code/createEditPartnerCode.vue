@@ -117,7 +117,7 @@
               :page-count="modalPageSize"
               :total-page="modalPageSize"
               @onChenagePage="modalChangePage"
-              @pagination="changPageSize"
+              @pagination="modalChangPageSize"
             />
           </div>
           <div class="modal-footer">
