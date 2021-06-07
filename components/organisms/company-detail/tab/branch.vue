@@ -178,10 +178,6 @@ export default class TabBranch extends Vue {
       status: 'All'
     },
     {
-      id: 1,
-      status: 'Draft'
-    },
-    {
       id: 2,
       status: 'Active'
     },

@@ -129,10 +129,6 @@ export default class TabPartnerCode extends Vue {
       status: 'All'
     },
     {
-      id: 1,
-      status: 'Draft'
-    },
-    {
       id: 2,
       status: 'Active'
     },
@@ -183,8 +179,8 @@ export default class TabPartnerCode extends Vue {
         params.data.status === 'Active'
           ? (strFormat = 'active')
           : params.data.status === 'On hold'
-            ? (strFormat = 'hold')
-            : (strFormat = 'in-active')
+          ? (strFormat = 'hold')
+          : (strFormat = 'in-active')
         return `<div class="custom-row-80">
                   <span class='row-status ${strFormat}'>${params.data.status}</span>
                 </div>`
