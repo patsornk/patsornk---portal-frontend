@@ -33,7 +33,7 @@
       <input-field
         v-model="$v.categoryId.$model"
         type="select"
-        required
+        :required="$v.typeId.$model === 3"
         :disable="$v.typeId.$model !== 3"
         :title="$t('createCompany.partnerCategory')"
         :options="companyTypeCategory"
@@ -47,7 +47,7 @@
       <input-field
         v-model="$v.sizeId.$model"
         type="select"
-        required
+        :required="$v.typeId.$model === 3"
         :disable="$v.typeId.$model !== 3"
         :title="$t('createCompany.businessSize')"
         :options="companyTypeSize"
@@ -61,7 +61,7 @@
         :disable="$v.typeId.$model !== 3"
         :title="$t('createCompany.assignee')"
         :placeholder="$t('common.pleaseSelect')"
-        required
+        :required="$v.typeId.$model === 3"
         :error-message="error.assignee"
       />
       <!-- Keep for restore in future -->
