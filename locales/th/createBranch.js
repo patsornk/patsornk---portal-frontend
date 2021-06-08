@@ -10,6 +10,8 @@ module.exports = {
     email: 'อีเมล',
     phoneNo: 'เบอร์โทรศัพท์',
     partnerCode: 'รหัสพาร์ทเนอร์',
+    createNewBranchSuccess: 'สร้างสาขาสำเร็จ',
+    savedSuccessfully: 'บันทึกสำเร็จ'
   },
   locationHeader: 'ตำแหน่งที่ตั้ง',
   location: {
@@ -23,21 +25,21 @@ module.exports = {
     postalCode: 'รหัสไปรษณีย์',
     latitude: 'ละติจูด',
     longitude: 'ลองติจูด',
-    findInMap: 'ค้นหาในแผนที่',
+    findInMap: 'ค้นหาในแผนที่'
   },
   mallPageHeader: 'หน้าห้างสรรพสินค้า',
   mallPage: {
     display: 'แสดงผลบน The 1 แอพพลิเคชั่น',
     mallLogo: 'โลโก้ของห้างสรรพสินค้า',
     mallCover: 'รูปหน้าปกของห้างสรรพสินค้า',
-    mallShortDescription: 'Mall Short Description ',
+    mallShortDescription: 'Mall Short Description '
   },
   mallInfoHeader: 'ข้อมูลห้างสรรพสินค้า',
   mallInfoDescription: 'Websites and Social Links',
   mallInfo: {
     addWebsite: 'Add Website',
     addSocialLink: 'Add Social Link',
-    website: 'Website',
+    website: 'Website'
   },
   category: 'ประเภท',
   openingHour: 'Opening Hour',
@@ -64,8 +66,8 @@ module.exports = {
     maxLength: 'maxLength',
     minLength: 'minLength',
     email: 'email',
-    numeric: 'numeric',
+    numeric: 'numeric'
   },
   fieldError: 'One or more field have an error. Please check and try again.',
-  partnerCode: 'Please select partner code.',
+  partnerCode: 'Please select partner code.'
 }

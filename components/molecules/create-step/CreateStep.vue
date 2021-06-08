@@ -5,7 +5,7 @@
       <create-company v-show="param === step.COMPANY" />
       <create-partner-code v-show="param === step.PARTNERCODE" />
       <create-brand v-show="param === step.BRAND" />
-      <create-branch v-show="param === step.BRANCH" componetMode="onboard"/>
+      <create-branch v-show="param === step.BRANCH" componetMode="onboard" />
       <service-selection v-show="param === step.SERVICE" />
     </div>
     <!-- for debug stepbar (action is next stepbar)-->
@@ -127,6 +127,9 @@ export default class CreateStep extends Vue {
           { companyId: compId }
         )
         if (response.successful) {
+          this.$toast.global.success(
+            this.$t('createCompany.createNewOrganizationSuccess').toString()
+          )
           this.$router.push('/organizationManagement')
         }
       } catch (error) {

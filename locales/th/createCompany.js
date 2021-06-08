@@ -8,7 +8,7 @@ module.exports = {
     number: '0-9',
     minLength: 'minLength',
     maxLength: 'maxLength',
-    email: 'email',
+    email: 'email'
   },
   companyNameTh: 'ชื่อบริษัท (ภาษาไทย)',
   companyNameEn: 'ชื่อบริษัท (ภาษาอังกฤษ)',
@@ -24,4 +24,6 @@ module.exports = {
   companyNameInput: 'ระบุชื่อบริษัท',
   emailInput: 'ระบุอีเมล',
   phoneNoInput: 'ระบุเบอร์โทรศัพท์',
+  createNewOrganizationSuccess: 'สร้างองค์กรใหม่สำเร็จ',
+  savedSuccessfully:'บันทึกสำเร็จ',
 }

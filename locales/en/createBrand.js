@@ -15,6 +15,8 @@ module.exports = {
   brandNameThInput: 'Input Brand Name (TH)',
   brandNameEnInput: 'Input Brand Name (EN)',
   brandCodeInput: 'Input brand code',
+  createNewBrandSuccess: 'Create new brand success',
+  savedSuccessfully: 'Saved successfully',
   error: {
     require: 'require',
     characterAndNumber: 'a-z, 0-9',
@@ -22,7 +24,7 @@ module.exports = {
     maxLength: 'maxLength',
     minLength: 'minLength',
     email: 'email',
-    numeric: 'numeric',
+    numeric: 'numeric'
   },
   partnerCode: 'Please select partner code.',
   brandFeature: {
@@ -39,11 +41,12 @@ module.exports = {
         'Please input the required field for Display on the 1 app',
       toastDelete: 'Can not delete when ‘Display on The 1 App’ toggle on',
       oneFieldRequired: 'At least one field required',
-      featureCannotDisplay: 'The feature cannot display on The 1 App. Please input required field(s).',
+      featureCannotDisplay:
+        'The feature cannot display on The 1 App. Please input required field(s).',
       image: 'No file chosen',
       ctaLabel: 'Input Feature CTA Label',
       ctaType: 'Select Feature CTA Type',
-      ctaFeature: 'Input Feature CTA',
+      ctaFeature: 'Input Feature CTA'
     }
-  },
+  }
 }

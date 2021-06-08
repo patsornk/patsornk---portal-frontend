@@ -8,7 +8,7 @@ module.exports = {
     number: '0-9',
     minLength: 'minLength',
     maxLength: 'maxLength',
-    email: 'email',
+    email: 'email'
   },
   companyNameTh: 'Company Name (TH)',
   companyNameEn: 'Company Name (EN)',
@@ -24,4 +24,6 @@ module.exports = {
   companyNameInput: 'Input company name',
   emailInput: 'Input email',
   phoneNoInput: 'Input Phone No.',
+  createNewOrganizationSuccess: 'Create new organization success',
+  savedSuccessfully: 'Saved successfully',
 }

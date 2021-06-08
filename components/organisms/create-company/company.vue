@@ -168,7 +168,7 @@ export default class CreateCompany extends Vue {
   companyNameEn = ''
   typeId = ''
   categoryId: string = ''
-  sizeId:string = ''
+  sizeId: string = ''
   assignee = ''
   email = ''
   companyPhonePrefix = '+66'
@@ -454,7 +454,7 @@ export default class CreateCompany extends Vue {
               )
               window.sessionStorage.setItem('companyFirstTime', 'no')
               this.$toast.global.success(
-                this.$t('common.successfully').toString()
+                this.$t('common.successfully').toString() //create company 1st time
               )
               this.$router.push('/organizationManagement/create/partnercode')
             }

@@ -2420,14 +2420,14 @@ export default class CreateBranch extends Vue {
             response.data.branchId
           )
           window.sessionStorage.setItem('createBranchFirstTime', 'no')
-          this.$toast.global.success(this.$t('common.successfully').toString())
+          this.$toast.global.success(this.$t('createBranch.createNewBranchSuccess').toString())
           this.$router.push('/organizationManagement/create/service')
         } else if (this.componetMode === 'create') {
           const parentCompanyId = this.parentCompanyId
           ? parseInt(this.parentCompanyId)
           : window.sessionStorage.getItem('createCompanyId')
           this.$router.push(`/organizationManagement/${parentCompanyId}`)
-          this.$toast.global.success(this.$t('common.successfully').toString())
+          this.$toast.global.success(this.$t('createBranch.createNewBranchSuccess').toString())
         } else if (this.componetMode === 'onboard') {
           window.sessionStorage.setItem('createBranchFirstTime', 'no')
           this.$toast.global.success(this.$t('common.successfully').toString())

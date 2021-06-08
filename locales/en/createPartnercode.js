@@ -13,4 +13,5 @@ module.exports = {
   brandList: 'Brand List',
   toastAssign: 'Assign brand(s) successfully',
   toastUnAssign: 'Remove brand(s) successfully',
+  savedSuccessfully: 'Saved successfully',
 }

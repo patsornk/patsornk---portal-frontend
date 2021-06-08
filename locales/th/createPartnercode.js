@@ -9,8 +9,9 @@ module.exports = {
   duplicatePartnerName: 'ชื่อพาร์ทเนอร์ซ้ำ',
   inputSiebelPartnerCodeInEnglishLanguage: 'ระบุรหัสพาร์ทเนอร์ภาษาอังกฤษ',
   inputSiebelPartnerNameInEnglishLanguage: 'ระบุชื่อพาร์ทเนอร์ภาษาอังกฤษ',
-  inputSiebelPartnerCodeAtLeast3Digits: 'ระบุข้อมูลอย่างน้อย 3 ตัวอักษร',  
+  inputSiebelPartnerCodeAtLeast3Digits: 'ระบุข้อมูลอย่างน้อย 3 ตัวอักษร',
   brandList: 'รายการแบรนด์',
   toastAssign: 'กำหนดแบรนด์สำเร็จ',
   toastUnAssign: 'นำแบรนด์ออกสำเร็จ',
+  savedSuccessfully: 'บันทึกสำเร็จ'
 }
