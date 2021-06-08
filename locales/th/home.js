@@ -5,5 +5,6 @@ module.exports = {
   landing: {
     byFeature: 'แสดงตามฟีเจอร์',
     organiztionMng: 'การจัดการองค์กร',
+    userManagement: 'การจัดการผู้ใช้งาน',
   }
 }

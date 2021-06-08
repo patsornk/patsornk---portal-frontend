@@ -43,7 +43,7 @@ export default class Landing extends Vue {
       },
       {
         title: this.$t('home.landing.organiztionMng').toString(),
-        value: Organization.ORGANIZATIONMANAGEMENT
+        value: Organization.USERMANAGEMENT
       }
     ]
   }
@@ -65,8 +65,8 @@ export default class Landing extends Vue {
       case 'REQUEST':
         this.$router.push('/example')
         break
-      case 'ORGANIZATIONMANAGEMENT':
-        this.$router.push('/organizationManagement')
+      case 'USERMANAGEMENT':
+        this.$router.push('/userManagement')
         break
     }
   }

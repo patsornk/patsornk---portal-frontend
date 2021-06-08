@@ -61,4 +61,13 @@ export const request: SidebarMenu[] = [
   }
 ]
 
+export const user: SidebarMenu[] = [
+  {
+    title: 'User Management'
+  },
+  {
+    title: 'User Role Management'
+  }
+]
+
 export const organizationManagement: SidebarMenu[] = []

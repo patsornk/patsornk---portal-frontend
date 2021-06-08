@@ -1,0 +1,33 @@
+module.exports = {
+  placeholder: {
+    searchBy: 'Search by Username or First name or Last name',
+    userType: 'User Type',
+    userRole: 'User Role',
+    company: 'Company',
+    brand: 'Brand',
+    branch: 'Branch',
+    status: 'Status',
+  },
+  search: 'Search',
+  tab: {
+    centralGroup: 'Central Group Users',
+    nonCentralGroup: 'Non Central Group Users',
+  },
+  table:{
+    username: 'Username',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    userType: 'User Type',
+    company: 'Company',
+    brand: 'Brand',
+    userRole: 'User Role',
+    email: 'Email',
+    phoneNo: 'Phone No.',
+    status: 'Status',
+  },
+  assignRoleToNewUser: 'Assign Role to New User',
+  bulkAssignRoleToUser: 'Bulk Assign Role to User',
+  createNewUser: 'Create New User',
+  userList: 'User List',
+  clearAll: 'Clear All',
+}

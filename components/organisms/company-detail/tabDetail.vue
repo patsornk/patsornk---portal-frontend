@@ -1,9 +1,9 @@
 <template>
   <div class="company-tab-container">
     <div class="tab-header">
-      <div class="tab" @click="tab = 'brand'">{{$t('common.brandTitle')}}</div>
-      <div class="tab" @click="tab = 'branch'">{{$t('common.branchTitle')}}</div>
-      <div class="tab" @click="tab = 'partnerCode'">{{$t('common.partnerCodeTitle')}}</div>
+      <div class="tab" :class="tab === 'brand' && 'select'" @click="tab = 'brand'">{{$t('common.brandTitle')}}</div>
+      <div class="tab" :class="tab === 'branch' && 'select'" @click="tab = 'branch'">{{$t('common.branchTitle')}}</div>
+      <div class="tab" :class="tab === 'partnerCode' && 'select'" @click="tab = 'partnerCode'">{{$t('common.partnerCodeTitle')}}</div>
     </div>
     <div class="tab-line">
       <div class="line" :class="tab === 'brand' && 'select'"></div>
@@ -97,6 +97,12 @@ export default class TabDetail extends Vue {
     .tab {
       cursor: pointer;
       padding-bottom: 20px;
+      color: $gray-disable;
+    }
+
+    .select {
+      color: $mid-black;
+      font-weight: 700;
     }
   }
 

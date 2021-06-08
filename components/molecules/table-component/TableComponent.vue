@@ -68,6 +68,19 @@
           <span class="text">{{ createNewTitle }}</span>
         </button>
       </div>
+      <div v-if="isCreateNoIcon">
+        <button class="add-new-btn" @click="$emit('clickNew')">
+          <span class="text">{{ createNewTitle }}</span>
+        </button>
+      </div>
+      <div v-if="isTwoBtn" class="btn-container">
+        <button class="add-new-btn" @click="$emit('clickBtnLeft')">
+          <span class="text">{{ titleLeft }}</span>
+        </button>
+        <button class="add-new-btn" @click="$emit('clickBtnRight')">
+          <span class="text">{{ titleRight }}</span>
+        </button>
+      </div>
     </div>
     <ag-grid-vue
       ref="agGridTable"
@@ -111,10 +124,10 @@
       </div>
     </div>
     <div v-if="isShowPaginate" class="footer-container">
-      <span
-        >{{ currentSelectedRows }} / {{ totalItem }}
-        {{ $t('common.itemSelected') }}</span
-      >
+      <div>
+        <span class="sum-select">{{ currentSelectedRows }}</span>
+        <span> / {{ totalItem }} {{ $t('common.itemSelected') }}</span>
+      </div>
       <t1-pagination
         v-model="currentPage"
         class="pagination-container"
@@ -290,6 +303,18 @@ export default class TableComponent extends Vue {
 
   @Prop({
     type: Boolean,
+    default: false
+  })
+  readonly isCreateNoIcon!: boolean
+
+  @Prop({
+    type: Boolean,
+    default: false
+  })
+  readonly isTwoBtn!: boolean
+
+  @Prop({
+    type: Boolean,
     default: true
   })
   readonly isShowAddIcon!: boolean
@@ -323,6 +348,18 @@ export default class TableComponent extends Vue {
     default: ''
   })
   readonly createNewTitle!: string
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  readonly titleLeft!: string
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  readonly titleRight!: string
 
   @Prop({
     type: Number,

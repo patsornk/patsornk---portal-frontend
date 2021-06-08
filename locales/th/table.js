@@ -14,6 +14,6 @@ module.exports = {
     hold: 'ระงับชั่วคราว',
     delete: 'ลบ'
   },
-  dataNotFound: 'No result found',
+  dataNotFound: 'ไม่พบข้อมูล',
   noBrand: 'No brand(s) assigned'
 }

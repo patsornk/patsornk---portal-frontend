@@ -7,6 +7,7 @@ import createPartnerCode from './th/createPartnercode'
 import applyService from './th/applyService'
 import table from './th/table'
 import error from './th/error'
+import userManagement from './th/userManagement'
 import login from  './th/login'
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
   applyService,
   table,
   error,
-  login
+  login,
+  userManagement
 }

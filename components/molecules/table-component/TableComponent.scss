@@ -4,6 +4,10 @@
   display: flex;
   justify-content: space-between;
 
+  .btn-container{    
+    display: flex;
+  }
+
   .add-new-btn {
     display: flex;
     justify-content: center;
@@ -83,6 +87,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 23px;
+
+  .sum-select{
+    color: $primary;
+    font-weight: 700;
+  }
 
   .dropdown {
     width: 90px;
