@@ -42,7 +42,7 @@
           :title="$t('createBrand.display')"
         />
       </div>
-      <div class="text-danger text-sm validation-error-text">
+      <div class="text-danger error-msg validation-error-text">
         {{ errorMessage }}
       </div>
       <input-field

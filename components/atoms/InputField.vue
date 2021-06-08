@@ -93,7 +93,7 @@
       <div class="validation-error-text">
         <span
           v-if="errorMessage"
-          class="text-danger text-sm "
+          class="text-danger error-msg"
         >
           {{ errorMessage }}
       </span>
@@ -471,7 +471,7 @@ export default class InputField extends Vue {
     color: $primary;
     top: 5px;
     position: relative;
-    height: 24px;
+    height: 32px;
   }
 
   .vs__dropdown-menu {
@@ -483,7 +483,10 @@ export default class InputField extends Vue {
     }
   }
 }
-
+.error-msg{
+  position: absolute;
+  font-size: 0.75rem;
+}
 ::placeholder {
   color: $gray-disable;
 }

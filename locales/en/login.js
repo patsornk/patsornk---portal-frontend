@@ -3,12 +3,16 @@ module.exports = {
   headingTitleNonCG: "Non Central Group User",
   usernamePlaceHolder: "Input username",
   passwordPlaceHolder: "Input password",
+  passwordNewPlaceHolder: "Input new password",
+  passwordConfirmPlaceHolder: "Input confirm new password",
   titleUserName: "Username",
   titlePassword: "Password",
   submitText: 'Log in',
   urlText: 'Forgot your password?',
   emptyUsername: 'Input username',
   emptyUserPassword: 'Input Password',
+  emptyUserNewPassword: 'Input New Password',
+  emptyUserConfirmNewPassword: 'Input Confirm New Password',
   invalidInputInformation: 'Input invalid information',
   inputInvalidEmailFormat: 'Input invalid email format',
 
@@ -17,5 +21,15 @@ module.exports = {
   incorrectPassword: 'The username or password you entered is incorrect.',
   onHoldInActive: 'Something went wrong with your user account, please contact your administrator.',
   manyAttempt: 'Your account has been locked due to multiple failed sign in attempts.You can reset new password from Forgot your Password? link or contact your administrator.',
-  accountLocked: 'Your account has been locked. You can reset new password from Forgot your Password? link or contact your administrator.'
+  accountLocked: 'Your account has been locked. You can reset new password from Forgot your Password? link or contact your administrator.',
+
+  headingsResetPassword: "Change My Password",
+  newPasswordTitle: "New Password",
+  confirmNewPasswordTitle: "Confirm New Password",
+  setNewPasswordBtn: "Confirm",
+  lengthPassword: "The password must be 8-12 characters and contains A-Z, a-z and 0-9.",
+
+  passwordNotMatch: "The New Password and Confirm New Password doesn’t matched.",
+  passwordSame: "Your new password can not be same as old password ",
+  successNewPassword: "New password was set successfully."
 }

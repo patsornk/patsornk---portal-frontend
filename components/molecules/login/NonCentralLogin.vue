@@ -153,7 +153,7 @@ export default class CentarlLogin extends Vue {
     this.onChangedUsername()
     this.onChangedPassword()
     if (validateError(this.error)) {
-      this.$router.push('/landing')
+      this.$router.push('/login/resetPassword')
     }
   }
 }
