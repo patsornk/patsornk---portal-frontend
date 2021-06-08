@@ -90,12 +90,14 @@
         />
         <slot />
       </div>
-      <span
-        v-if="errorMessage"
-        class="text-danger text-sm validation-error-text"
-      >
-        {{ errorMessage }}
+      <div class="validation-error-text">
+        <span
+          v-if="errorMessage"
+          class="text-danger text-sm "
+        >
+          {{ errorMessage }}
       </span>
+      </div>
     </div>
   </div>
 </template>
@@ -469,6 +471,7 @@ export default class InputField extends Vue {
     color: $primary;
     top: 5px;
     position: relative;
+    height: 24px;
   }
 
   .vs__dropdown-menu {

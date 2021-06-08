@@ -1,5 +1,5 @@
 <template>
-  <div class="central-login">
+  <div class="non-central-login">
     <div class="login-input w-full">
       <input-field
         :title="$t('login.titleUserName')"
@@ -31,7 +31,7 @@
         {{ $t('login.submitText') }}
       </t1-button>
       <div class="btn-forget">
-        <a class="cursor-pointer" href="https://myaccess.central.co.th/m/home">{{ $t('login.urlText')}}</a>
+        <span class="cursor-pointer">{{ $t('login.urlText') }}</span>
       </div>
     </div>
   </div>
@@ -54,14 +54,12 @@ import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
 import {
   required,
-  email
 } from 'vuelidate/lib/validators'
 
 const validations = {
   username: {
     required,
-    email,
-    mustBe: (value: any) => /^([A-Za-z0-9@._-])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9])*$/g.test(value),
   },
   password: {
     required,
@@ -129,11 +127,9 @@ export default class CentarlLogin extends Vue {
   onChangedUsername(): void {
     this.error.username = !this.$v.username.required
       ? this.$t('login.emptyUsername').toString()
-      : !this.$v.username.email
-        ? this.$t('login.inputInvalidEmailFormat').toString()
-        : !this.$v.username.mustBe
-        ? this.$t('login.inputInvalidEmailFormat').toString()
-        : ''
+      : !this.$v.username.mustBe
+      ? this.$t('login.invalidInputInformation').toString()
+      : ''
   }
 
   @Watch('password')
@@ -166,7 +162,7 @@ export default class CentarlLogin extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
-.central-login {
+.non-central-login {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

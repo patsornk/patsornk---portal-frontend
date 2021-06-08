@@ -6,14 +6,14 @@
         :class="tabIndex == 0 ? 'tab-active' : ''"
         @click="tabIndex = 0"
       >
-        Central Group
+        {{ $t('login.headingTitleCG') }}
       </div>
       <div
         class="login-tab no-margin"
         :class="tabIndex == 1 ? 'tab-active' : ''"
         @click="tabIndex = 1"
       >
-        Partner
+        {{ $t('login.headingTitleNonCG') }}
       </div>
     </div>
     <div
@@ -22,7 +22,8 @@
         tabIndex == 0 ? 'active-left' : 'active-right'
       "
     >
-      <central-login />
+      <central-login v-if="tabIndex === 0"/>
+      <non-central-login v-if="tabIndex === 1"/>
     </div>
   </div>
 </template>
@@ -30,10 +31,11 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import CentralLogin from '~/components/molecules/login/CentralLogin.vue'
-
+import NonCentralLogin from "~/components/molecules/login/NonCentralLogin.vue";
 @Component({
   components: {
-    CentralLogin
+    CentralLogin,
+    NonCentralLogin
   }
 })
 export default class LoginSection extends Vue {
@@ -60,7 +62,7 @@ export default class LoginSection extends Vue {
       width: 100%;
       padding: 13px;
       margin-right: 1rem;
-      color: grey-text;
+      color: #5C5C5C;
       font-weight: 700;
       background-color: $gray-bg-fade;
       box-shadow: $box-shadow-black;
@@ -68,7 +70,6 @@ export default class LoginSection extends Vue {
       border-top-right-radius: 10px;
       cursor: pointer;
     }
-
     .tab-active {
       color: $primary;
       padding-bottom: 11px;
@@ -88,7 +89,7 @@ export default class LoginSection extends Vue {
     }
 
     .no-margin {
-      margin-right: 0rem !important;
+      margin-right: 0 !important;
     }
   }
 

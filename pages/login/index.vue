@@ -27,6 +27,7 @@ export default class Example extends Vue {}
   .logo {
     font-size: 96px;
     font-weight: 700;
+    margin-bottom: 43px;
   }
 }
 </style>
