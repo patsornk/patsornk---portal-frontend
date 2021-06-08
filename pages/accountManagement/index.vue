@@ -5,10 +5,12 @@
       title="lat"
       v-model="infoData.lat"
       required
+      :shouldBeError=false 
     /><input-field
       title="lng"
       v-model="infoData.lng"
       required
+      :shouldBeError=false 
     />
 
     <google-map class="t1-map" :position="mapPosition" />

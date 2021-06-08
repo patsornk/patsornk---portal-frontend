@@ -90,7 +90,7 @@
         />
         <slot />
       </div>
-      <div class="validation-error-text">
+      <div class="validation-error-text" v-if="shouldBeError">
         <span
           v-if="errorMessage"
           class="text-danger error-msg"
@@ -194,6 +194,12 @@ export default class InputField extends Vue {
     type: Number
   })
   private maxlength?: number | undefined
+
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  private shouldBeError?: Boolean
 
   get dataValue() {
     return this.value
@@ -471,7 +477,7 @@ export default class InputField extends Vue {
     color: $primary;
     top: 5px;
     position: relative;
-    height: 32px;
+    height: 24px;
   }
 
   .vs__dropdown-menu {

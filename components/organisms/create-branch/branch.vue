@@ -278,6 +278,7 @@
           type="textarea"
           :title="$t('createBranch.mallPage.mallShortDescription')"
           :maxlength="255"
+          :shouldBeError=false 
           style="width: 100%"
           v-model="$v.mallDescription.$model"
         />

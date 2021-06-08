@@ -7,6 +7,7 @@
         :required="false"
         :type="inputType"
         :placeholder="$t('common.searchFromPartner')"
+        :shouldBeError=false 
         @blur="$emit('onBlur')"
       />
 

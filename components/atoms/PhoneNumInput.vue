@@ -13,6 +13,7 @@
           :options="countryCodes"
           :optionsReduce="(item) => item.label"
           optionsLabel="label"
+          :shouldBeError=false 
         />
       </div>
       <div class="flex flex-col phone">

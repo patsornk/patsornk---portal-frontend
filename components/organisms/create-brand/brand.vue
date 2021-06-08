@@ -111,6 +111,7 @@
           :placeholder="$t('createBrand.inputBrandInfo')"
           :required="false"
           :maxlength="255"
+          :shouldBeError=false 
           style="width: 100%"
           v-model="$v.brandInfo.$model"
         />
