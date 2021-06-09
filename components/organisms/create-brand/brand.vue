@@ -1194,6 +1194,8 @@ export default class CreateBrand extends Vue {
   createNewBrand() {
     if (this.mode === 'create') {
       this.dialogDisplay = true
+    } else if(this.mode === 'edit') {
+      this.update()
     } else {
       this.save()
     }

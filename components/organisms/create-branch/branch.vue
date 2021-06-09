@@ -2508,6 +2508,8 @@ export default class CreateBranch extends Vue {
   createNewBranch() {
     if (this.componetMode === 'onboard') {
       this.save()
+    } else if(this.componetMode === 'edit') {
+      this.update()
     } else {
       this.dialogDisplay = true
     }
