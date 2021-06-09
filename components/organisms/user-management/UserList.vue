@@ -709,7 +709,9 @@ export default class UserList extends Vue {
     }
   }
 
-  clickNewUser() {}
+  clickNewUser() {
+    this.$router.push('/userManagement/userProfile/create')
+  }
 
   clickAssign() {}
 

@@ -19,7 +19,7 @@ import { BreadcrumbType } from '~/constants'
     UserList
   }
 })
-export default class userManagement extends Vue {
+export default class UserManagement extends Vue {
   get language(): any {
     return this.$i18n.locale
   }

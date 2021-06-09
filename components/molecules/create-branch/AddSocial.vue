@@ -164,7 +164,7 @@ export default class AddSocial extends Vue {
     font-weight: 700;
     line-height: 22px;
     color: $primary;
-    background: $primary-bg;
+    background: $tritery-red;
     border-radius: 6px;
     padding: 6px;
     margin: 19px 0px 0px 30px;

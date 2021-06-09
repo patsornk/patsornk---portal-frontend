@@ -51,6 +51,7 @@ export default {
     '@/plugins/google-maps',
     '@/plugins/vuelidate',
     '@/plugins/axios',
+    '@/plugins/directives',
     //{src: '~/plugins/vuelidate.js', mode: 'client'}
   ],
 
