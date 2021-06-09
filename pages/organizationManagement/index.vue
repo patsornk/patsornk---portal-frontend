@@ -46,6 +46,7 @@ export default class OrganizationManagement extends Vue {
     window.sessionStorage.removeItem('createBranchFirstTime')
     window.sessionStorage.removeItem('createBranchId')
     window.sessionStorage.removeItem('maxStepbar')
+    window.sessionStorage.removeItem('currentTab')
     this.$store.dispatch('stepbar/setMaxState', 0)
     this.setupBreadcrumb()
   }

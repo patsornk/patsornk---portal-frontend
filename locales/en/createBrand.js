@@ -17,6 +17,7 @@ module.exports = {
   brandCodeInput: 'Input brand code',
   createNewBrandSuccess: 'Create new brand success',
   savedSuccessfully: 'Saved successfully',
+  fieldError: 'One or more field have an error. Please check and try again.',
   error: {
     require: 'require',
     characterAndNumber: 'a-z, 0-9',

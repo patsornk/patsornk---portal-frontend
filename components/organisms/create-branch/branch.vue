@@ -446,7 +446,9 @@
     </div>
 
     <div class="submit-section">
-      <button class="submit" @click="clickSave">{{ $t('common.save') }}</button>
+      <button class="submit" @click="createNewBranch">
+        {{ $t('common.save') }}
+      </button>
     </div>
 
     <modal v-show="isShowImage" class="show-image">
@@ -465,6 +467,18 @@
         <img class="show-image-view" v-if="imageUrl" :src="imageUrl" />
       </template>
     </modal>
+
+    <dialog-popup
+      :display="dialogDisplay"
+      title="Want to Create New Branch  ?"
+      description="To make sure, Please check the information before click ‘Create New Branch’ "
+      leftButtonTitle="Cancel"
+      rightButtonTitle="Create New Branch "
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="dialogAction"
+      leftStyle="width: 120px;"
+      rightStyle="width: 210px;"
+    />
   </div>
 </template>
 
@@ -480,6 +494,7 @@ import AddWebsiteView from '@/components/molecules/create-branch/AddWebsiteView.
 import AddSocial from '@/components/molecules/create-branch/AddSocial.vue'
 import AddSocialView from '@/components/molecules/create-branch/AddSocialView.vue'
 import OpenHourCustom from '@/components/molecules/create-branch/OpenHourCustom.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
 import { getAssetsPath } from '~/helper/images'
 import { getImagePath } from '~/helper/images'
@@ -680,7 +695,8 @@ const validations = {
     AddWebsiteView,
     AddSocial,
     AddSocialView,
-    OpenHourCustom
+    OpenHourCustom,
+    DialogPopup
   }
 })
 export default class CreateBranch extends Vue {
@@ -705,6 +721,8 @@ export default class CreateBranch extends Vue {
     required: false
   })
   readonly setBranch?: (value: any) => void
+
+  private dialogDisplay = false
 
   private statusOption = [
     {
@@ -1759,18 +1777,14 @@ export default class CreateBranch extends Vue {
             )
           } else if (data.mall.mallInfo.openingHour.length === 1) {
             this.openingHourId = '1'
-            this.openTime = data.mall.mallInfo.openingHour[0].openingTime.split(
-              '|'
-            )[0]
-            this.openMeridiem = data.mall.mallInfo.openingHour[0].openingTime.split(
-              '|'
-            )[1]
-            this.closeTime = data.mall.mallInfo.openingHour[0].closingTime.split(
-              '|'
-            )[0]
-            this.closeMeridiem = data.mall.mallInfo.openingHour[0].closingTime.split(
-              '|'
-            )[1]
+            this.openTime =
+              data.mall.mallInfo.openingHour[0].openingTime.split('|')[0]
+            this.openMeridiem =
+              data.mall.mallInfo.openingHour[0].openingTime.split('|')[1]
+            this.closeTime =
+              data.mall.mallInfo.openingHour[0].closingTime.split('|')[0]
+            this.closeMeridiem =
+              data.mall.mallInfo.openingHour[0].closingTime.split('|')[1]
           }
           this.mapPosition.lat = this.latitude
             ? Number(this.latitude)
@@ -1951,7 +1965,6 @@ export default class CreateBranch extends Vue {
               this.validateInfoAndLocation()
               this.validateMall()
               this.validateOpenDaily()
-
               return
             } else {
               this.checkWebsite()
@@ -2369,6 +2382,8 @@ export default class CreateBranch extends Vue {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
             this.checkBranchTypeId()
+            this.dialogCancelAction()
+
             return
           } else {
             return {
@@ -2421,14 +2436,19 @@ export default class CreateBranch extends Vue {
             response.data.branchId
           )
           window.sessionStorage.setItem('createBranchFirstTime', 'no')
-          this.$toast.global.success(this.$t('createBranch.createNewBranchSuccess').toString())
+          this.$toast.global.success(
+            this.$t('createBranch.createNewBranchSuccess').toString()
+          )
           this.$router.push('/organizationManagement/create/service')
         } else if (this.componetMode === 'create') {
           const parentCompanyId = this.parentCompanyId
-          ? parseInt(this.parentCompanyId)
-          : window.sessionStorage.getItem('createCompanyId')
+            ? parseInt(this.parentCompanyId)
+            : window.sessionStorage.getItem('createCompanyId')
+          this.dialogCancelAction()
           this.$router.push(`/organizationManagement/${parentCompanyId}`)
-          this.$toast.global.success(this.$t('createBranch.createNewBranchSuccess').toString())
+          this.$toast.global.success(
+            this.$t('createBranch.createNewBranchSuccess').toString()
+          )
         } else if (this.componetMode === 'onboard') {
           window.sessionStorage.setItem('createBranchFirstTime', 'no')
           this.$toast.global.success(this.$t('common.successfully').toString())
@@ -2439,6 +2459,7 @@ export default class CreateBranch extends Vue {
     } catch (error) {
       this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
+      this.dialogCancelAction()
     }
   }
 
@@ -2482,6 +2503,22 @@ export default class CreateBranch extends Vue {
         closeMeridiemError: ''
       }
     })
+  }
+
+  createNewBranch() {
+    if (this.componetMode === 'onboard') {
+      this.save()
+    } else {
+      this.dialogDisplay = true
+    }
+  }
+
+  dialogCancelAction() {
+    this.dialogDisplay = false
+  }
+
+  dialogAction() {
+    this.save()
   }
 
   async update() {

@@ -168,7 +168,9 @@
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="clickSave">{{ $t('common.save') }}</button>
+      <button class="submit" @click="createNewBrand">
+        {{ $t('common.save') }}
+      </button>
     </div>
     <modal v-show="isShowImage" class="show-image">
       <template v-slot:header>
@@ -186,6 +188,18 @@
         <img class="show-image-view" v-if="imageUrl" :src="imageUrl" />
       </template>
     </modal>
+
+    <dialog-popup
+      :display="dialogDisplay"
+      title="Want to Create New Brand  ?"
+      description="To make sure, Please check the information before click ‘Create New Brand’ "
+      leftButtonTitle="Cancel"
+      rightButtonTitle="Create New Brand "
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="dialogAction"
+      leftStyle="width: 120px;"
+      rightStyle="width: 210px;"
+    />
   </div>
 </template>
 
@@ -208,6 +222,7 @@ import UploadFile from '@/components/molecules/UploadFile.vue'
 import TableComponent from '~/components/molecules/table-component/TableComponent.vue'
 import BrandFeatureHeader from '~/components/molecules/brand-feature/BrandFeatureHeader.vue'
 import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody/BrandFeatureBody.vue'
+import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import { getImagePath } from '~/helper/images'
 
 const validations = {
@@ -300,7 +315,8 @@ const validations = {
     TableComponent,
     Modal,
     BrandFeatureHeader,
-    BrandFeatureBody
+    BrandFeatureBody,
+    DialogPopup
   }
 })
 export default class CreateBrand extends Vue {
@@ -325,6 +341,8 @@ export default class CreateBrand extends Vue {
     th: '',
     en: ''
   }
+
+  private dialogDisplay = false
 
   private statusOption = [
     {
@@ -752,6 +770,7 @@ export default class CreateBrand extends Vue {
       this.onChangedEmail()
       this.onChangedPhoneNo()
       this.onChangedLogo(this.$v.logo.$model)
+      this.dialogCancelAction()
     } else {
       validationGroup = true
       if (!brandFeatureValidate) {
@@ -821,6 +840,7 @@ export default class CreateBrand extends Vue {
             const companyId = this.companyId
               ? parseInt(this.companyId)
               : window.sessionStorage.getItem('createCompanyId')
+            this.dialogCancelAction()
             this.$router.push(`/organizationManagement/${companyId}`)
             this.$toast.global.success(
               this.$t('createBrand.createNewBrandSuccess').toString()
@@ -1169,6 +1189,22 @@ export default class CreateBrand extends Vue {
       }
     }
     return brandFeatureFormatedList
+  }
+
+  createNewBrand() {
+    if (this.mode === 'create') {
+      this.dialogDisplay = true
+    } else {
+      this.save()
+    }
+  }
+
+  dialogCancelAction() {
+    this.dialogDisplay = false
+  }
+
+  dialogAction() {
+    this.save()
   }
 }
 </script>

@@ -1,9 +1,15 @@
 <template>
   <div class="company-tab-container">
     <div class="tab-header">
-      <div class="tab" :class="tab === 'brand' && 'select'" @click="tab = 'brand'">{{$t('common.brandTitle')}}</div>
-      <div class="tab" :class="tab === 'branch' && 'select'" @click="tab = 'branch'">{{$t('common.branchTitle')}}</div>
-      <div class="tab" :class="tab === 'partnerCode' && 'select'" @click="tab = 'partnerCode'">{{$t('common.partnerCodeTitle')}}</div>
+      <div class="tab" @click="tabChange('brand')">
+        {{ $t('common.brandTitle') }}
+      </div>
+      <div class="tab" @click="tabChange('branch')">
+        {{ $t('common.branchTitle') }}
+      </div>
+      <div class="tab" @click="tabChange('partnerCode')">
+        {{ $t('common.partnerCodeTitle') }}
+      </div>
     </div>
     <div class="tab-line">
       <div class="line" :class="tab === 'brand' && 'select'"></div>
@@ -63,6 +69,11 @@ export default class TabDetail extends Vue {
     this.brandIdSearch = data
   }
 
+  tabChange(tab: string) {
+    this.tab = tab
+    window.sessionStorage.setItem('currentTab', this.tab)
+  }
+
   async getService(): Promise<void> {
     try {
       let res = await this.$axios.$get(
@@ -79,6 +90,7 @@ export default class TabDetail extends Vue {
 
   mounted() {
     this.getService()
+    this.tab = window.sessionStorage.getItem('currentTab') || 'brand'
   }
 }
 </script>
