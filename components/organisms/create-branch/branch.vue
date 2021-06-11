@@ -2509,8 +2509,8 @@ export default class CreateBranch extends Vue {
   createNewBranch() {
     if (this.componetMode === 'onboard') {
       if (
-        window.sessionStorage.getItem('createBrandFirstTime') &&
-        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+        window.sessionStorage.getItem('createBranchFirstTime') &&
+        window.sessionStorage.getItem('createBranchFirstTime') === 'no'
         ) {
           this.update()
       } else {
