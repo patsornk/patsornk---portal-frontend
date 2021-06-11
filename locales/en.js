@@ -9,6 +9,7 @@ import table from './en/table'
 import error from './en/error'
 import userManagement from './en/userManagement'
 import login from './en/login'
+import profile from './en/profile'
 
 module.exports = {
   home,
@@ -21,5 +22,6 @@ module.exports = {
   table,
   error,
   login,
-  userManagement
+  userManagement,
+  profile
 }
