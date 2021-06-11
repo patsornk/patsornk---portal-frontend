@@ -11,6 +11,7 @@
         :placeholder="$t('login.passwordNewPlaceHolder')"
         :minlength="8"
         :maxlength="12"
+        :errorMessageHeight="32"
         required
       >
         <img
@@ -30,6 +31,7 @@
         :placeholder="$t('login.passwordConfirmPlaceHolder')"
         :minlength="8"
         :maxlength="12"
+        :errorMessageHeight="32"
         required
       >
         <img
@@ -180,6 +182,9 @@ export default class ResetPassword extends Vue {
       : !this.$v.newPassword.maxLength
       ? this.$t('login.lengthPassword').toString()
       : ''
+    if(this.error.confirmPassword === this.$t('login.passwordNotMatch').toString()){
+      this.onChangedConfirmPassword()
+    }
   }
 
   @Watch('confirmPassword')
@@ -211,7 +216,7 @@ export default class ResetPassword extends Vue {
   private submit() {
     this.onChangedNewPassword()
     this.onChangedConfirmPassword()
-    if((this.error.confirmPassword === '') && (this.formData.confirmPassword !== this.formData.newPassword)){
+    if(this.formData.confirmPassword !== this.formData.newPassword){
       this.error.confirmPassword = this.$t('login.passwordNotMatch').toString()
     }
     if (validateError(this.error)) {

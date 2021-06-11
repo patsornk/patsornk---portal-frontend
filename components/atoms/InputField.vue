@@ -90,7 +90,7 @@
         />
         <slot />
       </div>
-      <div class="validation-error-text" v-if="shouldBeError">
+      <div class="validation-error-text" :style="errorHeight" v-if="shouldBeError">
         <span
           v-if="errorMessage"
           class="text-danger error-msg"
@@ -201,12 +201,22 @@ export default class InputField extends Vue {
   })
   private shouldBeError?: Boolean
 
+  @Prop({
+    type: Number,
+    default: 24
+  })
+  private errorMessageHeight?: Number
+
   get dataValue() {
     return this.value
   }
 
   set dataValue(value) {
     this.$emit('input', value)
+  }
+
+  get errorHeight() {
+    return "height: " + this.errorMessageHeight + "px;"
   }
 
   @Watch('dataValue')
@@ -477,7 +487,6 @@ export default class InputField extends Vue {
     color: $primary;
     top: 5px;
     position: relative;
-    height: 24px;
   }
 
   .vs__dropdown-menu {

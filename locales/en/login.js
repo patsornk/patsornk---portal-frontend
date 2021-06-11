@@ -27,7 +27,7 @@ module.exports = {
   newPasswordTitle: "New Password",
   confirmNewPasswordTitle: "Confirm New Password",
   setNewPasswordBtn: "Confirm",
-  lengthPassword: "The password must be 8-12 characters and contains A-Z, a-z and 0-9.",
+  lengthPassword: "The password must be 8-12 characters and contains (A-Z, a-z and 0-9)",
 
   passwordNotMatch: "The New Password and Confirm New Password doesn’t matched.",
   passwordSame: "Your new password can not be same as old password ",
