@@ -58,18 +58,20 @@ export default class ChangeLang extends Vue {
   @Watch('langSelected')
   onChangedLang(value: string): void {
     this.$i18n.setLocale(value)
+    window.location.reload()
   }
 
   private imageIcon(name: string): any {
-    const image = getAssetsPath(`lang/${name}.png`);
+    const image = getAssetsPath(`lang/${name}.png`)
     return image
   }
 
   deleteHandler(map: any, vm: any) {
     return {
-      ...map, 8: (e: any) => {
-        e.preventDefault();
-      },
+      ...map,
+      8: (e: any) => {
+        e.preventDefault()
+      }
     }
   }
 }
