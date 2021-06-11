@@ -6,7 +6,7 @@
       </div>
       <div class="link-box">
         <div class="link">{{ item }}</div>
-        <div class="type">{{ $t('createBranch.mallInfo.addWebsite') }}</div>
+        <div class="type">{{ $t('createBranch.mallInfo.website') }}</div>
       </div>
     </div>
   </div>

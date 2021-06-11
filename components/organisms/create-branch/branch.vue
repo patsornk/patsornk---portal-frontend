@@ -1737,6 +1737,7 @@ export default class CreateBranch extends Vue {
           this.websiteList = data.mall.mallInfo.websiteUrl
             ? data.mall.mallInfo.websiteUrl
             : []
+            this.checkWebsite()
 
           if (data.mall.mallInfo.facebook) {
             data.mall.mallInfo.facebook.forEach((link: string) => {
