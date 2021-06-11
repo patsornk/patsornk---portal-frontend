@@ -18,6 +18,7 @@
     visibility: hidden;
   }
 
+  font-family: "The1Official";
   color: inherit !important;
 
   &.num-0 {
@@ -107,12 +108,14 @@
 
   .ag-icon-checkbox-checked,
   .ag-icon-checkbox-indeterminate {
+    font-family: "The1Official";
     font-size: 22px;
     color: $primary !important;
   }
 
   .ag-icon-checkbox-unchecked {
     color: $gray-disable !important;
+    font-family: "The1Official";
     font-size: 22px;
   }
 
@@ -135,6 +138,7 @@
     border-radius: 16px;
     height: 22px;
     width: 100px;
+    font-family: "The1Official";
     font-size: 12px;
     font-weight: 700;
     text-align: center;
@@ -303,12 +307,14 @@ div[role='row'] {
 }
 
 .ag-header-cell-text{
+  font-family: "The1Official";
   font-size: 14px;
   font-weight: 700;
 }
 
 .table-header {
   color: #37394c;
+  font-family: "The1Official";
   font-size: 24px;
   font-weight: 700;
   line-height: 20px;

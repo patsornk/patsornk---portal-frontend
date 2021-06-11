@@ -1,5 +1,25 @@
 @import './_variables.scss';
 
+@font-face {
+  font-family: 'The1Official';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('~assets/ttf/The1Official_Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'The1Official';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('~assets/ttf/The1Official_Bold.ttf') format('truetype');
+}
+
+html {
+  font-family: "The1Official";
+}
+
 ::-webkit-input-placeholder {
   color: $gray-disable;
 }
