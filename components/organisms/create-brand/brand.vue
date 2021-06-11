@@ -1197,7 +1197,14 @@ export default class CreateBrand extends Vue {
     } else if(this.mode === 'edit') {
       this.update()
     } else {
-      this.save()
+      if (
+        window.sessionStorage.getItem('createBrandFirstTime') &&
+        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
+      ) {
+        this.update()
+      } else {
+        this.save()
+      }
     }
   }
 
