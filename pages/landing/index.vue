@@ -30,7 +30,7 @@ export default class Landing extends Vue {
     // mock data should get by role
     return [
       {
-        title: 'By feature',
+        title: this.$t('home.landing.byFeature'),
         value: Organization.FEATURE
       },
       {
@@ -42,7 +42,7 @@ export default class Landing extends Vue {
         value: Organization.REQUEST
       },
       {
-        title: this.$t('home.landing.organiztionMng').toString(),
+        title: this.$t('home.landing.userManagement'),
         value: Organization.USERMANAGEMENT
       }
     ]
