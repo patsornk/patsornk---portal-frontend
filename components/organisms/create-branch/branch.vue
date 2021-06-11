@@ -1457,7 +1457,7 @@ export default class CreateBranch extends Vue {
 
   checkSocial() {
     this.socialList = this.socialList.filter(
-      (item) => item.type !== 0 && item.link !== ''
+      (item) => item.type !== '' && item.link !== ''
     )
     this.isViewSocial = true
   }
