@@ -34,7 +34,7 @@
         :disable="$v.typeId.$model != 3"
         v-model="$v.categoryId.$model"
         :title="$t('createCompany.partnerCategory')"
-        required
+        :required="this.typeId === 3"
         type="select"
         :options="companyTypeCategory"
         :optionsReduce="(item) => item.companyCategoryId"
@@ -48,7 +48,7 @@
         :disable="$v.typeId.$model != 3"
         v-model="$v.sizeId.$model"
         :title="$t('createCompany.businessSize')"
-        required
+        :required="this.typeId === 3"
         type="select"
         :options="companyTypeSize"
         :optionsReduce="(item) => item.companySizeId"
@@ -61,7 +61,7 @@
         v-model="$v.assignee.$model"
         :title="$t('createCompany.assignee')"
         :placeholder="$t('common.pleaseSelect')"
-        required
+        :required="this.typeId === 3"
         :errorMessage="error.assignee"
       />
       <!-- Keep for restore in future -->
