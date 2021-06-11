@@ -1,5 +1,5 @@
 module.exports = {
-  headingTitleCG: "ผู้ใช้งานเซ็นทรัลกรุ๊ป",
+  headingTitleCG: "ผู้ใช้งานในเซ็นทรัลกรุ๊ป",
   headingTitleNonCG: "ผู้ใช้งานนอกเซ็นทรัลกรุ๊ป",
   usernamePlaceHolder: "Input username",
   passwordPlaceHolder: "Input password",

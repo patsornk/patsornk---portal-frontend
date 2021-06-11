@@ -1,6 +1,6 @@
 module.exports = {
-  headingTitleCG: "Central Group User",
-  headingTitleNonCG: "Non Central Group User",
+  headingTitleCG: "Central Group Users",
+  headingTitleNonCG: "Non Central Group Users",
   usernamePlaceHolder: "Input username",
   passwordPlaceHolder: "Input password",
   passwordNewPlaceHolder: "Input new password",
