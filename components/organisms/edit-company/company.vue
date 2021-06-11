@@ -305,8 +305,6 @@ export default class EditCompany extends Vue {
     }
     this.error = {
       ...this.error,
-      companyNameEn: '',
-      companyNameTh: '',
       categoryId: '',
       sizeId: '',
       assignee: ''

@@ -232,8 +232,6 @@ export default class CreateCompany extends Vue {
     }
     this.error = {
       ...this.error,
-      companyNameEn: '',
-      companyNameTh: '',
       categoryId: '',
       sizeId: '',
       assignee: ''
