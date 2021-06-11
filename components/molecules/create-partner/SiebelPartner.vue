@@ -5,7 +5,7 @@
       :maxlength="9"
       v-model="$v.partnerCode.$model"
       :placeholder="$t('createPartnerCode.sieabelPartner')"
-      :errorMessage="error.partnerCode"
+      :errorMessage="partnerCodeErrorValue"
       required
     />
 
@@ -14,7 +14,7 @@
       v-model="$v.partnerName.$model"
       :maxlength="100"
       :placeholder="$t('createPartnerCode.sieabelPartnerName')"
-      :errorMessage="error.partnerName"
+      :errorMessage="partnerNameError"
       required
     />
     <t1-button
@@ -105,42 +105,47 @@ export default class CreatePartnerCode extends Vue {
   })
   private partnerCodeError: string | undefined
 
+  partnerNameError = ''
   isAddingPartner = false
   partnerCode = this.value.partnerCode
   partnerName = this.value.partnerName
   partnerId = this.value.partnerId
 
-  private error: ErrorSiebelPartner = {
-    partnerCode: '',
-    partnerName: ''
-  }
-
   assets(name: string) {
     return getAssetsPath(name)
   }
 
-  @Watch('partnerCodeError')
-  onChangePartnerCodeError(): void {
-    this.error.partnerCode = this.partnerCodeError
+  get partnerCodeErrorValue() {
+    return this.partnerCodeError
+  }
+
+  set partnerCodeErrorValue(value) {
+    this.$emit('setErrorPartnerCode', value)
   }
 
   @Watch('partnerCode')
   checkPartnerCode(): void {
-    this.error.partnerCode = !this.$v.partnerCode.required
+    this.partnerCodeErrorValue = !this.$v.partnerCode.required
       ? this.$t('createPartnerCode.inputSieabelPartner').toString()
       : !this.$v.partnerCode.mustBe
-      ? this.$t('createPartnerCode.inputSiebelPartnerCodeInEnglishLanguage').toString()
+      ? this.$t(
+          'createPartnerCode.inputSiebelPartnerCodeInEnglishLanguage'
+        ).toString()
       : !this.$v.partnerCode.minLength
-      ? this.$t('createPartnerCode.inputSiebelPartnerCodeAtLeast3Digits').toString()
+      ? this.$t(
+          'createPartnerCode.inputSiebelPartnerCodeAtLeast3Digits'
+        ).toString()
       : ''
   }
 
   @Watch('partnerName')
   checkPartnerName(): void {
-    this.error.partnerName = !this.$v.partnerName.required
+    this.partnerNameError = !this.$v.partnerName.required
       ? this.$t('createPartnerCode.inputSieabelPartnerName').toString()
       : !this.$v.partnerName.mustBe
-      ? this.$t('createPartnerCode.inputSiebelPartnerNameInEnglishLanguage').toString()
+      ? this.$t(
+          'createPartnerCode.inputSiebelPartnerNameInEnglishLanguage'
+        ).toString()
       : ''
   }
 
@@ -156,7 +161,10 @@ export default class CreatePartnerCode extends Vue {
     if (!this.isAddingPartner && validate) {
       this.isAddingPartner = true
 
-      if (validateError(this.error)) {
+      if (
+        validateError(this.partnerCodeErrorValue) &&
+        validateError(this.partnerNameError)
+      ) {
         this.$emit('clickAdd', {
           value: {
             partnerCode: this.$v.partnerCode.$model,

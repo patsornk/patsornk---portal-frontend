@@ -22,6 +22,7 @@
       :partner-code-error="partnerCodeError"
       @clickAdd="clickEditNewSiebelPartner"
       @clickDelete="clickCancelSiebelPartner"
+      @setErrorPartnerCode="setErrorPartnerCode"
     />
     <siebel-partner
       v-if="isShowNewForm"
@@ -31,7 +32,7 @@
       :partner-code-error="partnerCodeError"
       @clickAdd="clickAddNewSiebelPartner"
       @clickDelete="clearData"
-      @changePartnerCode="changePartnerCode"
+      @setErrorPartnerCode="setErrorPartnerCode"
     />
 
     <div class="add-container" @click="clickAdd" v-if="dataList.length < 100">
@@ -226,47 +227,41 @@ export default class CreatePartnerCode extends Vue {
 
   async clickEditNewSiebelPartner(event: any): Promise<void> {
     const data = event.value
-    if (this.checkDuplicate(data)) {
-      this.partnerCodeError = this.$t(
-        'createPartnerCode.duplicatePartnerCode'
-      ).toString()
-    } else {
-      try {
-        const payload = {
-          partnerId: data.partnerId,
-          partnerCode: data.partnerCode,
-          partnerName: data.partnerName,
-          companyId: this.companyId
-        }
+    try {
+      const payload = {
+        partnerId: data.partnerId,
+        partnerCode: data.partnerCode,
+        partnerName: data.partnerName,
+        companyId: this.companyId
+      }
 
-        this.$nuxt.$loading.start()
-        const res = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
-          payload
-        )
+      this.$nuxt.$loading.start()
+      const res = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/edit_partner_code`,
+        payload
+      )
 
-        if (res.successful) {
-          this.partnerCodeError = ''
-          this.dataList.push({
-            id: res.data.partnerId,
-            partnerId: res.data.partnerId,
-            partnerCode: res.data.partnerCode,
-            partnerName: res.data.partnerName
-          })
-          this.dataList.sort((a, b) => {
-            return a.partnerId - b.partnerId
-          })
-          this.clearData()
-        }
-        this.$nuxt.$loading.finish()
-      } catch (error) {
-        this.$nuxt.$loading.finish()
-        this.$toast.global.error(error.response.data.message)
-        if (error.response.data.code === '07') {
-          this.partnerCodeError = this.$t(
-            'createPartnerCode.duplicatePartnerCode'
-          ).toString()
-        }
+      if (res.successful) {
+        this.partnerCodeError = ''
+        this.dataList.push({
+          id: res.data.partnerId,
+          partnerId: res.data.partnerId,
+          partnerCode: res.data.partnerCode,
+          partnerName: res.data.partnerName
+        })
+        this.dataList.sort((a, b) => {
+          return a.partnerId - b.partnerId
+        })
+        this.clearData()
+      }
+      this.$nuxt.$loading.finish()
+    } catch (error) {
+      this.$nuxt.$loading.finish()
+      this.$toast.global.error(error.response.data.message)
+      if (error.response.data.code === '07') {
+        this.partnerCodeError = this.$t(
+          'createPartnerCode.duplicatePartnerCode'
+        ).toString()
       }
     }
     event?.callback()
@@ -274,68 +269,48 @@ export default class CreatePartnerCode extends Vue {
 
   async clickAddNewSiebelPartner(event: any): Promise<void> {
     const data = event.value
-    if (this.checkDuplicate(data)) {
-      this.partnerCodeError = this.$t(
-        'createPartnerCode.duplicatePartnerCode'
-      ).toString()
-    } else {
-      try {
-        const payload = {
-          partnerCode: data.partnerCode,
-          partnerName: data.partnerName,
-          companyId: this.companyId
-        }
+    try {
+      const payload = {
+        partnerCode: data.partnerCode,
+        partnerName: data.partnerName,
+        companyId: this.companyId
+      }
 
-        const res = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/create_partner_code`,
-          payload
-        )
+      const res = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/create_partner_code`,
+        payload
+      )
 
-        this.$nuxt.$loading.start()
-        if (res.successful) {
-          this.partnerCodeError = ''
-          this.dataList.push({
-            id: res.data.partnerId,
-            partnerId: res.data.partnerId,
-            partnerCode: res.data.partnerCode,
-            partnerName: res.data.partnerName
-          })
-          this.dataList.sort((a, b) => {
-            return a.partnerId - b.partnerId
-          })
-          this.refList = [...this.dataList]
-          this.clearData()
-        }
-        this.$nuxt.$loading.finish()
-      } catch (error) {
-        this.$nuxt.$loading.finish()
-        this.$toast.global.error(error.response.data.message)
-        if (error.response.data.code === '07') {
-          this.partnerCodeError = this.$t(
-            'createPartnerCode.duplicatePartnerCode'
-          ).toString()
-        }
+      this.$nuxt.$loading.start()
+      if (res.successful) {
+        this.partnerCodeError = ''
+        this.dataList.push({
+          id: res.data.partnerId,
+          partnerId: res.data.partnerId,
+          partnerCode: res.data.partnerCode,
+          partnerName: res.data.partnerName
+        })
+        this.dataList.sort((a, b) => {
+          return a.partnerId - b.partnerId
+        })
+        this.refList = [...this.dataList]
+        this.clearData()
+      }
+      this.$nuxt.$loading.finish()
+    } catch (error) {
+      this.$nuxt.$loading.finish()
+      this.$toast.global.error(error.response.data.message)
+      if (error.response.data.code === '07') {
+        this.partnerCodeError = this.$t(
+          'createPartnerCode.duplicatePartnerCode'
+        ).toString()
       }
     }
     event?.callback()
   }
 
-  checkDuplicate(event: SiebelPartnerType): boolean {
-    return (
-      this.dataList.filter(
-        (item: SiebelPartnerType) => item.partnerCode === event.partnerCode
-      ).length > 0
-    )
-  }
-
-  changePartnerCode(event: SiebelPartnerType): void {
-    if (this.checkDuplicate(event)) {
-      this.partnerCodeError = this.$t(
-        'createPartnerCode.duplicatePartnerCode'
-      ).toString()
-    } else {
-      this.partnerCodeError = ''
-    }
+  setErrorPartnerCode(event: any) {
+    this.partnerCodeError = event
   }
 
   clickCancelSiebelPartner(): void {
