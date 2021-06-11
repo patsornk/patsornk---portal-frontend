@@ -1858,6 +1858,12 @@ export default class CreateBranch extends Vue {
     this.checkPostalCode()
     this.checkLatitude()
     this.checkLongitude()
+    if(!this.logoUrl){
+      this.checkLogo('')
+    }
+    if(!this.coverUrl){
+      this.checkCover('')
+    }
   }
 
   validateMall(): void {
