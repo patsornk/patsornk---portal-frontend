@@ -1108,7 +1108,7 @@ export default class CreateBranch extends Vue {
   checkSiebelBranchCode(): void {
     this.error.siebelBranchCode = !this.$v.siebelBranchCode.required
       ? this.$t('createBranch.error.inputSiebelBranchCode').toString()
-      : !this.$v.branchNameEn.mustBe
+      : !this.$v.siebelBranchCode.mustBe
       ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
@@ -1117,7 +1117,7 @@ export default class CreateBranch extends Vue {
   checkSiebelBranchName(): void {
     this.error.siebelBranchName = !this.$v.siebelBranchName.required
       ? this.$t('createBranch.error.inputSiebelBranchName').toString()
-      : !this.$v.branchNameEn.mustBe
+      : !this.$v.siebelBranchName.mustBe
       ? this.$t('common.invalidInputInformation').toString()
       : ''
   }
