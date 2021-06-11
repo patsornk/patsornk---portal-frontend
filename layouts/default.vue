@@ -85,7 +85,7 @@ export default class Default extends Vue {
       case 'การจัดการองค์กร':
         return 'สร้างองค์กรใหม่'
       case 'Organization Management':
-        return 'Create New Organiztion'
+        return 'Create New Organization'
       default:
         return ''
     }
@@ -174,6 +174,7 @@ html {
       border-radius: 6px; 
       align-content: center;
       align-items: center;
+      cursor: pointer;
       .add-icon {
         width: 12px;
         height: 12px;
