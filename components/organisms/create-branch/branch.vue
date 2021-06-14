@@ -2562,6 +2562,8 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
+        const statusStr = this.statusOption.filter(e => e.id === this.$v.status.$model)[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
       }

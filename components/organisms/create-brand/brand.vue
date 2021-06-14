@@ -1016,6 +1016,8 @@ export default class CreateBrand extends Vue {
           payload
         )
         if (response.successful) {
+          const statusStr = this.statusOption.filter(e => e.id === this.$v.status.$model)[0].status
+          this.$store.dispatch('company/setStatus', statusStr)
           if (window.sessionStorage.getItem('createBranchId')) {
             const res = await this.$axios.$get(
               `${
