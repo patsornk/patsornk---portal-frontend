@@ -119,7 +119,8 @@ export default class Stepbar extends Vue {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-right: 60px;
+      width: 150px;
+      margin-right: 30px;
       position: relative;
       z-index: 1;
 
