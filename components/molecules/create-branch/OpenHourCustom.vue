@@ -100,76 +100,76 @@ export default class AddSocial extends Vue {
 
   timeList = [
     {
-      label: '12 : 00'
+      label: '12:00'
     },
     {
-      label: '12 : 30'
+      label: '12:30'
     },
     {
-      label: '01 : 00'
+      label: '01:00'
     },
     {
-      label: '01 : 30'
+      label: '01:30'
     },
     {
-      label: '02 : 00'
+      label: '02:00'
     },
     {
-      label: '02 : 30'
+      label: '02:30'
     },
     {
-      label: '03 : 00'
+      label: '03:00'
     },
     {
-      label: '03 : 30'
+      label: '03:30'
     },
     {
-      label: '04 : 00'
+      label: '04:00'
     },
     {
-      label: '04 : 30'
+      label: '04:30'
     },
     {
-      label: '05 : 00'
+      label: '05:00'
     },
     {
-      label: '05 : 30'
+      label: '05:30'
     },
     {
-      label: '06 : 00'
+      label: '06:00'
     },
     {
-      label: '06 : 30'
+      label: '06:30'
     },
     {
-      label: '07 : 00'
+      label: '07:00'
     },
     {
-      label: '07 : 30'
+      label: '07:30'
     },
     {
-      label: '08 : 00'
+      label: '08:00'
     },
     {
-      label: '08 : 30'
+      label: '08:30'
     },
     {
-      label: '09 : 00'
+      label: '09:00'
     },
     {
-      label: '09 : 30'
+      label: '09:30'
     },
     {
-      label: '10 : 00'
+      label: '10:00'
     },
     {
-      label: '10 : 30'
+      label: '10:30'
     },
     {
-      label: '11 : 00'
+      label: '11:00'
     },
     {
-      label: '11 : 30'
+      label: '11:30'
     }
   ]
 
