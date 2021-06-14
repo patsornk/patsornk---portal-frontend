@@ -6,7 +6,7 @@
         v-model="dataList[index]"
         placeholder="Website Link"
         :maxlength="255"
-        :shouldBeError=false 
+        :shouldBeError="false"
       />
       <img
         class="icon-close"

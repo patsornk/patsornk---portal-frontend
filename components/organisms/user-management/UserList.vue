@@ -5,7 +5,7 @@
         <input-field
           v-model="filterData.keyword"
           :placeholder="$t('userManagement.placeholder.searchBy').toString()"
-          :shouldBeError=false 
+          :shouldBeError="false"
         />
         <input-field
           v-model="filterData.userType"
@@ -13,7 +13,7 @@
           :placeholder="$t('userManagement.placeholder.userType').toString()"
           :options="userTypeList"
           :options-reduce="(item) => item.id"
-          :shouldBeError=false 
+          :shouldBeError="false"
           options-label="id"
           class="search"
         />
@@ -23,7 +23,7 @@
           :placeholder="$t('userManagement.placeholder.userRole').toString()"
           :options="roleList"
           :options-reduce="(item) => item.id"
-          :shouldBeError=false 
+          :shouldBeError="false"
           options-label="id"
           class="search"
         />
@@ -33,7 +33,7 @@
         <input-field
           v-model="filterData.keyword"
           :placeholder="$t('userManagement.placeholder.searchBy').toString()"
-          :shouldBeError=false 
+          :shouldBeError="false"
         />
         <input-field
           v-model="filterData.roleId"
@@ -41,7 +41,7 @@
           :placeholder="$t('userManagement.placeholder.userRole').toString()"
           :options="roleList"
           :options-reduce="(item) => item.id"
-          :shouldBeError=false 
+          :shouldBeError="false"
           options-label="id"
           class="search"
         />
@@ -59,7 +59,7 @@
             "
             :options-reduce="(item) => item.companyId"
             :placeholder="$t('userManagement.placeholder.company').toString()"
-            :shouldBeError=false 
+            :shouldBeError="false"
           />
           <input-field
             v-model="filterData.brandId"
@@ -70,7 +70,7 @@
             :options-label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
             :options-reduce="(item) => item.brandId"
             :placeholder="$t('userManagement.placeholder.brand').toString()"
-            :shouldBeError=false 
+            :shouldBeError="false"
           />
           <input-field
             v-model="filterData.branchId"
@@ -81,7 +81,7 @@
             :options-label="language === 'th' ? 'branchNameTh' : 'branchNameEn'"
             :options-reduce="(item) => item.branchId"
             :placeholder="$t('userManagement.placeholder.branch').toString()"
-            :shouldBeError=false 
+            :shouldBeError="false"
           />
           <input-field
             v-model="filterData.status"
@@ -91,7 +91,7 @@
             :options-label="'status'"
             :options-reduce="(item) => item.id"
             :placeholder="$t('userManagement.placeholder.status').toString()"
-            :shouldBeError=false 
+            :shouldBeError="false"
           />
         </div>
         <div class="search">

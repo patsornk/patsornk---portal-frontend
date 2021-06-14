@@ -13,7 +13,7 @@
           :options="countryCodes"
           :optionsReduce="(item) => item.label"
           optionsLabel="label"
-          :shouldBeError=false 
+          :shouldBeError="false"
         />
       </div>
       <div class="flex flex-col phone">
@@ -21,15 +21,17 @@
           v-model="dataValue"
           class="input-number"
           :class="errorMessage !== '' ? 'input-error' : ''"
-        :placeholder="$t('createCompany.phoneNoInput')"
+          :placeholder="$t('createCompany.phoneNoInput')"
           type="text"
           inputmode="tel"
           maxlength="13"
           minlength="9"
         />
-        <span v-if="errorMessage" class="error-message">{{
-          errorMessage
-        }}</span>
+        <div class="error-message-box">
+          <span v-if="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -147,10 +149,14 @@ export default class PhoneNumInput extends Vue {
     }
   }
 
-  .error-message {
-    color: $primary;
-    font-size: 14px;
-    margin-top: 0.4rem;
+  .error-message-box {
+    height: 24px;
+
+    .error-message {
+      color: $primary;
+      font-size: 14px;
+      margin-top: 0.4rem;
+    }
   }
 }
 </style>

@@ -13,7 +13,7 @@
             :title="$t('Mark as day off')"
             v-model="item.isDayOff"
             @onChange="$emit('changeCusTomList', { index, time: '' })"
-            :shouldBeError=false 
+            :shouldBeError="false"
           />
         </div>
       </div>

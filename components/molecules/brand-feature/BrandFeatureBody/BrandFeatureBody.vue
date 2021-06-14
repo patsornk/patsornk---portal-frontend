@@ -40,7 +40,7 @@
           v-model="showDisplay"
           type="switch"
           :title="$t('createBrand.display')"
-          :shouldBeError=false 
+          :shouldBeError="false"
         />
       </div>
       <div class="text-danger error-msg validation-error-text">

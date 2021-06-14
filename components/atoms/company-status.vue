@@ -58,6 +58,7 @@ export default class CompanyStatus extends Vue {
 }
 .status-text {
   font-size: 18px;
+  font-weight: 700;
   &.active {
     color: $success;
   }

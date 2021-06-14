@@ -1782,14 +1782,18 @@ export default class CreateBranch extends Vue {
             )
           } else if (data.mall.mallInfo.openingHour.length === 1) {
             this.openingHourId = '1'
-            this.openTime =
-              data.mall.mallInfo.openingHour[0].openingTime.split('|')[0]
-            this.openMeridiem =
-              data.mall.mallInfo.openingHour[0].openingTime.split('|')[1]
-            this.closeTime =
-              data.mall.mallInfo.openingHour[0].closingTime.split('|')[0]
-            this.closeMeridiem =
-              data.mall.mallInfo.openingHour[0].closingTime.split('|')[1]
+            this.openTime = data.mall.mallInfo.openingHour[0].openingTime.split(
+              '|'
+            )[0]
+            this.openMeridiem = data.mall.mallInfo.openingHour[0].openingTime.split(
+              '|'
+            )[1]
+            this.closeTime = data.mall.mallInfo.openingHour[0].closingTime.split(
+              '|'
+            )[0]
+            this.closeMeridiem = data.mall.mallInfo.openingHour[0].closingTime.split(
+              '|'
+            )[1]
           }
           this.mapPosition.lat = this.latitude
             ? Number(this.latitude)

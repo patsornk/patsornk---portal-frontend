@@ -1,10 +1,13 @@
 <template>
   <div class="input-tag-container">
+    <div class="title-box w-full" v-if="title">
+      <span class="input-title">{{ title }}</span>
+      <span v-show="required" class="input-field-required"> *</span>
+    </div>
     <div class="tag-inline">
       <div class="tag-container" v-for="item in dataValue" :key="item.id">
         <div class="tag">
           {{ item.role }}
-
           <img
             class="icon"
             :src="assets('icon/close.png')"
@@ -13,11 +16,10 @@
         </div>
       </div>
     </div>
-
     <div class="multiselect" v-click-outside="closeDropdown">
       <div @click="showCheckboxes">
-        <div class="select-role">
-          {{$t('userManagement.userProfile.selectUserRole')}}
+        <div class="select-role" :class="errorMessage ? 'error' : ''">
+          {{ $t('userManagement.userProfile.selectUserRole') }}
           <img
             class="icon"
             :src="assets('icon/arrow-down.png')"
@@ -26,7 +28,9 @@
         </div>
       </div>
       <div v-if="expanded" class="checkboxes">
-        <label class="item-please-select"> {{$t('common.pleaseSelect')}} </label>
+        <label class="item-please-select">
+          {{ $t('common.pleaseSelect') }}
+        </label>
         <label class="item-checkbox" v-for="item in option" :key="item.id">
           <input
             type="checkbox"
@@ -37,6 +41,11 @@
           <span class="checkmark"></span>
         </label>
       </div>
+    </div>
+    <div class="error-message-box">
+      <span v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </span>
     </div>
   </div>
 </template>
@@ -59,6 +68,24 @@ export default class InputTag extends Vue {
   })
   private option!: Array<object>
 
+  @Prop({
+    default: '',
+    type: String
+  })
+  private title?: string
+
+  @Prop({
+    default: '',
+    type: String
+  })
+  private errorMessage?: string
+
+  @Prop({
+    default: false,
+    type: Boolean
+  })
+  private required?: boolean
+
   get dataValue() {
     return this.value
   }
@@ -69,10 +96,7 @@ export default class InputTag extends Vue {
 
   expanded = false
 
-  mounted() {
-    console.log('value', this.dataValue)
-    console.log('option', this.option)
-  }
+  mounted() {}
 
   showCheckboxes() {
     this.expanded = !this.expanded
@@ -84,8 +108,11 @@ export default class InputTag extends Vue {
 
   selectValue(itemCheck: any) {
     const isHave = this.isCheckItemInSelectValue(itemCheck)
-    if (isHave) this.removeItem(itemCheck)
-    else this.dataValue.push(itemCheck)
+    if (isHave) {
+      this.removeItem(itemCheck)
+    } else {
+      this.dataValue.push(itemCheck)
+    }
   }
 
   isCheckItemInSelectValue(item: any) {
@@ -108,6 +135,21 @@ export default class InputTag extends Vue {
 .input-tag-container {
   font-size: 16px;
   line-height: 20px;
+
+  .title-box {
+    margin-bottom: 8px;
+
+    .input-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .input-field-required {
+      margin-left: 0.25rem;
+      color: $primary;
+      font-weight: 700;
+    }
+  }
 
   .tag-inline {
     display: flex;
@@ -151,10 +193,14 @@ export default class InputTag extends Vue {
       padding-left: 15px;
       padding: 9px 16px;
 
-      .icon{
+      .icon {
         height: 5.24px;
         width: 10.2px;
         margin-top: 9px;
+      }
+
+      &.error{
+      border: 1px solid $primary;
       }
     }
 
@@ -162,7 +208,7 @@ export default class InputTag extends Vue {
       height: 300px;
       overflow: auto;
       border: 1px #dadada solid;
-      box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.1);      
+      box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.1);
       border-bottom-left-radius: 4px;
       border-bottom-right-radius: 4px;
 
@@ -247,6 +293,16 @@ export default class InputTag extends Vue {
 
     .checkboxes label:hover {
       background-color: $grey-hover-dropdown;
+    }
+  }
+
+  .error-message-box {
+    height: 24px;
+
+    .error-message {
+      color: $primary;
+      font-size: 14px;
+      margin-top: 0.4rem;
     }
   }
 

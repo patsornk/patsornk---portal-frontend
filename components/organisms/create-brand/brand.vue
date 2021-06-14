@@ -111,7 +111,7 @@
           :placeholder="$t('createBrand.inputBrandInfo')"
           :required="false"
           :maxlength="255"
-          :shouldBeError=false 
+          :shouldBeError="false"
           style="width: 100%"
           v-model="$v.brandInfo.$model"
         />
@@ -1196,7 +1196,7 @@ export default class CreateBrand extends Vue {
   createNewBrand() {
     if (this.mode === 'create') {
       this.dialogDisplay = true
-    } else if(this.mode === 'edit') {
+    } else if (this.mode === 'edit') {
       this.update()
     } else {
       if (

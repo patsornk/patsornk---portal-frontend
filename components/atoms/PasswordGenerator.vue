@@ -1,30 +1,19 @@
 <template>
-  <div class="input-field">
-    <div class="w-full" style="display: flex; align-items: center;" v-if="title">
-      <span class="input-title">
-        {{ title }}
-      </span>
+  <div class="input-field relative">
+    <div class="w-full" style="display: flex; align-items: center" v-if="title">
+      <span class="input-title">{{ title }}</span>
       <span v-show="required" class="input-field-required"> *</span>
-      <tooltip
-        :numberOfLine="numberOfLine"
-        :tooltipMessage="tooltipMessage"
-      >
+      <tooltip :numberOfLine="numberOfLine" :tooltipMessage="tooltipMessage">
       </tooltip>
     </div>
     <div class="input-field-input-group w-full">
-      <div
-        :class="
-          errorMessage ? 'input-field-input-error' : ''
-        "
-      >
+      <div :class="errorMessage ? 'input-field-input-error' : ''">
         <input
           v-model="dataValue"
-          :type="type"
           class="input-field-input"
           :class="disable ? 'disable' : errorMessage ? 'no-border' : ''"
-          :inputmode="inputmode"
           :placeholder="placeholder"
-          :maxlength="maxlength"
+          maxlength="12"
           :disabled="disable"
           @blur="$emit('onBlur', dataValue)"
           @change="$emit('onChange', dataValue)"
@@ -33,13 +22,10 @@
           {{ $t('profile.textGenerateBtn') }}
         </button>
       </div>
-      <div class="validation-error-text" v-if="shouldBeError">
-        <span
-          v-if="errorMessage"
-          class="text-danger error-msg"
-        >
+      <div class="validation-error-text">
+        <span v-if="errorMessage" class="text-danger error-msg">
           {{ errorMessage }}
-      </span>
+        </span>
       </div>
     </div>
   </div>
@@ -55,7 +41,6 @@ import Tooltip from '~/components/atoms/Tooltip.vue'
   }
 })
 export default class PasswordGenerator extends Vue {
-  
   @Prop({
     required: false,
     type: String
@@ -72,7 +57,7 @@ export default class PasswordGenerator extends Vue {
     default: false,
     type: Boolean
   })
-  private required!: boolean
+  private required?: boolean
 
   @Prop({
     default: false,
@@ -81,74 +66,15 @@ export default class PasswordGenerator extends Vue {
   private disable!: boolean
 
   @Prop({
-    default: false,
-    type: Boolean
-  })
-  private searchable!: boolean
-
-  @Prop({
     type: String,
     default: ''
   })
   private errorMessage?: string
 
   @Prop({
-    type: String,
-    default: 'text',
-    validator(value) {
-      return [
-        'text',
-        'number',
-        'select',
-        'password',
-        'textarea',
-        'switch',
-        'checkbox'
-      ].includes(value)
-    }
-  })
-  private type?: string
-
-  @Prop({
-    type: Array,
-    default() {
-      return []
-    }
-  })
-  private options?: []
-
-  @Prop({
-    type: String,
-    default: 'id'
-  })
-  private optionsLabel?: string
-
-  @Prop({
-    type: Function,
-    default: () => {}
-  })
-  private optionsReduce?: () => {}
-
-  @Prop({
     type: String
   })
   private placeholder?: string
-
-  @Prop({
-    type: String
-  })
-  private inputmode?: string
-
-  @Prop({
-    type: Number
-  })
-  private maxlength?: number | undefined
-
-  @Prop({
-    type: Boolean,
-    default: true
-  })
-  private shouldBeError?: Boolean
 
   @Prop({
     type: Number,
@@ -158,7 +84,8 @@ export default class PasswordGenerator extends Vue {
 
   @Prop({
     type: String,
-    default: 'The password must be 8-12 characters and contains (A-Z, a-z and 0-9)'
+    default:
+      'The password must be 8-12 characters and contains (A-Z, a-z and 0-9)'
   })
   private tooltipMessage?: String
 
@@ -183,20 +110,10 @@ export default class PasswordGenerator extends Vue {
     this.$emit('onChange')
   }
 
-  deleteHandler(map: any, vm: any) {
-    return {
-      ...map,
-      8: (e: any) => {
-        if (!this.searchable) {
-          e.preventDefault()
-        }
-      }
-    }
-  }
-
-
   private generatePassword() {
-    this.dataValue = this.password(Math.floor((8 + ((Math.random() * ((12 - 8) + 1))%10))));
+    this.dataValue = this.password(
+      Math.floor(8 + ((Math.random() * (12 - 8 + 1)) % 10))
+    )
   }
 
   private upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -205,38 +122,41 @@ export default class PasswordGenerator extends Vue {
   private special = '!@#$%.-_'
   private all = this.upper + this.lower + this.digit + this.special
 
-  private password( length:number ) {
-  let result1 = this.generate(1, this.upper)
-  let result2 = this.generate(1, this.lower)
-  let result3 = this.generate(1, this.digit)
-  let result4 = this.generate(1, this.special)
-  let result5 = this.generate(length - 4, this.all)
-  return (this.shuffle(result1.concat(result2,result3,result4,result5))).join('') // shuffle and make a string
-}
-  private generate (length:number, set:string) {
-  let result = []
-  while (length--) result.push(this.random(set))
-  return result
+  private password(length: number) {
+    let result1 = this.generate(1, this.upper)
+    let result2 = this.generate(1, this.lower)
+    let result3 = this.generate(1, this.digit)
+    let result4 = this.generate(1, this.special)
+    let result5 = this.generate(length - 4, this.all)
+    return this.shuffle(
+      result1.concat(result2, result3, result4, result5)
+    ).join('') // shuffle and make a string
   }
-  private random (set:string) {
+  private generate(length: number, set: string) {
+    let result = []
+    while (length--) result.push(this.random(set))
+    return result
+  }
+  private random(set: string) {
     return set[this.rand(set.length - 1)]
   }
-  private rand(max:number) {
-  return Math.floor(Math.random() * max)
+  private rand(max: number) {
+    return Math.floor(Math.random() * max)
   }
 
-  private shuffle(array:string[]) {
-  var currentIndex = array.length,  randomIndex;
+  private shuffle(array: string[]) {
+    var currentIndex = array.length,
+      randomIndex
 
     while (0 !== currentIndex) {
-
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex--
+      ;[array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex]
+      ]
     }
-    return array;
+    return array
   }
 }
 </script>
@@ -275,12 +195,11 @@ export default class PasswordGenerator extends Vue {
     width: 100%;
   }
 
-  .generate-button{
+  .generate-button {
     position: absolute;
     height: 24px;
     width: 71px;
     top: 42px;
-    right: 20;
     color: $primary;
     background-color: $tritery-red;
     right: 11px;
@@ -289,7 +208,8 @@ export default class PasswordGenerator extends Vue {
     text-align: center;
     border-radius: 6px;
   }
-  .generate-button:focus{
+
+  .generate-button:focus {
     outline: none;
   }
 
@@ -338,7 +258,7 @@ export default class PasswordGenerator extends Vue {
     }
   }
 }
-.error-msg{
+.error-msg {
   position: absolute;
   font-size: 0.75rem;
 }

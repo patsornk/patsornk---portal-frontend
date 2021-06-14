@@ -40,11 +40,11 @@ export default class TabDetail extends Vue {
 
   @Watch('tab')
   changeTab() {
-    window.sessionStorage.setItem('useerTab', this.tab)
+    window.sessionStorage.setItem('userTab', this.tab)
   }
 
   mounted() {
-    this.tab = window.sessionStorage.getItem('useerTab') || 'cg'
+    this.tab = window.sessionStorage.getItem('userTab') || 'cg'
   }
 }
 </script>

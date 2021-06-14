@@ -5,12 +5,12 @@
       title="lat"
       v-model="infoData.lat"
       required
-      :shouldBeError=false 
+      :shouldBeError="false"
     /><input-field
       title="lng"
       v-model="infoData.lng"
       required
-      :shouldBeError=false 
+      :shouldBeError="false"
     />
 
     <google-map class="t1-map" :position="mapPosition" />
@@ -48,16 +48,10 @@ export default class Main extends Vue {
         active: true
       }
     ]
-    this.$store.dispatch(
-      'breadcrumb/setBreadcrumb',
-      breadcrumb
-    )
+    this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
 
     //set Page title
-    this.$store.dispatch(
-      'breadcrumb/setPageTitle',
-      'Account Management'
-    )
+    this.$store.dispatch('breadcrumb/setPageTitle', 'Account Management')
   }
 
   mounted(): void {
