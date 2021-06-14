@@ -278,7 +278,7 @@
           type="textarea"
           :title="$t('createBranch.mallPage.mallShortDescription')"
           :maxlength="255"
-          :shouldBeError=false 
+          :shouldBeError="false"
           style="width: 100%"
           v-model="$v.mallDescription.$model"
         />
@@ -1014,6 +1014,7 @@ export default class CreateBranch extends Vue {
   ]
 
   disableBrandId = false
+  inValidOpenCustomize = false
 
   isShowImage = false
   imageUrl = ''
@@ -1294,6 +1295,7 @@ export default class CreateBranch extends Vue {
   }
 
   checkTimeError(openType: string): void {
+    this.inValidOpenCustomize = false
     if (openType === 'daily') {
       if (
         this.openTime === this.closeTime &&
@@ -1327,9 +1329,11 @@ export default class CreateBranch extends Vue {
         } else {
           if (item.openTime === '') {
             item.openError = this.$t('common.pleaseSelect').toString()
+            this.inValidOpenCustomize = true
           }
           if (item.closeTime === '') {
             item.closeError = this.$t('common.pleaseSelect').toString()
+            this.inValidOpenCustomize = true
           }
           if (
             item.openTime === item.closeTime &&
@@ -1737,7 +1741,7 @@ export default class CreateBranch extends Vue {
           this.websiteList = data.mall.mallInfo.websiteUrl
             ? data.mall.mallInfo.websiteUrl
             : []
-            this.checkWebsite()
+          this.checkWebsite()
 
           if (data.mall.mallInfo.facebook) {
             data.mall.mallInfo.facebook.forEach((link: string) => {
@@ -1858,10 +1862,10 @@ export default class CreateBranch extends Vue {
     this.checkPostalCode()
     this.checkLatitude()
     this.checkLongitude()
-    if(!this.logoUrl){
+    if (!this.logoUrl) {
       this.checkLogo('')
     }
-    if(!this.coverUrl){
+    if (!this.coverUrl) {
       this.checkCover('')
     }
   }
@@ -1965,7 +1969,8 @@ export default class CreateBranch extends Vue {
               this.$v.validationEditBranchInfoGroup.$invalid ||
               this.$v.validationMallOpenDailyGroup.$invalid ||
               this.inValidateLogo ||
-              this.inValidateCover
+              this.inValidateCover ||
+              this.inValidOpenCustomize
             ) {
               this.$store.dispatch('stepbar/setEnableSubmit', 0)
               this.$toast.global.error(this.$t('createBranch.fieldError'))
@@ -2049,16 +2054,17 @@ export default class CreateBranch extends Vue {
               }
             }
           } else if (this.openingHourId === '2') {
+            this.validateOpenCustomize()
             if (
               this.$v.validationEditBranchInfoGroup.$invalid ||
               this.$v.validationMallOpenCustomizeGroup.$invalid ||
               this.inValidateLogo ||
-              this.inValidateCover
+              this.inValidateCover ||
+              this.inValidOpenCustomize
             ) {
               this.$toast.global.error(this.$t('createBranch.fieldError'))
               this.validateInfoAndLocation()
               this.validateMall()
-              this.validateOpenCustomize()
 
               return
             } else {
@@ -2241,16 +2247,17 @@ export default class CreateBranch extends Vue {
               }
             }
           } else if (this.openingHourId === '2') {
+            this.validateOpenCustomize()
             if (
               this.$v.validationBranchInfoGroup.$invalid ||
               this.$v.validationMallOpenCustomizeGroup.$invalid ||
               this.inValidateLogo ||
-              this.inValidateCover
+              this.inValidateCover ||
+              this.inValidOpenCustomize
             ) {
               this.$toast.global.error(this.$t('createBranch.fieldError'))
               this.validateInfoAndLocation()
               this.validateMall()
-              this.validateOpenCustomize()
 
               return
             } else {
@@ -2517,12 +2524,12 @@ export default class CreateBranch extends Vue {
       if (
         window.sessionStorage.getItem('createBranchFirstTime') &&
         window.sessionStorage.getItem('createBranchFirstTime') === 'no'
-        ) {
-          this.update()
+      ) {
+        this.update()
       } else {
         this.save()
       }
-    } else if(this.componetMode === 'edit') {
+    } else if (this.componetMode === 'edit') {
       this.update()
     } else {
       this.dialogDisplay = true

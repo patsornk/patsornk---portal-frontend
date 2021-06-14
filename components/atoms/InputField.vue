@@ -305,6 +305,7 @@ export default class InputField extends Vue {
       ::v-deep .vs__dropdown-toggle {
         height: 100%;
         border: 1px solid $gray-disable;
+        cursor: pointer;
       }
       &.vs--disabled {
         ::v-deep .vs__search {
