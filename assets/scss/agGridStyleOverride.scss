@@ -352,6 +352,7 @@ div[role='row'] {
 
 .custom-row {
   text-align: left;
+  overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
 }

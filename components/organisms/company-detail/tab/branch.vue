@@ -594,5 +594,7 @@ export default class TabBranch extends Vue {
 
 .custom-row-80 {
   margin-top: 15px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
