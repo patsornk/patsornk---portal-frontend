@@ -78,16 +78,38 @@ export default class OrganizationManagementDetail extends Vue {
         url: '/'
       },
       {
-        title: 'Edit company Information',
+        title: this.$t('home.editCompany').toString(),
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', 'Edit company Information')
+    this.$store.dispatch('breadcrumb/setPageTitle', this.$t('home.editCompany').toString())
+  }
+
+  async getCompany(): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_company?companyId=${this.id}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.company = res.data
+        this.$store.dispatch('company/setStatus', this.company.statusDesc)
+
+        this.setupBreadcrumb(
+          this.language === 'th'
+            ? this.company.companyNameTh
+            : this.company.companyNameEn
+        )
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   mounted() {
+    this.getCompany()
   }
 }
 </script>
