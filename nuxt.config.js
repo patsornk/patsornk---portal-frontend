@@ -75,7 +75,8 @@ export default {
     'nuxt-i18n',
     '@nuxtjs/dotenv',
     '@nuxtjs/toast',
-    'nuxt-material-design-icons'
+    'nuxt-material-design-icons',
+    '@nuxtjs/auth-next'
   ],
 
   toast: {
@@ -119,6 +120,55 @@ export default {
       }
     },
     baseURL: process.env.PORTAL_ENDPOINT
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          maxAge: 1800
+          // type: 'Bearer'
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 1800
+        },
+        endpoints: {
+          login: {
+            url:
+              '/auth/token',
+            method: 'post',
+            headers: {
+              'Content-Type':
+                'application/x-www-form-urlencoded'
+            },
+            propertyName: 'data'
+          },
+          // login: {
+          //   url: 'login',
+          //   method: 'post',
+          //   propertyName: 'data.token'
+          // },
+          // user: {
+          //   url: '',
+          //   method: 'get',
+          //   propertyName: false
+          // },
+          user: false,
+          logout: false
+        }
+      }
+    },
+    redirect: {
+      login: '/login'
+    }
+  },
+
+  router: {
+    middleware: ['auth']
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

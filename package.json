@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.1",
+    "@nuxtjs/auth-next": "5.0.0-1616003482.75c20e6",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/toast": "^3.3.1",
@@ -36,6 +37,7 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/tailwindcss": "^3.4.2",
+    "@types/nuxtjs__auth": "^4.8.7",
     "@types/vue-select": "^3.11.1",
     "@types/vuelidate": "^0.7.14",
     "@typescript-eslint/parser": "^4.6.1",

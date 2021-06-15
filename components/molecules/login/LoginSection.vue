@@ -112,4 +112,5 @@ export default class LoginSection extends Vue {
     border-top-right-radius: 0px;
   }
 }
+
 </style>

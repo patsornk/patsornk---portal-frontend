@@ -13,7 +13,8 @@ import LoginSection from '~/components/molecules/login/LoginSection.vue'
   layout: 'login',
   components: {
     LoginSection
-  }
+  },
+  auth: false
 })
 export default class Example extends Vue {}
 </script>

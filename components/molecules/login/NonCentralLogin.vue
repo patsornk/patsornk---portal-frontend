@@ -38,32 +38,23 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Watch,
-} from 'vue-property-decorator'
-import {
-  ErrorUserFormData,
-  UserFormData
-} from '~/constants'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { ErrorUserFormData, UserFormData } from '~/constants'
 import { validateError } from '~/helper'
 import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '~/components/atoms/button.vue'
 import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
-import {
-  required,
-} from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 
 const validations = {
   username: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9.])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9.])*$/g.test(value)
   },
   password: {
-    required,
-  },
+    required
+  }
 }
 @Component({
   mixins: [validationMixin],
@@ -102,9 +93,7 @@ export default class CentarlLogin extends Vue {
   }
 
   get imageName(): string {
-    return this.stateMagicEyeType === 'password'
-      ? 'eye'
-      : 'close-eye'
+    return this.stateMagicEyeType === 'password' ? 'eye' : 'close-eye'
   }
 
   get language(): any {
@@ -113,9 +102,7 @@ export default class CentarlLogin extends Vue {
 
   private toggleMagicEye(): void {
     this.stateMagicEyeType =
-      this.stateMagicEyeType === 'password'
-        ? 'text'
-        : 'password'
+      this.stateMagicEyeType === 'password' ? 'text' : 'password'
   }
 
   private imageIcon(name: string): any {
@@ -141,19 +128,52 @@ export default class CentarlLogin extends Vue {
 
   @Watch('language')
   changeLanguage(): void {
-    if(this.error.username){
+    if (this.error.username) {
       this.onChangedUsername()
     }
-    if(this.error.password){
+    if (this.error.password) {
       this.onChangedPassword()
     }
   }
 
-  private submit() {
+  private async submit() {
     this.onChangedUsername()
     this.onChangedPassword()
     if (validateError(this.error)) {
-      this.$router.push('/login/resetPassword')
+      const params = new URLSearchParams()
+      params.append('username', this.username)
+      params.append('password', this.password)
+      params.append('type', 'non-cg')
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      try {
+        let response = await this.$axios.$post(
+          `${process.env.PORTAL_ENDPOINT}/auth/token`,
+          params,
+          config
+        )
+        if (response && response.successful) {
+          if (response.data) {
+            // if need to change password
+            this.$router.push('/login/resetPassword')
+            // else don't change password
+            // this.$router.push('/landing')
+          } else {
+          }
+        } else {
+        }
+      } catch (error) {
+        if (error.response.data && error.response.data.code == '45') {
+          this.$toast.global.error(
+            this.$t('login.incorrectPassword').toString()
+          )
+        } else {
+          this.$toast.global.error(error)
+        }
+      }
     }
   }
 }
