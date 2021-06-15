@@ -1,13 +1,25 @@
 <template>
   <div class="company-tab-container">
     <div class="tab-header">
-      <div class="tab" @click="tabChange('brand')">
+      <div
+        class="tab"
+        :class="tab === 'brand' && 'select'"
+        @click="tabChange('brand')"
+      >
         {{ $t('common.brandTitle') }}
       </div>
-      <div class="tab" @click="tabChange('branch')">
+      <div
+        class="tab"
+        :class="tab === 'branch' && 'select'"
+        @click="tabChange('branch')"
+      >
         {{ $t('common.branchTitle') }}
       </div>
-      <div class="tab" @click="tabChange('partnerCode')">
+      <div
+        class="tab"
+        :class="tab === 'partnerCode' && 'select'"
+        @click="tabChange('partnerCode')"
+      >
         {{ $t('common.partnerCodeTitle') }}
       </div>
     </div>
@@ -113,6 +125,7 @@ export default class TabDetail extends Vue {
     }
 
     .select {
+      cursor: pointer;
       color: $mid-black;
       font-weight: 700;
     }
