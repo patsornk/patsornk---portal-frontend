@@ -441,6 +441,7 @@ export default class CreatePartnerCode extends Vue {
     cursor: pointer;
     display: flex;
     margin-top: 32px;
+    width: 170px;
 
     .icon-add {
       width: 20px;
