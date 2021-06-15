@@ -1,5 +1,5 @@
 <template>
-  <div class="create-company-container">
+  <div class="create-brand-container">
     <span class="header">{{ $t('createBrand.brandInformation') }}</span>
     <div>
       <input-field
@@ -1223,7 +1223,7 @@ export default class CreateBrand extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
-.create-company-container {
+.create-brand-container {
   padding-top: 60px;
 
   .show-image {

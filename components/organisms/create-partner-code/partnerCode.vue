@@ -1,5 +1,5 @@
 <template>
-  <div class="create-company-container">
+  <div class="create-partner-code-container">
     <table-component
       v-model="selectData"
       item-key="partnerId"
@@ -252,6 +252,7 @@ export default class CreatePartnerCode extends Vue {
         this.dataList.sort((a, b) => {
           return a.partnerId - b.partnerId
         })
+        this.refList = this.dataList
         this.clearData()
       }
       this.$nuxt.$loading.finish()
@@ -428,7 +429,7 @@ export default class CreatePartnerCode extends Vue {
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.create-company-container {
+.create-partner-code-container {
   padding-top: 60px;
 
   .header {

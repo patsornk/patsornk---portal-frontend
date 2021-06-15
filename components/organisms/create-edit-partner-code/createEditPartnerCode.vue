@@ -1,5 +1,5 @@
 <template>
-  <div class="create-company-container">
+  <div class="edit-partner-code-container">
     <div class="partner-code-container">
       <span class="siebel-title">
         {{ $t('createPartnerCode.partnerInfo') }}
@@ -642,7 +642,7 @@ export default class CreateEditPartnerCode extends Vue {
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.create-company-container {
+.edit-partner-code-container {
   padding: 0px;
   .partner-code-container {
     margin: 42px 55px 0px 55px;
