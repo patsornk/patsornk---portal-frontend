@@ -736,6 +736,7 @@ export default class UserProfile extends Vue {
 
   dialogCancelAction() {
     this.$router.push('/userManagement')
+    this.dialogCancelCancelAction()
   }
 
   submit() {

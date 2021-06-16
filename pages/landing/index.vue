@@ -76,6 +76,7 @@ export default class Landing extends Vue {
     // set Page title
     this.$store.dispatch('breadcrumb/setPageTitle', '')
     this.$store.dispatch('nav/setOrganization', '')
+    window.sessionStorage.removeItem('userTab')
   }
 }
 </script>
