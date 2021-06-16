@@ -31,7 +31,7 @@
             id="upload-file"
             name="file"
             @change="fileSelected"
-            accept="jpg/image/jpeg/image/png"
+            accept=".jpeg, .jpg, .png"
             hidden
             @click="closeDropdown"
           />
