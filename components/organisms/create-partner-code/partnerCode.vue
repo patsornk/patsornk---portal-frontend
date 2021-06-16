@@ -315,6 +315,7 @@ export default class CreatePartnerCode extends Vue {
   }
 
   clickCancelSiebelPartner(): void {
+    this.partnerCodeError = ''
     this.dataList = this.refList
     this.clearData()
   }
@@ -395,6 +396,7 @@ export default class CreatePartnerCode extends Vue {
     )
     this.isShowNewForm = false
     this.isShowEditForm = false
+    this.partnerCodeError = ''
   }
 
   clickDeleteList(): void | boolean {
