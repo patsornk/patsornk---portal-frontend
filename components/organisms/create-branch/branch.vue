@@ -1303,7 +1303,7 @@ export default class CreateBranch extends Vue {
       ) {
         this.openCusTomList[item.index].openError =
           this.$t('common.select').toString() + this.$t('createBranch.opening')
-      } else {
+      } else if (item.time !== 'close') {
         this.openCusTomList[item.index].openError = ''
         this.openCusTomList[item.index].openMeridiemError = ''
       }
@@ -1314,7 +1314,7 @@ export default class CreateBranch extends Vue {
         this.openCusTomList[item.index].closeError =
           this.$t('common.select').toString() +
           this.$t('createBranch.closingHour')
-      } else {
+      } else if (item.time !== 'open') {
         this.openCusTomList[item.index].closeError = ''
         this.openCusTomList[item.index].closeMeridiemError = ''
       }
