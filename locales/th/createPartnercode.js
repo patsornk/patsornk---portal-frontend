@@ -13,5 +13,12 @@ module.exports = {
   brandList: 'รายการแบรนด์',
   toastAssign: 'กำหนดแบรนด์สำเร็จ',
   toastUnAssign: 'นำแบรนด์ออกสำเร็จ',
-  savedSuccessfully: 'บันทึกสำเร็จ'
+  savedSuccessfully: 'บันทึกสำเร็จ',
+  error: {
+    oneOrMore: 'ต้องมีข้อมูลรหัสพาร์เนอร์อย่างน้อย 1 พาร์ทเนอร์',
+    finishCurrent: 'กรุณาเพิ่มข้อมูลพาร์ทเนอร์ให้สมบูรณ์'
+  },
+  assignMore: 'เพิ่มแบรนด์',
+  searchFromBrand: 'ค้นหาจากแบรนด์',
+  assign: 'เพิ่มแบรนด์'
 }

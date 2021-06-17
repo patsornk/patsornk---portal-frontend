@@ -2,10 +2,10 @@
   <div class="brand-feature-body-container">
     <dialog-popup
       :display="dialogDisplay"
-      :title="dialogTitle"
-      :description="dialogDescription"
+      :title="$t('common.wantToDeleteBrandFeature')"
+      :description="$t('common.neverGetBack')"
       :left-button-title="$t('common.cancel')"
-      :right-button-title="dialogRightButtonText"
+      :right-button-title="$t('common.delete')"
       @onLeftButtonClick="dialogLeftButtonAction"
       @onRightButtonClick="dialogRightButtonAction"
     />
@@ -53,7 +53,7 @@
         :required="showDisplay"
         :error-message="error.ctaLabel"
         :maxlength="50"
-        :placeholder="$t('createBrand.brandFeature.ctaLabel')"
+        :placeholder="$t('createBrand.brandFeature.ctaPlaceholder')"
       />
       <input-field
         v-model="$v.ctaType.$model"
@@ -75,7 +75,7 @@
         :required="showDisplay"
         :error-message="error.ctaFeature"
         :maxlength="255"
-        :placeholder="$t('createBrand.brandFeature.ctaFeature')"
+        :placeholder="$t('createBrand.brandFeature.ctaFeaturePlaceholder')"
       />
       <div class="info-description">
         {{ $t('common.charaterLeftS') }}

@@ -30,10 +30,10 @@
 
     <dialog-popup
       :display="dialogDisplay"
-      title="Want to Create New Organization  ?"
-      description="To make sure, Please check the information before click ‘Create New Organization’ "
-      leftButtonTitle="Cancel"
-      rightButtonTitle="Create New Organization "
+      :title="$t('createCompany.dialogPopup.title')"
+      :description="$t('createCompany.dialogPopup.description')"
+      :leftButtonTitle="$t('createCompany.dialogPopup.leftButtonTitle')"
+      :rightButtonTitle="$t('createCompany.dialogPopup.rightButtonTitle')"
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
       leftStyle="width: 120px;"
@@ -133,7 +133,35 @@ export default class CreateStep extends Vue {
           this.$router.push('/organizationManagement')
         }
       } catch (error) {
-        this.$toast.global.error(error.response.data.message)
+        if (error && error.response && error.response.data) {
+          switch (error.response.data.message) {
+            case 'Partner code is duplicated':
+              this.$toast.global.error(
+                this.$t('createCompany.toast.partnerCodeDuplicate').toString()
+              )
+              break
+            case 'Company name is duplicated':
+              this.$toast.global.error(
+                this.$t('createCompany.toast.companyNameDuplicate').toString()
+              )
+              break
+            case 'Brand code is duplicated':
+              this.$toast.global.error(
+                this.$t('createCompany.toast.brandCodeDuplicate').toString()
+              )
+              break
+            case 'Branch code is duplicated':
+              this.$toast.global.error(
+                this.$t('createCompany.toast.branchCodeDuplicate').toString()
+              )
+              break
+            default:
+              this.$toast.global.error(error.response.data.message)
+              break
+          }
+        } else {
+          this.$toast.global.error(error.response.data.message)
+        }
       }
     }
   }

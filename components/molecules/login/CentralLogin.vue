@@ -31,41 +31,35 @@
         {{ $t('login.submitText') }}
       </t1-button>
       <div class="btn-forget">
-        <a class="cursor-pointer" href="https://myaccess.central.co.th/m/home">{{ $t('login.urlText')}}</a>
+        <a
+          class="cursor-pointer"
+          href="https://myaccess.central.co.th/m/home"
+          >{{ $t('login.urlText') }}</a
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Watch,
-} from 'vue-property-decorator'
-import {
-  ErrorUserFormData,
-  UserFormData
-} from '~/constants'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { ErrorUserFormData, UserFormData } from '~/constants'
 import { validateError } from '~/helper'
 import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '~/components/atoms/button.vue'
 import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
-import {
-  required,
-  email
-} from 'vuelidate/lib/validators'
+import { required, email } from 'vuelidate/lib/validators'
 
 const validations = {
   username: {
     required,
     email,
-    mustBe: (value: any) => /^([A-Za-z0-9@._-])*$/g.test(value),
+    mustBe: (value: any) => /^([A-Za-z0-9@._-])*$/g.test(value)
   },
   password: {
-    required,
-  },
+    required
+  }
 }
 import qs from 'qs'
 
@@ -108,9 +102,7 @@ export default class CentarlLogin extends Vue {
   }
 
   get imageName(): string {
-    return this.stateMagicEyeType === 'password'
-      ? 'eye'
-      : 'close-eye'
+    return this.stateMagicEyeType === 'password' ? 'eye' : 'close-eye'
   }
 
   get language(): any {
@@ -119,9 +111,7 @@ export default class CentarlLogin extends Vue {
 
   private toggleMagicEye(): void {
     this.stateMagicEyeType =
-      this.stateMagicEyeType === 'password'
-        ? 'text'
-        : 'password'
+      this.stateMagicEyeType === 'password' ? 'text' : 'password'
   }
 
   private imageIcon(name: string): any {
@@ -134,10 +124,10 @@ export default class CentarlLogin extends Vue {
     this.error.username = !this.$v.username.required
       ? this.$t('login.emptyUsername').toString()
       : !this.$v.username.email
-        ? this.$t('login.inputInvalidEmailFormat').toString()
-        : !this.$v.username.mustBe
-        ? this.$t('login.inputInvalidEmailFormat').toString()
-        : ''
+      ? this.$t('login.inputInvalidEmailFormat').toString()
+      : !this.$v.username.mustBe
+      ? this.$t('login.inputInvalidEmailFormat').toString()
+      : ''
   }
 
   @Watch('password')
@@ -149,10 +139,10 @@ export default class CentarlLogin extends Vue {
 
   @Watch('language')
   changeLanguage(): void {
-    if(this.error.username){
+    if (this.error.username) {
       this.onChangedUsername()
     }
-    if(this.error.password){
+    if (this.error.password) {
       this.onChangedPassword()
     }
   }
@@ -161,36 +151,34 @@ export default class CentarlLogin extends Vue {
     this.onChangedUsername()
     this.onChangedPassword()
     const params = new URLSearchParams()
-      params.append('username', this.username)
-      params.append('password', this.password)
-      params.append('type', 'cg')
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+    params.append('username', this.username)
+    params.append('password', this.password)
+    params.append('type', 'cg')
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-      try {
-        let response = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/auth/token`,
-          params,
-          config
-        )
-        if (response && response.successful) {
-          if (response.data) {
-            this.$router.push('/landing')
-          } else {
-          }
+    }
+    try {
+      let response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/auth/token`,
+        params,
+        config
+      )
+      if (response && response.successful) {
+        if (response.data) {
+          this.$router.push('/landing')
         } else {
         }
-      } catch (error) {
-        if (error.response.data && error.response.data.code == '45') {
-          this.$toast.global.error(
-            this.$t('login.incorrectPassword').toString()
-          )
-        } else {
-          this.$toast.global.error(error)
-        }
+      } else {
       }
+    } catch (error) {
+      if (error.response.data && error.response.data.code == '45') {
+        this.$toast.global.error(this.$t('login.incorrectPassword').toString())
+      } else {
+        this.$toast.global.error(error)
+      }
+    }
     // if (validateError(this.error)) {
     //   try {
     //     this.$auth
@@ -270,7 +258,7 @@ export default class CentarlLogin extends Vue {
       line-height: 24px;
       text-align: center;
       padding: 8px 16px;
-      color: #221F20;
+      color: #221f20;
       text-decoration: underline;
       width: 100%;
     }

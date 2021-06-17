@@ -13,11 +13,7 @@
         <div class="dropdown-option">
           <img
             :src="imageIcon(option.code)"
-            style="
-              margin-right: 8px;
-              width: 22px;
-              height: 22px;
-            "
+            style="margin-right: 8px; width: 22px; height: 22px"
           />
           <span>{{ option.name }}</span>
         </div>
@@ -26,11 +22,7 @@
         <div class="dropdown-option">
           <img
             :src="imageIcon(option.code)"
-            style="
-              margin-right: 8px;
-              width: 22px;
-              height: 22px;
-            "
+            style="margin-right: 8px; width: 22px; height: 22px"
           />
           {{ option.name }}
         </div>
@@ -40,11 +32,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { getAssetsPath } from '~/helper/images'
 
 @Component

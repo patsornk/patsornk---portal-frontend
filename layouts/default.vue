@@ -23,9 +23,7 @@
         </transition>
       </div>
     </div>
-    <div class="version"> 
-      Version {{version}}
-    </div>
+    <div class="version">Version {{ version }}</div>
   </div>
 </template>
 
@@ -54,7 +52,7 @@ export default class Default extends Vue {
   }
 
   get version() {
-    const pkgVersion = JSON.stringify(require('../package.json').version);
+    const pkgVersion = JSON.stringify(require('../package.json').version)
     return pkgVersion.replace(/["]/g, '')
   }
 
@@ -171,7 +169,7 @@ html {
       // width: 229px;
       height: 40px;
       background: $primary;
-      border-radius: 6px; 
+      border-radius: 6px;
       align-content: center;
       align-items: center;
       cursor: pointer;

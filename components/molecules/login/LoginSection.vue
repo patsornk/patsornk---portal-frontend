@@ -18,12 +18,10 @@
     </div>
     <div
       class="login-card"
-      :class="
-        tabIndex == 0 ? 'active-left' : 'active-right'
-      "
+      :class="tabIndex == 0 ? 'active-left' : 'active-right'"
     >
-      <central-login v-if="tabIndex === 0"/>
-      <non-central-login v-if="tabIndex === 1"/>
+      <central-login v-if="tabIndex === 0" />
+      <non-central-login v-if="tabIndex === 1" />
     </div>
   </div>
 </template>
@@ -31,7 +29,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import CentralLogin from '~/components/molecules/login/CentralLogin.vue'
-import NonCentralLogin from "~/components/molecules/login/NonCentralLogin.vue";
+import NonCentralLogin from '~/components/molecules/login/NonCentralLogin.vue'
 @Component({
   components: {
     CentralLogin,
@@ -62,7 +60,7 @@ export default class LoginSection extends Vue {
       width: 100%;
       padding: 13px;
       margin-right: 1rem;
-      color: #5C5C5C;
+      color: #5c5c5c;
       font-weight: 700;
       background-color: $gray-bg-fade;
       box-shadow: $box-shadow-black;
@@ -112,5 +110,4 @@ export default class LoginSection extends Vue {
     border-top-right-radius: 0px;
   }
 }
-
 </style>

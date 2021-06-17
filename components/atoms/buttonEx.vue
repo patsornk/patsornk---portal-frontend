@@ -72,7 +72,6 @@ export default class T1ButtonEx extends Vue {
   color: $grey-text;
 }
 
-
 .transparent-disable {
   border: 2px solid $gray-disable;
   background: transparent;

@@ -4,7 +4,7 @@
       <input-field
         class="input-website"
         v-model="dataList[index]"
-        placeholder="Website Link"
+        :placeholder="$t('createBranch.websiteLink')"
         :maxlength="255"
         :shouldBeError="false"
       />

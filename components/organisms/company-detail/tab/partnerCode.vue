@@ -14,9 +14,9 @@
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
-            v-model="filterData.compantStatus"
+            v-model="filterData.companyStatus"
             class="dropdown"
-            :options="compantStatus"
+            :options="companyStatus"
             :label="'status'"
             :reduce="(item) => item.id"
             :placeholder="$t('common.status')"
@@ -120,33 +120,33 @@ export default class TabPartnerCode extends Vue {
   clickSearch = false
   filterData = {
     keyword: '',
-    compantStatus: 0
+    companyStatus: 0
   }
 
   private pagination = 10
-  private compantStatus = [
+  private companyStatus = [
     {
       id: -1,
-      status: 'All'
+      status: `${this.$t('common.companyDropdownStatus.all')}`
     },
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
   dataList = []
   readonly columnDefs = [
     {
-      headerName: 'Siebel Partner Code',
+      headerName: `${this.$t('common.siebelPartnerCode')}`,
       field: 'partnerCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -155,7 +155,7 @@ export default class TabPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Siebel Partner Name',
+      headerName: `${this.$t('common.siebelPartnerName')}`,
       field: 'partnerName',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -164,7 +164,7 @@ export default class TabPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Number of Brand',
+      headerName: `${this.$t('common.numberOfBrand')}`,
       field: 'numberOfBrands',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -173,13 +173,15 @@ export default class TabPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Status',
+      headerName: `${this.$t('common.status')}`,
       field: 'status',
       cellRenderer: (params: any) => {
         let strFormat = ''
-        params.data.status === 'Active'
+        params.data.status ===
+        this.$t('table.contentTableStatus.active').toString()
           ? (strFormat = 'active')
-          : params.data.status === 'On hold'
+          : params.data.status ===
+            this.$t('table.contentTableStatus.hold').toString()
           ? (strFormat = 'hold')
           : (strFormat = 'in-active')
         return `<div class="custom-row-80">
@@ -223,8 +225,8 @@ export default class TabPartnerCode extends Vue {
     if (this.filterData.keyword !== '') {
       path = `${path}&keyword=${this.filterData.keyword}`
     }
-    if (this.filterData.compantStatus > 0) {
-      path = `${path}&statusId=${this.filterData.compantStatus}`
+    if (this.filterData.companyStatus > 0) {
+      path = `${path}&statusId=${this.filterData.companyStatus}`
     }
     try {
       const res = await this.$axios.$get(
@@ -263,9 +265,12 @@ export default class TabPartnerCode extends Vue {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.partner.map((item: any) => {
+      const statusStr = this.companyStatus.filter(
+        (e) => e.id === item.status
+      )[0].status
       return {
         ...item,
-        status: item.statusDesc,
+        status: statusStr,
         partnerCode: item.partnerCode,
         partnerId: item.partnerId,
         partnerName: item.partnerName
@@ -276,37 +281,53 @@ export default class TabPartnerCode extends Vue {
   clickActive(): void {
     this.status = OrganizationManagementStatus.ACTIVE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to active  ?`
-    this.dialogDescription =
-      'This account will be temporarity disabled. Are you sure you want to change account status?'
-    this.dialogRightButtonText = 'Confirm'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')} ${this.$t(
+      'table.status.active'
+    )}${this.$t('table.dialogPopup.title3')}`
+    this.dialogDescription = this.$t(
+      'table.dialogPopup.descriptionActive'
+    ).toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.confirm').toString()
   }
 
   clickHold(): void {
     this.status = OrganizationManagementStatus.HOLD
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to on hold  ?`
-    this.dialogDescription =
-      'This account will be temporarity disabled. Are you sure you want to change account status?'
-    this.dialogRightButtonText = 'Confirm'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')} ${this.$t(
+      'table.status.hold'
+    )}${this.$t('table.dialogPopup.title3')}`
+    this.dialogDescription = this.$t(
+      'table.dialogPopup.descriptionHold'
+    ).toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.confirm').toString()
   }
 
   clickInActive(): void {
     this.status = OrganizationManagementStatus.INACTIVE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to inctive   ?`
-    this.dialogDescription =
-      'This account will be disabled. Are you sure you want to change account status?'
-    this.dialogRightButtonText = 'Confirm'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')} ${this.$t(
+      'table.status.inactive'
+    )}${this.$t('table.dialogPopup.title3')}`
+    this.dialogDescription = this.$t(
+      'table.dialogPopup.descriptionInActive'
+    ).toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.confirm').toString()
   }
 
   clickDelete(): void {
     this.status = OrganizationManagementStatus.DELETE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to delete ${this.selectData.length} items selection   ?`
-    this.dialogDescription =
-      'Please check the information before click to confirm button. The information will lose and never get back.'
-    this.dialogRightButtonText = 'Delete'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title4')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title5')}`
+    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.delete').toString()
   }
 
   dialogCancelAction(): void {

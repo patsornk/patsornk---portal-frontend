@@ -29,11 +29,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue
-} from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class UploadImage extends Vue {
@@ -70,8 +66,7 @@ export default class UploadImage extends Vue {
       })
     }
 
-    this.file &&
-      (this.imageUrl = URL.createObjectURL(this.file))
+    this.file && (this.imageUrl = URL.createObjectURL(this.file))
   }
 }
 </script>

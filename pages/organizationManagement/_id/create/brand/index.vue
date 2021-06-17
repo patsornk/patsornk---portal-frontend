@@ -80,13 +80,16 @@ export default class CompanyCreateBrand extends Vue {
         url: '/'
       },
       {
-        title: 'Create brand',
+        title: `${this.$t('common.createBrand')}`,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', 'Create Brand')
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      `${this.$t('common.createBrand')}`
+    )
   }
 
   async getCompany(): Promise<void> {

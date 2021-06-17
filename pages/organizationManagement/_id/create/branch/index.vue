@@ -50,13 +50,16 @@ export default class CreateBranch extends Vue {
         url: '/'
       },
       {
-        title: 'Create New Branch',
+        title: `${this.$t('common.createBranch')}`,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', 'Create New Branch')
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      `${this.$t('common.createBranch')}`
+    )
   }
 
   async getCompany(): Promise<void> {

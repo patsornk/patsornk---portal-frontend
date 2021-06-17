@@ -199,8 +199,8 @@ export default class InputTag extends Vue {
         margin-top: 9px;
       }
 
-      &.error{
-      border: 1px solid $primary;
+      &.error {
+        border: 1px solid $primary;
       }
     }
 

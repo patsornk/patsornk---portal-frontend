@@ -80,13 +80,16 @@ export default class CompanyCreatePartnerCode extends Vue {
         url: '/'
       },
       {
-        title: 'Create partner code',
+        title: `${this.$t('common.createPartnerCode')}`,
         url: '/',
         active: true
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', 'Create partner code')
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      `${this.$t('common.createPartnerCode')}`
+    )
   }
 
   async getCpmpany(): Promise<void> {

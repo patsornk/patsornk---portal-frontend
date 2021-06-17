@@ -11,11 +11,10 @@ import { Component, Vue } from 'vue-property-decorator'
 import ResetPassword from '~/components/molecules/login/ResetPassword.vue'
 @Component({
   components: {
-    ResetPassword,
+    ResetPassword
   }
 })
-export default class ResetPasswordSection extends Vue {
-}
+export default class ResetPasswordSection extends Vue {}
 </script>
 
 <style lang="scss" scoped>

@@ -1,7 +1,7 @@
 <template>
   <div class="org-management-container">
-    <user-list v-if="type === 'partner'" :type="type"/>
-    <tab v-else :type="type"/>
+    <user-list v-if="type === 'partner'" :type="type" />
+    <tab v-else :type="type" />
   </div>
 </template>
 

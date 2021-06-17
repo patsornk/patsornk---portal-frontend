@@ -14,4 +14,10 @@ module.exports = {
   toastAssign: 'Assign brand(s) successfully',
   toastUnAssign: 'Remove brand(s) successfully',
   savedSuccessfully: 'Saved successfully',
+  error: {
+    oneOrMore: 'At least one Partner Code must be add.',
+    finishCurrent: 'Please finish current action before click another.'
+  },
+  assignMore: 'Assign More Brand',
+  assign: 'Assign'
 }

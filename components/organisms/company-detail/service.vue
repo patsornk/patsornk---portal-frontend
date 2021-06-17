@@ -1,7 +1,7 @@
 <template>
   <div class="company-service-container">
     <div class="header-box">
-      <div class="text-header">{{$t('common.serviceTitle')}}</div>
+      <div class="text-header">{{ $t('common.serviceTitle') }}</div>
       <img class="edit" :src="assets('company-detail/edit.png')" />
     </div>
     <div class="data-box">

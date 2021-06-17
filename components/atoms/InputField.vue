@@ -90,13 +90,14 @@
         />
         <slot />
       </div>
-      <div class="validation-error-text" :style="errorHeight" v-if="shouldBeError">
-        <span
-          v-if="errorMessage"
-          class="text-danger error-msg"
-        >
+      <div
+        class="validation-error-text"
+        :style="errorHeight"
+        v-if="shouldBeError"
+      >
+        <span v-if="errorMessage" class="text-danger error-msg">
           {{ errorMessage }}
-      </span>
+        </span>
       </div>
     </div>
   </div>
@@ -216,7 +217,7 @@ export default class InputField extends Vue {
   }
 
   get errorHeight() {
-    return "height: " + this.errorMessageHeight + "px;"
+    return 'height: ' + this.errorMessageHeight + 'px;'
   }
 
   @Watch('dataValue')
@@ -499,7 +500,7 @@ export default class InputField extends Vue {
     }
   }
 }
-.error-msg{
+.error-msg {
   position: absolute;
   font-size: 0.75rem;
 }

@@ -23,7 +23,7 @@ module.exports = {
     characterAndNumber: 'a-z, 0-9',
     thaiAndNumber: 'ก-๛, 0-9',
     maxLength: 'maxLength',
-    minLength: 'minLength',
+    minLength: 'Input Phone no. at least 9 digits',
     email: 'email',
     numeric: 'numeric'
   },
@@ -33,8 +33,10 @@ module.exports = {
     feature: 'Feature',
     display: 'Display on The 1 App',
     ctaLabel: 'Feature CTA Label',
+    ctaPlaceholder: 'Input Feature CTA Label',
     ctaType: 'Feature CTA Type',
     ctaFeature: 'Feature CTA',
+    ctaFeaturePlaceholder: 'Input Feature CTA',
     error: {
       toastOneFieldRequired:
         'At least one field required. Please check and try again.',

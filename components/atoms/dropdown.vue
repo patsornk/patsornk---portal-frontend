@@ -17,12 +17,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Vue,
-  Prop,
-  Component,
-  Emit
-} from 'vue-property-decorator'
+import { Vue, Prop, Component, Emit } from 'vue-property-decorator'
 
 @Component({})
 export default class T1Dropdown extends Vue {

@@ -14,14 +14,14 @@
             :options="brandList"
             :label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
             :reduce="(item) => item.brandId"
-            placeholder="From which brand"
+            :placeholder="$t('common.columnDefBranch.fromWhichBrand')"
             :searchable="false"
             :map-keydown="deleteHandler"
           />
           <v-select
-            v-model="filterData.compantStatus"
+            v-model="filterData.companyStatus"
             class="dropdown"
-            :options="compantStatus"
+            :options="companyStatus"
             :label="'status'"
             :reduce="(item) => item.id"
             :placeholder="$t('common.status')"
@@ -38,7 +38,7 @@
       v-model="selectData"
       class="row-h-80"
       item-key="branchId"
-      header-title="Branch list"
+      :header-title="$t('common.branchList')"
       is-show-paginate
       is-show-header-table
       is-show-check-box
@@ -131,7 +131,6 @@ export default class TabBranch extends Vue {
         )}`
       }
     ]
-
     this.mappingBranch(this.listBranch)
   }
 
@@ -152,42 +151,40 @@ export default class TabBranch extends Vue {
   clickSearch = false
   searchList = [
     {
-      id: 'branch',
-      label: 'Search by Branch'
-    },
-    {
-      id: 'partnerCode',
-      label: 'Search by PartnerCode'
+      id: '',
+      label: 'branch'
     }
   ]
 
   filterData = {
     search: {
-      searchBy: 'branch',
+      searchBy: `${this.$t('common.searchBy')} ${this.$t(
+        'common.branchTitle'
+      )}`,
       keyword: ''
     },
     brandId: 0,
-    compantStatus: 0
+    companyStatus: 0
   }
 
   private pagination = 10
   private brandId: any = []
-  private compantStatus = [
+  private companyStatus = [
     {
       id: -1,
-      status: 'All'
+      status: `${this.$t('common.companyDropdownStatus.all')}`
     },
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -195,7 +192,7 @@ export default class TabBranch extends Vue {
   brandList = []
   readonly columnDefs = [
     {
-      headerName: 'Branch name (TH)',
+      headerName: `${this.$t('common.columnDefBranch.branchNameTh')}`,
       field: 'branchNameTh',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -204,7 +201,7 @@ export default class TabBranch extends Vue {
       }
     },
     {
-      headerName: 'Branch name (EN)',
+      headerName: `${this.$t('common.columnDefBranch.branchNameEn')}`,
       field: 'branchNameEn',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -213,7 +210,7 @@ export default class TabBranch extends Vue {
       }
     },
     {
-      headerName: 'Branch code',
+      headerName: `${this.$t('common.columnDefBranch.branchCode')}`,
       field: 'branchCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -222,7 +219,7 @@ export default class TabBranch extends Vue {
       }
     },
     {
-      headerName: 'From which brand',
+      headerName: `${this.$t('common.columnDefBranch.fromWhichBrand')}`,
       field: 'fromWhichBrand',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -231,7 +228,7 @@ export default class TabBranch extends Vue {
       }
     },
     {
-      headerName: 'Partner Code',
+      headerName: `${this.$t('common.partnerCodeTitle')}`,
       field: 'partnerCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -240,7 +237,7 @@ export default class TabBranch extends Vue {
       }
     },
     {
-      headerName: 'Branch Type',
+      headerName: `${this.$t('common.columnDefBranch.branchType')}`,
       field: 'branchType',
       cellRenderer: (params: any) => {
         const branchType =
@@ -254,13 +251,15 @@ export default class TabBranch extends Vue {
       }
     },
     {
-      headerName: 'Status',
+      headerName: `${this.$t('common.status')}`,
       field: 'status',
       cellRenderer: (params: any) => {
         let strFormat = ''
-        params.data.status === 'Active'
+        params.data.status ===
+        this.$t('table.contentTableStatus.active').toString()
           ? (strFormat = 'active')
-          : params.data.status === 'On hold'
+          : params.data.status ===
+            this.$t('table.contentTableStatus.hold').toString()
           ? (strFormat = 'hold')
           : (strFormat = 'in-active')
         return `<div class="custom-row-80">
@@ -292,6 +291,7 @@ export default class TabBranch extends Vue {
     } else {
       await this.getBranches(1, 10)
     }
+    this.changeSerchSelect()
   }
 
   changePage(page: number): void {
@@ -316,8 +316,8 @@ export default class TabBranch extends Vue {
     if (this.filterData.brandId) {
       path = `${path}&brandId=${this.filterData.brandId}`
     }
-    if (this.filterData.compantStatus > 0) {
-      path = `${path}&statusId=${this.filterData.compantStatus}`
+    if (this.filterData.companyStatus > 0) {
+      path = `${path}&statusId=${this.filterData.companyStatus}`
     }
 
     try {
@@ -355,22 +355,27 @@ export default class TabBranch extends Vue {
   mappingBranch(data: any): void {
     this.pageSize = data.totalPage
     this.totalItem = data.total
-    this.dataList = data.branch.map((item: any) => {
-      return {
-        branchId: item.branchId,
-        branchNameTh: item.branchNameTh,
-        branchNameEn: item.branchNameEn,
-        branchCode: item.branchCode,
-        brand: item.brand,
-        fromWhichBrand:
-          this.language === 'th'
-            ? item.brand.brandNameTh
-            : item.brand.brandNameEn,
-        partnerCode: item.partners[0] ? item.partners[0].partnerCode : '-',
-        branchType: item.branchType,
-        status: item.statusDesc
-      }
-    })
+    if (data.branch) {
+      this.dataList = data.branch.map((item: any) => {
+        const statusStr = this.companyStatus.filter(
+          (e) => e.id === item.status
+        )[0].status
+        return {
+          branchId: item.branchId,
+          branchNameTh: item.branchNameTh,
+          branchNameEn: item.branchNameEn,
+          branchCode: item.branchCode,
+          brand: item.brand,
+          fromWhichBrand:
+            this.language === 'th'
+              ? item.brand.brandNameTh
+              : item.brand.brandNameEn,
+          partnerCode: item.partners[0] ? item.partners[0].partnerCode : '-',
+          branchType: item.branchType,
+          status: statusStr
+        }
+      })
+    }
   }
 
   async getBrands(): Promise<void> {
@@ -431,37 +436,53 @@ export default class TabBranch extends Vue {
   clickActive(): void {
     this.status = OrganizationManagementStatus.ACTIVE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to active  ?`
-    this.dialogDescription =
-      'This account will be temporarity disabled. Are you sure you want to change account status?'
-    this.dialogRightButtonText = 'Confirm'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')} ${this.$t(
+      'table.status.active'
+    )}${this.$t('table.dialogPopup.title3')}`
+    this.dialogDescription = this.$t(
+      'table.dialogPopup.descriptionActive'
+    ).toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.confirm').toString()
   }
 
   clickHold(): void {
     this.status = OrganizationManagementStatus.HOLD
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to on hold  ?`
-    this.dialogDescription =
-      'This account will be temporarity disabled. Are you sure you want to change account status?'
-    this.dialogRightButtonText = 'Confirm'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')} ${this.$t(
+      'table.status.hold'
+    )}${this.$t('table.dialogPopup.title3')}`
+    this.dialogDescription = this.$t(
+      'table.dialogPopup.descriptionHold'
+    ).toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.confirm').toString()
   }
 
   clickInActive(): void {
     this.status = OrganizationManagementStatus.INACTIVE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to change ${this.selectData.length} items seletection status to inctive   ?`
-    this.dialogDescription =
-      'This account will be disabled. Are you sure you want to change account status?'
-    this.dialogRightButtonText = 'Confirm'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title2')} ${this.$t(
+      'table.status.inactive'
+    )}${this.$t('table.dialogPopup.title3')}`
+    this.dialogDescription = this.$t(
+      'table.dialogPopup.descriptionInActive'
+    ).toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.confirm').toString()
   }
 
   clickDelete(): void {
     this.status = OrganizationManagementStatus.DELETE
     this.setDialogDisplay(true)
-    this.dialogTitle = `Want to delete ${this.selectData.length} items selection   ?`
-    this.dialogDescription =
-      'Please check the information before click to confirm button. The information will lose and never get back.'
-    this.dialogRightButtonText = 'Delete'
+    this.dialogTitle = `${this.$t('table.dialogPopup.title4')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title5')}`
+    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
+    this.dialogRightButtonText = this.$t('table.dialogPopup.delete').toString()
   }
 
   dialogCancelAction(): void {

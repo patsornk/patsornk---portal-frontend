@@ -5,11 +5,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Vue,
-  Prop,
-  Component
-} from 'vue-property-decorator'
+import { Vue, Prop, Component } from 'vue-property-decorator'
 
 @Component({})
 export default class T1Button extends Vue {
@@ -66,7 +62,6 @@ export default class T1Button extends Vue {
   background: transparent;
   color: $grey-text;
 }
-
 
 .transparent-disable {
   border: 2px solid $gray-disable;

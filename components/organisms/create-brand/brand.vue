@@ -175,7 +175,7 @@
     <modal v-show="isShowImage" class="show-image">
       <template v-slot:header>
         <div class="show-image-header">
-          <div>Example File</div>
+          <div>{{ $t('common.exampleFile') }}</div>
           <div>
             <span class="material-icons close" @click="changeIsModal">
               close
@@ -191,10 +191,12 @@
 
     <dialog-popup
       :display="dialogDisplay"
-      title="Want to Create New Brand  ?"
-      description="To make sure, Please check the information before click ‘Create New Brand’ "
-      leftButtonTitle="Cancel"
-      rightButtonTitle="Create New Brand "
+      :title="this.$t('createCompany.dialogPopup.titleBrand')"
+      :description="this.$t('createCompany.dialogPopup.descriptionBrand')"
+      :leftButtonTitle="this.$t('createCompany.dialogPopup.leftButtonTitle')"
+      :rightButtonTitle="
+        this.$t('createCompany.dialogPopup.rightButtonTitleBrand')
+      "
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
       leftStyle="width: 120px;"
@@ -347,15 +349,15 @@ export default class CreateBrand extends Vue {
   private statusOption = [
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -580,7 +582,7 @@ export default class CreateBrand extends Vue {
 
   private columnDefs = [
     {
-      headerName: 'Siebel Partner code',
+      headerName: `${this.$t('common.siebelPartnerCode')}`,
       field: 'partnerCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -589,7 +591,7 @@ export default class CreateBrand extends Vue {
       }
     },
     {
-      headerName: 'Siebel Partner Name',
+      headerName: `${this.$t('common.siebelPartnerName')}`,
       field: 'partnerName',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -771,16 +773,19 @@ export default class CreateBrand extends Vue {
       this.onChangedPhoneNo()
       this.onChangedLogo(this.$v.logo.$model)
       this.dialogCancelAction()
+      return
     } else {
       validationGroup = true
       if (!brandFeatureValidate) {
         this.$toast.global.error(this.$t('createBrand.fieldError'))
+        return
       }
     }
 
     if (!this.$v.partnerCodeList.required) {
       isPartnerCodeList = false
       this.$toast.global.error(this.$t('createBrand.partnerCode'))
+      return
     } else {
       isPartnerCodeList = true
     }
@@ -832,7 +837,7 @@ export default class CreateBrand extends Vue {
               response.data.brandId
             )
             this.$toast.global.success(
-              this.$t('createBrand.createNewBrandSuccess').toString()
+              this.$t('createBrand.savedSuccessfully').toString()
             )
 
             this.$router.push('/organizationManagement/create/branch')
@@ -850,7 +855,17 @@ export default class CreateBrand extends Vue {
         this.$nuxt.$loading.finish()
       } catch (error) {
         this.$nuxt.$loading.finish()
-        this.$toast.global.error(error.response.data.message)
+        if (error && error.response && error.response.data) {
+          if (error.response.data.message === 'Brand code is duplicated') {
+            this.$toast.global.error(
+              this.$t('createCompany.toast.brandCodeDuplicate').toString()
+            )
+          } else {
+            this.$toast.global.error(error.response.data.message)
+          }
+        } else {
+          this.$toast.global.error(error)
+        }
       }
     }
   }
@@ -1016,8 +1031,12 @@ export default class CreateBrand extends Vue {
           payload
         )
         if (response.successful) {
-          const statusStr = this.statusOption.filter(e => e.id === this.$v.status.$model)[0].status
-          this.$store.dispatch('company/setStatus', statusStr)
+          if (this.mode === 'edit') {
+            const statusStr = this.statusOption.filter(
+              (e) => e.id === this.$v.status.$model
+            )[0].status
+            this.$store.dispatch('company/setStatus', statusStr)
+          }
           if (window.sessionStorage.getItem('createBranchId')) {
             const res = await this.$axios.$get(
               `${

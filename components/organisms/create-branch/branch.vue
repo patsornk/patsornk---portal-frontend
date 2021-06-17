@@ -19,6 +19,7 @@
         :disable="this.componetMode === 'edit'"
         :title="$t('createBranch.branchInfo.branchCode')"
         :maxlength="25"
+        :placeholder="$t('createBranch.error.inputBranchCode')"
         required
         :errorMessage="error.branchCode"
       />
@@ -26,6 +27,7 @@
         v-model="$v.branchNameTh.$model"
         :title="$t('createBranch.branchInfo.branchNameTh')"
         :maxlength="50"
+        :placeholder="$t('createBranch.error.inputBranchNameTh')"
         required
         :errorMessage="error.branchNameTh"
       />
@@ -34,6 +36,7 @@
         required
         :title="$t('createBranch.branchInfo.branchNameEn')"
         :maxlength="50"
+        :placeholder="$t('createBranch.error.inputBranchNameEn')"
         :errorMessage="error.branchNameEn"
       />
       <input-field
@@ -41,6 +44,7 @@
         :title="$t('createBranch.branchInfo.siebelBranchCode')"
         :disable="this.componetMode === 'edit'"
         :maxlength="15"
+        :placeholder="$t('createBranch.error.inputSiebelBranchCode')"
         required
         :errorMessage="error.siebelBranchCode"
       />
@@ -49,6 +53,7 @@
         :title="$t('createBranch.branchInfo.siebelBranchName')"
         :disable="this.componetMode === 'edit'"
         :maxlength="50"
+        :placeholder="$t('createBranch.error.inputSiebelBranchName')"
         required
         :errorMessage="error.siebelBranchName"
       />
@@ -56,6 +61,7 @@
         v-model="$v.email.$model"
         :title="$t('createBranch.branchInfo.email')"
         :maxlength="50"
+        :placeholder="$t('createCompany.emailInput')"
         required
         :errorMessage="error.email"
       />
@@ -63,6 +69,7 @@
         v-model="$v.phoneNumber.$model"
         :title="$t('createBranch.branchInfo.phoneNo')"
         :maxlength="13"
+        :placeholder="$t('createBranch.error.inputBranchNameTh')"
         required
         :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
@@ -127,6 +134,7 @@
       :maxlength="255"
       style="width: 100%"
       v-model="$v.address.$model"
+      :placeholder="$t('createBranch.error.address')"
       :errorMessage="error.address"
     />
 
@@ -187,7 +195,7 @@
         v-model="$v.postalCode.$model"
         :title="$t('createBranch.location.postalCode')"
         required
-        :placeholder="$t('common.pleaseSelect')"
+        :placeholder="$t('createBranch.error.postalCode')"
         :errorMessage="error.postalCode"
       />
       <div></div>
@@ -196,12 +204,19 @@
         :title="$t('createBranch.location.latitude')"
         :maxlength="13"
         :errorMessage="error.latitude"
+        :placeholder="
+          $t('createCompany.pleaseEnter') + $t('createBranch.location.latitude')
+        "
       />
       <input-field
         v-model="$v.longitude.$model"
         :title="$t('createBranch.location.longitude')"
         :maxlength="14"
         :errorMessage="error.longitude"
+        :placeholder="
+          $t('createCompany.pleaseEnter') +
+          $t('createBranch.location.longitude')
+        "
       />
 
       <button
@@ -280,6 +295,10 @@
           :maxlength="255"
           :shouldBeError="false"
           style="width: 100%"
+          :placeholder="
+            $t('createCompany.pleaseEnter') +
+            $t('createBranch.mallPage.mallShortDescription')
+          "
           v-model="$v.mallDescription.$model"
         />
         <div v-if="language === 'th'" class="mall-description">
@@ -289,7 +308,7 @@
         </div>
         <div v-else class="mall-description">
           {{ 255 - $v.mallDescription.$model.length }}
-          {{ $t('common.charaterLeftS') }}
+          {{ $t('common.charaterLeftE') }}
         </div>
       </div>
 
@@ -398,10 +417,11 @@
             :options="timeList"
             :optionsReduce="(item) => item.label"
             optionsLabel="label"
-            :placeholder="$t('createBranch.openingHour')"
+            :placeholder="$t('createBranch.opening')"
             :errorMessage="error.openTime"
             searchable
           />
+          <!-- //NAPAT/ -->
           <input-field
             class="open-meridiem"
             v-model="$v.openMeridiem.$model"
@@ -412,7 +432,7 @@
             optionsLabel="label"
             :errorMessage="error.openMeridiem"
           />
-          <span class="to">to</span>
+          <span class="to">{{ $t('createBranch.to') }}</span>
           <input-field
             class="open-time"
             v-model="$v.closeTime.$model"
@@ -454,7 +474,7 @@
     <modal v-show="isShowImage" class="show-image">
       <template v-slot:header>
         <div class="show-image-header">
-          <div>Example File</div>
+          <div>{{ $t('common.exampleFile') }}</div>
           <div>
             <span class="material-icons close" @click="changeIsModal">
               close
@@ -470,10 +490,12 @@
 
     <dialog-popup
       :display="dialogDisplay"
-      title="Want to Create New Branch  ?"
-      description="To make sure, Please check the information before click ‘Create New Branch’ "
-      leftButtonTitle="Cancel"
-      rightButtonTitle="Create New Branch "
+      :title="this.$t('createCompany.dialogPopup.titleBranch')"
+      :description="this.$t('createCompany.dialogPopup.descriptionBranch')"
+      :leftButtonTitle="this.$t('createCompany.dialogPopup.leftButtonTitle')"
+      :rightButtonTitle="
+        this.$t('createCompany.dialogPopup.rightButtonTitleBranch')
+      "
       @onLeftButtonClick="dialogCancelAction"
       @onRightButtonClick="dialogAction"
       leftStyle="width: 120px;"
@@ -727,15 +749,15 @@ export default class CreateBranch extends Vue {
   private statusOption = [
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -777,7 +799,7 @@ export default class CreateBranch extends Vue {
   openCusTomList = [
     {
       dayOfWeek: 2,
-      day: 'Monday',
+      day: `${this.$t('createBranch.monday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -790,7 +812,7 @@ export default class CreateBranch extends Vue {
     },
     {
       dayOfWeek: 3,
-      day: 'Tuesday',
+      day: `${this.$t('createBranch.tuesday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -803,7 +825,7 @@ export default class CreateBranch extends Vue {
     },
     {
       dayOfWeek: 4,
-      day: 'Wednesday',
+      day: `${this.$t('createBranch.wednesday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -816,7 +838,7 @@ export default class CreateBranch extends Vue {
     },
     {
       dayOfWeek: 5,
-      day: 'Thursday',
+      day: `${this.$t('createBranch.thursday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -829,7 +851,7 @@ export default class CreateBranch extends Vue {
     },
     {
       dayOfWeek: 6,
-      day: 'Friday',
+      day: `${this.$t('createBranch.friday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -842,7 +864,7 @@ export default class CreateBranch extends Vue {
     },
     {
       dayOfWeek: 7,
-      day: 'Saturday',
+      day: `${this.$t('createBranch.saturday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -855,7 +877,7 @@ export default class CreateBranch extends Vue {
     },
     {
       dayOfWeek: 1,
-      day: 'Sunday',
+      day: `${this.$t('createBranch.sunday')}`,
       openTime: '',
       openMeridiem: 'AM',
       closeTime: '',
@@ -1232,7 +1254,8 @@ export default class CreateBranch extends Vue {
   @Watch('openTime')
   checkOpenTime(): void {
     this.error.openTime = !this.$v.openTime.required
-      ? this.$t('common.pleaseSelect').toString()
+      ? this.$t('common.select').toString() +
+        this.$t('createBranch.opening').toString()
       : ''
   }
 
@@ -1246,7 +1269,8 @@ export default class CreateBranch extends Vue {
   @Watch('closeTime')
   checkCloseTime(): void {
     this.error.closeTime = !this.$v.closeTime.required
-      ? this.$t('common.pleaseSelect').toString()
+      ? this.$t('common.select').toString() +
+        this.$t('createBranch.closingHour').toString()
       : ''
   }
 
@@ -1273,9 +1297,8 @@ export default class CreateBranch extends Vue {
         item.time === 'open' &&
         this.openCusTomList[item.index].openTime === ''
       ) {
-        this.openCusTomList[item.index].openError = this.$t(
-          'common.pleaseSelect'
-        ).toString()
+        this.openCusTomList[item.index].openError =
+          this.$t('common.select').toString() + this.$t('createBranch.opening')
       } else {
         this.openCusTomList[item.index].openError = ''
         this.openCusTomList[item.index].openMeridiemError = ''
@@ -1284,9 +1307,9 @@ export default class CreateBranch extends Vue {
         item.time === 'close' &&
         this.openCusTomList[item.index].closeTime === ''
       ) {
-        this.openCusTomList[item.index].closeError = this.$t(
-          'common.pleaseSelect'
-        ).toString()
+        this.openCusTomList[item.index].closeError =
+          this.$t('common.select').toString() +
+          this.$t('createBranch.closingHour')
       } else {
         this.openCusTomList[item.index].closeError = ''
         this.openCusTomList[item.index].closeMeridiemError = ''
@@ -1328,11 +1351,15 @@ export default class CreateBranch extends Vue {
           item.closeMeridiemError = ''
         } else {
           if (item.openTime === '') {
-            item.openError = this.$t('common.pleaseSelect').toString()
+            item.openError =
+              this.$t('common.select').toString() +
+              this.$t('createBranch.opening')
             this.inValidOpenCustomize = true
           }
           if (item.closeTime === '') {
-            item.closeError = this.$t('common.pleaseSelect').toString()
+            item.closeError =
+              this.$t('common.select').toString() +
+              this.$t('createBranch.closingHour')
             this.inValidOpenCustomize = true
           }
           if (
@@ -1531,7 +1558,9 @@ export default class CreateBranch extends Vue {
           })
         }
       } catch (error) {
-        this.$toast.global.error(error.response.data.message)
+        if (error.response.data.code !== '04') {
+          this.$toast.global.error(error.response.data.message)
+        }
       }
     }
   }
@@ -1782,18 +1811,14 @@ export default class CreateBranch extends Vue {
             )
           } else if (data.mall.mallInfo.openingHour.length === 1) {
             this.openingHourId = '1'
-            this.openTime = data.mall.mallInfo.openingHour[0].openingTime.split(
-              '|'
-            )[0]
-            this.openMeridiem = data.mall.mallInfo.openingHour[0].openingTime.split(
-              '|'
-            )[1]
-            this.closeTime = data.mall.mallInfo.openingHour[0].closingTime.split(
-              '|'
-            )[0]
-            this.closeMeridiem = data.mall.mallInfo.openingHour[0].closingTime.split(
-              '|'
-            )[1]
+            this.openTime =
+              data.mall.mallInfo.openingHour[0].openingTime.split('|')[0]
+            this.openMeridiem =
+              data.mall.mallInfo.openingHour[0].openingTime.split('|')[1]
+            this.closeTime =
+              data.mall.mallInfo.openingHour[0].closingTime.split('|')[0]
+            this.closeMeridiem =
+              data.mall.mallInfo.openingHour[0].closingTime.split('|')[1]
           }
           this.mapPosition.lat = this.latitude
             ? Number(this.latitude)
@@ -2455,7 +2480,7 @@ export default class CreateBranch extends Vue {
           )
           window.sessionStorage.setItem('createBranchFirstTime', 'no')
           this.$toast.global.success(
-            this.$t('createBranch.createNewBranchSuccess').toString()
+            this.$t('createBranch.branchInfo.savedSuccessfully').toString()
           )
           this.$router.push('/organizationManagement/create/service')
         } else if (this.componetMode === 'create') {
@@ -2465,7 +2490,7 @@ export default class CreateBranch extends Vue {
           this.dialogCancelAction()
           this.$router.push(`/organizationManagement/${parentCompanyId}`)
           this.$toast.global.success(
-            this.$t('createBranch.createNewBranchSuccess').toString()
+            this.$t('createBranch.branchInfo.savedSuccessfully').toString()
           )
         } else if (this.componetMode === 'onboard') {
           window.sessionStorage.setItem('createBranchFirstTime', 'no')
@@ -2476,7 +2501,17 @@ export default class CreateBranch extends Vue {
       this.$nuxt.$loading.finish()
     } catch (error) {
       this.$nuxt.$loading.finish()
-      this.$toast.global.error(error.response.data.message)
+      if (error && error.response && error.response.data) {
+        if (error.response.data.message === 'Branch code is duplicated') {
+          this.$toast.global.error(
+            this.$t('createCompany.toast.branchCodeDuplicate').toString()
+          )
+        } else {
+          this.$toast.global.error(error.response.data.message)
+        }
+      } else {
+        this.$toast.global.error(error)
+      }
       this.dialogCancelAction()
     }
   }
@@ -2573,8 +2608,12 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
-        const statusStr = this.statusOption.filter(e => e.id === this.$v.status.$model)[0].status
-        this.$store.dispatch('company/setStatus', statusStr)
+        if (this.componetMode === 'edit') {
+          const statusStr = this.statusOption.filter(
+            (e) => e.id === this.$v.status.$model
+          )[0].status
+          this.$store.dispatch('company/setStatus', statusStr)
+        }
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
       }

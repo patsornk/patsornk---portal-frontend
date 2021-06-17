@@ -37,7 +37,7 @@ module.exports = {
     username: 'ชื่อผู้ใช้งาน',
     profilePicture: 'รูปโปรไฟล์',
     dragAndDrop: 'ลากไฟล์วางที่นี่',
-    uploadPicture: 'อัพโหลดรูปภาพ',
+    uploadPicture: 'อัปโหลดรูปภาพ',
     firstName: 'ชื่อ',
     lastName: 'นามสกุล',
     userType: 'ประเภทของผู้ใช้งาน',

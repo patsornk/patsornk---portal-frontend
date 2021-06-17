@@ -191,7 +191,7 @@ export default class CreatePartnerCode extends Vue {
   clickEditSiebelPartner(param: string): boolean | void {
     if (this.isShowNewForm || this.isShowEditForm) {
       this.$toast.global.error(
-        'Please finish current action before click another.'
+        this.$t('createPartnerCode.error.finishCurrent').toString()
       )
       return
     }
@@ -208,7 +208,7 @@ export default class CreatePartnerCode extends Vue {
   clickAdd(): void | boolean {
     if (this.isShowNewForm || this.isShowEditForm) {
       this.$toast.global.error(
-        'Please finish current action before click another.'
+        this.$t('createPartnerCode.error.finishCurrent').toString()
       )
       return
     }
@@ -400,7 +400,7 @@ export default class CreatePartnerCode extends Vue {
   clickDeleteList(): void | boolean {
     if (this.isShowNewForm || this.isShowEditForm) {
       this.$toast.global.error(
-        'Please finish current action before click another.'
+        this.$t('createPartnerCode.error.finishCurrent').toString()
       )
       return
     }
@@ -413,7 +413,7 @@ export default class CreatePartnerCode extends Vue {
     if (this.dataList.length === 0) {
       this.$store.dispatch('stepbar/setEnableSubmit', 0)
       this.$toast.global.error(
-        'One or more field have an error. Please check and try again.'
+        this.$t('createPartnerCode.error.oneOrMore').toString()
       )
       return
     }

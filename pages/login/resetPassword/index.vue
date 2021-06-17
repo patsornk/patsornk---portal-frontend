@@ -13,7 +13,6 @@ import ResetPasswordSection from '~/components/molecules/login/ResetPasswordSect
     ResetPasswordSection
   }
 })
-
 export default class Example extends Vue {}
 </script>
 

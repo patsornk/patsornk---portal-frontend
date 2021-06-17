@@ -182,22 +182,22 @@ export default class EditCompany extends Vue {
 
   @Prop({
     required: true,
-    type: Object
+    type: String
   })
   readonly companyId!: number
 
   private companyStatusOption = [
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -488,7 +488,10 @@ export default class EditCompany extends Vue {
             }
           )
           if (response.successful) {
-            this.$store.dispatch('company/setStatus', response.data.statusDesc)
+            const statusStr = this.companyStatusOption.filter(
+              (e) => e.id === response.data.status
+            )[0].status
+            this.$store.dispatch('company/setStatus', statusStr)
             this.$store.dispatch(
               'organizartion/setCompanyId',
               response.data.companyId

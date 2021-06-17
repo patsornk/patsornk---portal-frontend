@@ -9,9 +9,9 @@
       <div class="dropdown-container">
         <div class="dropdown-group">
           <v-select
-            v-model="filterData.compantStatus"
+            v-model="filterData.companyStatus"
             class="dropdown"
-            :options="compantStatus"
+            :options="companyStatus"
             :label="'status'"
             :reduce="(item) => item.id"
             :placeholder="$t('common.status')"
@@ -141,40 +141,36 @@ export default class TabBrand extends Vue {
   clickSearch = false
   searchList = [
     {
-      id: 'brand',
-      label: 'Search by Brand'
-    },
-    {
-      id: 'partnerCode',
-      label: 'Search by PartnerCode'
+      id: '',
+      label: ''
     }
   ]
 
   filterData = {
     search: {
-      searchBy: 'brand',
+      searchBy: `${this.$t('common.searchBy')} ${this.$t('common.brandTitle')}`,
       keyword: ''
     },
-    compantStatus: 0
+    companyStatus: 0
   }
 
   private pagination = 10
-  private compantStatus = [
+  private companyStatus = [
     {
       id: -1,
-      status: 'All'
+      status: `${this.$t('common.companyDropdownStatus.all')}`
     },
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -185,7 +181,7 @@ export default class TabBrand extends Vue {
   dataList = []
   readonly columnDefs = [
     {
-      headerName: 'Brand Logo',
+      headerName: `${this.$t('common.brandLogo')}`,
       field: 'additionalLogoImg',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -196,7 +192,7 @@ export default class TabBrand extends Vue {
       }
     },
     {
-      headerName: 'Brand Name (TH)',
+      headerName: `${this.$t('common.brandNameTh')}`,
       field: 'brandNameTh',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -205,7 +201,7 @@ export default class TabBrand extends Vue {
       }
     },
     {
-      headerName: 'Brand Name (EN)',
+      headerName: `${this.$t('common.brandNameEn')}`,
       field: 'brandNameEn',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -214,7 +210,7 @@ export default class TabBrand extends Vue {
       }
     },
     {
-      headerName: 'Number of branch',
+      headerName: `${this.$t('common.numberOfBranch')}`,
       field: 'numberOfBranch',
       cellRenderer: (params: any) => {
         return `<div class="custom-row-80">
@@ -223,13 +219,15 @@ export default class TabBrand extends Vue {
       }
     },
     {
-      headerName: 'Status',
+      headerName: `${this.$t('common.status')}`,
       field: 'status',
       cellRenderer: (params: any) => {
         let strFormat = ''
-        params.data.status === 'Active'
+        params.data.status ===
+        this.$t('table.contentTableStatus.active').toString()
           ? (strFormat = 'active')
-          : params.data.status === 'On hold'
+          : params.data.status ===
+            this.$t('table.contentTableStatus.hold').toString()
           ? (strFormat = 'hold')
           : (strFormat = 'in-active')
         return `<div class="custom-row-80">
@@ -242,6 +240,7 @@ export default class TabBrand extends Vue {
       field: 'brandId',
       cellRenderer: 'AgBranchButton',
       cellRendererParams: {
+        btnName: this.$t('common.viewBranch').toString(),
         clicked: (param: any) => {
           this.viewBranch(param)
         }
@@ -270,6 +269,7 @@ export default class TabBrand extends Vue {
 
   mounted(): void {
     this.getBrands(1, 10)
+    this.changeSerchSelect()
   }
 
   changePage(page: number): void {
@@ -290,8 +290,8 @@ export default class TabBrand extends Vue {
     if (this.filterData.search.keyword !== '') {
       path = `${path}&keyword=${this.filterData.search.keyword}`
     }
-    if (this.filterData.compantStatus > 0) {
-      path = `${path}&statusId=${this.filterData.compantStatus}`
+    if (this.filterData.companyStatus > 0) {
+      path = `${path}&statusId=${this.filterData.companyStatus}`
     }
 
     try {
@@ -330,13 +330,16 @@ export default class TabBrand extends Vue {
     this.pageSize = data.totalPage
     this.totalItem = data.total
     this.dataList = data.brand.map((item: any) => {
+      const statusStr = this.companyStatus.filter(
+        (e) => e.id === item.status
+      )[0].status
       return {
         brandId: item.brandId,
         additionalLogoImg: getImagePath(item.brandAdditional.additionalLogoImg),
         brandNameTh: item.brandNameTh,
         brandNameEn: item.brandNameEn,
         numberOfBranch: item.numberOfBranches,
-        status: item.statusDesc
+        status: statusStr
       }
     })
   }
@@ -395,7 +398,6 @@ export default class TabBrand extends Vue {
 
   onTableIconClick(action: string): void {
     this.dialogDisplay = true
-    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
     this.dialogLeftButtonText = this.$t('table.dialogPopup.cancel').toString()
     let title = ''
 
@@ -405,11 +407,17 @@ export default class TabBrand extends Vue {
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionActive'
+      ).toString()
     } else if (action === 'clickInActive') {
       title = this.$t('table.status.inactive').toString()
       this.dialogAction = OrganizationManagementStatus.INACTIVE
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
+      ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionInActive'
       ).toString()
     } else if (action === 'clickHold') {
       title = this.$t('table.status.hold').toString()
@@ -417,16 +425,30 @@ export default class TabBrand extends Vue {
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionHold'
+      ).toString()
     } else if (action === 'clickDelete') {
       title = this.$t('table.status.delete').toString()
       this.dialogAction = OrganizationManagementStatus.DELETE
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.delete'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.description'
+      ).toString()
     }
-    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${title} ${
-      this.selectData.length
-    } ${this.$t('table.dialogPopup.title2')}`
+    if (action === 'clickDelete') {
+      this.dialogTitle = `${this.$t('table.dialogPopup.title4')} ${
+        this.selectData.length
+      } ${this.$t('table.dialogPopup.title5')}`
+    } else {
+      this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+        this.selectData.length
+      } ${this.$t('table.dialogPopup.title2')} ${title}${this.$t(
+        'table.dialogPopup.title3'
+      )}`
+    }
   }
 
   onLeftDialogPopupClick(): void {
@@ -536,6 +558,7 @@ export default class TabBrand extends Vue {
     border-radius: 6px;
     height: 36px;
     margin-top: 22px;
+    text-align: center;
   }
 }
 </style>

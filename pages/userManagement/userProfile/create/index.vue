@@ -1,6 +1,6 @@
 <template>
   <div>
-    <user-profile mode="create"/>
+    <user-profile mode="create" />
   </div>
 </template>
 
@@ -11,11 +11,7 @@ import UserProfile from '~/components/organisms/user-management/UserProfile.vue'
 @Component({
   components: { UserProfile }
 })
-export default class UserProfileCreate extends Vue {
-  
-}
+export default class UserProfileCreate extends Vue {}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

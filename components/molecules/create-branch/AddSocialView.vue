@@ -3,18 +3,19 @@
     <div class="list-box" v-for="(item, index) in dataList" :key="index">
       <div class="icon-social">
         <img
-          v-if="item.type === type.FACEBOOK"
+          v-if="item.type === type.FACEBOOK || item.type === type.FACEBOOK_TH"
           :src="assets('icon/facebook.png')"
         />
         <img
-          v-if="item.type === type.INSTAGRAM"
+          v-if="item.type === type.INSTAGRAM || item.type === type.INSTAGRAM_TH"
           :src="assets('icon/instagram.png')"
         />
-        <img 
-          v-if="item.type === type.LINE" 
-          :src="assets('icon/line.png')" />
         <img
-          v-if="item.type === type.TWITTER"
+          v-if="item.type === type.LINE || item.type === type.LINE_TH"
+          :src="assets('icon/line.png')"
+        />
+        <img
+          v-if="item.type === type.TWITTER || item.type === type.TWITTER_TH"
           :src="assets('icon/twitter.png')"
         />
       </div>
@@ -51,7 +52,7 @@ export default class AddSocial extends Vue {
     type: Array
   })
   private value?: object[]
-  
+
   private type = CreateBranch
 
   get dataList() {

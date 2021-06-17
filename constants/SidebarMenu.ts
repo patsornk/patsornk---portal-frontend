@@ -3,7 +3,7 @@ import { SidebarMenu } from './types/SidebarMenuType'
 export const feature: SidebarMenu[] = [
   {
     title: 'Partner Management',
-    link: '/organizationManagement',
+    link: '/organizationManagement'
   },
   {
     title: 'Loyalty '

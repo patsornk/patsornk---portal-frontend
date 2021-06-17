@@ -16,15 +16,14 @@ import ChangeLang from '~/components/atoms/dropdown-lang/ChangeLang.vue'
     ChangeLang
   }
 })
-export default class HeaderNavbarWithTitle extends Vue {
-}
+export default class HeaderNavbarWithTitle extends Vue {}
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
 .header-bar {
-  .app-title{
+  .app-title {
     display: flex;
     justify-content: flex-start;
     align-items: center;

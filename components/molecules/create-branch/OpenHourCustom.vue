@@ -10,7 +10,7 @@
         <div class="day-off">
           <input-field
             type="checkbox"
-            :title="$t('Mark as day off')"
+            :title="$t('createBranch.markAsDayOff')"
             v-model="item.isDayOff"
             @onChange="$emit('changeCusTomList', { index, time: '' })"
             :shouldBeError="false"
@@ -27,7 +27,7 @@
           :options="timeList"
           :optionsReduce="(item) => item.label"
           optionsLabel="label"
-          :placeholder="$t('createBranch.openingHour')"
+          :placeholder="$t('createBranch.opening')"
           :errorMessage="item.openError"
           @onChange="$emit('changeCusTomList', { index, time: 'open' })"
           searchable
@@ -43,7 +43,7 @@
           optionsLabel="label"
           :errorMessage="item.openMeridiemError"
         />
-        <span class="to">to</span>
+        <span class="to">{{ $t('createBranch.to') }}</span>
         <input-field
           class="open-time"
           v-model="item.closeTime"
@@ -89,7 +89,12 @@ export default class AddSocial extends Vue {
     type: Array
   })
   private value?: object[]
-
+  private errorOpenHour = `${this.$t('common.select')}${this.$t(
+    'createBranch.opening'
+  )}`
+  private errorCloseHour = `${this.$t('common.select')}${this.$t(
+    'createBranch.closingHour'
+  )}`
   get dataList() {
     return this.value
   }

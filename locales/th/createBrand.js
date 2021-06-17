@@ -6,7 +6,7 @@ module.exports = {
   brandPage: 'หน้าแบรนด์',
   email: 'อีเมล',
   phoneNo: 'เบอร์โทรศัพท์',
-  display: 'แสดงผลบน The 1 แอพพลิเคชั่น',
+  display: 'แสดงผลบน The 1 แอปพลิเคชัน',
   brandLogo: 'โลโก้ของแบรนด์',
   brandBanner: 'รูปหน้าปกของแบรนด์',
   brandInfo: 'รายละเอียดของแบรนด์',
@@ -17,29 +17,31 @@ module.exports = {
   brandCodeInput: 'ระบุรหัสแบรนด์',
   createNewBrandSuccess: 'สร้างแบรนด์สำเร็จ',
   savedSuccessfully: 'บันทึกสำเร็จ',
-  fieldError: 'One or more field have an error. Please check and try again.',
+  fieldError: 'มีบางข้อมูลผิดพลาด กรุณาตรวจสอบและลองอีกครั้ง',
   error: {
     require: 'require',
     characterAndNumber: 'a-z, 0-9',
     thaiAndNumber: 'ก-๛, 0-9',
     maxLength: 'maxLength',
-    minLength: 'minLength',
+    minLength: 'ระบุเบอร์โทรศัพท์อย่างน้อย 9 ตัวอักษร',
     email: 'email',
     numeric: 'numeric'
   },
-  partnerCode: 'Please select partner code.',
+  partnerCode: 'กรุณาเลือกรหัสพาร์ทเนอร์',
   brandFeature: {
     title: 'แบรนด์ฟีเจอร์',
-    feature: 'ฟีเจอร์',
-    display: 'แสดงผลบน The 1 แอพพลิเคชั่น',
+    feature: 'ฟีเจอร์ที่ ',
+    display: 'แสดงผลบน The 1 แอปพลิเคชัน',
     ctaLabel: 'ข้อความ CTA',
+    ctaPlaceholder: 'ระบุข้อความ CTA',
     ctaType: 'ประเภทของ CTA',
     ctaFeature: 'ฟีเจอร์ CTA',
+    ctaFeaturePlaceholder: 'ระบุฟีเจอร์ CTA',
     error: {
       toastOneFieldRequired:
         'ต้องระบุข้อมูลอย่างน้อย 1 ช่อง กรุณาตรวจสอบข้อมูล และลองใหม่อีกครั้ง',
       toastRequiredField:
-        'Please input the required field for Display on the 1 app',
+        'ไม่สามารถแสดงบน The 1 app ได้กรุณาระบุข้อมูลที่จำเป็น',
       toastDelete:
         'ไม่สามารถลบได้ขณะที่เปิดใช้งาน ‘แสดงผลบน The 1 แอปพลิเคชัน’',
       oneFieldRequired: 'ต้องระบุอย่างน้อย 1 ช่อง',

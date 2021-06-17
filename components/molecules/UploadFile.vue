@@ -34,7 +34,7 @@
                   <img class="view-file" :src="assets('login/eye-white.png')" />
                 </div>
                 <span class="view-file-text" @click="viewFile">
-                  View File
+                  {{ $t('common.viewFile') }}
                 </span>
               </div>
               <div class="icon-padding" @click="remove">
@@ -44,7 +44,9 @@
                     :src="assets('table/delete-white.png')"
                   />
                 </div>
-                <div class="delete-file-text">Delete File</div>
+                <div class="delete-file-text">
+                  {{ $t('common.deleteFile') }}
+                </div>
               </div>
             </div>
           </div>

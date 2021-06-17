@@ -7,9 +7,7 @@
     >
       <div class="flex items-center" v-if="!item.active">
         <span class="title-inactive">{{ item.title }}</span>
-        <img
-          :src="assets(`breadcrumb/arrow-right-grey.png`)"
-        />
+        <img :src="assets(`breadcrumb/arrow-right-grey.png`)" />
       </div>
       <div v-else>
         <span class="title-active">{{ item.title }}</span>

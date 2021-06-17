@@ -6,16 +6,11 @@
       :active="activeMenu"
       @click.native="onClickMenu(menu.link)"
     >
-      <img
-        :src="assets('navbar/arrow-right.png')"
-        v-if="menu.subMenu"
-      />
+      <img :src="assets('navbar/arrow-right.png')" v-if="menu.subMenu" />
     </nav-menu-item>
     <ul
       class="sub-menu"
-      v-show="
-        activeMenu && menu.subMenu && menu.subMenu.length
-      "
+      v-show="activeMenu && menu.subMenu && menu.subMenu.length"
     >
       <nav-menu
         v-for="(item, index) in menu.subMenu"
@@ -29,12 +24,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Prop,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import NavMenuItem from '~/components/atoms/navbar/NavMenuItem.vue'
 import { getAssetsPath } from '~/helper/images'
 

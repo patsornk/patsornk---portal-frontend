@@ -92,7 +92,7 @@ export default class Landing extends Vue {
 
     padding: 90px;
     height: 400px;
-    background-color: #221F20;
+    background-color: #221f20;
     box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.11);
     border-radius: 11px;
 

@@ -55,6 +55,21 @@ export default class CompanyEditPartnerCode extends Vue {
     updatedBy: ''
   }
 
+  private statusOption = [
+    {
+      id: 2,
+      status: `${this.$t('common.companyDropdownStatus.active')}`
+    },
+    {
+      id: 3,
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
+    },
+    {
+      id: 4,
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
+    }
+  ]
+
   get mode(): string {
     return PartnerCodeMode.EDIT_MODE
   }
@@ -129,7 +144,10 @@ export default class CompanyEditPartnerCode extends Vue {
       )
       if (res.successful) {
         const data = res.data
-        this.$store.dispatch('company/setStatus', res.data.statusDesc)
+        const statusStr = this.statusOption.filter(
+          (e) => e.id === this.$v.status.$model
+        )[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
         return data.partnerCode
       }
     } catch (error) {

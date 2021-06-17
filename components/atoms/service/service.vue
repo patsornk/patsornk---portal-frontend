@@ -10,7 +10,7 @@
         :src="assets('service/close.png')"
         @click="$emit('unApply')"
       />
-      <div class="active" v-if="isActive">{{$t('common.active')}}</div>
+      <div class="active" v-if="isActive">{{ $t('common.active') }}</div>
     </div>
     <div class="title-box">
       <div>{{ title }}</div>
@@ -19,7 +19,7 @@
     <div class="detail">{{ detail }}</div>
     <div class="footer">
       <button class="apply" v-if="!isApply" @click="$emit('onApply')">
-        {{$t('common.apply')}}
+        {{ $t('common.apply') }}
       </button>
     </div>
   </div>

@@ -20,7 +20,7 @@
               :src="assets('table/hold.png')"
               @click="clickAction('clickHold')"
             />
-            <span class="tooltiptext">On hold</span>
+            <span class="tooltiptext">{{ $t('common.onHold') }}</span>
           </div>
           <div v-if="isShowInactive" class="icon-container">
             <img
@@ -28,7 +28,7 @@
               :src="assets('table/inactive.png')"
               @click="clickAction('clickInActive')"
             />
-            <span class="tooltiptext">Inactive</span>
+            <span class="tooltiptext">{{ $t('common.inActive') }}</span>
           </div>
           <div v-if="isShowDelete" class="icon-container">
             <img
@@ -36,7 +36,7 @@
               :src="assets('table/delete.png')"
               @click="clickAction('clickDelete')"
             />
-            <span class="tooltiptext">Delete</span>
+            <span class="tooltiptext">{{ $t('common.delete') }}</span>
           </div>
         </span>
         <span v-else class="icon-list">

@@ -5,7 +5,10 @@
       <input-field
         v-model="$v.companyNameTh.$model"
         :title="$t('createCompany.companyNameTh')"
-        :placeholder="$t('createCompany.companyNameInput')"
+        :placeholder="
+          $t('createCompany.pleaseEnter').toString() +
+          $t('createCompany.companyNameTh').toString()
+        "
         :maxlength="50"
         required
         :error-message="error.companyNameTh"
@@ -14,7 +17,10 @@
         v-model="$v.companyNameEn.$model"
         required
         :title="$t('createCompany.companyNameEn')"
-        :placeholder="$t('createCompany.companyNameInput')"
+        :placeholder="
+          $t('createCompany.pleaseEnter').toString() +
+          $t('createCompany.companyNameEn').toString()
+        "
         :maxlength="50"
         :error-message="error.companyNameEn"
       />
@@ -197,7 +203,8 @@ export default class CreateCompany extends Vue {
   @Watch('companyNameTh')
   checkCompanyNameTh(): void {
     this.error.companyNameTh = !this.$v.companyNameTh.required
-      ? this.$t('createCompany.pleaseEnter').toString()
+      ? this.$t('createCompany.pleaseEnter').toString() +
+        this.$t('createCompany.companyNameTh').toString()
       : !this.$v.companyNameTh.mustBe
       ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.companyNameTh.maxLength
@@ -208,7 +215,8 @@ export default class CreateCompany extends Vue {
   @Watch('companyNameEn')
   checkCompanyNameEn(): void {
     this.error.companyNameEn = !this.$v.companyNameEn.required
-      ? this.$t('createCompany.pleaseEnter').toString()
+      ? this.$t('createCompany.pleaseEnter').toString() +
+        this.$t('createCompany.companyNameEn').toString()
       : !this.$v.companyNameEn.mustBe
       ? this.$t('common.invalidInputInformation').toString()
       : !this.$v.companyNameEn.maxLength
@@ -219,7 +227,8 @@ export default class CreateCompany extends Vue {
   @Watch('typeId')
   checkTypeId(): void {
     this.error.typeId = !this.$v.typeId.required
-      ? this.$t('createCompany.pleaseEnter').toString()
+      ? this.$t('createCompany.pleaseSelect').toString() +
+        this.$t('createCompany.companyType').toString()
       : ''
   }
 
@@ -242,7 +251,8 @@ export default class CreateCompany extends Vue {
   checkCategoryId(): void {
     if (this.$v.typeId.$model === 3) {
       this.error.categoryId = !this.$v.categoryId.required
-        ? this.$t('createCompany.pleaseEnter').toString()
+        ? this.$t('createCompany.pleaseSelect').toString() +
+          this.$t('createCompany.partnerCategory').toString()
         : ''
     }
   }
@@ -251,7 +261,8 @@ export default class CreateCompany extends Vue {
   checkSizeId(): void {
     if (this.$v.typeId.$model === 3) {
       this.error.sizeId = !this.$v.sizeId.required
-        ? this.$t('createCompany.pleaseEnter').toString()
+        ? this.$t('createCompany.pleaseSelect').toString() +
+          this.$t('createCompany.businessSize').toString()
         : ''
     }
   }
@@ -260,7 +271,8 @@ export default class CreateCompany extends Vue {
   checkAssignee(): void {
     if (this.$v.typeId.$model === 3) {
       this.error.assignee = !this.$v.assignee.required
-        ? this.$t('createCompany.pleaseEnter').toString()
+        ? this.$t('createCompany.pleaseSelect').toString() +
+          this.$t('createCompany.assignee').toString()
         : ''
     }
   }
@@ -369,19 +381,23 @@ export default class CreateCompany extends Vue {
           { data: null }
         )
         if (res.successful) {
-          const data = res.data
-          this.companyNameTh = data.companyNameTh
-          this.companyNameEn = data.companyNameEn
-          this.typeId = data.companyType.companyTypeId
-          this.categoryId = data.companyCategory.companyCategoryId
-          this.sizeId = data.companySize.companySizeId
-          this.assignee = data.assignee
-          this.email = data.companyEmail
-          this.companyPhonePrefix = data.companyPhonePrefix
-          this.phoneNumber = data.companyPhoneNumber
+          if (res.data) {
+            const data = res.data
+            this.companyNameTh = data.companyNameTh
+            this.companyNameEn = data.companyNameEn
+            this.typeId = data.companyType.companyTypeId
+            this.email = data.companyEmail
+            this.companyPhonePrefix = data.companyPhonePrefix
+            this.phoneNumber = data.companyPhoneNumber
+            if (data.companyCategory && data.companySize && data.assignee) {
+              this.categoryId = data.companyCategory.companyCategoryId
+              this.sizeId = data.companySize.companySizeId
+              this.assignee = data.assignee
+            }
+          }
         }
       } catch (error) {
-        this.$toast.global.error(error.response.data.message)
+        this.$toast.global.error(error)
       }
     }
   }
@@ -390,7 +406,7 @@ export default class CreateCompany extends Vue {
     this.checkTypeId()
     if (this.$v.typeId.$model !== 3) {
       if (this.$v.validationGroup.$invalid) {
-        this.$toast.global.error(this.$t('createCompany.fieldError'))
+        this.$toast.global.error(this.$t('common.somethingWrong'))
         this.checkCompanyNameEn()
         this.checkCompanyNameTh()
         this.checkTypeId()
@@ -465,7 +481,7 @@ export default class CreateCompany extends Vue {
       }
     } else {
       if (this.$v.validationPartnerGroup.$invalid) {
-        this.$toast.global.error(this.$t('createCompany.fieldError'))
+        this.$toast.global.error(this.$t('common.somethingWrong'))
         this.checkCompanyNameEn()
         this.checkCompanyNameTh()
         this.checkTypeId()
@@ -505,7 +521,7 @@ export default class CreateCompany extends Vue {
                 response.data.companyId
               )
               this.$toast.global.success(
-                this.$t('common.successfully').toString()
+                this.$t('createCompany.savedSuccessfully').toString()
               )
               window.sessionStorage.setItem('createCompanyFirstTime', 'no')
               this.$store.dispatch('stepbar/setEnableSubmit', 1)
@@ -533,7 +549,7 @@ export default class CreateCompany extends Vue {
               )
               window.sessionStorage.setItem('companyFirstTime', 'no')
               this.$toast.global.success(
-                this.$t('common.successfully').toString()
+                this.$t('createCompany.savedSuccessfully').toString()
               )
               this.$router.push('/organizationManagement/create/partnercode')
             }

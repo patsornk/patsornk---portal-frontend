@@ -47,7 +47,7 @@
     <table-component
       v-model="selectData"
       item-key="brandId"
-      create-new-title="Assign More Brand"
+      :create-new-title="$t('createPartnerCode.assignMore')"
       is-show-header-table
       is-show-check-box
       is-show-paginate
@@ -85,13 +85,15 @@
       <div class="modal-backdrop">
         <div class="modal">
           <div class="modal-header">
-            <span class="title"> Assign more brand </span>
+            <span class="title">
+              {{ $t('createPartnerCode.assignMore') }}
+            </span>
           </div>
           <div class="modal-body">
             <input-field
               class="input-keyword"
               v-model="keyword"
-              placeholder="Social Link"
+              :placeholder="$t('createPartnerCode.searchFromBrand')"
               :error-message="keywordError"
               @onChange="chengeKeyword"
             />
@@ -132,7 +134,7 @@
                 :class="modalSelectData.length === 0 ? 'disable' : ''"
                 @click.native="clickSubmitModel"
               >
-                {{ $t('createCompany.assign') }}
+                {{ $t('createPartnerCode.assign') }}
               </t-1-button>
             </div>
           </div>
@@ -223,15 +225,15 @@ export default class CreateEditPartnerCode extends Vue {
   private statusOption = [
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -271,7 +273,7 @@ export default class CreateEditPartnerCode extends Vue {
   frameworkComponents = {}
   columnDefs = [
     {
-      headerName: 'Brand Code',
+      headerName: this.$t('common.brandCode'),
       field: 'brandCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -280,7 +282,7 @@ export default class CreateEditPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Brand Name (TH)',
+      headerName: this.$t('common.brandNameTh'),
       field: 'brandNameTh',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -289,7 +291,7 @@ export default class CreateEditPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Brand Name (EN)',
+      headerName: this.$t('common.brandNameEn'),
       field: 'brandNameEn',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -308,7 +310,7 @@ export default class CreateEditPartnerCode extends Vue {
   modalFrameworkComponents = {}
   readonly modalColumnDefs = [
     {
-      headerName: 'Brand Code',
+      headerName: this.$t('common.brandCode'),
       field: 'brandCode',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -317,7 +319,7 @@ export default class CreateEditPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Brand Name (TH)',
+      headerName: this.$t('common.brandNameTh'),
       field: 'brandNameTh',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -326,7 +328,7 @@ export default class CreateEditPartnerCode extends Vue {
       }
     },
     {
-      headerName: 'Brand Name (EN)',
+      headerName: this.$t('common.brandNameEn'),
       field: 'brandNameEn',
       cellRenderer: (params: any) => {
         return `<div class="custom-row">
@@ -338,9 +340,7 @@ export default class CreateEditPartnerCode extends Vue {
 
   dialogDisplay = false
   dialogTitle = ''
-  dialogDescription =
-    'Please check the information before click to confirm button. The information will lose and never get back.'
-
+  dialogDescription = ''
   dialogLeftButtonText = 'Cancel'
   dialogRightButtonText = 'Remove'
 
@@ -368,7 +368,10 @@ export default class CreateEditPartnerCode extends Vue {
         this.partnerId = res.data.partnerId
         this.status = res.data.status
         this.$toast.global.success('Saved successfully')
-        this.$store.dispatch('company/setStatus', res.data.statusDesc)
+        const statusStr = this.statusOption.filter(
+          (e) => e.id === res.data.status
+        )[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -383,10 +386,14 @@ export default class CreateEditPartnerCode extends Vue {
       )
       if (res.successful) {
         const data = res.data
+        const statusStr = this.statusOption.filter(
+          (e) => e.id === data.status
+        )[0].status
         this.partnerCode = data.partnerCode
         this.partnerName = data.partnerName
         this.partnerId = data.partnerId
-        this.status = data.status
+        this.status = statusStr
+        this.$store.dispatch('company/setStatus', statusStr)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -531,7 +538,10 @@ export default class CreateEditPartnerCode extends Vue {
 
   clickDeleteList(): void {
     this.dialogDisplay = true
-    this.dialogTitle = `Want to remove ${this.selectData.length} selected items from assigned partner code?`
+    this.dialogTitle = `${this.$t('table.dialogPopup.title6')} ${
+      this.selectData.length
+    } ${this.$t('table.dialogPopup.title7')}`
+    this.dialogDescription = `${this.$t('table.dialogPopup.removeDescription')}`
   }
 
   async dialogAction(): Promise<void> {

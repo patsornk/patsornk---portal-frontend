@@ -13,8 +13,8 @@ module.exports = {
   companyNameTh: 'Company Name (TH)',
   companyNameEn: 'Company Name (EN)',
   companyType: 'Company Type',
-  pleaseEnter: 'Please enter',
-  pleaseSelect: 'Please select',
+  pleaseEnter: 'Input ',
+  pleaseSelect: 'Select ',
   partnerCategory: 'Partner Category',
   businessSize: 'Business Size',
   assign: 'Assign',
@@ -26,4 +26,22 @@ module.exports = {
   phoneNoInput: 'Input Phone No.',
   createNewOrganizationSuccess: 'Create new organization success',
   savedSuccessfully: 'Saved successfully',
+  dialogPopup: {
+    title: 'Want to Create New Organization?',
+    titleBranch: 'Want to Create New Branch?',
+    titleBrand: 'Want to Create New Brand?',
+    description: "To make sure, please check the information before click 'Create New Organization'",
+    descriptionBranch: "To make sure, please check the information before click 'Create New Branch'",
+    descriptionBrand: "To make sure, please check the information before click 'Create New Brand'",
+    leftButtonTitle: 'Cancel',
+    rightButtonTitle: 'Create New Organization',
+    rightButtonTitleBranch: 'Create New Branch',
+    rightButtonTitleBrand: 'Create New Brand'
+  },
+  toast: {
+    partnerCodeDuplicate: 'Duplicated Siebel Partner Code',
+    companyNameDuplicate: 'Duplicated Company Name',
+    brandCodeDuplicate: 'Duplicated Brand Code',
+    branchCodeDuplicate: 'Duplicated Branch Code',
+  }
 }

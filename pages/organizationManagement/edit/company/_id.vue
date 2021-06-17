@@ -22,6 +22,24 @@ export default class OrganizationManagementDetail extends Vue {
   get language(): any {
     return this.$i18n.locale
   }
+  private companyStatus = [
+    {
+      id: -1,
+      status: `${this.$t('common.companyDropdownStatus.all')}`
+    },
+    {
+      id: 2,
+      status: `${this.$t('common.companyDropdownStatus.active')}`
+    },
+    {
+      id: 3,
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
+    },
+    {
+      id: 4,
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
+    }
+  ]
 
   private company: CompanyType = {
     assignee: '',
@@ -73,7 +91,7 @@ export default class OrganizationManagementDetail extends Vue {
         title: this.$t('home.landing.organiztionMng').toString(),
         url: '/'
       },
-      { 
+      {
         title,
         url: '/'
       },
@@ -84,7 +102,10 @@ export default class OrganizationManagementDetail extends Vue {
       }
     ]
     this.$store.dispatch('breadcrumb/setBreadcrumb', breadcrumb)
-    this.$store.dispatch('breadcrumb/setPageTitle', this.$t('home.editCompany').toString())
+    this.$store.dispatch(
+      'breadcrumb/setPageTitle',
+      this.$t('home.editCompany').toString()
+    )
   }
 
   async getCompany(): Promise<void> {
@@ -95,7 +116,10 @@ export default class OrganizationManagementDetail extends Vue {
       )
       if (res.successful) {
         this.company = res.data
-        this.$store.dispatch('company/setStatus', this.company.statusDesc)
+        const statusStr = this.companyStatus.filter(
+          (e) => e.id === this.company.status
+        )[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
 
         this.setupBreadcrumb(
           this.language === 'th'

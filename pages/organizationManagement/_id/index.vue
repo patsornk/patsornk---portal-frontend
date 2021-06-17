@@ -62,6 +62,25 @@ export default class OrganizationManagementDetail extends Vue {
     return this.$route.params.id
   }
 
+  private companyOption = [
+    {
+      id: -1,
+      status: `${this.$t('common.companyDropdownStatus.all')}`
+    },
+    {
+      id: 2,
+      status: `${this.$t('common.companyDropdownStatus.active')}`
+    },
+    {
+      id: 3,
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
+    },
+    {
+      id: 4,
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
+    }
+  ]
+
   @Watch('language')
   setTitleBreadcrumb(): void {
     this.setupBreadcrumb(
@@ -95,7 +114,10 @@ export default class OrganizationManagementDetail extends Vue {
       )
       if (res.successful) {
         this.company = res.data
-        this.$store.dispatch('company/setStatus', this.company.statusDesc)
+        const statusStr = this.companyOption.filter(
+          (e) => e.id === this.company.status
+        )[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
 
         this.setupBreadcrumb(
           this.language === 'th'

@@ -9,11 +9,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Vue,
-  Prop,
-  Component
-} from 'vue-property-decorator'
+import { Vue, Prop, Component } from 'vue-property-decorator'
 
 @Component({})
 export default class FeatureTab extends Vue {
@@ -60,5 +56,4 @@ export default class FeatureTab extends Vue {
   border-radius: 4px 4px 0px 0px;
   margin-top: -3px;
 }
-
 </style>

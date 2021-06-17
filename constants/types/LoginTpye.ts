@@ -10,12 +10,12 @@ export interface ErrorUserFormData {
   password: string
 }
 
-export interface  ResetPasswordFormData {
+export interface ResetPasswordFormData {
   newPassword: string
   confirmPassword: string
 }
 
-export interface  ErrorResetPasswordFormData {
+export interface ErrorResetPasswordFormData {
   newPassword: string
   confirmPassword: string
 }

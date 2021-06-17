@@ -34,7 +34,7 @@ export default class Loading extends Vue {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  
+
   .loading {
     display: inline-block;
     width: 3rem;

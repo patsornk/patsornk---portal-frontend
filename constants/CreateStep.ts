@@ -3,5 +3,5 @@ export enum CreateStepBar {
   PARTNERCODE = 'partnercode',
   BRAND = 'brand',
   BRANCH = 'branch',
-  SERVICE = 'service',
+  SERVICE = 'service'
 }

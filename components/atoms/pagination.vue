@@ -1,9 +1,6 @@
 <template>
   <div class="pagination-container">
-    <span
-      class="pagination-icon material-icons"
-      @click="prevPage()"
-    >
+    <span class="pagination-icon material-icons" @click="prevPage()">
       chevron_left
     </span>
     <template v-for="(page, index) in pages">
@@ -28,22 +25,14 @@
         >{{ page.content }}
       </a>
     </template>
-    <span
-      @click="nextPage()"
-      class="pagination-icon material-icons"
-    >
+    <span @click="nextPage()" class="pagination-icon material-icons">
       chevron_right
     </span>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue,
-  Watch
-} from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class Pagination extends Vue {
@@ -147,12 +136,10 @@ export default class Pagination extends Vue {
       if (this.selected - halfPageRange > 0) {
         selectedRangeLow = this.selected - 1 - halfPageRange
       }
-      let selectedRangeHigh =
-        selectedRangeLow + this.pageRange - 1
+      let selectedRangeHigh = selectedRangeLow + this.pageRange - 1
       if (selectedRangeHigh >= this.pageCount) {
         selectedRangeHigh = this.pageCount - 1
-        selectedRangeLow =
-          selectedRangeHigh - this.pageRange + 1
+        selectedRangeLow = selectedRangeHigh - this.pageRange + 1
       }
       for (
         let i = selectedRangeLow;
@@ -166,10 +153,7 @@ export default class Pagination extends Vue {
         setBreakView(selectedRangeLow - 1)
       }
       // Check if there is breakView in the right of selected range
-      if (
-        selectedRangeHigh + 1 <
-        this.pageCount - this.marginPages
-      ) {
+      if (selectedRangeHigh + 1 < this.pageCount - this.marginPages) {
         setBreakView(selectedRangeHigh + 1)
       }
       // 3rd - loop thru high end of margin pages
@@ -202,10 +186,7 @@ export default class Pagination extends Vue {
     return this.selected === 1
   }
   private lastPageSelected() {
-    return (
-      this.selected === this.pageCount ||
-      this.pageCount === 0
-    )
+    return this.selected === this.pageCount || this.pageCount === 0
   }
   private selectFirstPage() {
     if (this.selected <= 1) return

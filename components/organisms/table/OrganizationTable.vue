@@ -32,9 +32,9 @@
             :map-keydown="deleteHandler"
           />
           <v-select
-            v-model="filterData.compantStatus"
+            v-model="filterData.companyStatus"
             class="dropdown"
-            :options="compantStatus"
+            :options="companyStatus"
             :label="'status'"
             :reduce="(item) => item.id"
             :placeholder="$t('common.status').toString()"
@@ -161,51 +161,44 @@ export default class OrganizationTable extends Vue {
   inputType = 'text'
   clickSearch = false
   clickSort = false
-  searchList = [
-    {
-      id: 'company',
-      label: 'Search by Company'
-    },
-    {
-      id: 'partnerCode',
-      label: 'Search by PartnerCode'
-    }
-  ]
+  searchList = [{}]
 
   filterData = {
     search: {
-      searchBy: 'company',
+      searchBy: `${this.$t('common.searchBy')} ${this.$t(
+        'common.companyTitle'
+      )}`,
       keyword: ''
     },
     companyTypeId: 0,
     companyCategoryId: 0,
-    compantStatus: 0
+    companyStatus: 0
   }
 
   private pagination = 10
   private companyType: any = []
   private companySize: any = []
   private companyCategory: any = []
-  private compantStatus = [
+  private companyStatus = [
     {
       id: -1,
-      status: 'All'
+      status: `${this.$t('common.companyDropdownStatus.all')}`
     },
     {
       id: 1,
-      status: 'Draft'
+      status: `${this.$t('common.companyDropdownStatus.draft')}`
     },
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -307,9 +300,11 @@ export default class OrganizationTable extends Vue {
       sortable: true,
       cellRenderer: (params: any) => {
         let strFormat = ''
-        params.data.status === 'Active'
+        params.data.status ===
+        this.$t('table.contentTableStatus.active').toString()
           ? (strFormat = 'active')
-          : params.data.status === 'On hold'
+          : params.data.status ===
+            this.$t('table.contentTableStatus.hold').toString()
           ? (strFormat = 'hold')
           : (strFormat = 'in-active')
         return `<div class="custom-row">
@@ -366,7 +361,8 @@ export default class OrganizationTable extends Vue {
   }
 
   onRowClicked(row: any): void {
-    if (row.data.status === 'Draft') {
+    console.log(row)
+    if (row.data.status === 'Draft' || row.data.status === 'แบบร่าง') {
       this.getOnboardStep(row.data.companyId)
     } else {
       this.$router.push(`/organizationManagement/${row.data.companyId}`)
@@ -414,6 +410,7 @@ export default class OrganizationTable extends Vue {
     await this.getCompanyCategory()
     this.currentPage = 1
     this.getCompanies(1, 10)
+    this.changeSerchSelect()
   }
 
   changePage(page: number): void {
@@ -451,8 +448,8 @@ export default class OrganizationTable extends Vue {
     if (this.filterData.search.keyword !== '') {
       path = `${path}&keyword=${this.filterData.search.keyword}`
     }
-    if (this.filterData.compantStatus > 0) {
-      path = `${path}&statusId=${this.filterData.compantStatus}`
+    if (this.filterData.companyStatus > 0) {
+      path = `${path}&statusId=${this.filterData.companyStatus}`
     }
     if (this.filterData.companyCategoryId > 0) {
       path = `${path}&companyCategoryId=${this.filterData.companyCategoryId}`
@@ -567,6 +564,7 @@ export default class OrganizationTable extends Vue {
         if (this.clickSearch)
           this.filterCompanies(this.currentPage, this.pagination)
         else this.getCompanies(this.currentPage, this.pagination)
+        this.$toast.global.success(this.$t('table.changedStatusSuccessfully'))
       }
     } catch (error) {
       const code = error.response.data.code
@@ -590,6 +588,18 @@ export default class OrganizationTable extends Vue {
       )
       if (response.successful) {
         this.getCompanies(this.currentPage, this.pagination)
+        this.$toast.global.success(this.$t('table.deletedSuccessfully'))
+        this.filterData = {
+          search: {
+            searchBy: `${this.$t('common.searchBy')} ${this.$t(
+              'common.companyTitle'
+            )}`,
+            keyword: ''
+          },
+          companyTypeId: 0,
+          companyCategoryId: 0,
+          companyStatus: 0
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -614,7 +624,9 @@ export default class OrganizationTable extends Vue {
           ? item.companySize.companySizeTh
           : item.companySize.companySizeEn
         : '-'
-
+      const statusStr = this.companyStatus.filter(
+        (e) => e.id === item.status
+      )[0].status
       return {
         companyId: item.companyId,
         regioCompanyNameTh: item.companyNameTh,
@@ -622,7 +634,7 @@ export default class OrganizationTable extends Vue {
         companyCategory: cat,
         companyType: type,
         businessSize: size,
-        status: item.statusDesc
+        status: statusStr
       }
     })
   }
@@ -638,7 +650,6 @@ export default class OrganizationTable extends Vue {
 
   onTableIconClick(action: string): void {
     this.dialogDisplay = true
-    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
     this.dialogLeftButtonText = this.$t('table.dialogPopup.cancel').toString()
     let title = ''
 
@@ -648,11 +659,17 @@ export default class OrganizationTable extends Vue {
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionActive'
+      ).toString()
     } else if (action === 'clickInActive') {
       title = this.$t('table.status.inactive').toString()
       this.dialogAction = OrganizationManagementStatus.INACTIVE
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
+      ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionInActive'
       ).toString()
     } else if (action === 'clickHold') {
       title = this.$t('table.status.hold').toString()
@@ -660,16 +677,30 @@ export default class OrganizationTable extends Vue {
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionHold'
+      ).toString()
     } else if (action === 'clickDelete') {
       title = this.$t('table.status.delete').toString()
       this.dialogAction = OrganizationManagementStatus.DELETE
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.delete'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.description'
+      ).toString()
     }
-    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${title} ${
-      this.selectData.length
-    } ${this.$t('table.dialogPopup.title2')}`
+    if (action === 'clickDelete') {
+      this.dialogTitle = `${this.$t('table.dialogPopup.title4')} ${
+        this.selectData.length
+      } ${this.$t('table.dialogPopup.title5')}`
+    } else {
+      this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+        this.selectData.length
+      } ${this.$t('table.dialogPopup.title2')} ${title}${this.$t(
+        'table.dialogPopup.title3'
+      )}`
+    }
   }
 
   onLeftDialogPopupClick(): void {

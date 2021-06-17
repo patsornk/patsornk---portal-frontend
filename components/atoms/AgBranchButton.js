@@ -4,7 +4,7 @@ export default Vue.extend({
   template: `
       <span class="custom-row-80">
         <div class="view-branch" @click="clickSave">
-          View branch
+          {{ params.btnName }}
         </div>
       </span>
     `,

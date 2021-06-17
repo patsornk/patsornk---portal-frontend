@@ -2,15 +2,8 @@
   <div class="nav-menu-item">
     <div :class="active ? 'content-active' : 'content'">
       <div class="icon-text flex items-center">
-        <img
-          class="mr-4"
-          v-if="icon"
-          :src="imageIcon"
-          width="20"
-        />
-        <span :class="active ? 'title-active' : 'title'">{{
-          label
-        }}</span>
+        <img class="mr-4" v-if="icon" :src="imageIcon" width="20" />
+        <span :class="active ? 'title-active' : 'title'">{{ label }}</span>
       </div>
       <slot />
     </div>
@@ -18,11 +11,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Prop
-} from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 import { getAssetsPath } from '~/helper/images'
 
 @Component

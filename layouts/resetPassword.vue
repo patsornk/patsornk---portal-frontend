@@ -17,7 +17,7 @@ import HeaderNavbarWithTitle from '~/components/organisms/navbar/HeaderNavbarWit
 })
 export default class ResetPasswordLayout extends Vue {
   get version() {
-    const pkgVersion = JSON.stringify(require('../package.json').version);
+    const pkgVersion = JSON.stringify(require('../package.json').version)
     return pkgVersion.replace(/["]/g, '')
   }
 }

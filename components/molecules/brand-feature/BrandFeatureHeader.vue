@@ -5,28 +5,25 @@
       :key="index"
       :value="index.toString()"
       :active="index == activeIndex"
-      @clickTab="$emit('selectBrandFeature', index)" 
+      @clickTab="$emit('selectBrandFeature', index)"
     />
     <feature-tab
       v-if="range < 8"
       :newTab="true"
-      @clickTab="$emit('createBrandFeature')" 
+      @clickTab="$emit('createBrandFeature')"
     />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  Vue,
-  Prop,
-  Component
-} from 'vue-property-decorator'
+import { Vue, Prop, Component } from 'vue-property-decorator'
 import FeatureTab from '~/components/atoms/FeatureTab.vue'
 
 @Component({
   components: {
-    FeatureTab,
-}})
+    FeatureTab
+  }
+})
 export default class BrandFeatureHeader extends Vue {
   @Prop({
     type: Number,
@@ -52,5 +49,4 @@ export default class BrandFeatureHeader extends Vue {
   border-bottom-color: '#EFEFEF';
   border-bottom-width: 1px;
 }
-
 </style>

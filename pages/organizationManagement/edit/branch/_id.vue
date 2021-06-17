@@ -45,6 +45,25 @@ export default class CreateBranch extends Vue {
     branchNameTh: ''
   }
 
+  private companyStatus = [
+    {
+      id: -1,
+      status: `${this.$t('common.companyDropdownStatus.all')}`
+    },
+    {
+      id: 2,
+      status: `${this.$t('common.companyDropdownStatus.active')}`
+    },
+    {
+      id: 3,
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
+    },
+    {
+      id: 4,
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
+    }
+  ]
+
   @Watch('language')
   changeLanguage(): void {
     this.setupBreadcrumb()
@@ -108,7 +127,10 @@ export default class CreateBranch extends Vue {
       )
       if (res.successful) {
         this.branch = res.data
-        this.$store.dispatch('company/setStatus', res.data.statusDesc)
+        const statusStr = this.companyStatus.filter(
+          (e) => e.id === res.data.status
+        )[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

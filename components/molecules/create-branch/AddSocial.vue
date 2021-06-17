@@ -9,7 +9,7 @@
         :options="socialList"
         :optionsReduce="(item) => item.label"
         optionsLabel="label"
-        placeholder="Select Social Media"
+        :placeholder="$t('createBranch.selectSocialMedia')"
         :errorMessage="
           dataList[index].errorType ? dataList[index].errorType : ''
         "
@@ -17,7 +17,7 @@
       <input-field
         class="input-website"
         v-model="dataList[index].link"
-        placeholder="Social Link"
+        :placeholder="$t('createBranch.socialLink')"
         :maxlength="255"
         :errorMessage="
           dataList[index].errorLink ? dataList[index].errorLink : ''
@@ -64,19 +64,19 @@ export default class AddSocial extends Vue {
   socialList = [
     {
       id: 1,
-      label: 'Facebook'
+      label: `${this.$t('createBranch.facebook')}`
     },
     {
       id: 2,
-      label: 'Instagram'
+      label: `${this.$t('createBranch.instagram')}`
     },
     {
       id: 3,
-      label: 'Line'
+      label: `${this.$t('createBranch.line')}`
     },
     {
       id: 4,
-      label: 'Twitter'
+      label: `${this.$t('createBranch.twitter')}`
     }
   ]
 
@@ -101,7 +101,7 @@ export default class AddSocial extends Vue {
   removeInput(index: number) {
     this.dataList?.splice(index, 1)
   }
-  
+
   assets(name: string) {
     return getAssetsPath(name)
   }

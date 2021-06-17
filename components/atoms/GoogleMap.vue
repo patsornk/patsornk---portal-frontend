@@ -1,15 +1,10 @@
 <template>
   <div>
-    <gmap-map
-      :center="position"
-      :zoom="zoom"
-      class="custom-map"
-    >
+    <gmap-map :center="position" :zoom="zoom" class="custom-map">
       <gmap-marker :position="position"></gmap-marker>
     </gmap-map>
   </div>
 </template>
-
 
 <script lang="ts">
 import { MapPosition } from '@/constants/types/GoogleMapTypes.js'
@@ -28,7 +23,6 @@ export default class GoogleMap extends Vue {
     default: 15
   })
   readonly zoom!: number
-
 }
 </script>
 

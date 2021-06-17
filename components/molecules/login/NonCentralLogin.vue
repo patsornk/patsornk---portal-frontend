@@ -229,7 +229,7 @@ export default class CentarlLogin extends Vue {
       line-height: 24px;
       text-align: center;
       padding: 8px 16px;
-      color: #221F20;
+      color: #221f20;
       text-decoration: underline;
       width: 100%;
     }

@@ -1,7 +1,9 @@
 ﻿<template>
   <div class="central-reset-password">
     <div class="reset-password-input w-full">
-      <p class="reset-password-header">{{ $t('login.headingsResetPassword') }}</p>
+      <p class="reset-password-header">
+        {{ $t('login.headingsResetPassword') }}
+      </p>
       <input-field
         class="relative"
         :title="$t('login.newPasswordTitle')"
@@ -52,39 +54,30 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Watch,
-} from 'vue-property-decorator'
-import {
-  ResetPasswordFormData,
-  ErrorResetPasswordFormData
-} from '~/constants'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { ResetPasswordFormData, ErrorResetPasswordFormData } from '~/constants'
 import { validateError } from '~/helper'
 import InputField from '~/components/atoms/InputField.vue'
 import T1Button from '~/components/atoms/button.vue'
 import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
-import {
-  required,
-  minLength,
-  maxLength,
-} from 'vuelidate/lib/validators'
+import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 
 const validations = {
   newPassword: {
     required,
-    mustBe: (value: any) => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z_.!@#$%-]*$/g.test(value),
+    mustBe: (value: any) =>
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z_.!@#$%-]*$/g.test(value),
     minLength: minLength(8),
     maxLength: maxLength(12)
   },
   confirmPassword: {
     required,
-    mustBe: (value: any) => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z_.!@#$%-]*$/g.test(value),
+    mustBe: (value: any) =>
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z_.!@#$%-]*$/g.test(value),
     minLength: minLength(8),
     maxLength: maxLength(12)
-  },
+  }
 }
 @Component({
   mixins: [validationMixin],
@@ -98,7 +91,6 @@ export default class ResetPassword extends Vue {
   $i18n: any
   private stateMagicEyeTypeNew = 'password'
   private stateMagicEyeType = 'password'
-
 
   private formData: ResetPasswordFormData = {
     newPassword: '',
@@ -124,41 +116,36 @@ export default class ResetPassword extends Vue {
   }
 
   get imageNameNew(): string {
-    return this.stateMagicEyeTypeNew === 'password'
-      ? 'eye'
-      : 'close-eye'
+    return this.stateMagicEyeTypeNew === 'password' ? 'eye' : 'close-eye'
   }
 
   get imageName(): string {
-    return this.stateMagicEyeType === 'password'
-      ? 'eye'
-      : 'close-eye'
+    return this.stateMagicEyeType === 'password' ? 'eye' : 'close-eye'
   }
 
   get language(): any {
     return this.$i18n.locale
   }
-  get isDisabled() : any {
-    if(validateError(this.error) && (this.formData.newPassword && this.formData.confirmPassword)){
-      return ""
-    }
-    else {
-      return "disabled"
+  get isDisabled(): any {
+    if (
+      validateError(this.error) &&
+      this.formData.newPassword &&
+      this.formData.confirmPassword
+    ) {
+      return ''
+    } else {
+      return 'disabled'
     }
   }
 
   private toggleMagicEyeNew(): void {
     this.stateMagicEyeTypeNew =
-      this.stateMagicEyeTypeNew === 'password'
-        ? 'text'
-        : 'password'
+      this.stateMagicEyeTypeNew === 'password' ? 'text' : 'password'
   }
 
   private toggleMagicEye(): void {
     this.stateMagicEyeType =
-      this.stateMagicEyeType === 'password'
-        ? 'text'
-        : 'password'
+      this.stateMagicEyeType === 'password' ? 'text' : 'password'
   }
 
   private imageIconNew(name: string): any {
@@ -182,7 +169,10 @@ export default class ResetPassword extends Vue {
       : !this.$v.newPassword.maxLength
       ? this.$t('login.lengthPassword').toString()
       : ''
-    if(this.error.confirmPassword === this.$t('login.passwordNotMatch').toString()){
+    if (
+      this.error.confirmPassword ===
+      this.$t('login.passwordNotMatch').toString()
+    ) {
       this.onChangedConfirmPassword()
     }
   }
@@ -202,13 +192,18 @@ export default class ResetPassword extends Vue {
 
   @Watch('language')
   changeLanguage(): void {
-    if(this.error.newPassword){
+    if (this.error.newPassword) {
       this.onChangedNewPassword()
     }
-    if(this.error.confirmPassword){
+    if (this.error.confirmPassword) {
       this.onChangedConfirmPassword()
-      if((this.error.confirmPassword === '') && (this.formData.confirmPassword !== this.formData.newPassword)){
-        this.error.confirmPassword = this.$t('login.passwordNotMatch').toString()
+      if (
+        this.error.confirmPassword === '' &&
+        this.formData.confirmPassword !== this.formData.newPassword
+      ) {
+        this.error.confirmPassword = this.$t(
+          'login.passwordNotMatch'
+        ).toString()
       }
     }
   }
@@ -216,7 +211,7 @@ export default class ResetPassword extends Vue {
   private submit() {
     this.onChangedNewPassword()
     this.onChangedConfirmPassword()
-    if(this.formData.confirmPassword !== this.formData.newPassword){
+    if (this.formData.confirmPassword !== this.formData.newPassword) {
       this.error.confirmPassword = this.$t('login.passwordNotMatch').toString()
     }
     if (validateError(this.error)) {
@@ -235,7 +230,7 @@ export default class ResetPassword extends Vue {
   justify-content: space-between;
   height: 100%;
 
-  .reset-password-header{
+  .reset-password-header {
     color: $primary;
     font-size: 24px;
     line-height: 24px;

@@ -14,10 +14,7 @@
         />
         <change-lang />
       </div>
-      <div
-        class="menu-apps grid grid-cols-3 gap-4"
-        v-show="toggleShowMenuApps"
-      >
+      <div class="menu-apps grid grid-cols-3 gap-4" v-show="toggleShowMenuApps">
         <div
           class="flex flex-col items-center cursor-pointer"
           v-for="(app, index) in menuApps"
@@ -37,10 +34,7 @@
         :src="assets('navbar/menu-group.png')"
         @click="onClickMenuApps"
       />
-      <div
-        class="menu-apps grid grid-cols-3 gap-4"
-        v-show="toggleShowMenuApps"
-      >
+      <div class="menu-apps grid grid-cols-3 gap-4" v-show="toggleShowMenuApps">
         <div
           class="flex flex-col items-center cursor-pointer"
           v-for="(app, index) in menuApps"
