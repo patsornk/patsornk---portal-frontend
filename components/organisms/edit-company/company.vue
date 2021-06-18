@@ -186,6 +186,12 @@ export default class EditCompany extends Vue {
   })
   readonly companyId!: number
 
+  @Prop({
+    required: false,
+    type: () => {}
+  })
+  callback?: () => {}
+
   private companyStatusOption = [
     {
       id: 2,
@@ -460,6 +466,9 @@ export default class EditCompany extends Vue {
               this.$t('common.successfully').toString()
             )
             window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+            if (this.callback) {
+              this.callback()
+            }
           }
         } catch (error) {
           this.$toast.global.error(error.response.data.message)
@@ -504,6 +513,9 @@ export default class EditCompany extends Vue {
               this.$t('common.successfully').toString()
             )
             window.sessionStorage.setItem('createCompanyFirstTime', 'no')
+            if (this.callback) {
+              this.callback()
+            }
           }
         } catch (error) {
           this.$toast.global.error(error.response.data.message)

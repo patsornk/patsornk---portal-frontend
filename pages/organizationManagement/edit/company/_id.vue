@@ -1,5 +1,5 @@
 <template>
-  <EditCompany :companyId="id" />
+  <EditCompany :companyId="id" :callback="getCompany" />
 </template>
 
 <script lang="ts">
