@@ -346,7 +346,11 @@
               v-if="isViewWebsite"
               v-model="$v.websiteList.$model"
             />
-            <add-website v-else v-model="$v.websiteList.$model" />
+            <add-website
+              v-else
+              v-model="$v.websiteList.$model"
+              @closeAddWebsiteButton="closeAddWebsiteButton"
+            />
           </div>
         </div>
 
@@ -378,7 +382,11 @@
               v-if="isViewSocial"
               v-model="$v.socialList.$model"
             />
-            <add-social v-else v-model="$v.socialList.$model" />
+            <add-social
+              v-else
+              v-model="$v.socialList.$model"
+              @closeAddSocialButton="closeAddSocialButton"
+            />
           </div>
         </div>
       </div>
@@ -1496,6 +1504,14 @@ export default class CreateBranch extends Vue {
   checkWebsite() {
     this.websiteList = this.websiteList.filter((item) => item !== '')
     this.isViewWebsite = true
+  }
+
+  closeAddWebsiteButton(event: boolean) {
+    this.isViewWebsite = event
+  }
+
+  closeAddSocialButton(event: boolean) {
+    this.isViewSocial = event
   }
 
   checkSocial() {

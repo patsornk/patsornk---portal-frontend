@@ -58,6 +58,9 @@ export default class AddWebsite extends Vue {
 
   removeInput(index: number) {
     this.dataList?.splice(index, 1)
+    if (this.dataList?.length === 0){
+      this.$emit('closeAddWebsiteButton', true)
+    }
   }
 
   assets(name: string) {

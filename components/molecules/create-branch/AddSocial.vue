@@ -100,6 +100,9 @@ export default class AddSocial extends Vue {
 
   removeInput(index: number) {
     this.dataList?.splice(index, 1)
+    if (this.dataList?.length === 0) {
+      this.$emit('closeAddSocialButton', true)
+    }
   }
 
   assets(name: string) {
