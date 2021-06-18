@@ -170,8 +170,10 @@ export default class CentarlLogin extends Vue {
           this.$toast.global.error(
             this.$t('login.incorrectPassword').toString()
           )
+        } else if (error.response.status === 500) {
+          this.$router.push('/login/error_')
         } else {
-          this.$toast.global.error(error)
+          this.$toast.global.error(this.$t('login.emptyUsernameToast'))
         }
       }
     }
