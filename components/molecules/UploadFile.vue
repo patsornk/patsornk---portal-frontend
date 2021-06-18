@@ -55,8 +55,8 @@
           <div class="upload-input">
             <span class="material-icons icon-upload"> cloud_upload </span>
             <div>
-              <span class="drop-text">{{ $t('common.dragAndDrop') }}</span>
-              <span class="btn-upload">{{ $t('common.upload') }}</span>
+              <div class="drop-text">{{ $t('common.dragAndDrop') }}</div>
+              <div class="btn-upload">{{ $t('common.upload') }}</div>
               <div class="drop-text-description">
                 {{ $t('common.fileType') }}
               </div>
