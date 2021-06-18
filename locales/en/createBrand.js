@@ -42,6 +42,8 @@ module.exports = {
         'At least one field required. Please check and try again.',
       toastRequiredField:
         'Please input the required field for Display on the 1 app',
+      toastOnlyRequiredField:
+        'Please input the required field',
       toastDelete: 'Can not delete when ‘Display on The 1 App’ toggle on',
       oneFieldRequired: 'At least one field required',
       featureCannotDisplay:

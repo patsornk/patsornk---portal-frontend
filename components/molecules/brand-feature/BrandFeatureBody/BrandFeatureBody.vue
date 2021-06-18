@@ -23,7 +23,7 @@
         @removeUrl="onRemoveFeatureImage"
       />
     </div>
-    <div class="form-container">
+    <div class="form-container" style="position: relative">
       <div class="feature-container">
         <div class="feature">
           <div class="title">
@@ -305,6 +305,11 @@ export default class BrandFeatureBody extends Vue {
       this.error.image = this.imageUrl
         ? ''
         : this.$t('createBrand.brandFeature.error.image').toString()
+      if(this.error.ctaLabel || this.error.ctaType || this.error.ctaFeature || this.error.image){
+        this.$toast.global.error(
+          this.$t('createBrand.brandFeature.error.toastRequiredField')
+        )
+      }
     }
   }
 
@@ -394,6 +399,10 @@ export default class BrandFeatureBody extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import './BrandFeatureBody.scss';
+
+.error-msg {
+  top: 35px !important;
+}
 </style>
