@@ -191,10 +191,10 @@ export default class UserList extends Vue {
   private type!: string
 
   @Prop({
-    required: true,
+    default: '',
     type: String
   })
-  private tab!: string
+  private tab?: string
 
   get language(): any {
     return this.$i18n.locale
@@ -203,6 +203,7 @@ export default class UserList extends Vue {
   @Watch('tab')
   changeTab(): void {
     this.clearFilter()
+    this.getUserList(1, 1000)
   }
 
   @Watch('language')
@@ -264,19 +265,19 @@ export default class UserList extends Vue {
   private statusList = [
     {
       id: -1,
-      status: 'All'
+      status: `${this.$t('common.companyDropdownStatus.all')}`
     },
     {
       id: 2,
-      status: 'Active'
+      status: `${this.$t('common.companyDropdownStatus.active')}`
     },
     {
       id: 3,
-      status: 'Inactive'
+      status: `${this.$t('common.companyDropdownStatus.inActive')}`
     },
     {
       id: 4,
-      status: 'Onhold'
+      status: `${this.$t('common.companyDropdownStatus.onHold')}`
     }
   ]
 
@@ -393,9 +394,11 @@ export default class UserList extends Vue {
       sortable: true,
       cellRenderer: (params: any) => {
         let strFormat = ''
-        params.data.status === 'Active'
+        params.data.status ===
+        this.$t('table.contentTableStatus.active').toString()
           ? (strFormat = 'active')
-          : params.data.status === 'On hold'
+          : params.data.status ===
+            this.$t('table.contentTableStatus.hold').toString()
           ? (strFormat = 'hold')
           : (strFormat = 'in-active')
         return `<div class="custom-row">
@@ -451,8 +454,8 @@ export default class UserList extends Vue {
   async mounted(): Promise<void> {
     await this.getRole()
     await this.getCompany()
+    await this.getUserList(1, 1000)
     this.currentPage = 1
-    this.getUserList(1, 1000)
   }
 
   changePage(page: number): void {
@@ -476,8 +479,15 @@ export default class UserList extends Vue {
     sortDirection?: string
   ): Promise<void> {
     this.isLoading = true
-    let path = `/list_user?page=${page}&limit=${limit}`
-
+    let userGroup
+    if (this.type === 'the1') {
+      userGroup = this.tab === 'cg' ? 1 : 2
+    } else if (this.type === 'partner') {
+      userGroup = 1
+    } else {
+      userGroup = this.tab === 'cg' ? 1 : 2
+    }
+    let path = `/list_user?page=${page}&limit=${limit}&userGroup=${userGroup}`
     if (sortBy) {
       path = `${path}&sortBy=${sortBy}`
     }
@@ -488,19 +498,19 @@ export default class UserList extends Vue {
       path = `${path}&keyword=${this.filterData.keyword}`
     }
     if (this.filterData.roleId > 0) {
-      path = `${path}&companyCategoryId=${this.filterData.roleId}`
+      path = `${path}&userRole=${this.filterData.roleId}`
     }
     if (this.filterData.companyId) {
-      path = `${path}&companyTypeId=${this.filterData.companyId}`
+      path = `${path}&company=${this.filterData.companyId}`
     }
     if (this.filterData.brandId) {
-      path = `${path}&companyTypeId=${this.filterData.brandId}`
+      path = `${path}&brand=${this.filterData.brandId}`
     }
     if (this.filterData.branchId) {
-      path = `${path}&companyTypeId=${this.filterData.branchId}`
+      path = `${path}&branch=${this.filterData.branchId}`
     }
     if (this.filterData.status > 0) {
-      path = `${path}&statusId=${this.filterData.status}`
+      path = `${path}&status=${this.filterData.status}`
     }
 
     try {
@@ -521,14 +531,23 @@ export default class UserList extends Vue {
   async getUserList(page: number, limit: number): Promise<void> {
     this.isLoading = true
     try {
-      // const res = await this.$axios.$get(
-      //   `${process.env.PORTAL_ENDPOINT}/list_user?page=${page}&limit=${limit}`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      //   this.mappingUser(res.data)
-      //   this.currentPage = page
-      // }
+      let userGroup
+      if (this.type === 'the1') {
+        userGroup = this.tab === 'cg' ? 1 : 2
+      } else if (this.type === 'partner') {
+        userGroup = 1
+      } else {
+        userGroup = this.tab === 'cg' ? 1 : 2
+      }
+      let path = `/list_user?page=${page}&limit=${limit}&userGroup=${userGroup}`
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}${path}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.mappingUser(res.data)
+        this.currentPage = page
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
@@ -632,7 +651,35 @@ export default class UserList extends Vue {
     // }
   }
 
-  mappingUser(data: any): void {}
+  mappingUser(data: any): void {
+    this.pageSize = data.totalPage
+    this.totalItem = data.total
+    this.dataList = data.users.map((item: any) => {
+      const type =
+        this.language === 'th'
+          ? item.userType.typeNameTh
+          : item.userType.typeNameEn
+      const company =
+        this.language === 'th'
+          ? item.userScope.company.companyNameTh
+          : item.userScope.company.companyNameEn
+      const brand =
+        this.language === 'th'
+          ? item.userScope.brand.brandNameTh
+          : item.userScope.brand.brandNameEn
+      const statusStr = this.statusList.filter((e) => e.id === item.status)[0]
+        .status
+      return {
+        firstName: item.userProfile.firstName,
+        lastName: item.userProfile.lastName,
+        userType: type,
+        company: company,
+        brand: brand,
+        userRole: item.role,
+        status: statusStr
+      }
+    })
+  }
 
   deleteHandler(map: any, vm: any): any {
     return {
@@ -645,7 +692,6 @@ export default class UserList extends Vue {
 
   onTableIconClick(action: string): void {
     this.dialogDisplay = true
-    this.dialogDescription = this.$t('table.dialogPopup.description').toString()
     this.dialogLeftButtonText = this.$t('table.dialogPopup.cancel').toString()
     let title = ''
 
@@ -655,11 +701,17 @@ export default class UserList extends Vue {
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionActive'
+      ).toString()
     } else if (action === 'clickInActive') {
       title = this.$t('table.status.inactive').toString()
       this.dialogAction = OrganizationManagementStatus.INACTIVE
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
+      ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionInActive'
       ).toString()
     } else if (action === 'clickHold') {
       title = this.$t('table.status.hold').toString()
@@ -667,16 +719,30 @@ export default class UserList extends Vue {
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.confirm'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.descriptionHold'
+      ).toString()
     } else if (action === 'clickDelete') {
       title = this.$t('table.status.delete').toString()
       this.dialogAction = OrganizationManagementStatus.DELETE
       this.dialogRightButtonText = this.$t(
         'table.dialogPopup.delete'
       ).toString()
+      this.dialogDescription = this.$t(
+        'table.dialogPopup.description'
+      ).toString()
     }
-    this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${title} ${
-      this.selectData.length
-    } ${this.$t('table.dialogPopup.title2')}`
+    if (action === 'clickDelete') {
+      this.dialogTitle = `${this.$t('table.dialogPopup.title4')} ${
+        this.selectData.length
+      } ${this.$t('table.dialogPopup.title5')}`
+    } else {
+      this.dialogTitle = `${this.$t('table.dialogPopup.title1')} ${
+        this.selectData.length
+      } ${this.$t('table.dialogPopup.title2')} ${title}${this.$t(
+        'table.dialogPopup.title3'
+      )}`
+    }
   }
 
   onLeftDialogPopupClick(): void {
@@ -723,6 +789,7 @@ export default class UserList extends Vue {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
+
 .filter-container {
   margin: 24px 24px 32px 24px;
 
@@ -756,6 +823,7 @@ export default class UserList extends Vue {
     grid-template-columns: 64% 36%;
     align-items: center;
     margin-top: 4px;
+
     .dropdown-group {
       display: grid;
       grid-template-columns: 25% 25% 25% 25%;

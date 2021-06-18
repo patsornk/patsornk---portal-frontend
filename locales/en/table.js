@@ -10,7 +10,7 @@ module.exports = {
     descriptionActive: 'This account will be active. Are you sure you want to change account status?',
     descriptionInActive: 'This account will be disabled. Are you sure you want to change account status?',
     descriptionHold: 'This account will be temporarity disabled. Are you sure you want to change account status?',
-    description: "Please check the information before click 'Confirm' button, The information will lose and never get back.",
+    description: "Please check the information before click 'Delete' button, The information will lose and never get back.",
     removeDescription: "Please check the information before click 'Remove' button",
     cancel: 'Cancel',
     confirm: 'Confirm',

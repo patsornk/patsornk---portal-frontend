@@ -466,14 +466,16 @@ export default class Partner extends Vue {
   async getUserList(page: number, limit: number): Promise<void> {
     this.isLoading = true
     try {
-      // const res = await this.$axios.$get(
-      //   `${process.env.PORTAL_ENDPOINT}/list_user?page=${page}&limit=${limit}`,
-      //   { data: null }
-      // )
-      // if (res.successful) {
-      //   this.mappingUser(res.data)
-      //   this.currentPage = page
-      // }
+      let userGroup = 1
+      let path = `/list_user?page=${page}&limit=${limit}&userGroup=${userGroup}`
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}${path}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.mappingUser(res.data)
+        this.currentPage = page
+      }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
