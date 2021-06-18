@@ -386,12 +386,8 @@ export default class UserList extends Vue {
       headerName: this.$t('common.status').toString(),
       field: 'status',
       headerComponentParams: {
-        colKey: UserTableCol.status,
-        sortingList: (param: any, order: any) => {
-          this.sortingList(param, order)
-        }
+        colKey: UserTableCol.status
       },
-      sortable: true,
       cellRenderer: (params: any) => {
         let strFormat = ''
         params.data.status ===
@@ -846,7 +842,7 @@ export default class UserList extends Vue {
         }
 
         ::v-deep .vs__selected {
-          position: inherit;
+          display: block;
         }
 
         ::v-deep .vs__dropdown-toggle {

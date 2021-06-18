@@ -66,7 +66,6 @@
       :selected-item="selectData.length"
       :total-item="totalItem"
       :total-page="pageSize"
-      :framework-components="frameworkComponents"
       @onChenagePage="changePage"
       @pagination="changPageSize"
       @clickActive="onTableIconClick"
@@ -292,12 +291,8 @@ export default class OrganizationTable extends Vue {
       headerName: this.$t('common.status').toString(),
       field: 'status',
       headerComponentParams: {
-        colKey: OrganizationTableCol.CompStatus,
-        sortingList: (param: any, order: any) => {
-          this.sortingList(param, order)
-        }
+        colKey: OrganizationTableCol.CompStatus
       },
-      sortable: true,
       cellRenderer: (params: any) => {
         let strFormat = ''
         params.data.status ===

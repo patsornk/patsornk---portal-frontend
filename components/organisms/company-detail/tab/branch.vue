@@ -593,7 +593,11 @@ export default class TabBranch extends Vue {
         }
 
         ::v-deep .vs__selected {
-          position: inherit;
+          display: block;
+          text-overflow: ellipsis;
+          -webkit-appearance: none;
+          flex-flow: nowrap;
+          overflow: hidden;
         }
 
         ::v-deep .vs__dropdown-toggle {
@@ -603,6 +607,21 @@ export default class TabBranch extends Vue {
 
         ::-webkit-input-placeholder {
           color: $gray-disable;
+        }
+        ::v-deep .vs__selected-options {
+          display: flex;
+          flex-basis: 100%;
+          flex-grow: 1;
+          flex-wrap: wrap;
+          padding: 0 2px;
+          text-overflow: ellipsis;
+          -webkit-appearance: none;
+          flex-flow: nowrap;
+          overflow: hidden;
+          white-space: nowrap;
+          position: relative;
+          align-items: center;
+          min-width: 0;
         }
       }
     }

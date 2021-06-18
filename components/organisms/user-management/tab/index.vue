@@ -59,6 +59,8 @@ export default class TabDetail extends Vue {
     grid-template-columns: 50% 50%;
     padding: 26px 26px 0px 26px;
     text-align: center;
+    font-size: 22px;
+    line-height: 24px;
 
     .tab {
       cursor: pointer;
