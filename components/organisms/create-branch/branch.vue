@@ -1166,6 +1166,10 @@ export default class CreateBranch extends Vue {
   }
 
   @Watch('partnerCodeId')
+  watchPartnerCode(): void {
+    this.error.partnerCodeId = ''
+  }
+
   checkPartnerCode(): void {
     this.error.partnerCodeId = !this.$v.partnerCodeId.required
       ? this.$t('createBranch.error.inputPartnerCode').toString()
@@ -1556,6 +1560,7 @@ export default class CreateBranch extends Vue {
               partnerName: item.partnerName
             }
           })
+          this.partnerCodeId = ''
         }
       } catch (error) {
         if (error.response.data.code !== '04') {
@@ -2598,12 +2603,10 @@ export default class CreateBranch extends Vue {
         payload
       )
       if (response.successful) {
-        if (this.componetMode === 'edit') {
-          const statusStr = this.statusOption.filter(
-            (e) => e.id === this.$v.status.$model
-          )[0].status
-          this.$store.dispatch('company/setStatus', statusStr)
-        }
+        const statusStr = this.statusOption.filter(
+          (e) => e.id === this.$v.status.$model
+        )[0].status
+        this.$store.dispatch('company/setStatus', statusStr)
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
       }
