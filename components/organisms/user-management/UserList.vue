@@ -203,7 +203,7 @@ export default class UserList extends Vue {
   @Watch('tab')
   changeTab(): void {
     this.clearFilter()
-    this.getUserList(1, 1000)
+    this.getUserList(1, 10)
   }
 
   @Watch('language')
@@ -450,7 +450,7 @@ export default class UserList extends Vue {
   async mounted(): Promise<void> {
     await this.getRole()
     await this.getCompany()
-    await this.getUserList(1, 1000)
+    await this.getUserList(1, 10)
     this.currentPage = 1
   }
 
