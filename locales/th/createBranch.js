@@ -1,5 +1,7 @@
 module.exports = {
   branchInformation: 'ข้อมูลสาขา',
+  createNewBranchSuccess: 'สร้างสาขาสำเร็จ',
+  savedSuccessfully: 'บันทึกสำเร็จ',
   branchInfo: {
     selectBrand: 'เลือกแบรนด์',
     branchCode: 'รหัสสาขา',
@@ -9,9 +11,7 @@ module.exports = {
     siebelBranchName: 'Siebel Branch Name',
     email: 'อีเมล',
     phoneNo: 'เบอร์โทรศัพท์',
-    partnerCode: 'รหัสพาร์ทเนอร์',
-    createNewBranchSuccess: 'สร้างสาขาสำเร็จ',
-    savedSuccessfully: 'บันทึกสำเร็จ'
+    partnerCode: 'รหัสพาร์ทเนอร์'
   },
   locationHeader: 'ตำแหน่งที่ตั้ง',
   location: {
@@ -85,6 +85,7 @@ module.exports = {
     email: 'email',
     numeric: 'numeric'
   },
-  fieldError: 'ต้องระบุข้อมูลอย่างน้อย 1 ช่อง กรุณาตรวจสอบข้อมูล และลองใหม่อีกครั้ง',
+  fieldError:
+    'ต้องระบุข้อมูลอย่างน้อย 1 ช่อง กรุณาตรวจสอบข้อมูล และลองใหม่อีกครั้ง',
   partnerCode: 'กรุณาเลือกรหัสพาร์ทเนอร์'
 }

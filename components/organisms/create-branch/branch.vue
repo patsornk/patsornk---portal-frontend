@@ -466,7 +466,7 @@
     </div>
 
     <div class="submit-section">
-      <button class="submit" @click="createNewBranch">
+      <button class="submit" @click="clickSave">
         {{ $t('common.save') }}
       </button>
     </div>
@@ -2425,8 +2425,6 @@ export default class CreateBranch extends Vue {
             this.$toast.global.error(this.$t('createBranch.fieldError'))
             this.validateInfoAndLocation()
             this.checkBranchTypeId()
-            this.dialogCancelAction()
-
             return
           } else {
             return {
@@ -2456,63 +2454,17 @@ export default class CreateBranch extends Vue {
     }
   }
 
+  setData = {}
   async save(): Promise<void> {
     let payload = await this.setPayload()
     if (!payload) {
       return
     }
-
-    try {
-      this.$nuxt.$loading.start()
-      let response = await this.$axios.$post(
-        `${process.env.PORTAL_ENDPOINT}/create_branch`,
-        payload
-      )
-      if (response.successful) {
-        if (this.componetMode === 'onboard') {
-          this.$store.dispatch(
-            'organizartion/setBranchId',
-            response.data.branchId
-          )
-          window.sessionStorage.setItem(
-            'createBranchId',
-            response.data.branchId
-          )
-          window.sessionStorage.setItem('createBranchFirstTime', 'no')
-          this.$toast.global.success(
-            this.$t('createBranch.branchInfo.savedSuccessfully').toString()
-          )
-          this.$router.push('/organizationManagement/create/service')
-        } else if (this.componetMode === 'create') {
-          const parentCompanyId = this.parentCompanyId
-            ? parseInt(this.parentCompanyId)
-            : window.sessionStorage.getItem('createCompanyId')
-          this.dialogCancelAction()
-          this.$router.push(`/organizationManagement/${parentCompanyId}`)
-          this.$toast.global.success(
-            this.$t('createBranch.branchInfo.savedSuccessfully').toString()
-          )
-        } else if (this.componetMode === 'onboard') {
-          window.sessionStorage.setItem('createBranchFirstTime', 'no')
-          this.$toast.global.success(this.$t('common.successfully').toString())
-          this.$router.push('/organizationManagement/create/service')
-        }
-      }
-      this.$nuxt.$loading.finish()
-    } catch (error) {
-      this.$nuxt.$loading.finish()
-      if (error && error.response && error.response.data) {
-        if (error.response.data.message === 'Branch code is duplicated') {
-          this.$toast.global.error(
-            this.$t('createCompany.toast.branchCodeDuplicate').toString()
-          )
-        } else {
-          this.$toast.global.error(error.response.data.message)
-        }
-      } else {
-        this.$toast.global.error(error)
-      }
-      this.dialogCancelAction()
+    if (this.componetMode === 'create') {
+      this.dialogDisplay = true
+      this.setData = payload
+    } else {
+      this.createNewBranch(payload)
     }
   }
 
@@ -2558,20 +2510,58 @@ export default class CreateBranch extends Vue {
     })
   }
 
-  createNewBranch() {
-    if (this.componetMode === 'onboard') {
-      if (
-        window.sessionStorage.getItem('createBranchFirstTime') &&
-        window.sessionStorage.getItem('createBranchFirstTime') === 'no'
-      ) {
-        this.update()
-      } else {
-        this.save()
+  async createNewBranch(payload: any) {
+    try {
+      this.$nuxt.$loading.start()
+      let response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/create_branch`,
+        payload
+      )
+      if (response.successful) {
+        if (this.componetMode === 'onboard') {
+          this.$store.dispatch(
+            'organizartion/setBranchId',
+            response.data.branchId
+          )
+          window.sessionStorage.setItem(
+            'createBranchId',
+            response.data.branchId
+          )
+          window.sessionStorage.setItem('createBranchFirstTime', 'no')
+          this.$toast.global.success(
+            this.$t('createBranch.savedSuccessfully').toString()
+          )
+          this.$router.push('/organizationManagement/create/service')
+        } else if (this.componetMode === 'create') {
+          const parentCompanyId = this.parentCompanyId
+            ? parseInt(this.parentCompanyId)
+            : window.sessionStorage.getItem('createCompanyId')
+          this.dialogCancelAction()
+          this.$router.push(`/organizationManagement/${parentCompanyId}`)
+          this.$toast.global.success(
+            this.$t('createBranch.createNewBranchSuccess').toString()
+          )
+        } else if (this.componetMode === 'onboard') {
+          window.sessionStorage.setItem('createBranchFirstTime', 'no')
+          this.$toast.global.success(this.$t('common.successfully').toString())
+          this.$router.push('/organizationManagement/create/service')
+        }
       }
-    } else if (this.componetMode === 'edit') {
-      this.update()
-    } else {
-      this.dialogDisplay = true
+      this.$nuxt.$loading.finish()
+    } catch (error) {
+      this.$nuxt.$loading.finish()
+      if (error && error.response && error.response.data) {
+        if (error.response.data.message === 'Branch code is duplicated') {
+          this.$toast.global.error(
+            this.$t('createCompany.toast.branchCodeDuplicate').toString()
+          )
+        } else {
+          this.$toast.global.error(error.response.data.message)
+        }
+      } else {
+        this.$toast.global.error(error)
+      }
+      this.dialogCancelAction()
     }
   }
 
@@ -2580,7 +2570,7 @@ export default class CreateBranch extends Vue {
   }
 
   dialogAction() {
-    this.save()
+    this.createNewBranch(this.setData)
   }
 
   async update() {

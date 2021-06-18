@@ -168,7 +168,7 @@
       />
     </div>
     <div class="submit-section">
-      <button class="submit" @click="createNewBrand">
+      <button class="submit" @click="clickSave">
         {{ $t('common.save') }}
       </button>
     </div>
@@ -198,7 +198,7 @@
         this.$t('createCompany.dialogPopup.rightButtonTitleBrand')
       "
       @onLeftButtonClick="dialogCancelAction"
-      @onRightButtonClick="dialogAction"
+      @onRightButtonClick="createNewBrand"
       leftStyle="width: 120px;"
       rightStyle="width: 210px;"
     />
@@ -763,7 +763,7 @@ export default class CreateBrand extends Vue {
 
     let validationGroup = false
     let isPartnerCodeList = false
-    if (this.$v.validationGroup.$invalid && !this.validateLogo) {
+    if (this.$v.validationGroup.$invalid || !this.validateLogo) {
       validationGroup = false
       this.$toast.global.error(this.$t('createBrand.fieldError'))
       this.onChangedBrandCode()
@@ -789,83 +789,88 @@ export default class CreateBrand extends Vue {
     } else {
       isPartnerCodeList = true
     }
-
     if (validationGroup && isPartnerCodeList && brandFeatureValidate) {
-      const partnerId = this.$v.partnerCodeList.$model.map(
-        (item: { id: any }) => {
-          return item.id
-        }
-      )
-      const companyId = this.companyId
-        ? this.companyId
-        : window.sessionStorage.getItem('createCompanyId')
-
-      const brandFeatureFormatedList = await this.getBrandFeaturePayload(
-        this.brandFeatureList
-      )
-
-      const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
-      const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
-      const payload = {
-        companyId,
-        brandNameTh: this.$v.brandNameTh.$model,
-        brandNameEn: this.$v.brandNameEn.$model,
-        brandCode: this.$v.brandCode.$model,
-        brandLogoImg: getLogoBase64, // Wait for api
-        brandBannerImg: getbannerBase64, // Wait for api
-        brandInfo: this.$v.brandInfo.$model,
-        brandLink: this.$v.brandCode.$model,
-        brandPhonePrefix: this.phonePrefix,
-        brandPhoneNumber: this.$v.phoneNo.$model,
-        brandEmail: this.$v.email.$model,
-        showInApp: this.$v.showDisplay.$model,
-        partnerId,
-        feature: brandFeatureFormatedList
+      if (!this.mode) {
+        this.createNewBrand()
+      } else {
+        this.dialogDisplay = true
       }
+    }
+  }
 
-      try {
-        this.$nuxt.$loading.start()
-        const response = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/create_brand`,
-          payload
-        )
-        if (response.successful) {
-          if (!this.mode) {
-            window.sessionStorage.setItem('createBrandFirstTime', 'no')
-            window.sessionStorage.setItem(
-              'createBrandId',
-              response.data.brandId
-            )
-            this.$toast.global.success(
-              this.$t('createBrand.savedSuccessfully').toString()
-            )
+  async createNewBrand() {
+    const partnerId = this.$v.partnerCodeList.$model.map(
+      (item: { id: any }) => {
+        return item.id
+      }
+    )
+    const companyId = this.companyId
+      ? this.companyId
+      : window.sessionStorage.getItem('createCompanyId')
 
-            this.$router.push('/organizationManagement/create/branch')
-          } else {
-            const companyId = this.companyId
-              ? parseInt(this.companyId)
-              : window.sessionStorage.getItem('createCompanyId')
-            this.dialogCancelAction()
-            this.$router.push(`/organizationManagement/${companyId}`)
-            this.$toast.global.success(
-              this.$t('createBrand.createNewBrandSuccess').toString()
-            )
-          }
-        }
-        this.$nuxt.$loading.finish()
-      } catch (error) {
-        this.$nuxt.$loading.finish()
-        if (error && error.response && error.response.data) {
-          if (error.response.data.message === 'Brand code is duplicated') {
-            this.$toast.global.error(
-              this.$t('createCompany.toast.brandCodeDuplicate').toString()
-            )
-          } else {
-            this.$toast.global.error(error.response.data.message)
-          }
+    const brandFeatureFormatedList = await this.getBrandFeaturePayload(
+      this.brandFeatureList
+    )
+
+    const getLogoBase64 = await this.getBase64(this.$v.logo.$model)
+    const getbannerBase64 = await this.getBase64(this.$v.banner.$model)
+    const payload = {
+      companyId,
+      brandNameTh: this.$v.brandNameTh.$model,
+      brandNameEn: this.$v.brandNameEn.$model,
+      brandCode: this.$v.brandCode.$model,
+      brandLogoImg: getLogoBase64, // Wait for api
+      brandBannerImg: getbannerBase64, // Wait for api
+      brandInfo: this.$v.brandInfo.$model,
+      brandLink: this.$v.brandCode.$model,
+      brandPhonePrefix: this.phonePrefix,
+      brandPhoneNumber: this.$v.phoneNo.$model,
+      brandEmail: this.$v.email.$model,
+      showInApp: this.$v.showDisplay.$model,
+      partnerId,
+      feature: brandFeatureFormatedList
+    }
+
+    try {
+      this.$nuxt.$loading.start()
+      const response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/create_brand`,
+        payload
+      )
+      if (response.successful) {
+        if (!this.mode) {
+          window.sessionStorage.setItem('createBrandFirstTime', 'no')
+          window.sessionStorage.setItem('createBrandId', response.data.brandId)
+          this.$toast.global.success(
+            this.$t('createBrand.savedSuccessfully').toString()
+          )
+
+          this.$router.push('/organizationManagement/create/branch')
         } else {
-          this.$toast.global.error(error)
+          const companyId = this.companyId
+            ? parseInt(this.companyId)
+            : window.sessionStorage.getItem('createCompanyId')
+          this.dialogCancelAction()
+          this.$router.push(`/organizationManagement/${companyId}`)
+          this.$toast.global.success(
+            this.$t('createBrand.createNewBrandSuccess').toString()
+          )
         }
+      }
+      this.$nuxt.$loading.finish()
+    } catch (error) {
+      this.$nuxt.$loading.finish()
+      if (error && error.response && error.response.data) {
+        if (error.response.data.message === 'Brand code is duplicated') {
+          this.$toast.global.error(
+            this.$t('createCompany.toast.brandCodeDuplicate').toString()
+          )
+          this.dialogCancelAction()
+        } else {
+          this.$toast.global.error(error.response.data.message)
+        }
+      } else {
+        this.$toast.global.error(error)
       }
     }
   }
@@ -1210,23 +1215,6 @@ export default class CreateBrand extends Vue {
       }
     }
     return brandFeatureFormatedList
-  }
-
-  createNewBrand() {
-    if (this.mode === 'create') {
-      this.dialogDisplay = true
-    } else if (this.mode === 'edit') {
-      this.update()
-    } else {
-      if (
-        window.sessionStorage.getItem('createBrandFirstTime') &&
-        window.sessionStorage.getItem('createBrandFirstTime') === 'no'
-      ) {
-        this.update()
-      } else {
-        this.save()
-      }
-    }
   }
 
   dialogCancelAction() {
