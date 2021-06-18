@@ -167,8 +167,16 @@
         @pagination="changPageSize"
       />
     </div>
-    <div class="submit-section">
-      <button class="submit" @click="clickSave">
+    <div class="submit-section" v-if="mode === 'create'">
+      <button class="submit-section-btn cancel" @click="clickCancel">
+        {{ $t('common.cancel') }}
+      </button>
+      <button class="submit-section-btn create" @click="clickSave">
+        {{ $t('createBrand.createNewBrand') }}
+      </button>
+    </div>
+    <div class="submit-section" v-else>
+      <button class="submit-section-btn submit" @click="clickSave">
         {{ $t('common.save') }}
       </button>
     </div>
@@ -739,6 +747,11 @@ export default class CreateBrand extends Vue {
       }
     }
     this.currentBrandFeatureKey = 1
+  }
+
+  clickCancel(): void {
+    const companyId = this.companyId
+    this.$router.push(`/organizationManagement/${companyId}`)
   }
 
   clickSave(): void {
@@ -1353,24 +1366,43 @@ export default class CreateBrand extends Vue {
     width: 100%;
     margin-bottom: 35px;
 
-    .submit {
+    .submit-section-btn {
       display: flex;
       justify-content: center;
       align-items: center;
-
-      background: $mid-black;
-      color: $white;
       border-radius: 6px;
       box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+    .cancel {
+      background: $white;
       width: 160px;
       height: 40px;
-
-      font-size: 16px;
-      font-weight: bold;
+      margin-right: 25px;
+      border: 1px solid #b9b9b9;
+    }
+    .cancel:hover {
+      color: $grey-text;
+    }
+    .create {
+      background: $primary;
+      color: $white;
+      width: 200px;
+      height: 40px;
+    }
+    .submit {
+      background: $mid-black;
+      color: $white;
+      width: 160px;
+      height: 40px;
     }
   }
 }
-
+button:focus {
+  outline: none;
+}
 .error {
   color: $primary;
 }

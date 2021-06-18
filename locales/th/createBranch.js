@@ -1,5 +1,6 @@
 module.exports = {
   branchInformation: 'ข้อมูลสาขา',
+  createNewBranch: 'สร้างสาขาใหม่',
   createNewBranchSuccess: 'สร้างสาขาสำเร็จ',
   savedSuccessfully: 'บันทึกสำเร็จ',
   branchInfo: {

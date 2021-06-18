@@ -16,6 +16,7 @@ module.exports = {
   brandNameEnInput: 'ระบุชื่อแบรนด์ (ภาษาอังกฤษ)',
   brandCodeInput: 'ระบุรหัสแบรนด์',
   createNewBrandSuccess: 'สร้างแบรนด์สำเร็จ',
+  createNewBrand: 'สร้างแบรนด์ใหม่',
   savedSuccessfully: 'บันทึกสำเร็จ',
   fieldError: 'มีบางข้อมูลผิดพลาด กรุณาตรวจสอบและลองอีกครั้ง',
   error: {

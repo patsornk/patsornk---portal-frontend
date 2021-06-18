@@ -465,8 +465,16 @@
       </div>
     </div>
 
-    <div class="submit-section">
-      <button class="submit" @click="clickSave">
+    <div class="submit-section" v-if="componetMode === 'create'">
+      <button class="submit-section-btn cancel" @click="clickCancel">
+        {{ $t('common.cancel') }}
+      </button>
+      <button class="submit-section-btn create" @click="clickSave">
+        {{ $t('createBranch.createNewBranch') }}
+      </button>
+    </div>
+    <div class="submit-section" v-else>
+      <button class="submit-section-btn submit" @click="clickSave">
         {{ $t('common.save') }}
       </button>
     </div>
@@ -1838,6 +1846,11 @@ export default class CreateBranch extends Vue {
     }
   }
 
+  clickCancel(): void {
+    const companyId = this.parentCompanyId
+    this.$router.push(`/organizationManagement/${companyId}`)
+  }
+
   clickSave(): void {
     if (this.componetMode === 'onboard') {
       if (
@@ -2832,21 +2845,41 @@ export default class CreateBranch extends Vue {
     width: 100%;
     margin: 35px 0px;
 
-    .submit {
+    .submit-section-btn {
       display: flex;
       justify-content: center;
       align-items: center;
-
-      background: $mid-black;
-      color: $white;
       border-radius: 6px;
       box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-      width: 160px;
-      height: 40px;
-
       font-size: 16px;
+      line-height: 24px;
       font-weight: bold;
     }
+    .cancel {
+      background: $white;
+      width: 160px;
+      height: 40px;
+      margin-right: 25px;
+      border: 1px solid #b9b9b9;
+    }
+    .cancel:hover {
+      color: $grey-text;
+    }
+    .create {
+      background: $primary;
+      color: $white;
+      width: 200px;
+      height: 40px;
+    }
+    .submit {
+      background: $mid-black;
+      color: $white;
+      width: 160px;
+      height: 40px;
+    }
+  }
+  button:focus {
+    outline: none;
   }
 }
 </style>

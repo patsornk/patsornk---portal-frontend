@@ -1,5 +1,6 @@
 module.exports = {
   branchInformation: 'Branch Information',
+  createNewBranch: 'Create New Branch',
   createNewBranchSuccess: 'Create new branch success',
   savedSuccessfully: 'Saved successfully',
   branchInfo: {

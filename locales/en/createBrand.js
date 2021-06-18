@@ -16,6 +16,7 @@ module.exports = {
   brandNameEnInput: 'Input Brand Name (EN)',
   brandCodeInput: 'Input brand code',
   createNewBrandSuccess: 'Create new brand success',
+  createNewBrand: 'Create New Brand',
   savedSuccessfully: 'Saved successfully',
   fieldError: 'One or more field have an error. Please check and try again.',
   error: {
