@@ -19,7 +19,7 @@
     <div class="multiselect" v-click-outside="closeDropdown">
       <div @click="showCheckboxes">
         <div class="select-role" :class="errorMessage ? 'error' : ''">
-          {{ $t('userManagement.userProfile.selectUserRole') }}
+          {{ $t('userManagement.pleaseSelect') }}
           <img
             class="icon"
             :src="assets('icon/arrow-down.png')"
@@ -192,6 +192,7 @@ export default class InputTag extends Vue {
       border-radius: 4px;
       padding-left: 15px;
       padding: 9px 16px;
+      line-height: 25px;
 
       .icon {
         height: 5.24px;
@@ -301,8 +302,8 @@ export default class InputTag extends Vue {
 
     .error-message {
       color: $primary;
-      font-size: 14px;
-      margin-top: 0.4rem;
+      font-size: 12px;
+      margin-top: 0.4rem; 
     }
   }
 

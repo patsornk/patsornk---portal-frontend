@@ -2,7 +2,7 @@
   <div class="status-container">
     <div class="status-circle" :class="statusClass" />
     <div class="status-text" :class="statusClass">
-      {{ status }}
+      {{ dataStatus }}
     </div>
   </div>
 </template>
@@ -30,6 +30,18 @@ export default class CompanyStatus extends Vue {
       this.status === this.$t('table.contentTableStatus.hold').toString()
     ) {
       return 'hold'
+    } else {
+      return ''
+    }
+  }
+
+  get dataStatus(): string {
+    if (this.status === 'Active') {
+      return this.$t('common.active').toString()
+    } else if (this.status === 'Inactive') {
+      return this.$t('common.inActive').toString()
+    } else if (this.status === 'Onhold') {
+      return this.$t('common.onHold').toString()
     } else {
       return ''
     }

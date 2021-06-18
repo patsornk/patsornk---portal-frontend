@@ -3,8 +3,7 @@
     <div class="w-full" style="display: flex; align-items: center" v-if="title">
       <span class="input-title">{{ title }}</span>
       <span v-show="required" class="input-field-required"> *</span>
-      <tooltip :numberOfLine="numberOfLine" :tooltipMessage="tooltipMessage">
-      </tooltip>
+      <tooltip :numberOfLine="numberOfLine" :tooltipMessage="tooltipMessage" />
     </div>
     <div class="input-field-input-group w-full">
       <div :class="errorMessage ? 'input-field-input-error' : ''">
@@ -198,11 +197,11 @@ export default class PasswordGenerator extends Vue {
   .generate-button {
     position: absolute;
     height: 24px;
-    width: 71px;
+    width: 84px;
     top: 42px;
     color: $primary;
     background-color: $tritery-red;
-    right: 11px;
+    right: 36px;
     font-size: 14px;
     padding-bottom: 2px;
     text-align: center;

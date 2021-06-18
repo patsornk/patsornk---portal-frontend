@@ -99,15 +99,15 @@ export default class ProfilePicture extends Vue {
   changeLanguage(): void {
     if (this.language === 'en') {
       if (this.errorMessage) {
-        if (this.errorMessage === this.$t('profile.errorFileType').toString()) {
-          this.errorMessage = this.$t('profile.errorFileType').toString()
-        } else this.errorMessage = this.$t('profile.errorFileSize').toString()
+        if (this.errorMessage === this.$t('common.fileType').toString()) {
+          this.errorMessage = this.$t('common.fileType').toString()
+        } else this.errorMessage = this.$t('common.fileSizeNotExceed').toString()
       }
     } else {
       if (this.errorMessage) {
-        if (this.errorMessage === this.$t('profile.errorFileType').toString()) {
-          this.errorMessage = this.$t('profile.errorFileType').toString()
-        } else this.errorMessage = this.$t('profile.errorFileSize').toString()
+        if (this.errorMessage === this.$t('common.fileType').toString()) {
+          this.errorMessage = this.$t('common.fileType').toString()
+        } else this.errorMessage = this.$t('common.fileSizeNotExceed').toString()
       }
     }
   }
@@ -142,10 +142,10 @@ export default class ProfilePicture extends Vue {
       return
     } else if (!regexFileType.test(this.file.type)) {
       // wrong type
-      this.errorMessage = this.$t('profile.errorFileType').toString()
+      this.errorMessage = this.$t('common.fileType').toString()
     } else if (this.file.size > 5 * 1024 * 1024) {
       // out of size
-      this.errorMessage = this.$t('profile.errorFileSize').toString()
+      this.errorMessage = this.$t('common.fileSizeNotExceed').toString()
     } else {
       //success case
       this.file && (this.dataValue = URL.createObjectURL(this.file))

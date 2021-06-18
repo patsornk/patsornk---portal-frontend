@@ -68,7 +68,7 @@
           <span class="text-status"
             >{{ $t('userManagement.userProfile.accountStatus') }} :
           </span>
-          <span class="status">{{ status }}</span>
+          <span class="status">{{ dataStatus }}</span>
         </div>
       </div>
       <div class="profile-detail-container">
@@ -84,6 +84,7 @@
               $t('userManagement.input') +
               $t('userManagement.userProfile.username')
             "
+            @onBlur="onBlurUsername"
             :error-message="error.username"
           />
         </div>
@@ -95,6 +96,7 @@
             required
             :maxlength="50"
             :title="$t('userManagement.userProfile.firstName')"
+            :disable="mode === 'edit'"
             :placeholder="
               $t('userManagement.input') +
               $t('userManagement.userProfile.firstName')
@@ -107,6 +109,7 @@
             required
             :maxlength="50"
             :title="$t('userManagement.userProfile.lastName')"
+            :disable="mode === 'edit'"
             :placeholder="
               $t('userManagement.input') +
               $t('userManagement.userProfile.lastName')
@@ -122,31 +125,27 @@
             :options="userTypeList"
             :options-reduce="(item) => item.userTypeId"
             :options-label="language === 'th' ? 'userTypeTh' : 'userTypeEn'"
-            :placeholder="
-              $t('userManagement.select') +
-              $t('userManagement.userProfile.userType')
-            "
+            :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userType"
           />
           <input-field
             v-model="$v.userScope.$model"
             class="right"
             :title="$t('userManagement.userProfile.userScope')"
+            :disable="mode === 'edit'"
             required
             type="select"
             :options="userScopeList"
             :options-reduce="(item) => item.userScopeId"
             :options-label="language === 'th' ? 'userScopeTh' : 'userScopeEn'"
-            :placeholder="
-              $t('userManagement.select') +
-              $t('userManagement.userProfile.userScope')
-            "
+            :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userScope"
           />
           <input-field
             v-model="$v.company.$model"
             class="left"
             :title="$t('userManagement.userProfile.company')"
+            :disable="mode === 'edit'"
             required
             type="select"
             :options="companyList"
@@ -154,16 +153,14 @@
             :options-label="
               language === 'th' ? 'companyNameTh' : 'companyNameEn'
             "
-            :placeholder="
-              $t('userManagement.select') +
-              $t('userManagement.userProfile.company')
-            "
+            :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.company"
           />
           <input-field
             v-model="$v.department.$model"
             class="input-field right"
             :title="$t('userManagement.userProfile.department')"
+            :disable="mode === 'edit'"
             :placeholder="
               $t('userManagement.input') +
               $t('userManagement.userProfile.department')
@@ -180,10 +177,7 @@
             :options="brandList"
             :options-reduce="(item) => item.brandId"
             :options-label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
-            :placeholder="
-              $t('userManagement.select') +
-              $t('userManagement.userProfile.brand')
-            "
+            :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.brand"
           />
           <input-field
@@ -195,10 +189,7 @@
             :options="branchList"
             :options-reduce="(item) => item.branchId"
             :options-label="language === 'th' ? 'branchNameTh' : 'branchNameEn'"
-            :placeholder="
-              $t('userManagement.select') +
-              $t('userManagement.userProfile.branch')
-            "
+            :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.branch"
           />
         </div>
@@ -214,9 +205,9 @@
           <input-field
             v-model="$v.email.$model"
             class="input-field left"
+            disable
             :title="$t('userManagement.userProfile.email')"
             :placeholder="$t('userManagement.userProfile.email')"
-            :error-message="error.email"
           />
         </div>
         <phone-num-input
@@ -234,16 +225,10 @@
           :maxlength="13"
           :errorMessage="error.mobile"
           @prefix="changedPrefixmobile"
+          :placeholder="
+            $t('userManagement.input') + $t('userManagement.userProfile.mobile')
+          "
         />
-        <div class="input-box">
-          <password-generator
-            v-model="$v.password.$model"
-            :title="$t('userManagement.userProfile.password')"
-            :placeholder="$t('userManagement.userProfile.password')"
-            :error-message="error.password"
-            required
-          />
-        </div>
       </div>
     </div>
     <div class="footer-container">
@@ -261,7 +246,7 @@
       >
         {{
           mode === 'create'
-            ? $t('userManagement.createNewUser')
+            ? $t('userManagement.userProfile.assignRoleToUser')
             : $t('userManagement.userProfile.save')
         }}
       </t1-button>
@@ -304,7 +289,6 @@ import InputTag from '~/components/atoms/InputTag.vue'
 import InputField from '@/components/atoms/InputField.vue'
 import T1Button from '@/components/atoms/button.vue'
 import PhoneNumInput from '@/components/atoms/PhoneNumInput.vue'
-import PasswordGenerator from '@/components/atoms/PasswordGenerator.vue'
 import CompanyStatus from '~/components/atoms/company-status.vue'
 import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import ProfilePicture from '@/components/molecules/ProfilePicture.vue'
@@ -316,15 +300,15 @@ import { required, email, numeric, minLength } from 'vuelidate/lib/validators'
 const validations = {
   username: {
     required,
-    mustBe: (value: any) => /^([A-Za-z.])*$/g.test(value)
+    email
   },
   firstName: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9-])*$/g.test(value)
+    mustBe: (value: any) => /^([ก-๛A-Za-z0-9-])*$/g.test(value)
   },
   lastName: {
     required,
-    mustBe: (value: any) => /^([A-Za-z0-9 -])*$/g.test(value)
+    mustBe: (value: any) => /^([ก-๛A-Za-z0-9 -])*$/g.test(value)
   },
   userType: {
     required
@@ -343,20 +327,14 @@ const validations = {
   userRole: {
     required
   },
-  email: {
-    email
-  },
+  email: {},
   phoneNo: {
     numeric,
-    minLength: minLength(9)
+    minLength: minLength(8)
   },
   mobile: {
     numeric,
     minLength: minLength(9)
-  },
-  password: {
-    required,
-    minLength: minLength(8)
   },
 
   validationGroup: [
@@ -367,8 +345,7 @@ const validations = {
     'userScope',
     'company',
     'brand',
-    'userRole',
-    'password'
+    'userRole'
   ]
 }
 
@@ -380,13 +357,12 @@ const validations = {
     InputField,
     T1Button,
     PhoneNumInput,
-    PasswordGenerator,
     ProfilePicture,
     CompanyStatus,
     DialogPopup
   }
 })
-export default class UserProfile extends Vue {
+export default class UserProfileNonCg extends Vue {
   $i18n: any
 
   imageUrl = ''
@@ -407,7 +383,6 @@ export default class UserProfile extends Vue {
   phonePrefix = ''
   mobile = ''
   mobilePrefix = ''
-  password = ''
 
   error = {
     username: '',
@@ -418,10 +393,8 @@ export default class UserProfile extends Vue {
     company: '',
     brand: '',
     userRole: '',
-    email: '',
     phoneNo: '',
-    mobile: '',
-    password: ''
+    mobile: ''
   }
 
   userTypeList = []
@@ -492,13 +465,25 @@ export default class UserProfile extends Vue {
     return this.$i18n.locale
   }
 
+  get dataStatus(): string {
+    if (this.status === 'Active') {
+      return this.$t('common.active').toString()
+    } else if (this.status === 'Inactive') {
+      return this.$t('common.inActive').toString()
+    } else if (this.status === 'Onhold') {
+      return this.$t('common.onHold').toString()
+    } else {
+      return ''
+    }
+  }
+
   @Watch('username')
   checkUsername(): void {
     this.error.username = !this.$v.username.required
       ? this.$t('userManagement.input').toString() +
         this.$t('userManagement.userProfile.username')
-      : !this.$v.username.mustBe
-      ? this.$t('common.invalidInputInformation').toString()
+      : !this.$v.username.email
+      ? this.$t('userManagement.error.cgInvalidUsernameFormat').toString()
       : ''
   }
 
@@ -547,6 +532,10 @@ export default class UserProfile extends Vue {
   }
 
   @Watch('brand')
+  watchBrand(): void {
+    this.error.brand = ''
+  }
+
   checkBrand(): void {
     this.error.brand = !this.$v.brand.required
       ? this.$t('userManagement.select').toString() +
@@ -562,38 +551,21 @@ export default class UserProfile extends Vue {
       : ''
   }
 
-  @Watch('email')
-  checkEmail(): void {
-    this.error.email = !this.$v.email.email
-      ? this.$t('userManagement.error.invalidEmailFormat').toString()
-      : ''
-  }
-
   @Watch('phoneNo')
   checkPhoneNo(): void {
     this.error.phoneNo = !this.$v.phoneNo.numeric
-      ? this.$t('userManagement.input').toString()
+      ? this.$t('userManagement.error.invalidPhoneNo').toString()
       : !this.$v.phoneNo.minLength
-      ? this.$t('common.invalidInputInformation').toString()
+      ? this.$t('userManagement.error.inputPhoneNoAtLeast8Digits').toString()
       : ''
   }
 
   @Watch('mobile')
   checkmobile(): void {
     this.error.mobile = !this.$v.mobile.numeric
-      ? this.$t('userManagement.input').toString()
+      ? this.$t('userManagement.error.invalidMolile').toString()
       : !this.$v.mobile.minLength
-      ? this.$t('common.invalidInputInformation').toString()
-      : ''
-  }
-
-  @Watch('password')
-  checkPassword(): void {
-    this.error.password = !this.$v.password.required
-      ? this.$t('userManagement.input').toString() +
-        this.$t('userManagement.userProfile.password')
-      : !this.$v.password.minLength
-      ? this.$t('userManagement.error.invalidPassword').toString()
+      ? this.$t('userManagement.error.inputMobileAtLeast9Digits').toString()
       : ''
   }
 
@@ -611,8 +583,8 @@ export default class UserProfile extends Vue {
       {
         title:
           this.mode === 'create'
-            ? this.$t('userManagement.createNewUser').toString()
-            : this.$t('userManagement.editUser').toString(),
+            ? this.$t('userManagement.userProfile.assignRoleToUser').toString()
+            : this.$t('userManagement.editCgUser').toString(),
         url: '/',
         active: true
       }
@@ -623,8 +595,8 @@ export default class UserProfile extends Vue {
     this.$store.dispatch(
       'breadcrumb/setPageTitle',
       this.mode === 'create'
-        ? this.$t('userManagement.createNewUser').toString()
-        : this.$t('userManagement.editUser').toString()
+        ? this.$t('userManagement.userProfile.assignRoleToUser').toString()
+        : this.$t('userManagement.editCgUser').toString()
     )
   }
 
@@ -664,14 +636,13 @@ export default class UserProfile extends Vue {
     }
   }
 
-  @Watch('company')
   @Watch('brand')
   async getBranch(): Promise<any> {
-    this.branch = ''
-    let path = `${process.env.PORTAL_ENDPOINT}/list_branch?page=1&limit=1000&companyId=${this.company}`
-    if (this.brand) {
-      path = `${path}&brandId=${this.brand}`
+    if (!this.brand) {
+      return
     }
+    this.branch = ''
+    let path = `${process.env.PORTAL_ENDPOINT}/list_branch?page=1&limit=1000&brandId=${this.brand}`
     try {
       const res = await this.$axios.$get(path, { data: null })
       if (res.successful) {
@@ -679,6 +650,14 @@ export default class UserProfile extends Vue {
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  onBlurUsername() {
+    if (!this.$v.username.$invalid) {
+      this.email = this.username
+    } else {
+      this.email = ''
     }
   }
 
@@ -736,7 +715,6 @@ export default class UserProfile extends Vue {
 
   dialogCancelAction() {
     this.$router.push('/userManagement')
-    this.dialogCancelCancelAction()
   }
 
   submit() {
@@ -749,7 +727,6 @@ export default class UserProfile extends Vue {
       this.checkCompany()
       this.checkBrand()
       this.checkUserRole()
-      this.checkPassword()
     } else {
       if (this.mode === 'create') {
         this.dialogSaveTitle = this.$t(
@@ -884,7 +861,8 @@ export default class UserProfile extends Vue {
     padding: 0px 50px;
 
     .input-phone {
-      width: 60%;
+      width: 50%;
+      padding-right: 25px;
     }
 
     .input-box {

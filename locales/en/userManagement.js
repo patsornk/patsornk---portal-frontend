@@ -28,7 +28,8 @@ module.exports = {
   assignRoleToNewUser: 'Assign Role to New User',
   bulkAssignRoleToUser: 'Bulk Assign Role to User',
   createNewUser: 'Create New User',
-  editUser: 'Edit User',
+  editNonCgUser: 'Edit Non Central Group User',
+  editCgUser: 'Edit Central Group User',
   userList: 'User List',
   clearAll: 'Clear All',
   userProfile: {
@@ -84,12 +85,16 @@ module.exports = {
   },
   input: 'Input ',
   select: 'Select ',
+  pleaseSelect: 'Please Select...',
   error: {
     invalidEmailFormat: 'Input invalid email format',
     invalidPhoneNo: 'Input invalid phone no. format',
+    invalidMolile: 'Input invalid mobile format',
+    inputPhoneNoAtLeast8Digits: 'Input phone no. at least 8 digits',
+    inputMobileAtLeast9Digits: 'Input mobile at least 9 digits',
     invalidUsername: 'Input invalid username format',
     invalidPassword: 'The password must be 8-12 characters and contains (A-Z, a-z and 0-9)',
-    CgUserUsernameNotPass: 'The username that you’ve entered is not Central Group user.',
-    NonCgUserUsernameDuplicated: 'The username that you’ve entered is duplicated.',
+    cgInvalidUsernameFormat: 'The username that you’ve entered is not an email format.',
+    usernameDuplicated: 'The username that you’ve entered is duplicated.',
   },
 }

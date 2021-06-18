@@ -51,48 +51,48 @@ export default class Tooltip extends Vue {
   height: 14px;
 }
 
-.tooltip .tooltip-text {
-  visibility: hidden;
-  width: max-content;
-  max-width: 150px;
-  background: #5c5c5c;
-  color: #fff;
-  border-radius: 6px;
-  padding: 5px 7px;
-  position: absolute;
-  z-index: 1;
-  bottom: -50%;
-  left: 630%;
-  margin-left: -60px;
-  transition: opacity 0.3s;
-  font-size: 8px;
-  line-height: 10px;
-  opacity: 0;
-}
-.tooltip .tooltip-text::after {
-  transform: rotate(90deg);
-  content: '';
-  position: absolute;
-  top: 27%;
-  left: -6px;
-  margin-left: -5px;
-  border-width: 8px 3px;
-  border-style: solid;
-  border-color: #5c5c5c transparent transparent transparent;
-}
-.height-one {
-  bottom: -27% !important;
-}
-.height-one::after {
-  top: 14% !important;
-}
-.height-three {
-  bottom: -90% !important;
-}
-.height-three::after {
-  top: 32% !important;
-}
-.tooltip:hover .tooltip-text {
+  .tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 240px;
+    background: #5C5C5C;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 7px;
+    position: absolute;
+    z-index: 1;
+    bottom: -50%;
+    left: 630%;
+    margin-left: -60px;
+    transition: opacity 0.3s;
+    font-size: 13px;
+    line-height: 15px;
+    opacity: 0;
+  }
+  .tooltip .tooltip-text::after {
+    transform: rotate(90deg);
+    content: "";
+    position: absolute;
+    top: 41%;
+    left: -6px;
+    margin-left: -5px;
+    border-width: 8px 3px;
+    border-style: solid;
+    border-color: #5C5C5C transparent transparent transparent;
+  }
+  .height-one {
+      bottom: -27% !important;
+    }
+  .height-one::after {
+    top: 14% !important;
+  }
+  .height-three {
+      bottom: -90% !important;
+    }
+  .height-three::after {
+    top: 32% !important;
+  }
+  .tooltip:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
 }

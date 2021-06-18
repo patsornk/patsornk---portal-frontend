@@ -21,7 +21,7 @@
           v-model="dataValue"
           class="input-number"
           :class="errorMessage !== '' ? 'input-error' : ''"
-          :placeholder="$t('createCompany.phoneNoInput')"
+          :placeholder="dataPlaceholder"
           type="text"
           inputmode="tel"
           maxlength="13"
@@ -74,6 +74,12 @@ export default class PhoneNumInput extends Vue {
   })
   private errorMessage?: string
 
+  @Prop({
+    type: String,
+    default: ''
+  })
+  private placeholder?: string
+
   get countryCodes() {
     return countryCodes
   }
@@ -84,6 +90,14 @@ export default class PhoneNumInput extends Vue {
 
   set dataValue(value) {
     this.$emit('input', value)
+  }
+
+  get dataPlaceholder() {
+    return this.placeholder || this.$t('createCompany.phoneNoInput')
+  }
+
+  set dataPlaceholder(value) {
+    this.dataPlaceholder = value
   }
 
   @Watch('prefix')
