@@ -68,7 +68,7 @@
           <span class="text-status"
             >{{ $t('userManagement.userProfile.accountStatus') }} :
           </span>
-          <span class="status">{{ dataStatus }}</span>
+          <span class="status" :class="statusClass">{{ dataStatus }}</span>
         </div>
       </div>
       <div class="profile-detail-container">
@@ -399,13 +399,13 @@ export default class UserProfileNonCg extends Vue {
   $i18n: any
 
   imageUrl = ''
-  status = 'Active'
+  status = 'Inactive'
 
-  username = '00000000001111111111222222222233333333334444444444'
+  username = ''
   firstName = ''
   lastName = ''
-  userType = '1'
-  userScope = '1'
+  userType = ''
+  userScope = ''
   company = ''
   department = ''
   brand = ''
@@ -508,6 +508,25 @@ export default class UserProfileNonCg extends Vue {
       return this.$t('common.inActive').toString()
     } else if (this.status === 'Onhold') {
       return this.$t('common.onHold').toString()
+    } else {
+      return ''
+    }
+  }
+
+  get statusClass(): string {
+    if (
+      this.dataStatus === this.$t('table.contentTableStatus.active').toString()
+    ) {
+      return 'active'
+    } else if (
+      this.dataStatus ===
+      this.$t('table.contentTableStatus.inactive').toString()
+    ) {
+      return 'inactive'
+    } else if (
+      this.dataStatus === this.$t('table.contentTableStatus.hold').toString()
+    ) {
+      return 'hold'
     } else {
       return ''
     }
@@ -879,6 +898,7 @@ export default class UserProfileNonCg extends Vue {
 .user-status-container {
   display: flex;
   justify-content: flex-end;
+
   .user-status {
     position: absolute;
     top: 129px;
@@ -911,8 +931,14 @@ export default class UserProfileNonCg extends Vue {
         font-size: 16px;
       }
 
-      .status {
+      .active {
         color: $success;
+      }
+      .inactive {
+        color: $gray-disable;
+      }
+      .hold {
+        color: $warning;
       }
     }
   }

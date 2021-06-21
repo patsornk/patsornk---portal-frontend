@@ -68,7 +68,7 @@
           <span class="text-status"
             >{{ $t('userManagement.userProfile.accountStatus') }} :
           </span>
-          <span class="status">{{ dataStatus }}</span>
+          <span class="status" :class="statusClass">{{ dataStatus }}</span>
         </div>
       </div>
       <div class="profile-detail-container">
@@ -477,6 +477,25 @@ export default class UserProfileNonCg extends Vue {
     }
   }
 
+  get statusClass(): string {
+    if (
+      this.dataStatus === this.$t('table.contentTableStatus.active').toString()
+    ) {
+      return 'active'
+    } else if (
+      this.dataStatus ===
+      this.$t('table.contentTableStatus.inactive').toString()
+    ) {
+      return 'inactive'
+    } else if (
+      this.dataStatus === this.$t('table.contentTableStatus.hold').toString()
+    ) {
+      return 'hold'
+    } else {
+      return ''
+    }
+  }
+
   @Watch('username')
   checkUsername(): void {
     this.error.username = !this.$v.username.required
@@ -821,6 +840,7 @@ export default class UserProfileNonCg extends Vue {
 .user-status-container {
   display: flex;
   justify-content: flex-end;
+
   .user-status {
     position: absolute;
     top: 129px;
@@ -850,8 +870,14 @@ export default class UserProfileNonCg extends Vue {
         font-size: 16px;
       }
 
-      .status {
+      .active {
         color: $success;
+      }
+      .inactive {
+        color: $gray-disable;
+      }
+      .hold {
+        color: $warning;
       }
     }
   }

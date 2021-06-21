@@ -20,14 +20,14 @@ export default class CompanyStatus extends Vue {
   readonly status!: string
 
   get statusClass(): string {
-    if (this.status === this.$t('table.contentTableStatus.active').toString()) {
+    if (this.dataStatus === this.$t('table.contentTableStatus.active').toString()) {
       return 'active'
     } else if (
-      this.status === this.$t('table.contentTableStatus.inactive').toString()
+      this.dataStatus === this.$t('table.contentTableStatus.inactive').toString()
     ) {
       return 'inactive'
     } else if (
-      this.status === this.$t('table.contentTableStatus.hold').toString()
+      this.dataStatus === this.$t('table.contentTableStatus.hold').toString()
     ) {
       return 'hold'
     } else {
