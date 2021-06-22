@@ -37,7 +37,7 @@
             :src="assets('table/hold.png')"
             @click="clickAction('on hold')"
           />
-          <span class="tooltiptext">On hold</span>
+          <span class="tooltiptext">{{ $t('common.onHold') }}</span>
         </div>
         <div class="icon-container pointer">
           <img
@@ -45,7 +45,7 @@
             :src="assets('table/inactive.png')"
             @click="clickAction('inactive')"
           />
-          <span class="tooltiptext">Inactive</span>
+          <span class="tooltiptext">{{ $t('common.inActive') }}</span>
         </div>
         <div class="icon-container pointer">
           <img
@@ -53,7 +53,7 @@
             :src="assets('table/delete.png')"
             @click="clickAction('delete')"
           />
-          <span class="tooltiptext">Delete</span>
+          <span class="tooltiptext">{{ $t('common.delete') }}</span>
         </div>
       </div>
     </div>
