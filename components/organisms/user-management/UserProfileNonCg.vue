@@ -399,7 +399,7 @@ export default class UserProfileNonCg extends Vue {
   $i18n: any
 
   imageUrl = ''
-  status = 'Inactive'
+  status = 'Active'
 
   username = ''
   firstName = ''
