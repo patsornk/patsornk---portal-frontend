@@ -91,7 +91,7 @@ module.exports = {
     invalidPhoneNo: 'ระบุรูปแบบของเบอร์โทรศัพท์ไม่ถูกต้อง',
     invalidMolile: 'ระบุรูปแบบของเบอร์โทรศัพท์มือถือไม่ถูกต้อง',
     inputPhoneNoAtLeast8Digits: 'ระบุเบอร์โทรศัพท์อย่างน้อย 8 ตัวอักษร',
-    inputMobileAtLeast9Digits: 'ระบุเบอร์โทรศัพท์อย่างน้อย 9 ตัวอักษร',
+    inputMobileAtLeast9Digits: 'ระบุเบอร์โทรศัพท์มือถืออย่างน้อย 9 ตัวอักษร',
     invalidUsername: 'ระบุรูปแบบของชื่อผู้ใช้งานไม่ถูกต้อง',
     invalidPassword: 'รหัสผ่านต้องมีความยาว 8-12 ตัวอักษร และมี A-Z, a-z และ 0-9',
     cgInvalidUsernameFormat: 'ชื่อผู้ใช้งานที่คุณระบุไม่ใช่รูปแบบของอีเมล',
