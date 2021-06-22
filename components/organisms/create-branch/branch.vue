@@ -1584,7 +1584,9 @@ export default class CreateBranch extends Vue {
               partnerName: item.partnerName
             }
           })
-          this.partnerCodeId = ''
+          if (this.componetMode === 'create') {
+            this.partnerCodeId = ''
+          }
         }
       } catch (error) {
         if (error.response.data.code !== '04') {
