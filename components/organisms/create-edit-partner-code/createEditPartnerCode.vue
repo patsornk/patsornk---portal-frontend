@@ -392,7 +392,7 @@ export default class CreateEditPartnerCode extends Vue {
         this.partnerCode = data.partnerCode
         this.partnerName = data.partnerName
         this.partnerId = data.partnerId
-        this.status = statusStr
+        this.status = data.status
         this.$store.dispatch('company/setStatus', statusStr)
       }
     } catch (error) {
