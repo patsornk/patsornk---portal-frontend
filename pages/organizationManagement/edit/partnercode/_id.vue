@@ -55,6 +55,8 @@ export default class CompanyEditPartnerCode extends Vue {
     updatedBy: ''
   }
 
+  private partnerCode = ''
+
   private statusOption = [
     {
       id: 2,
@@ -98,7 +100,7 @@ export default class CompanyEditPartnerCode extends Vue {
       },
       {
         title: `${this.$t('common.partnerCodeTitle').toString()} - ${
-          partnerCode ?? 'Edit partner code'
+          this.partnerCode
         }`,
         url: '/',
         active: true
@@ -122,7 +124,7 @@ export default class CompanyEditPartnerCode extends Vue {
       if (res.successful) {
         this.company = res.data
 
-        const partnerCode = await this.getPartnercode()
+        const partnerCode = this.partnerCode
 
         this.setupBreadcrumb(
           this.language === 'th'
@@ -144,11 +146,11 @@ export default class CompanyEditPartnerCode extends Vue {
       )
       if (res.successful) {
         const data = res.data
+        this.partnerCode = data.partnerCode
         const statusStr = this.statusOption.filter(
           (e) => e.id === this.$v.status.$model
         )[0].status
         this.$store.dispatch('company/setStatus', statusStr)
-        return data.partnerCode
       }
     } catch (error) {
       return ''
@@ -178,6 +180,7 @@ export default class CompanyEditPartnerCode extends Vue {
     this.$store.dispatch('company/setStatus', '')
     if (this.compantId && (await this.checkBelongTo())) {
       this.getCpmpany()
+      await this.getPartnercode()
     } else {
       this.$router.push('/landing')
     }
