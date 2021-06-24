@@ -5,7 +5,7 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   // target: 'static',
 
-  mode:'spa',
+  mode: 'spa',
   loading: '~/components/atoms/Loading.vue',
 
   server: {
@@ -113,29 +113,20 @@ export default {
     proxyHeaders: false,
     headers: {
       common: {
+        'origin': null,
         'Accept': 'application/json, text/plain, */*'
       },
       get: {
+        'origin': null,
         'Content-Type': 'application/json'
       }
     },
     baseURL: process.env.PORTAL_ENDPOINT
   },
-
   auth: {
     strategies: {
-      local: {
-        scheme: 'refresh',
-        token: {
-          property: 'access_token',
-          maxAge: 1800
-          // type: 'Bearer'
-        },
-        refreshToken: {
-          property: 'refresh_token',
-          data: 'refresh_token',
-          maxAge: 1800
-        },
+      username: {
+        scheme: 'local',
         endpoints: {
           login: {
             url:
@@ -147,26 +138,78 @@ export default {
             },
             propertyName: 'data'
           },
-          // login: {
-          //   url: 'login',
-          //   method: 'post',
-          //   propertyName: 'data.token'
-          // },
-          // user: {
-          //   url: '',
-          //   method: 'get',
-          //   propertyName: false
-          // },
-          user: false,
-          logout: false
-        }
+          logout: false,
+          user: false
+        },
+        token: {
+          property: 'accessToken',
+          type: 'Bearer',
+          name: 'Authorization',
+          maxAge: 1800 // Can be dynamic ?
+        },
+        refreshToken: {
+          property: 'refreshToken',
+          maxAge: 1800 // Can be dynamic ? 
+        },
+      },
+      refreshToken: {
+        scheme: 'local',
+        endpoints: {
+          login: {
+            url: '/auth/refresh_token',
+            method: 'post',
+            headers: {
+              'Content-Type':
+                'application/x-www-form-urlencoded'
+            },
+            propertyName: 'data'
+          },
+          logout: false,
+          user: false
+        },
+        token: {
+          property: 'accessToken',
+          type: 'Bearer',
+          name: 'Authorization',
+          maxAge: 1800 // Can be dynamic ?
+        },
+        refreshToken: {
+          property: 'refreshToken',
+          maxAge: 1800 // Can be dynamic ? 
+        },
+      },
+      keycloak: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/auth`,
+          token: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/token`,
+          logout: ''
+        },
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          name: 'Authorization',
+          maxAge: 1800 // Can be dynamic ?
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 1800 // Can be dynamic ? 
+        },
+        clientId: 'public',
+        responseType: 'code',
+        accessType: 'offline',
+        grantType: 'authorization_code',
+        scope: ['openid'],
+        state: 'UNIQUE_AND_NON_GUESSABLE',
+        codeChallengeMethod: 'S256',
       }
     },
     redirect: {
-      login: '/login'
+      login: '/login',
+      logout: '/login',
+      callback: '/',
     }
   },
-
   router: {
     middleware: ['auth']
   },

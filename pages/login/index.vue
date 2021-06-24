@@ -16,7 +16,15 @@ import LoginSection from '~/components/molecules/login/LoginSection.vue'
   },
   auth: false
 })
-export default class Example extends Vue {}
+export default class Example extends Vue {
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.$router.push('/landing')
+    } else {
+      this.$router.push('/login')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

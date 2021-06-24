@@ -154,6 +154,9 @@ export default class CreateBranch extends Vue {
   }
 
   async mounted(): Promise<void> {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.$store.dispatch('company/setStatus', '')
     if (this.companyId && (await this.checkBelongTo())) {
       await this.getCompany()

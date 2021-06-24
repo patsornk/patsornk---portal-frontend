@@ -148,68 +148,11 @@ export default class CentarlLogin extends Vue {
   }
 
   private async submit() {
-    this.onChangedUsername()
-    this.onChangedPassword()
-    if (validateError(this.error)) {
-      const params = new URLSearchParams()
-      params.append('username', this.username)
-      params.append('password', this.password)
-      params.append('type', 'cg')
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+    this.$auth.loginWith('keycloak', {
+      params: {
+        kc_idp_hint: 'saml'
       }
-      try {
-        let response = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/auth/token`,
-          params,
-          config
-        )
-        if (response && response.successful) {
-          if (response.data) {
-            this.$router.push('/landing')
-          } else {
-          }
-        } else {
-        }
-      } catch (error) {
-        if (error.response.data && error.response.data.code == '45') {
-          this.$toast.global.error(
-            this.$t('login.incorrectPassword').toString()
-          )
-        } else if (error.response.status === 500) {
-          this.$router.push('/login/error_')
-        } else {
-          this.$toast.global.error(this.$t('login.emptyUsernameToast'))
-        }
-      }
-    }
-    // if (validateError(this.error)) {
-    //   try {
-    //     this.$auth
-    //       .loginWith('local', {
-    //         data: qs.stringify(this.formData)
-    //       })
-    //       .then((resp) => {
-    //         if (resp) {
-    //           console.log(resp)
-    //           this.$auth.setUserToken(
-    //             resp.data.access_token,
-    //             resp.data.refresh_token
-    //           )
-    //           this.$axios.setHeader(
-    //             'Authorization',
-    //             'Bearer ' + resp.data.access_token
-    //           )
-    //           this.$router.push('/landing')
-    //           console.log(this.$auth.refreshTokens())
-    //         }
-    //       })
-    //   } catch {
-    //     this.$router.push('/login')
-    //   }
-    // }
+    })
   }
 }
 </script>

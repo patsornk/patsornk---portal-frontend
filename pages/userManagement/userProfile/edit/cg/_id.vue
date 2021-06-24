@@ -12,7 +12,11 @@ import UserProfileCg from '~/components/organisms/user-management/UserProfileCg.
   components: { UserProfileCg }
 })
 export default class UserProfileCgCreate extends Vue {
-  
+  mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 

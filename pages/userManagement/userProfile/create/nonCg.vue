@@ -12,7 +12,11 @@ import UserProfileNonCg from '~/components/organisms/user-management/UserProfile
   components: { UserProfileNonCg }
 })
 export default class UserProfileNonCgCreate extends Vue {
-  
+  mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 

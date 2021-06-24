@@ -113,6 +113,9 @@ export default class CompanyCreateBrand extends Vue {
   }
 
   mounted(): void {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.getCompany()
     this.$store.dispatch('company/setStatus', '')
   }

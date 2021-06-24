@@ -131,6 +131,9 @@ export default class OrganizationManagementDetail extends Vue {
   }
 
   mounted(): void {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.getCpmpany()
   }
 }

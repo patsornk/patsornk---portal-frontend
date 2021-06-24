@@ -55,6 +55,10 @@ export default class Main extends Vue {
   }
 
   mounted(): void {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
+
     this.setupBreadcrumb()
 
     this.$toast.global.error('error')

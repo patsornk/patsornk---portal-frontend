@@ -38,6 +38,9 @@ export default class OrganizationManagement extends Vue {
   }
 
   mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     window.sessionStorage.removeItem('createCompanyFirstTime')
     window.sessionStorage.removeItem('companyFirstTime')
     window.sessionStorage.removeItem('createCompanyId')

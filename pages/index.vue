@@ -5,12 +5,23 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
   layout: 'login'
-  // layout: 'default'
 })
 export default class Home extends Vue {
   mounted() {
-    this.$router.push('/login')
-    // this.$router.push('/landing')
+    const query = this.$route.query
+    if (query && query.code) {
+      setTimeout(() => {
+        window.history.pushState({},'',`/`)
+        window.location.reload()
+        this.$nuxt.$loading.finish()
+      }, 500);
+    } else {
+      if (this.$auth.loggedIn) {
+        this.$router.push('/landing')
+      } else {
+        this.$router.push('/login')
+      }
+    }
   }
 }
 </script>

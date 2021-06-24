@@ -38,6 +38,7 @@
 </template>
 
 <script lang="ts">
+import qs from 'qs'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { ErrorUserFormData, UserFormData } from '~/constants'
 import { validateError } from '~/helper'
@@ -144,38 +145,34 @@ export default class CentarlLogin extends Vue {
       params.append('username', this.username)
       params.append('password', this.password)
       params.append('type', 'non-cg')
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }
-      try {
-        let response = await this.$axios.$post(
-          `${process.env.PORTAL_ENDPOINT}/auth/token`,
-          params,
-          config
-        )
-        if (response && response.successful) {
-          if (response.data) {
-            // if need to change password
-            this.$router.push('/login/resetPassword')
-            // else don't change password
-            // this.$router.push('/landing')
+      this.$auth
+        .loginWith('username', {
+          data: params
+        })
+        .then((response: any) => {
+          if (response) {
+            const res = response.data
+            if (res && res.accessToken) {
+              // if need to change password
+              this.$router.push('/login/resetPassword')
+              // else don't change password
+              // this.$router.push('/landing')
+            } else {
+            }
           } else {
           }
-        } else {
-        }
-      } catch (error) {
-        if (error.response.data && error.response.data.code == '45') {
-          this.$toast.global.error(
-            this.$t('login.incorrectPassword').toString()
-          )
-        } else if (error.response.status === 500) {
-          this.$router.push('/login/error_')
-        } else {
-          this.$toast.global.error(this.$t('login.emptyUsernameToast'))
-        }
-      }
+        })
+        .catch((error) => {
+          if (error.response.data && error.response.data.code == '45') {
+            this.$toast.global.error(
+              this.$t('login.incorrectPassword').toString()
+            )
+          } else if (error.response.status === 500) {
+            this.$router.push('/login/error_')
+          } else {
+            this.$toast.global.error(this.$t('login.emptyUsernameToast'))
+          }
+        })
     }
   }
 }

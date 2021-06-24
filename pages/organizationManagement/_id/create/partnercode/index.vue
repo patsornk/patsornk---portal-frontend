@@ -113,6 +113,9 @@ export default class CompanyCreatePartnerCode extends Vue {
   }
 
   mounted(): void {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.$store.dispatch('company/setStatus', '')
     this.getCpmpany()
   }

@@ -13,7 +13,13 @@ import SystemError from '~/components/molecules/error-display/SystemError.vue'
     SystemError
   }
 })
-export default class Example extends Vue {}
+export default class Example extends Vue {
+  mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

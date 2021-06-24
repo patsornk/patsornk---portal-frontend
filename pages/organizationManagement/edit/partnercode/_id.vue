@@ -172,6 +172,9 @@ export default class CompanyEditPartnerCode extends Vue {
   }
 
   async mounted(): Promise<void> {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.$store.dispatch('company/setStatus', '')
     if (this.compantId && (await this.checkBelongTo())) {
       this.getCpmpany()

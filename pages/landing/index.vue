@@ -72,6 +72,9 @@ export default class Landing extends Vue {
   }
 
   mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.$store.dispatch('breadcrumb/setBreadcrumb', [])
     // set Page title
     this.$store.dispatch('breadcrumb/setPageTitle', '')

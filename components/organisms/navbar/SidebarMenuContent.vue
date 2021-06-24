@@ -9,7 +9,8 @@
     <nav-menu-item
       class="logout"
       :label="$t('common.logout')"
-      :active="false"
+      @click.native="onClickLogout"
+      :active="true"
       icon="logout.png"
     />
   </div>
@@ -28,7 +29,11 @@ import ProfileNav from '~/components/molecules/navbar/ProfileNav.vue'
     ProfileNav
   }
 })
-export default class SidebarMenuContent extends Vue {}
+export default class SidebarMenuContent extends Vue {
+  onClickLogout() {
+    
+  }
+}
 </script>
 
 <style lang="scss" scoped>

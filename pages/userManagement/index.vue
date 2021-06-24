@@ -45,6 +45,9 @@ export default class UserManagement extends Vue {
   }
 
   mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.setupBreadcrumb()
   }
 }

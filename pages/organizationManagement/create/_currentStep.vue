@@ -48,6 +48,9 @@ export default class CreateCompanyStep extends Vue {
   }
 
   mounted() {
+    if (!this.$auth.loggedIn) {
+      this.$router.push('/login')
+    }
     this.setupBreadcrumb()
   }
 
