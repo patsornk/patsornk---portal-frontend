@@ -633,6 +633,10 @@ export default class UserProfileNonCg extends Vue {
 
   @Watch('password')
   checkPassword(): void {
+    if (this.password === '' && this.mode === 'edit') {
+      this.error.password = ''
+      return
+    }
     this.error.password = !this.$v.password.required
       ? this.$t('userManagement.input').toString() +
         this.$t('userManagement.userProfile.password')
