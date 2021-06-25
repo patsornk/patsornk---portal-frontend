@@ -4,6 +4,7 @@
       :parent-company-id="companyId"
       :set-branch="setBranch"
       componet-mode="edit"
+      :callback="getBranch"
     />
   </div>
 </template>
@@ -131,6 +132,7 @@ export default class CreateBranch extends Vue {
           (e) => e.id === res.data.status
         )[0].status
         this.$store.dispatch('company/setStatus', statusStr)
+        this.setupBreadcrumb()
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

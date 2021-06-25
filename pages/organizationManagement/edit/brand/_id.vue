@@ -1,7 +1,12 @@
 <template>
   <div class="create-step-container">
     <div class="w-full h-full">
-      <create-brand mode="edit" :company-id="companyId" :brand-id="brandId" />
+      <create-brand
+        mode="edit"
+        :company-id="companyId"
+        :brand-id="brandId"
+        :callback="getBrand"
+      />
     </div>
   </div>
 </template>
@@ -110,6 +115,7 @@ export default class CompanyEditBrand extends Vue {
           nameTh: data.brandNameTh,
           nameEn: data.brandNameEn
         }
+        this.setupBreadcrumb()
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

@@ -345,6 +345,12 @@ export default class CreateBrand extends Vue {
   })
   brandId!: string
 
+  @Prop({
+    required: false,
+    type: () => {}
+  })
+  callback?: () => {}
+
   $i18n: any
   brandCode = ''
   brandName = {
@@ -1085,6 +1091,9 @@ export default class CreateBrand extends Vue {
             this.$toast.global.success(
               this.$t('common.successfully').toString()
             )
+            if (this.callback) {
+              this.callback()
+            }
           }
         }
         this.$nuxt.$loading.finish()

@@ -760,6 +760,12 @@ export default class CreateBranch extends Vue {
   })
   readonly setBranch?: (value: any) => void
 
+  @Prop({
+    required: false,
+    type: () => {}
+  })
+  callback?: () => {}
+
   private dialogDisplay = false
 
   private statusOption = [
@@ -2640,6 +2646,9 @@ export default class CreateBranch extends Vue {
         this.$store.dispatch('company/setStatus', statusStr)
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
+        if (this.callback){
+          this.callback()
+        }
       }
       this.$nuxt.$loading.finish()
     } catch (error) {
