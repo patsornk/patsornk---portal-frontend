@@ -31,7 +31,10 @@ import ProfileNav from '~/components/molecules/navbar/ProfileNav.vue'
 })
 export default class SidebarMenuContent extends Vue {
   onClickLogout() {
-    
+    const authStrategy: any = this.$auth.strategy
+    const params = new URLSearchParams()
+    params.append('refreshToken', authStrategy.refreshToken.get())
+    this.$auth.logout({data: params})
   }
 }
 </script>

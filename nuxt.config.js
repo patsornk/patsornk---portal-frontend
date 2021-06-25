@@ -125,8 +125,8 @@ export default {
   },
   auth: {
     strategies: {
-      username: {
-        scheme: 'local',
+      local: {
+        scheme: 'refresh',
         endpoints: {
           login: {
             url:
@@ -138,25 +138,9 @@ export default {
             },
             propertyName: 'data'
           },
-          logout: false,
-          user: false
-        },
-        token: {
-          property: 'accessToken',
-          type: 'Bearer',
-          name: 'Authorization',
-          maxAge: 1800 // Can be dynamic ?
-        },
-        refreshToken: {
-          property: 'refreshToken',
-          maxAge: 1800 // Can be dynamic ? 
-        },
-      },
-      refreshToken: {
-        scheme: 'local',
-        endpoints: {
-          login: {
-            url: '/auth/refresh_token',
+          refresh: {
+            url:
+              '/auth/refresh_token',
             method: 'post',
             headers: {
               'Content-Type':
@@ -164,7 +148,16 @@ export default {
             },
             propertyName: 'data'
           },
-          logout: false,
+          logout: {
+            url:
+              '/auth/logout',
+            method: 'post',
+            headers: {
+              'Content-Type':
+                'application/x-www-form-urlencoded'
+            },
+            propertyName: 'data',
+          },
           user: false
         },
         token: {
@@ -175,7 +168,7 @@ export default {
         },
         refreshToken: {
           property: 'refreshToken',
-          maxAge: 1800 // Can be dynamic ? 
+          maxAge: 60 * 60 * 24 * 30
         },
       },
       keycloak: {
@@ -183,7 +176,7 @@ export default {
         endpoints: {
           authorization: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/auth`,
           token: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/token`,
-          logout: ''
+          logout: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/logout`,
         },
         token: {
           property: 'access_token',

@@ -15,9 +15,6 @@ import SystemError from '~/components/molecules/error-display/SystemError.vue'
 })
 export default class Example extends Vue {
   mounted() {
-    if (!this.$auth.loggedIn) {
-      this.$router.push('/login')
-    }
   }
 }
 </script>

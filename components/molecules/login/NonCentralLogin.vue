@@ -146,7 +146,7 @@ export default class CentarlLogin extends Vue {
       params.append('password', this.password)
       params.append('type', 'non-cg')
       this.$auth
-        .loginWith('username', {
+        .loginWith('local', {
           data: params
         })
         .then((response: any) => {
