@@ -104,7 +104,8 @@ import DialogPopup from '~/components/molecules/DialogPopup.vue'
 const brandFeatureValidations = {
   ctaLabel: { required },
   ctaType: { required },
-  ctaFeature: { required }
+  ctaFeature: { required },
+  imageUrl: { required }
 }
 
 @Component({
@@ -305,7 +306,12 @@ export default class BrandFeatureBody extends Vue {
       this.error.image = this.imageUrl
         ? ''
         : this.$t('createBrand.brandFeature.error.image').toString()
-      if(this.error.ctaLabel || this.error.ctaType || this.error.ctaFeature || this.error.image){
+      if (
+        this.error.ctaLabel ||
+        this.error.ctaType ||
+        this.error.ctaFeature ||
+        this.error.image
+      ) {
         this.$toast.global.error(
           this.$t('createBrand.brandFeature.error.toastRequiredField')
         )
