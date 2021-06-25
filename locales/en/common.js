@@ -58,6 +58,7 @@ module.exports = {
     searchBy: 'Search by',
     searchFromCompany: 'Search from Company Name or Partner Code',
     searchFromBrand: 'Search from Brand code, Brand name  or Partner code',
+    searchfromBranch:'Search from Branch Name or Partner Code',
     searchFromPartner: 'Search from Partner Code',
     active: 'Active',
     inActive: 'Inactive',

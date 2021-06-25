@@ -8,7 +8,16 @@
       />
       <div class="dropdown-container">
         <div class="dropdown-group">
-          <v-select
+          <input-field
+            class="input-select"
+            v-model="filterData.companyStatus"
+            type="select"
+            :options="companyStatus"
+            :optionsReduce="(item) => item.id"
+            :optionsLabel="'status'"
+            :placeholder="$t('common.status')"
+          />
+          <!-- <v-select
             v-model="filterData.companyStatus"
             class="dropdown"
             :options="companyStatus"
@@ -17,7 +26,7 @@
             :placeholder="$t('common.status')"
             :searchable="false"
             :map-keydown="deleteHandler"
-          />
+          /> -->
         </div>
         <t1-button class="black" @click.native="search">{{
           $t('common.search')
@@ -501,6 +510,12 @@ export default class TabBrand extends Vue {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      .input-select{
+        width: 240px;
+        height: 44px;
+        margin-right: 28px;
+      }
       .dropdown {
         padding: 0;
         width: 240px;

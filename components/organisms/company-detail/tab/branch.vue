@@ -3,30 +3,28 @@
     <div class="filter-container">
       <input-search
         v-model="filterData.search"
-        :placeholder="$t('common.search')"
+        :placeholder="$t('common.searchfromBranch')"
         :options="searchList"
       />
       <div class="dropdown-container">
         <div class="dropdown-group">
-          <v-select
+          <input-field
+            class="input-select-fwb"
             v-model="filterData.brandId"
-            class="dropdown"
+            type="select"
             :options="brandList"
-            :label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
-            :reduce="(item) => item.brandId"
+            :optionsReduce="(item) => item.brandId"
+            :optionsLabel="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
             :placeholder="$t('common.columnDefBranch.fromWhichBrand')"
-            :searchable="false"
-            :map-keydown="deleteHandler"
           />
-          <v-select
+          <input-field
+            class="input-select"
             v-model="filterData.companyStatus"
-            class="dropdown"
+            type="select"
             :options="companyStatus"
-            :label="'status'"
-            :reduce="(item) => item.id"
+            :optionsReduce="(item) => item.id"
+            :optionsLabel="'status'"
             :placeholder="$t('common.status')"
-            :searchable="false"
-            :map-keydown="deleteHandler"
           />
         </div>
         <t1-button class="black" @click.native="search">
@@ -576,6 +574,21 @@ export default class TabBranch extends Vue {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      .input-select-fwb {
+        width: 480px;
+        height: 44px;
+        margin-right: 28px;
+      }
+
+      .input-select {
+        padding: 0;
+        width: 240px;
+        height: 44px;
+        margin-right: 28px;
+        border: 0px;
+      }
+
       .dropdown {
         padding: 0;
         width: 240px;
