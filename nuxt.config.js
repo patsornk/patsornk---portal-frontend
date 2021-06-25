@@ -142,11 +142,11 @@ export default {
             url:
               '/auth/refresh_token',
             method: 'post',
-            headers: {
-              'Content-Type':
-                'application/x-www-form-urlencoded'
-            },
-            propertyName: 'data'
+            // headers: {
+            //   'Content-Type':
+            //     'application/x-www-form-urlencoded'
+            // },
+            // propertyName: 'data'
           },
           logout: {
             url:
