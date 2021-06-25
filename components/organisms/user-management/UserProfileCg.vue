@@ -300,7 +300,8 @@ import { required, email, numeric, minLength } from 'vuelidate/lib/validators'
 const validations = {
   username: {
     required,
-    email
+    email,
+    mustBe: (value: any) => /^([A-Za-z0-9@._-])*$/g.test(value)
   },
   firstName: {
     required,
@@ -501,7 +502,7 @@ export default class UserProfileNonCg extends Vue {
     this.error.username = !this.$v.username.required
       ? this.$t('userManagement.input').toString() +
         this.$t('userManagement.userProfile.username')
-      : !this.$v.username.email
+      : !this.$v.username.email || !this.$v.username.mustBe
       ? this.$t('userManagement.error.cgInvalidUsernameFormat').toString()
       : ''
   }
