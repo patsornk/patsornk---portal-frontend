@@ -151,10 +151,12 @@ export default class Default extends Vue {
         window.sessionStorage.removeItem('maxStepbar')
         this.$store.dispatch('stepbar/setMaxState', 0)
         this.$router.push('/organizationManagement/create')
+        break
       case this.$t('article.articlesList').toString():
         this.$router.push('/article/create')
+        break
       default:
-        return
+        break
     }
   }
 
