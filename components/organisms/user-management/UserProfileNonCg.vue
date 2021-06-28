@@ -124,8 +124,9 @@
             required
             type="select"
             :options="userTypeList"
-            :options-reduce="(item) => item.typeId"
-            :options-label="language === 'th' ? 'typeNameTh' : 'typeNameEn'"
+            :options-reduce="(item) => item.userTypeId"
+            :options-label="language === 'th' ? 'userTypeTh' : 'userTypeEn'"
+            :disable="mode === 'edit'"
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userType"
           />
