@@ -445,7 +445,15 @@ export default class UserList extends Vue {
     }
   }
 
-  onRowClicked(row: any): void {}
+  onRowClicked(row: any): void {
+    if (row.data) {
+      if (row.data.userGroup.groupId == 2) {
+        this.$router.push(`/userManagement/userProfile/edit/nonCG/${row.data.userId}`)
+      } else {
+        this.$router.push(`/userManagement/userProfile/edit/cg/${row.data.userId}`)
+      }
+    } 
+  }
 
   async mounted(): Promise<void> {
     await this.getRole()
@@ -666,6 +674,7 @@ export default class UserList extends Vue {
       const statusStr = this.statusList.filter((e) => e.id === item.status)[0]
         .status
       return {
+        ...item,
         firstName: item.userProfile.firstName,
         lastName: item.userProfile.lastName,
         userType: type,

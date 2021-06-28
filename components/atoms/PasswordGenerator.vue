@@ -113,6 +113,7 @@ export default class PasswordGenerator extends Vue {
     this.dataValue = this.password(
       Math.floor(8 + ((Math.random() * (12 - 8 + 1)) % 10))
     )
+    this.$emit('onClickGen')
   }
 
   private upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'

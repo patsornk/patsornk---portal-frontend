@@ -154,7 +154,8 @@ export default class CentarlLogin extends Vue {
             const res = response.data
             if (res && res.accessToken) {
               // if need to change password
-              this.$router.push('/login/resetPassword')
+              // this.$router.push('/login/resetPassword')
+              this.$router.push('/')
               // else don't change password
               // this.$router.push('/landing')
             } else {

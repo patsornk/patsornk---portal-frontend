@@ -62,7 +62,7 @@
     </div>
     <div class="user-profile-container">
       <div class="profile-image-container">
-        <profile-picture v-model="imageUrl" />
+        <profile-picture @onChange="onChangeProfileImage" v-model="imageUrl" />
         <div class="account-detail-container">
           <div class="username" v-if="mode === 'edit'">{{ username }}</div>
           <span class="text-status"
@@ -123,8 +123,8 @@
             required
             type="select"
             :options="userTypeList"
-            :options-reduce="(item) => item.userTypeId"
-            :options-label="language === 'th' ? 'userTypeTh' : 'userTypeEn'"
+            :options-reduce="(item) => item.typeId"
+            :options-label="language === 'th' ? 'typeNameTh' : 'typeNameEn'"
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userType"
           />
@@ -136,8 +136,8 @@
             required
             type="select"
             :options="userScopeList"
-            :options-reduce="(item) => item.userScopeId"
-            :options-label="language === 'th' ? 'userScopeTh' : 'userScopeEn'"
+            :options-reduce="(item) => item.userLevelScopeId"
+            :options-label="language === 'th' ? 'userLevelScopeTh' : 'userLevelScopeEn'"
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userScope"
           />
@@ -145,7 +145,7 @@
             v-model="$v.company.$model"
             class="left"
             :title="$t('userManagement.userProfile.company')"
-            :disable="mode === 'edit'"
+            :disable="mode === 'edit' || companyList.length === 0"
             required
             type="select"
             :options="companyList"
@@ -296,6 +296,7 @@ import { BreadcrumbType } from '~/constants'
 import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
 import { required, email, numeric, minLength } from 'vuelidate/lib/validators'
+import { getImagePath } from '~/helper/images'
 
 const validations = {
   username: {
@@ -311,23 +312,13 @@ const validations = {
     required,
     mustBe: (value: any) => /^([ก-๛A-Za-z0-9 -])*$/g.test(value)
   },
-  userType: {
-    required
-  },
-  userScope: {
-    required
-  },
-  company: {
-    required
-  },
+  userType: { required },
+  userScope: { required },
+  company: { required },
   department: {},
-  brand: {
-    required
-  },
-  branch: {},
-  userRole: {
-    required
-  },
+  brand: { required },
+  branch: { required },
+  userRole: { required },
   email: {},
   phoneNo: {
     numeric,
@@ -346,6 +337,18 @@ const validations = {
     'userScope',
     'company',
     'brand',
+    'userRole'
+  ],
+
+  validationGroupScopeBranch: [
+    'username',
+    'firstName',
+    'lastName',
+    'userType',
+    'userScope',
+    'company',
+    'brand',
+    'branch',
     'userRole'
   ]
 }
@@ -366,6 +369,9 @@ const validations = {
 export default class UserProfileNonCg extends Vue {
   $i18n: any
 
+  profileImg: any
+  previewUrl: null | string = ''
+
   imageUrl = ''
   status = 'Active'
 
@@ -381,9 +387,9 @@ export default class UserProfileNonCg extends Vue {
   userRole = []
   email = ''
   phoneNo = ''
-  phonePrefix = ''
+  phonePrefix = '+66'
   mobile = ''
-  mobilePrefix = ''
+  mobilePrefix = '+66'
 
   error = {
     username: '',
@@ -403,48 +409,7 @@ export default class UserProfileNonCg extends Vue {
   companyList = []
   brandList = []
   branchList = []
-  userRoleList = [
-    {
-      id: 1,
-      role: 'The 1 Admin'
-    },
-    {
-      id: 2,
-      role: 'Business Unit Admin'
-    },
-    {
-      id: 3,
-      role: 'Partner Admin'
-    },
-    {
-      id: 4,
-      role: 'Organization Approver'
-    },
-    {
-      id: 5,
-      role: 'Organization'
-    },
-    {
-      id: 6,
-      role: 'Content Approver'
-    },
-    {
-      id: 7,
-      role: 'Content Manager'
-    },
-    {
-      id: 8,
-      role: 'Content Staff'
-    },
-    {
-      id: 9,
-      role: 'Offer Approver'
-    },
-    {
-      id: 10,
-      role: 'Offer Manager'
-    }
-  ]
+  userRoleList = []
 
   dialogSave = false
   dialogSaveTitle = ''
@@ -461,6 +426,13 @@ export default class UserProfileNonCg extends Vue {
     type: String
   })
   private mode!: string
+
+  @Prop({
+    required: false,
+    type: String,
+    default: ''
+  })
+  private userId?: string
 
   get language(): any {
     return this.$i18n.locale
@@ -620,15 +592,114 @@ export default class UserProfileNonCg extends Vue {
     )
   }
 
-  mounted() {
+  async mounted() {
+    if (this.mode == 'edit') {
+      await this.getUser()
+    }
     this.setupBreadcrumb()
-    this.getCompany()
+    this.getUserType()
+    this.getUserScope()
   }
 
-  async getCompany(): Promise<void> {
+  async getUser(): Promise<void>  {
     try {
       const res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/list_company?page=1&limit=1000`,
+        `${process.env.PORTAL_ENDPOINT}/get_user?userId=${this.userId}`,
+        { data: null }
+      )
+      if (res.successful && res.data) {
+        const data = res.data
+        this.username = data.username
+        this.firstName = data.userProfile.firstName
+        this.lastName = data.userProfile.lastName
+        this.userType = data.userType.typeId
+        await this.getUserRole()
+        this.userScope = data.userScope.userScopeLevel ? data.userScope.userScopeLevel.scopeLevelId : undefined
+        this.company = data.userScope.company ? data.userScope.company.companyId : undefined
+        await this.getBrand()
+        this.brand = data.userScope.brand ? data.userScope.brand.brandId : undefined
+        await this.getBranch()
+        this.branch = data.userScope.branch ? data.userScope.branch.branchId : undefined
+        this.userRole = data.role.map((item: any) => {
+          return { 
+            ...item,
+            id: item.roleId,
+            role: item.roleTitle
+           }
+        })
+        this.email = data.userProfile.email
+        this.phonePrefix = data.userProfile.phonePrefix
+        this.phoneNo = data.userProfile.phoneNo
+        this.mobilePrefix = data.userProfile.phonePrefix
+        this.mobile = data.userProfile.phoneNo
+        this.previewUrl = data.userProfile.profileImg ? getImagePath(data.userProfile.profileImg) : null
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getUserType(): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_user_type`,
+        { data: null }
+      )
+      if (res.successful && res.data) {
+        this.userTypeList = res.data.userType.filter((item: any) => item.typeId !== 3)
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getUserScope(): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_user_level_scope`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.userScopeList = res.data.userLevelScope
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  @Watch('userType')
+  async getCompanyByType(): Promise<void> {
+    if (this.userType == '1') {
+      this.getCompany('')
+    } else {
+      this.getCompany(this.userType)
+    }
+  }
+
+  @Watch('userType')
+  async getUserRole(): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.userType}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.userRoleList = res.data.roles.map((item: any) => {
+          return {
+            ...item,
+            role: item.name
+          }
+        })
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  async getCompany(userType: string): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_company?keywordOf=Search%20by%20Company&page=1&limit=1000&statusId=2&companyTypeId=${userType}`,
         { data: null }
       )
       if (res.successful) {
@@ -738,7 +809,7 @@ export default class UserProfileNonCg extends Vue {
     this.dialogCancelCancelAction()
   }
 
-  submit() {
+  async submit() {
     if (this.$v.validationGroup.$invalid) {
       this.checkUsername()
       this.checkFirstName()
@@ -755,19 +826,132 @@ export default class UserProfileNonCg extends Vue {
         ).toString()
         this.dialogSave = true
       } else {
-        this.$toast.global.success(
-          this.$t('userManagement.toast.savedSuccessfully')
-        )
+        this.$nuxt.$loading.start()
+        let getLogoBase64: string | null = null
+        if (this.profileImg) {
+          getLogoBase64 = await this.getBase64(this.profileImg)
+        }
+        const roles = this.userRole.map((item: any) => {
+          return item.id
+        })
+        try {
+          const payload = {
+            userId: parseInt(this.userId ?? ''),
+            username: this.username,
+            // password: this.password,
+            // passwordMode: this.changePasswordMode,
+            userGroupId: 2,
+            userTypeId: this.userType,
+            role: roles,
+            profile: {
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email,
+              phonePrefix: this.phonePrefix,
+              phoneNo: this.phoneNo,
+              mobilePrefix: this.mobilePrefix,
+              mobileNo: this.mobile,
+              department: this.department,
+              profileImg: getLogoBase64
+            },
+            scope: {
+              companyId: this.company,
+              brandId: this.brand,
+              branchId: this.branch,
+              userScopeLevelId: this.userScope
+            }
+          }
+          let response = await this.$axios.$post(
+            `${process.env.PORTAL_ENDPOINT}/update_user`,
+            payload
+          )
+          this.$nuxt.$loading.finish()
+          if (response.successful) {
+            this.$nuxt.$loading.finish()
+            this.$toast.global.success(
+              this.$t('userManagement.toast.savedSuccessfully')
+            )
+          }
+        } catch (error) {
+          this.$nuxt.$loading.finish()
+          this.$toast.global.error(error.response.data.message)
+        }
       }
     }
+  }
+
+  async onChangeProfileImage(value: any) {
+    this.previewUrl = null
+    this.profileImg = value
+  }
+  
+  getBase64(file: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve(undefined)
+      } else {
+        const reader = new FileReader()
+        try {
+          reader.readAsDataURL(file)
+          reader.onload = () => {
+            resolve(reader.result)
+          }
+          reader.onerror = (error) => {
+            reject(error)
+          }
+        } catch (error) {
+          reject(error)
+        }
+      }
+    })
   }
 
   dialogSaveCancelAction() {
     this.dialogSave = false
   }
 
-  dialogSaveAction() {
-    this.$router.push('/userManagement')
+  async dialogSaveAction() {
+    this.$nuxt.$loading.start()
+    const getLogoBase64 = await this.getBase64(this.profileImg)
+    const roles = this.userRole.map((item: any) => {
+      return item.id
+    })
+    const payload = {
+      username: this.username,
+      userGroupId: 1,
+      userTypeId: this.userType,
+      roleIds: roles,
+      profile: {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        phonePrefix: this.phonePrefix,
+        phoneNo: this.phoneNo,
+        mobilePrefix: this.mobilePrefix,
+        mobileNo: this.mobile,
+        department: this.department,
+        profileImg: getLogoBase64
+      },
+      scope: {
+        companyId: this.company,
+        brandId: this.brand,
+        branchId: this.branch,
+        userScopeLevelId: this.userScope
+      }
+    }
+    try {
+      let response = await this.$axios.$post(
+        `${process.env.PORTAL_ENDPOINT}/create_user`,
+        payload
+      )
+      this.$nuxt.$loading.finish()
+      if (response.successful) {
+        this.$router.push('/userManagement')
+      }
+    } catch (error) {
+      this.$nuxt.$loading.finish()
+      this.$toast.global.error(error.response.data.message)
+    }
   }
 
   assets(name: string) {

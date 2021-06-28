@@ -5,14 +5,20 @@
         <img
           class="profile-image"
           style="width: 100%; height: 100%"
-          v-if="!(dataValue && file)"
+          v-if="!(dataValue && file) && !previewImgUrl"
           :src="assets('common/temporary-profile.png')"
         />
         <img
           class="profile-image"
           style="width: 100%; height: 100%"
+          v-if="previewImgUrl"
+          :src="this.previewImgUrl"
+        />
+        <img
+          class="profile-image"
+          style="width: 100%; height: 100%"
           v-if="dataValue && file"
-          :src="dataValue"
+          :src="this.imgURL"
         />
       </div>
     </div>
@@ -56,6 +62,7 @@
 </template>
 
 <script lang="ts">
+import { reject } from 'lodash'
 import { Vue, Prop, Component, Watch } from 'vue-property-decorator'
 import { getAssetsPath } from '~/helper/images'
 @Component({
@@ -69,18 +76,31 @@ export default class ProfilePicture extends Vue {
     type: String
   })
   private value!: string
+  
+  @Prop({
+    required: false,
+    type: String,
+    default: ''
+  })
+  private previewUrl?: string
 
   private isShowDropdown = false
   private file: any = null
   private errorMessage = ''
   private lock = false
+  private imgURL: any = null
 
   get dataValue() {
     return this.value
   }
 
+  get previewImgUrl() {
+    return this.previewUrl
+  }
+
   set dataValue(value) {
     this.$emit('input', value)
+    this.$emit('onChange', value)
   }
 
   get language(): any {
@@ -148,7 +168,8 @@ export default class ProfilePicture extends Vue {
       this.errorMessage = this.$t('common.fileSizeNotExceed').toString()
     } else {
       //success case
-      this.file && (this.dataValue = URL.createObjectURL(this.file))
+      this.file && (this.dataValue = this.file)
+      this.file && (this.imgURL = URL.createObjectURL(this.file))
       this.isShowDropdown = false
       this.errorMessage = ''
     }

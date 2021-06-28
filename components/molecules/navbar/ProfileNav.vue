@@ -2,23 +2,27 @@
   <div class="profile-nav">
     <div class="profile-img">
       <!-- get profile -->
-      <img :src="assets('navbar/profile.jpg')" />
+      <img :src="img(this.$auth.user)" />
     </div>
     <div class="profile-content">
-      <span class="name">robert.s@email.com</span>
-      <span class="role">Admin The 1</span>
+      <span class="name">{{ this.$auth.user.username }}</span>
+      <span class="role"></span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getAssetsPath } from '~/helper/images'
+import { getAssetsPath, getImagePath } from '~/helper/images'
 
 @Component
 export default class ProfileNav extends Vue {
-  assets(name: string) {
-    return getAssetsPath(name)
+  img(user: any) {
+    if (user && user.userProfile && user.userProfile.profileImg) {
+      return getImagePath(user.userProfile.profileImg)
+    } else {
+      return getAssetsPath('common/temporary-profile.png')
+    }
   }
 }
 </script>

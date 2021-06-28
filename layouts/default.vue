@@ -21,10 +21,10 @@
             <button class="submit-section-btn cancel" @click="cancel">
               {{ $t('common.cancel') }}
             </button>
-            <button class="submit-section-btn draft" @click="">
+            <button class="submit-section-btn draft" ><!-- @click=""> -->
               {{ $t('contentManagement.saveDraft') }}
             </button>
-            <button class="submit-section-btn preview" @click="">
+            <button class="submit-section-btn preview" ><!-- @click=""> -->
               <img
                 class="magic-eye"
                 height="12"

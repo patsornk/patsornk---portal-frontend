@@ -159,7 +159,13 @@ export default {
             },
             propertyName: 'data',
           },
-          user: false
+          user: false // {
+          //   url:
+          //     '/get_profile',
+          //   method: 'get',
+          //   propertyName: 'data',
+          //   data: {}
+          // }
         },
         token: {
           property: 'accessToken',
@@ -178,6 +184,7 @@ export default {
           authorization: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/auth`,
           token: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/token`,
           logout: `${process.env.KEYCLOAK_HOST}/auth/realms/portal/protocol/openid-connect/logout`,
+          // user: `${process.env.PORTAL_ENDPOINT}/get_profile`
         },
         token: {
           property: 'access_token',
