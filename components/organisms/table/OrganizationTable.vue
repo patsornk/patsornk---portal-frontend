@@ -356,7 +356,6 @@ export default class OrganizationTable extends Vue {
   }
 
   onRowClicked(row: any): void {
-    console.log(row)
     if (row.data.status === 'Draft' || row.data.status === 'แบบร่าง') {
       this.getOnboardStep(row.data.companyId)
     } else {

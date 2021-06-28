@@ -1,0 +1,30 @@
+﻿module.exports = {
+  articleList: 'Article List',
+  createNewArticle: 'Create New Article',
+  articleTemplate: 'Article Template',
+  templateSelection: 'Template Selection',
+  oneOfThreeStep: '1 of 3 step',
+  articleNormal: 'Normal Article',
+  articleNormalDescription: 'Including text, image, video',
+  articleVideo: 'Video Article',
+  articleVideoDescription: 'Only video and description',
+  normalArticleCreation: 'Normal Article Creation',
+  twoOfTwoStep: '2 of 2 steps',
+  saveDraft: 'Save draft',
+  preview: 'Preview',
+  publish: 'Publish',
+  titleTh: 'Title (TH)',
+  subTitleTh: 'Sub-Title (TH)',
+  titleEn: 'Title (EN)',
+  subTitleEn: 'Sub-Title (EN)',
+  optional: '(Optional)',
+  error: {
+    invalidInputInformation: 'Input invalid information',
+    emptyTitleTh: 'Input Title (TH)',
+    emptyTitleEn: 'Input Title (EN)',
+    emptySubTitleTh: 'Input Sub-Title (TH)',
+    emptySubTitleEn: 'Input Sub-Title (EN)'
+  },
+  searchForCategoryPlaceholder: 'Search for category tag...',
+  searchForTopicPlaceholder: 'Search for topic...'
+}

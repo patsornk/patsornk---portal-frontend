@@ -19,6 +19,7 @@ module.exports = {
     partnerCodeList: 'รายการรหัสพาร์ทเนอร์',
     save: 'บันทึก',
     cancel: 'ยกเลิก',
+    next: 'ถัดไป',
     successfully: 'บันทึกสำเร็จ',
     somethingWrong: 'มีบางข้อมูลผิดพลาด กรุณาตรวจสอบและลองอีกครั้ง',
     invalidInputInformation: 'ระบุข้อมูลไม่ถูกต้อง',

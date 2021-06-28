@@ -12,6 +12,8 @@ import login from './th/login'
 import profile from './th/profile'
 import article from './th/article'
 
+import contentManagement from './th/contentManagement'
+
 module.exports = {
   home,
   common,
@@ -26,4 +28,5 @@ module.exports = {
   userManagement,
   profile,
   article,
+  contentManagement
 }

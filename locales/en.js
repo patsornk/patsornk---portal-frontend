@@ -11,6 +11,7 @@ import userManagement from './en/userManagement'
 import login from './en/login'
 import profile from './en/profile'
 import article from './en/article'
+import contentManagement from './en/contentManagement'
 
 module.exports = {
   home,
@@ -26,4 +27,5 @@ module.exports = {
   userManagement,
   profile,
   article,
+  contentManagement
 }

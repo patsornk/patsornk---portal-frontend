@@ -1,0 +1,30 @@
+﻿module.exports = {
+  articleList: 'รายการบทความ',
+  createNewArticle: 'สร้างบทความใหม่',
+  articleTemplate: 'รูปแบบของบทความ',
+  templateSelection: 'การเลือกรูปแบบบทความ',
+  oneOfThreeStep: 'ขั้นตอนที่ 1 จาก 3',
+  articleNormal: 'บทความธรรมดา',
+  articleNormalDescription: 'รวมทั้ง ข้อความ, รูปภาพ และ วีดีโอ',
+  articleVideo: 'บทความที่เป็นวีดีโอ',
+  articleVideoDescription: 'เฉพาะวีดีโอ และคำบรรยาย',
+  normalArticleCreation: 'สร้างบทความทั่วไป',
+  twoOfTwoStep: 'ขั้นตอนที่ 2 จาก 2',
+  saveDraft: 'บันทึกแบบร่าง',
+  preview: 'ดูตัวอย่าง',
+  publish: 'เผยแพร่',
+  titleTh: 'หัวข้อ (ไทย)',
+  subTitleTh: 'หัวข้อย่อย (ไทย)',
+  titleEn: 'หัวข้อ (อังกฤษ)',
+  subTitleEn: 'หัวข้อย่อย (อังกฤษ)',
+  optional: '(ถ้ามี)',
+  error: {
+    invalidInputInformation: 'ระบุข้อมูลไม่ถูกต้อง',
+    emptyTitleTh: 'ระบุหัวข้อ (ไทย)',
+    emptyTitleEn: 'ระบุหัวข้อ (อังกฤษ)',
+    emptySubTitleTh: 'ระบุหัวข้อย่อย (ไทย)',
+    emptySubTitleEn: 'ระบุหัวข้อย่อย (อังกฤษ)'
+  },
+  searchForCategoryPlaceholder: 'Search for category tag...(TH)',
+  searchForTopicPlaceholder: 'Search for topic...(TH)'
+}

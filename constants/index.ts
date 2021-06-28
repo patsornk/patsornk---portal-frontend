@@ -8,6 +8,7 @@ export * from './CreateBranch'
 export * from './CreateEditPartnerCode'
 
 //types
+export * from './types/ArticleType'
 export * from './types/Brandfeature'
 export * from './types/SidebarMenuType'
 export * from './types/LoginTpye'

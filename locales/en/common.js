@@ -19,6 +19,7 @@ module.exports = {
     partnerCodeList: 'Partner Code List',
     save: 'Save',
     cancel: 'Cancel',
+    next: 'Next',
     successfully: 'Saved successfully',
     somethingWrong: 'One or more field have an error. Please check and try again.',
     invalidInputInformation: 'Input invalid information',

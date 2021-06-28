@@ -6,5 +6,6 @@ module.exports = {
     byFeature: 'แสดงตามฟีเจอร์',
     organiztionMng: 'การจัดการองค์กร',
     userManagement: 'การจัดการผู้ใช้งาน',
+    contentManagement: 'การจัดการเนื้อหา',
   }
 }

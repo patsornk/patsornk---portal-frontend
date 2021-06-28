@@ -7,6 +7,7 @@
         >{{ title }}</span
       >
       <span v-show="required" class="input-field-required"> *</span>
+      <span v-show="type === 'optional'" class="optional-txt">( Optional )</span>
     </div>
     <div class="input-field-input-group w-full">
       <div
@@ -75,6 +76,22 @@
             v-model="dataValue"
           ></textarea>
         </div>
+        <template v-else-if="type === 'topic'">
+          <input
+            v-model="dataValue"
+            :type="type"
+            class="input-field-input"
+            :class="disable ? 'disable' : errorMessage ? 'no-border' : ''"
+            :inputmode="inputmode"
+            :placeholder="placeholder"
+            :maxlength="maxlength"
+            :disabled="disable"
+            v-on:keyup.enter="$emit('onEnter', dataValue)"
+            @blur="$emit('onBlur', dataValue)"
+            @change="$emit('onChange', dataValue)"
+          />
+          <slot />
+        </template>
         <input
           v-else
           v-model="dataValue"
@@ -155,7 +172,9 @@ export default class InputField extends Vue {
         'password',
         'textarea',
         'switch',
-        'checkbox'
+        'checkbox',
+        'topic',
+        'optional'
       ].includes(value)
     }
   })
@@ -467,6 +486,7 @@ export default class InputField extends Vue {
     font-size: 12px;
   }
 
+
   .input-field-input {
     font-size: 16px;
     padding: 9px;
@@ -481,6 +501,12 @@ export default class InputField extends Vue {
 
   .input-field-input:focus {
     outline: none !important;
+  }
+
+  .optional-txt {
+    color: $gray-disable;
+    font-size: 12px;
+    line-height: 24px;
   }
 
   .no-border {

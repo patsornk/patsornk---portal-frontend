@@ -6,5 +6,6 @@ module.exports = {
     byFeature: 'By Feature',
     organiztionMng: 'Organization Management',
     userManagement: 'User Management',
+    contentManagement: 'Content Management'
   }
 }

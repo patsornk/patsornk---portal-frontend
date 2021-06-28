@@ -14,6 +14,36 @@
             <span class="btn">{{ buttonTitle }}</span>
           </div>
         </div>
+
+        <div v-else-if="isCreateNewArticle" class="title-contriner">
+          <span class="page-title">{{ pageTitle }}</span>
+          <div class="btn-section">
+            <button class="submit-section-btn cancel" @click="cancel">
+              {{ $t('common.cancel') }}
+            </button>
+            <button class="submit-section-btn draft" @click="">
+              {{ $t('contentManagement.saveDraft') }}
+            </button>
+            <button class="submit-section-btn preview" @click="">
+              <img
+                class="magic-eye"
+                height="12"
+                width="17"
+                :src="assets('login/eye-white.png')"
+                alt="magic-eye"
+              />
+              <p class="preview-text">{{ $t('contentManagement.preview') }}</p>
+            </button>
+            <button
+              class="submit-section-btn publish"
+              @click="publish"
+              :class="isDisabled"
+            >
+              {{ $t('contentManagement.publish') }}
+            </button>
+          </div>
+        </div>
+
         <div v-else class="title-contriner">
           <span class="page-title">{{ pageTitle }}</span>
           <company-status v-if="companyStatus" :status="companyStatus" />
@@ -68,6 +98,21 @@ export default class Default extends Vue {
     return this.$store.getters['breadcrumb/pageTitle']
   }
 
+  get isCreateNewArticle(): string {
+    return this.$store.getters['article/isCreateNewArticle']
+  }
+
+  get isError(): string {
+    return this.$store.getters['article/isError']
+  }
+
+  get isDisabled(): string {
+    return this.$store.getters['article/isDisabled']
+  }
+  get isSubmit(): string {
+    return this.$store.getters['article/isSubmit']
+  }
+
   get isShowTitleButton(): boolean {
     switch (this.pageTitle) {
       case this.$t('home.landing.organiztionMng').toString():
@@ -113,11 +158,35 @@ export default class Default extends Vue {
     }
   }
 
+  cancel() {
+    switch (this.pageTitle) {
+      case `${this.$t('contentManagement.createNewArticle').toString()}`:
+        this.$router.push('/contentManagement/articlelist/create')
+        break
+      default:
+        return
+    }
+  }
+
+  publish() {
+    switch (this.pageTitle) {
+      case `${this.$t('contentManagement.createNewArticle').toString()}`:
+        this.$store.dispatch('article/setIsSubmit', !this.isSubmit)
+        break
+      default:
+        return
+    }
+  }
+
   @Watch('$route')
   onRouteChanged() {
     if (this.isSidebar && window.innerWidth <= 768) {
       this.$store.dispatch('nav/toggleSidebar')
     }
+  }
+
+  assets(name: string) {
+    return getAssetsPath(name)
   }
 }
 </script>
@@ -184,6 +253,74 @@ html {
         font-size: 16px;
         font-weight: 700;
         margin: 0px 8px 0px 0px;
+      }
+    }
+    .btn-section {
+      display: flex;
+      flex-direction: row;
+      width: 495px;
+      height: 54px;
+      align-content: center;
+      align-items: center;
+
+      .submit-section-btn {
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: bold;
+        width: 112px;
+        height: 36px;
+        color: $white;
+      }
+
+      .cancel {
+        background: $white;
+        color: $black;
+        border: 1px solid #b9b9b9;
+        margin-right: 15px;
+      }
+
+      .cancel:hover {
+        color: $grey-text;
+      }
+
+      .draft {
+        background: $grey-text;
+        margin-right: 15px;
+      }
+
+      .preview {
+        background: $black;
+        margin-right: 15px;
+        position: relative;
+
+        .preview-text {
+          display: inline-flex;
+          margin-right: 2px;
+        }
+      }
+
+      .publish {
+        background: $primary;
+      }
+
+      .disabled {
+        cursor: default;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      .magic-eye {
+        display: inline-flex;
+        margin-right: 3px;
+        margin-bottom: 2px;
+      }
+
+      button:focus {
+        outline: none;
       }
     }
     .page-title {
