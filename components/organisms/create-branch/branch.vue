@@ -517,6 +517,17 @@
       leftStyle="width: 120px;"
       rightStyle="width: 210px;"
     />
+    <dialog-popup
+      :display="dialogCancelDisplay"
+      :title="this.$t('common.wantToDiscard')"
+      :description="this.$t('common.unsavedChange')"
+      :leftButtonTitle="this.$t('common.cancel')"
+      :rightButtonTitle="this.$t('common.discard')"
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="discardChange"
+      leftStyle="width: 120px;"
+      rightStyle="width: 210px;"
+    />
   </div>
 </template>
 
@@ -553,6 +564,7 @@ import {
   numeric,
   decimal
 } from 'vuelidate/lib/validators'
+import { isEqual } from 'lodash'
 
 const validations = {
   brandId: {
@@ -912,6 +924,76 @@ export default class CreateBranch extends Vue {
     }
   ]
 
+  prevData: {
+    brandId: string
+    branchCode: string
+    branchNameTh: string
+    branchNameEn: string
+    siebelBranchCode: string
+    siebelBranchName: string
+    email: string
+    phonePrefix: string
+    phoneNumber: string
+    partnerCodeId: string
+    branchTypeId: string
+    mallId: string
+    address: string
+    countryId: string
+    provinceId: string
+    districtId: string
+    subDistrictId: string
+    postalCode: string
+    latitude: string
+    longitude: string
+    showDisplay: boolean
+    logo: string
+    cover: string
+    mallDescription: string
+    websiteList: any[]
+    socialList: []
+    categoryId: string
+    openingHourId: string
+    openTime: string
+    openMeridiem: string
+    closeTime: string
+    closeMeridiem: string
+    OpenHourCustom: string
+  } = {
+    brandId: '',
+    branchCode: '',
+    branchNameTh: '',
+    branchNameEn: '',
+    siebelBranchCode: '',
+    siebelBranchName: '',
+    email: '',
+    phonePrefix: '+66',
+    phoneNumber: '',
+    partnerCodeId: '',
+    branchTypeId: '',
+    mallId: '',
+    address: '',
+    countryId: 'Thailand',
+    provinceId: '',
+    districtId: '',
+    subDistrictId: '',
+    postalCode: '',
+    latitude: '',
+    longitude: '',
+    showDisplay: false,
+    logo: '',
+    cover: '',
+    mallDescription: '',
+    websiteList: [],
+    socialList: [],
+    categoryId: '',
+    openingHourId: '',
+    openTime: '',
+    openMeridiem: 'AM',
+    closeTime: '',
+    closeMeridiem: 'PM',
+    OpenHourCustom: ''
+  }
+
   private error = {
     status: '',
     brandId: '',
@@ -1060,6 +1142,7 @@ export default class CreateBranch extends Vue {
   disableBrandId = false
   inValidOpenCustomize = false
 
+  dialogCancelDisplay = false
   isShowImage = false
   imageUrl = ''
   logoUrl? = ''
@@ -1870,9 +1953,59 @@ export default class CreateBranch extends Vue {
     }
   }
 
-  clickCancel(): void {
+  discardChange() {
     const companyId = this.parentCompanyId
     this.$router.push(`/organizationManagement/${companyId}`)
+    this.dialogCancelAction()
+  }
+
+  clickCancel(): void {
+    const dataChange = this.checkDataChange()
+    if (dataChange) {
+      this.dialogCancelDisplay = true
+    } else {
+      this.discardChange()
+    }
+  }
+
+  checkDataChange() {
+    if (
+      this.prevData.branchCode !== this.branchCode ||
+      this.prevData.branchNameTh !== this.branchNameTh ||
+      this.prevData.branchNameEn !== this.branchNameEn ||
+      this.prevData.siebelBranchCode !== this.siebelBranchCode ||
+      this.prevData.siebelBranchName !== this.siebelBranchName ||
+      this.prevData.email !== this.email ||
+      this.prevData.phonePrefix !== this.phonePrefix ||
+      this.prevData.phoneNumber !== this.phoneNumber ||
+      this.prevData.partnerCodeId !== this.partnerCodeId ||
+      this.prevData.branchTypeId !== this.branchTypeId ||
+      this.prevData.mallId !== this.mallId ||
+      this.prevData.address !== this.address ||
+      this.prevData.countryId !== this.countryId ||
+      this.prevData.provinceId !== this.provinceId ||
+      this.prevData.districtId !== this.districtId ||
+      this.prevData.subDistrictId !== this.subDistrictId ||
+      this.prevData.postalCode !== this.postalCode ||
+      this.prevData.latitude !== this.latitude ||
+      this.prevData.showDisplay !== this.showDisplay ||
+      this.prevData.logo !== this.logo ||
+      this.prevData.cover !== this.cover ||
+      this.prevData.mallDescription !== this.mallDescription ||
+      !isEqual(this.prevData.websiteList.sort(), this.websiteList.sort()) ||
+      !isEqual(this.prevData.socialList.sort(), this.socialList.sort()) ||
+      this.prevData.categoryId !== this.categoryId ||
+      this.prevData.openingHourId !== this.openingHourId ||
+      this.prevData.openTime !== this.openTime ||
+      this.prevData.openMeridiem !== this.openMeridiem ||
+      this.prevData.closeTime !== this.closeTime ||
+      this.prevData.closeMeridiem !== this.closeMeridiem ||
+      this.prevData.OpenHourCustom !== this.OpenHourCustom
+    ) {
+      return true
+    } else {
+      return false
+    }
   }
 
   clickSave(): void {
@@ -2609,6 +2742,7 @@ export default class CreateBranch extends Vue {
 
   dialogCancelAction() {
     this.dialogDisplay = false
+    this.dialogCancelDisplay = false
   }
 
   dialogAction() {

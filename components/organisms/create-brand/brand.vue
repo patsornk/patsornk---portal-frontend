@@ -210,6 +210,17 @@
       leftStyle="width: 120px;"
       rightStyle="width: 210px;"
     />
+    <dialog-popup
+      :display="dialogCancelDisplay"
+      :title="this.$t('common.wantToDiscard')"
+      :description="this.$t('common.unsavedChange')"
+      :leftButtonTitle="this.$t('common.cancel')"
+      :rightButtonTitle="this.$t('common.discard')"
+      @onLeftButtonClick="dialogCancelAction"
+      @onRightButtonClick="discardChange"
+      leftStyle="width: 120px;"
+      rightStyle="width: 210px;"
+    />
   </div>
 </template>
 
@@ -234,6 +245,7 @@ import BrandFeatureHeader from '~/components/molecules/brand-feature/BrandFeatur
 import BrandFeatureBody from '~/components/molecules/brand-feature/BrandFeatureBody/BrandFeatureBody.vue'
 import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import { getImagePath } from '~/helper/images'
+import { isEqual } from 'lodash'
 
 const validations = {
   brandCode: {
@@ -391,6 +403,46 @@ export default class CreateBrand extends Vue {
   partnerTotalItem = 10
   pagination = '10'
 
+  prevData: {
+    brandCode: string
+    brandNameTh: string
+    brandNameEn: string
+    email: string
+    phoneNo: string
+    phonePrefix: string
+    showDisplay: boolean
+    logoUrl: string | undefined
+    bannerUrl: string | undefined
+    brandInfo: string
+    partnerCodeList: SiebelPartnerType[]
+    partnerCodeDataList: SiebelPartnerType[]
+    brandFeatureList: any[]
+  } = {
+    brandCode: '',
+    brandNameTh: '',
+    brandNameEn: '',
+    email: '',
+    phoneNo: '',
+    phonePrefix: '+66',
+    showDisplay: false,
+    logoUrl: '',
+    bannerUrl: '',
+    brandInfo: '',
+    partnerCodeList: [],
+    partnerCodeDataList: [],
+    brandFeatureList: [
+      {
+        image: undefined,
+        imageUrl: undefined,
+        showDisplay: false,
+        ctaLabel: '',
+        ctaType: undefined,
+        ctaFeature: '',
+        isValid: true
+      }
+    ]
+  }
+
   status = 0
 
   brandFeatureError: any = ''
@@ -414,6 +466,7 @@ export default class CreateBrand extends Vue {
     status: ''
   }
 
+  dialogCancelDisplay = false
   isShowImage = false
   imageUrl = ''
 
@@ -616,11 +669,11 @@ export default class CreateBrand extends Vue {
   ]
 
   onRemoveLogo(): void {
-    this.logoUrl = undefined
+    this.logoUrl = ''
   }
 
   onRemoveBanner(): void {
-    this.bannerurl = undefined
+    this.bannerurl = ''
   }
 
   getBase64(file: any): Promise<any> {
@@ -755,9 +808,46 @@ export default class CreateBrand extends Vue {
     this.currentBrandFeatureKey = 1
   }
 
-  clickCancel(): void {
+  discardChange() {
     const companyId = this.companyId
     this.$router.push(`/organizationManagement/${companyId}`)
+    this.dialogCancelAction()
+  }
+
+  clickCancel(): void {
+    const dataChange = this.checkDataChange()
+    if (dataChange) {
+      this.dialogCancelDisplay = true
+    } else {
+      this.discardChange()
+    }
+  }
+
+  checkDataChange() {
+    if (
+      this.prevData.brandCode !== this.brandCode ||
+      this.prevData.brandNameTh !== this.brandNameTh ||
+      this.prevData.brandNameEn !== this.brandNameEn ||
+      this.prevData.email !== this.email ||
+      this.prevData.phoneNo !== this.phoneNo ||
+      this.prevData.phonePrefix !== this.phonePrefix ||
+      this.prevData.showDisplay !== this.showDisplay ||
+      this.prevData.logoUrl !== this.logoUrl ||
+      this.prevData.bannerUrl !== this.bannerurl ||
+      this.prevData.brandInfo !== this.brandInfo ||
+      !isEqual(
+        this.prevData.partnerCodeList.sort(),
+        this.partnerCodeList.sort()
+      ) ||
+      !isEqual(
+        this.prevData.brandFeatureList.sort(),
+        this.brandFeatureList.sort()
+      )
+    ) {
+      return true
+    } else {
+      return false
+    }
   }
 
   clickSave(): void {
@@ -1241,10 +1331,7 @@ export default class CreateBrand extends Vue {
 
   dialogCancelAction() {
     this.dialogDisplay = false
-  }
-
-  dialogAction() {
-    this.save()
+    this.dialogCancelDisplay = false
   }
 }
 </script>
