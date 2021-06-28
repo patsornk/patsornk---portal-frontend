@@ -73,3 +73,148 @@ html {
 body.modal-open{
   overflow: hidden;
 }
+
+//Datepicker
+.mx-datepicker {
+  .mx-input-wrapper {
+    height: 44px;
+
+    &:hover {
+      .mx-icon-clear {
+        display: none !important;
+      }
+      .mx-icon-clear+.mx-icon-calendar {
+        display: block;
+      }
+    }
+  }
+
+  .mx-input {
+    height: 100%;
+    color: $mid-black;
+    border: 1px solid $gray-disable;
+
+    &:hover, &:focus {
+      border: 1px solid $gray-disable;
+  }
+  }
+}
+
+.mx-datepicker-main.mx-datepicker-popup{
+  font-family: "The1Official";
+
+  thead .mx-table-date td, .mx-table-date th {
+    height: 38px;
+    font-size: 14px;
+    color: $gray-disable;
+    font-weight: 700;
+  }
+
+  .cell{
+    color: $mid-black;
+    font-size: 16px;
+
+    &.not-current-month{
+      color: $grey3;
+    }
+  }
+
+  .mx-calendar-content {
+    .mx-table {
+      &.mx-table-year {
+        .cell.active {
+          color: $white;
+          background-color: $primary;
+    
+          &:hover {
+            color: $white;
+            background-color: $primary;
+          }
+        }
+        .cell:hover {
+          color: $mid-black;
+          background-color: $gray-bg-fade;
+        }
+      }
+      &.mx-table-month {
+        .cell.active {
+          color: $white;
+          background-color: $primary;
+    
+          &:hover {
+            color: $white;
+            background-color: $primary;
+          }
+        }
+        .cell:hover {
+          color: $mid-black;
+          background-color: $gray-bg-fade;
+        }
+      }
+      &.mx-table-date {
+        .cell.active {
+          color: $white;
+          border-radius: 100%;
+          background-color: $primary;
+    
+          &:hover {
+            color: $white;
+            background-color: $primary;
+          }
+        }
+        .cell:hover {
+          color: $mid-black;
+          border-radius: 100%;
+          background-color: $gray-bg-fade;
+        }
+    
+      }
+    }
+  }
+
+  .mx-calendar-header{
+    button:focus {
+      outline: none;
+  }
+  }
+
+  .mx-datepicker-content{
+    padding: 20px;
+  }
+
+  .mx-datepicker-header {
+    border-bottom: none !important;
+    text-align: center !important;
+    color: $primary !important;
+    font-weight: 700 !important;
+    cursor: context-menu;
+  }
+
+  .mx-datepicker-footer {
+    border-top: none !important;
+    text-align: center !important;
+  }
+
+  .mx-icon-left{
+    color: $mid-black !important;
+  }
+
+  .mx-icon-right{
+    color: $mid-black !important;
+  }
+
+  .mx-btn-icon-double-left{
+    display: none !important;
+  }
+
+  .mx-btn-icon-double-right{
+    display: none !important;
+  }
+
+  .mx-calendar-header-label{
+    .mx-btn{
+      color: $mid-black;
+      font-weight: 700;
+    }
+  }
+}

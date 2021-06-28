@@ -70,8 +70,8 @@ export default class Default extends Vue {
 
   get isShowTitleButton(): boolean {
     switch (this.pageTitle) {
-      case 'การจัดการองค์กร':
-      case 'Organization Management':
+      case this.$t('home.landing.organiztionMng').toString():
+      case this.$t('article.articlesList').toString():
         return true
       default:
         return false
@@ -80,10 +80,10 @@ export default class Default extends Vue {
 
   get buttonTitle(): String {
     switch (this.pageTitle) {
-      case 'การจัดการองค์กร':
-        return 'สร้างองค์กรใหม่'
-      case 'Organization Management':
-        return 'Create New Organization'
+      case this.$t('home.landing.organiztionMng').toString():
+        return this.$t('common.createNewCompany').toString()
+      case this.$t('article.articlesList').toString():
+        return this.$t('common.createNewArticle').toString()
       default:
         return ''
     }
@@ -95,8 +95,7 @@ export default class Default extends Vue {
 
   onClickTitleButton() {
     switch (this.pageTitle) {
-      case 'การจัดการองค์กร':
-      case 'Organization Management':
+      case this.$t('home.landing.organiztionMng').toString():
         window.sessionStorage.removeItem('createCompanyFirstTime')
         window.sessionStorage.removeItem('companyFirstTime')
         window.sessionStorage.removeItem('createCompanyId')
@@ -107,6 +106,8 @@ export default class Default extends Vue {
         window.sessionStorage.removeItem('maxStepbar')
         this.$store.dispatch('stepbar/setMaxState', 0)
         this.$router.push('/organizationManagement/create')
+      case this.$t('article.articlesList').toString():
+        this.$router.push('/article/create')
       default:
         return
     }

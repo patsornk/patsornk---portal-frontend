@@ -52,6 +52,7 @@ export default {
     '@/plugins/vuelidate',
     '@/plugins/axios',
     '@/plugins/directives',
+    '@/plugins/vue-datepicker-ui',
     //{src: '~/plugins/vuelidate.js', mode: 'client'}
   ],
 

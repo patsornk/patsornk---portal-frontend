@@ -158,6 +158,37 @@
       border: 2px solid $warning;
       padding: 2px 9px;
     }
+
+    &.published{
+      color: $success;
+      border: 2px solid $success;
+      padding: 2px 9px;
+    }
+    &.un-published{
+      color: $grey-text;
+      border: 2px solid $grey-text;
+      padding: 2px 9px;
+    }
+    &.draft{
+      color: $gray-disable;
+      border: 2px solid $gray-disable;
+      padding: 2px 9px;
+    }
+    &.waiting-for-approval{
+      color: $warning;
+      border: 2px solid $warning;
+      padding: 2px 9px;
+    }
+    &.rejected{
+      color: $primary;
+      border: 2px solid $primary;
+      padding: 2px 9px;
+    }
+    &.scheduled{
+      color: $blue;
+      border: 2px solid $blue;
+      padding: 2px 9px;
+    }
   }
 }
 
@@ -355,6 +386,7 @@ div[role='row'] {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  margin-top: -5px;
 }
 
 .custom-row-80 {

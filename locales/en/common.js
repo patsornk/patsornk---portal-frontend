@@ -2,6 +2,7 @@ module.exports = {
     logout: 'Log out',
     pleaseSelect:'Please select...',
     select: 'Select ',
+    createNewArticle: 'Create New Article',
     createNewCompany:'Create New Organization',
     createPartnerCode: 'Create Partner Code',
     createBrand: 'Create Brand',

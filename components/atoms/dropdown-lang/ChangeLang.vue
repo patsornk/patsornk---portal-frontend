@@ -70,7 +70,7 @@ export default class ChangeLang extends Vue {
 
 .change-lang {
   .lang-select {
-    width: 140px;
+    width: 141px;
 
     .dropdown-option {
       display: flex;

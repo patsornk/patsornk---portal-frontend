@@ -18,7 +18,8 @@ export const feature: SidebarMenu[] = [
     title: 'Mission'
   },
   {
-    title: 'Content'
+    title: 'Content',
+    link: '/article'
   },
   {
     title: 'Payment'

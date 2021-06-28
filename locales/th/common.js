@@ -2,6 +2,7 @@ module.exports = {
     logout: 'ออกจากระบบ',
     pleaseSelect: 'โปรดเลือก...',
     select: 'เลือก',
+    createNewArticle: 'สร้างบทความใหม่',
     createNewCompany: 'สร้างองค์กรใหม่',
     createPartnerCode: 'สร้างรหัสพาร์ทเนอร์',
     createBrand: 'สร้างแบรนด์',

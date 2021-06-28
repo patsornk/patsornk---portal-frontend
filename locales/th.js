@@ -8,8 +8,10 @@ import applyService from './th/applyService'
 import table from './th/table'
 import error from './th/error'
 import userManagement from './th/userManagement'
-import login from  './th/login'
+import login from './th/login'
 import profile from './th/profile'
+import article from './th/article'
+
 module.exports = {
   home,
   common,
@@ -22,5 +24,6 @@ module.exports = {
   error,
   login,
   userManagement,
-  profile
+  profile,
+  article,
 }
