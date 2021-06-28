@@ -621,6 +621,7 @@ export default class OrganizationTable extends Vue {
       const statusStr = this.companyStatus.filter(
         (e) => e.id === item.status
       )[0].status
+      this.$store.dispatch('company/setStatus', statusStr)
       return {
         companyId: item.companyId,
         regioCompanyNameTh: item.companyNameTh,

@@ -36,11 +36,11 @@ export default class CompanyStatus extends Vue {
   }
 
   get dataStatus(): string {
-    if (this.status === 'Active') {
+    if (this.status === this.$t('table.contentTableStatus.active').toString()) {
       return this.$t('common.active').toString()
-    } else if (this.status === 'Inactive') {
+    } else if (this.status === this.$t('table.contentTableStatus.inactive').toString()) {
       return this.$t('common.inActive').toString()
-    } else if (this.status === 'Onhold') {
+    } else if (this.status === this.$t('table.contentTableStatus.hold').toString()) {
       return this.$t('common.onHold').toString()
     } else {
       return ''
