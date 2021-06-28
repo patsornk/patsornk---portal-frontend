@@ -1,3 +1,6 @@
+<template>
+</template>
+
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { BreadcrumbType } from '~/constants'
