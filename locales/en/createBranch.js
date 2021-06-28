@@ -78,6 +78,7 @@ module.exports = {
     subDistrict: 'Select Sub-district',
     postalCode: 'Input Postal Code',
     category: 'Input Category',
+    phoneNumber: 'Input Phone No.',
     require: 'require',
     characterAndNumber: 'a-z, 0-9',
     thaiAndNumber: 'ก-๛, 0-9',

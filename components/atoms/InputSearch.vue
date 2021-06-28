@@ -134,6 +134,7 @@ export default class InputSearch extends Vue {
   .no-border {
     border: none;
   }
+
   ::placeholder {
     color: $gray-disable;
   }

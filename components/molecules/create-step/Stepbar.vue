@@ -24,7 +24,8 @@
         <span
           class="title"
           :class="{
-            active: index <= maxState
+            active: index === currentState,
+            enable: index <= maxState
           }"
         >
           {{ item.title }}
@@ -152,8 +153,11 @@ export default class Stepbar extends Vue {
         color: $gray-disable;
       }
 
+      .title.enable {
+        color: $mid-black;
+      }
       .title.active {
-        color: $primary;
+        color: $primary !important;
       }
 
       .status.active,

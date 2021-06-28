@@ -69,7 +69,7 @@
         v-model="$v.phoneNumber.$model"
         :title="$t('createBranch.branchInfo.phoneNo')"
         :maxlength="13"
-        :placeholder="$t('createBranch.error.inputBranchNameTh')"
+        :placeholder="$t('createBranch.error.phoneNumber')"
         required
         :errorMessage="error.phoneNumber"
         @prefix="onChangedPrefixNumber"
@@ -1203,7 +1203,7 @@ export default class CreateBranch extends Vue {
   @Watch('brandId')
   checkBrandId(): void {
     this.error.brandId = !this.$v.brandId.required
-      ? this.$t('createBranch.selectBrand').toString()
+      ? this.$t('createBranch.branchInfo.selectBrand').toString()
       : ''
   }
 
@@ -1891,11 +1891,13 @@ export default class CreateBranch extends Vue {
             ? data.mall.mallInfo.websiteUrl
             : []
           this.checkWebsite()
-
           if (data.mall.mallInfo.facebook) {
             data.mall.mallInfo.facebook.forEach((link: string) => {
               if (link !== '') {
-                this.socialList.push({ type: 'Facebook', link })
+                this.socialList.push({
+                  type: this.$t('createBranch.facebook'),
+                  link
+                })
               }
             })
           }
@@ -1903,7 +1905,10 @@ export default class CreateBranch extends Vue {
           if (data.mall.mallInfo.instagram) {
             data.mall.mallInfo.instagram.forEach((link: string) => {
               if (link !== '') {
-                this.socialList.push({ type: 'Instagram', link })
+                this.socialList.push({
+                  type: this.$t('createBranch.instagram'),
+                  link
+                })
               }
             })
           }
@@ -1911,7 +1916,10 @@ export default class CreateBranch extends Vue {
           if (data.mall.mallInfo.line) {
             data.mall.mallInfo.line.forEach((link: string) => {
               if (link !== '') {
-                this.socialList.push({ type: 'Line', link })
+                this.socialList.push({
+                  type: this.$t('createBranch.line'),
+                  link
+                })
               }
             })
           }
@@ -1919,7 +1927,10 @@ export default class CreateBranch extends Vue {
           if (data.mall.mallInfo.twitter) {
             data.mall.mallInfo.twitter.forEach((link: string) => {
               if (link !== '') {
-                this.socialList.push({ type: 'Twitter', link })
+                this.socialList.push({
+                  type: this.$t('createBranch.twitter'),
+                  link
+                })
               }
             })
           }
@@ -2189,25 +2200,25 @@ export default class CreateBranch extends Vue {
               const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
               let mallFacebook: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Facebook') {
+                if (item.type === this.$t('createBranch.facebook')) {
                   mallFacebook.push(item.link)
                 }
               })
               let mallInstagram: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Instagram') {
+                if (item.type === this.$t('createBranch.instagram')) {
                   mallInstagram.push(item.link)
                 }
               })
               let mallLine: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Line') {
+                if (item.type === this.$t('createBranch.line')) {
                   mallLine.push(item.link)
                 }
               })
               let mallTwitter: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Twitter') {
+                if (item.type === this.$t('createBranch.twitter')) {
                   mallTwitter.push(item.link)
                 }
               })
@@ -2279,25 +2290,25 @@ export default class CreateBranch extends Vue {
 
               let mallFacebook: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Facebook') {
+                if (item.type === this.$t('createBranch.facebook')) {
                   mallFacebook.push(item.link)
                 }
               })
               let mallInstagram: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Instagram') {
+                if (item.type === this.$t('createBranch.instagram')) {
                   mallInstagram.push(item.link)
                 }
               })
               let mallLine: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Line') {
+                if (item.type === this.$t('createBranch.line')) {
                   mallLine.push(item.link)
                 }
               })
               let mallTwitter: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Twitter') {
+                if (item.type === this.$t('createBranch.twitter')) {
                   mallTwitter.push(item.link)
                 }
               })
@@ -2383,25 +2394,25 @@ export default class CreateBranch extends Vue {
               const getCoverBase64 = await this.getBase64(this.$v.cover.$model)
               let mallFacebook: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Facebook') {
+                if (item.type === this.$t('createBranch.facebook')) {
                   mallFacebook.push(item.link)
                 }
               })
               let mallInstagram: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Instagram') {
+                if (item.type === this.$t('createBranch.instagram')) {
                   mallInstagram.push(item.link)
                 }
               })
               let mallLine: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Line') {
+                if (item.type === this.$t('createBranch.line')) {
                   mallLine.push(item.link)
                 }
               })
               let mallTwitter: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Twitter') {
+                if (item.type === this.$t('createBranch.twitter')) {
                   mallTwitter.push(item.link)
                 }
               })
@@ -2472,25 +2483,25 @@ export default class CreateBranch extends Vue {
 
               let mallFacebook: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Facebook') {
+                if (item.type === this.$t('createBranch.facebook')) {
                   mallFacebook.push(item.link)
                 }
               })
               let mallInstagram: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Instagram') {
+                if (item.type === this.$t('createBranch.instagram')) {
                   mallInstagram.push(item.link)
                 }
               })
               let mallLine: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Line') {
+                if (item.type === this.$t('createBranch.line')) {
                   mallLine.push(item.link)
                 }
               })
               let mallTwitter: string[] = []
               this.$v.socialList.$model.forEach((item: any) => {
-                if (item.type === 'Twitter') {
+                if (item.type === this.$t('createBranch.twitter')) {
                   mallTwitter.push(item.link)
                 }
               })
@@ -2780,7 +2791,7 @@ export default class CreateBranch extends Vue {
         this.$store.dispatch('company/setStatus', statusStr)
         this.$store.dispatch('stepbar/setEnableSubmit', 1)
         this.$toast.global.success(this.$t('common.successfully').toString())
-        if (this.callback){
+        if (this.callback) {
           this.callback()
         }
       }

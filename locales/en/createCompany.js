@@ -22,7 +22,7 @@ module.exports = {
   email: 'Email',
   phoneNo: 'Phone No.',
   companyNameInput: 'Input company name',
-  emailInput: 'Input email',
+  emailInput: 'Input Email',
   phoneNoInput: 'Input Phone No.',
   createNewOrganizationSuccess: 'Create new organization success',
   savedSuccessfully: 'Saved successfully',

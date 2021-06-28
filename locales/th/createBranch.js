@@ -77,6 +77,7 @@ module.exports = {
     district: 'เลือก เขต/อำเภอ',
     subDistrict: 'เลือก แขวง/ตำบล',
     postalCode: 'ระบุรหัสไปรษณีย์',
+    phoneNumber: 'ระบุเบอร์โทรศัพท์',
     category: 'เลือกประเภท',
     require: 'require',
     characterAndNumber: 'a-z, 0-9',

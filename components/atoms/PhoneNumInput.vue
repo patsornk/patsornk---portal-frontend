@@ -172,5 +172,9 @@ export default class PhoneNumInput extends Vue {
       margin-top: 0.4rem;
     }
   }
+
+  ::placeholder {
+    color: $gray-disable;
+  }
 }
 </style>
