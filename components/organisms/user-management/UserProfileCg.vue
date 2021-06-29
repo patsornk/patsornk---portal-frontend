@@ -123,8 +123,8 @@
             required
             type="select"
             :options="userTypeList"
-            :options-reduce="(item) => item.userTypeId"
-            :options-label="language === 'th' ? 'userTypeTh' : 'userTypeEn'"
+            :options-reduce="(item) => item.typeId"
+            :options-label="language === 'th' ? 'typeNameTh' : 'typeNameEn'"
             :disable="mode === 'edit'"
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userType"
@@ -147,7 +147,7 @@
             v-model="$v.company.$model"
             class="left"
             :title="$t('userManagement.userProfile.company')"
-            :disable="mode === 'edit' || companyList.length === 0"
+            :disable="mode === 'edit' || companyList.length === 0 || userType == '1'"
             required
             type="select"
             :options="companyList"
@@ -615,12 +615,12 @@ export default class UserProfileNonCg extends Vue {
   }
 
   async mounted() {
+    this.setupBreadcrumb()
+    await this.getUserType()
+    await this.getUserScope()
     if (this.mode == 'edit') {
       await this.getUser()
     }
-    this.setupBreadcrumb()
-    this.getUserType()
-    this.getUserScope()
   }
 
   async getUser(): Promise<void> {
@@ -687,6 +687,7 @@ export default class UserProfileNonCg extends Vue {
     }
   }
 
+  @Watch('userType')
   async getUserScope(): Promise<void> {
     try {
       const res = await this.$axios.$get(
@@ -694,7 +695,11 @@ export default class UserProfileNonCg extends Vue {
         { data: null }
       )
       if (res.successful) {
-        this.userScopeList = res.data.userLevelScope
+        if (this.userType == '1') {
+          this.userScopeList = res.data.userLevelScope
+        } else {
+          this.userScopeList = res.data.userLevelScope.filter((item: any) => item.userLevelScopeId !== 1)
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -703,8 +708,12 @@ export default class UserProfileNonCg extends Vue {
 
   @Watch('userType')
   async getCompanyByType(): Promise<void> {
+    this.company = ''
+    this.brand = ''
+    this.branch = ''
     if (this.userType == '1') {
-      this.getCompany('')
+      await this.getCompany('')
+      this.company = '1'
     } else {
       this.getCompany(this.userType)
     }

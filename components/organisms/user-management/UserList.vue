@@ -434,11 +434,15 @@ export default class UserList extends Vue {
   onRowClicked(row: any): void {
     if (row.data) {
       if (row.data.userGroup.groupId == 2) {
-        this.$router.push(`/userManagement/userProfile/edit/nonCG/${row.data.userId}`)
+        this.$router.push(
+          `/userManagement/userProfile/edit/nonCG/${row.data.userId}`
+        )
       } else {
-        this.$router.push(`/userManagement/userProfile/edit/cg/${row.data.userId}`)
+        this.$router.push(
+          `/userManagement/userProfile/edit/cg/${row.data.userId}`
+        )
       }
-    } 
+    }
   }
 
   async mounted(): Promise<void> {
@@ -550,11 +554,11 @@ export default class UserList extends Vue {
 
   @Watch('filterData.userType')
   async getRole(): Promise<void> {
+    let endpoint = this.filterData.userType == 0
+      ? `${process.env.PORTAL_ENDPOINT}/list_role`
+      : `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.filterData.userType}`
     try {
-      const res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.filterData.userType}`,
-        { data: null }
-      )
+      const res = await this.$axios.$get(endpoint, { data: null })
       if (res.successful) {
         this.roleList = res.data.roles.map((item: any) => {
           return {
@@ -567,7 +571,7 @@ export default class UserList extends Vue {
       this.$toast.global.error(error.response.data.message)
     }
   }
-  
+
   async getUserType(): Promise<void> {
     try {
       const res = await this.$axios.$get(
