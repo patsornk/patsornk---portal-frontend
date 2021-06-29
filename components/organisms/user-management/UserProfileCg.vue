@@ -915,7 +915,7 @@ export default class UserProfileNonCg extends Vue {
       return item.id
     })
     const payload = {
-      username: this.username.toLowerCase(),
+      username: this.username,
       userGroupId: 1,
       userTypeId: this.userType,
       roleIds: roles,
