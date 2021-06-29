@@ -147,7 +147,9 @@
             v-model="$v.company.$model"
             class="left"
             :title="$t('userManagement.userProfile.company')"
-            :disable="mode === 'edit' || companyList.length === 0 || userType == '1'"
+            :disable="
+              mode === 'edit' || companyList.length === 0 || userType == '1'
+            "
             required
             type="select"
             :options="companyList"
@@ -383,10 +385,10 @@ export default class UserProfileNonCg extends Vue {
   lastName = ''
   userType = ''
   userScope = ''
-  company = ''
+  company: any = ''
   department = ''
-  brand = ''
-  branch = ''
+  brand: any = ''
+  branch: any = ''
   userRole = []
   email = ''
   phoneNo = ''
@@ -537,7 +539,7 @@ export default class UserProfileNonCg extends Vue {
       : ''
   }
 
-  @Watch('company')
+  // @Watch('company')
   checkCompany(): void {
     this.error.company = !this.$v.company.required
       ? this.$t('userManagement.select').toString() +
@@ -698,7 +700,9 @@ export default class UserProfileNonCg extends Vue {
         if (this.userType == '1') {
           this.userScopeList = res.data.userLevelScope
         } else {
-          this.userScopeList = res.data.userLevelScope.filter((item: any) => item.userLevelScopeId !== 1)
+          this.userScopeList = res.data.userLevelScope.filter(
+            (item: any) => item.userLevelScopeId !== 1
+          )
         }
       }
     } catch (error) {
@@ -713,7 +717,7 @@ export default class UserProfileNonCg extends Vue {
     this.branch = ''
     if (this.userType == '1') {
       await this.getCompany('')
-      this.company = '1'
+      this.company = 1
     } else {
       this.getCompany(this.userType)
     }
@@ -801,16 +805,18 @@ export default class UserProfileNonCg extends Vue {
   async getBrand(): Promise<any> {
     this.brand = ''
     this.branch = ''
-    try {
-      const res = await this.$axios.$get(
-        `${process.env.PORTAL_ENDPOINT}/list_brand?page=1&limit=1000&companyId=${this.company}`,
-        { data: null }
-      )
-      if (res.successful) {
-        this.brandList = res.data.brand
+    if (this.company) {
+      try {
+        const res = await this.$axios.$get(
+          `${process.env.PORTAL_ENDPOINT}/list_brand?page=1&limit=1000&companyId=${this.company}`,
+          { data: null }
+        )
+        if (res.successful) {
+          this.brandList = res.data.brand
+        }
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
       }
-    } catch (error) {
-      this.$toast.global.error(error.response.data.message)
     }
   }
 
