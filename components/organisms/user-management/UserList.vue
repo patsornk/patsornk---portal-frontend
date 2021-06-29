@@ -707,7 +707,7 @@ export default class UserList extends Vue {
         userType: type,
         company: company,
         brand: brand,
-        userRole: item.role[0].roleTitle,
+        userRole: item.role[0] ? item.role[0].roleTitle : '',
         status: statusStr
       }
     })
