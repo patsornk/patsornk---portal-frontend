@@ -51,6 +51,7 @@ export default class SidebarMenuContent extends Vue {
   width: 260px;
   background-color: $white;
   padding: 30px 0px;
+  cursor: pointer;
 
   .logo {
     padding: 0px 23px;

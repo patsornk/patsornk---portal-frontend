@@ -137,7 +137,9 @@
             type="select"
             :options="userScopeList"
             :options-reduce="(item) => item.userLevelScopeId"
-            :options-label="language === 'th' ? 'userLevelScopeTh' : 'userLevelScopeEn'"
+            :options-label="
+              language === 'th' ? 'userLevelScopeTh' : 'userLevelScopeEn'
+            "
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userScope"
           />
@@ -297,6 +299,7 @@ import { getAssetsPath } from '~/helper/images'
 import { validationMixin } from 'vuelidate'
 import { required, email, numeric, minLength } from 'vuelidate/lib/validators'
 import { getImagePath } from '~/helper/images'
+import { isEqual, sortBy } from 'lodash'
 
 const validations = {
   username: {
@@ -390,6 +393,25 @@ export default class UserProfileNonCg extends Vue {
   phonePrefix = '+66'
   mobile = ''
   mobilePrefix = '+66'
+
+  prevData = {
+    username: '',
+    firstName: '',
+    lastName: '',
+    userType: '',
+    userScope: '',
+    company: '',
+    department: '',
+    brand: '',
+    branch: '',
+    userRole: [],
+    email: '',
+    phoneNo: '',
+    phonePrefix: '',
+    mobile: '',
+    mobilePrefix: '',
+    imageUrl: ''
+  }
 
   error = {
     username: '',
@@ -601,7 +623,7 @@ export default class UserProfileNonCg extends Vue {
     this.getUserScope()
   }
 
-  async getUser(): Promise<void>  {
+  async getUser(): Promise<void> {
     try {
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_user?userId=${this.userId}`,
@@ -614,25 +636,35 @@ export default class UserProfileNonCg extends Vue {
         this.lastName = data.userProfile.lastName
         this.userType = data.userType.typeId
         await this.getUserRole()
-        this.userScope = data.userScope.userScopeLevel ? data.userScope.userScopeLevel.scopeLevelId : undefined
-        this.company = data.userScope.company ? data.userScope.company.companyId : undefined
+        this.userScope = data.userScope.userScopeLevel
+          ? data.userScope.userScopeLevel.scopeLevelId
+          : undefined
+        this.company = data.userScope.company
+          ? data.userScope.company.companyId
+          : undefined
         await this.getBrand()
-        this.brand = data.userScope.brand ? data.userScope.brand.brandId : undefined
+        this.brand = data.userScope.brand
+          ? data.userScope.brand.brandId
+          : undefined
         await this.getBranch()
-        this.branch = data.userScope.branch ? data.userScope.branch.branchId : undefined
+        this.branch = data.userScope.branch
+          ? data.userScope.branch.branchId
+          : undefined
         this.userRole = data.role.map((item: any) => {
-          return { 
+          return {
             ...item,
             id: item.roleId,
             role: item.roleTitle
-           }
+          }
         })
         this.email = data.userProfile.email
         this.phonePrefix = data.userProfile.phonePrefix
         this.phoneNo = data.userProfile.phoneNo
         this.mobilePrefix = data.userProfile.phonePrefix
         this.mobile = data.userProfile.phoneNo
-        this.previewUrl = data.userProfile.profileImg ? getImagePath(data.userProfile.profileImg) : null
+        this.previewUrl = data.userProfile.profileImg
+          ? getImagePath(data.userProfile.profileImg)
+          : null
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -646,7 +678,9 @@ export default class UserProfileNonCg extends Vue {
         { data: null }
       )
       if (res.successful && res.data) {
-        this.userTypeList = res.data.userType.filter((item: any) => item.typeId !== 3)
+        this.userTypeList = res.data.userType.filter(
+          (item: any) => item.typeId !== 3
+        )
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
@@ -708,6 +742,50 @@ export default class UserProfileNonCg extends Vue {
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
     }
+  }
+
+  checkDataChange() {
+    if (
+      this.prevData.username !== this.username ||
+      this.prevData.firstName !== this.firstName ||
+      this.prevData.lastName !== this.lastName ||
+      this.prevData.userType !== this.userType ||
+      this.prevData.userScope !== this.userScope ||
+      this.prevData.company !== this.company ||
+      this.prevData.department !== this.department ||
+      this.prevData.brand !== this.brand ||
+      this.prevData.branch !== this.branch ||
+      !isEqual(sortBy(this.prevData.userRole), sortBy(this.userRole)) ||
+      this.prevData.email !== this.email ||
+      this.prevData.phoneNo !== this.phoneNo ||
+      this.prevData.phonePrefix !== this.phonePrefix ||
+      this.prevData.mobile !== this.mobile ||
+      this.prevData.mobilePrefix !== this.mobilePrefix ||
+      this.prevData.imageUrl !== this.imageUrl
+    ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  setPrevData() {
+    this.prevData.username = this.username
+    this.prevData.firstName = this.firstName
+    this.prevData.lastName = this.lastName
+    this.prevData.userType = this.userType
+    this.prevData.userScope = this.userScope
+    this.prevData.company = this.company
+    this.prevData.department = this.department
+    this.prevData.brand = this.brand
+    this.prevData.branch = this.branch
+    this.prevData.userRole = this.userRole
+    this.prevData.email = this.email
+    this.prevData.phoneNo = this.phoneNo
+    this.prevData.phonePrefix = this.phonePrefix
+    this.prevData.mobile = this.mobile
+    this.prevData.mobilePrefix = this.mobilePrefix
+    this.prevData.imageUrl = this.imageUrl
   }
 
   @Watch('company')
@@ -797,7 +875,12 @@ export default class UserProfileNonCg extends Vue {
   }
 
   clickCancel() {
-    this.dialogCancel = true
+    const dataChange = this.checkDataChange()
+    if (dataChange) {
+      this.dialogCancel = true
+    } else {
+      this.dialogCancelAction()
+    }
   }
 
   dialogCancelCancelAction() {
@@ -822,7 +905,7 @@ export default class UserProfileNonCg extends Vue {
     } else {
       if (this.mode === 'create') {
         this.dialogSaveTitle = this.$t(
-          'userManagement.dialog.createModeSave'
+          'userManagement.dialog.assignUserRole'
         ).toString()
         this.dialogSave = true
       } else {
@@ -882,7 +965,7 @@ export default class UserProfileNonCg extends Vue {
     this.previewUrl = null
     this.profileImg = value
   }
-  
+
   getBase64(file: any): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!file) {
@@ -950,6 +1033,7 @@ export default class UserProfileNonCg extends Vue {
       this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
     }
+    this.dialogSaveCancelAction()
   }
 
   assets(name: string) {
