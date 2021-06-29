@@ -1,6 +1,6 @@
 <template>
   <div class="org-management-container">
-    <user-list v-if="type === 'partner'" :type="type" />
+    <user-list v-if="type === 'partner'" tab="ncg" :type="type" />
     <tab v-else :type="type" />
   </div>
 </template>
@@ -24,9 +24,26 @@ export default class UserManagement extends Vue {
     return this.$i18n.locale
   }
 
-  // type = 'partner'
-  type = 'the1'
-  // type = 'bu'
+  get user(): any {
+    return this.$auth.user
+  }
+
+  get type(): string {
+    if (this.user.userType && this.user.userType.typeId) {
+      switch (this.user.userType.typeId) {
+        case 1:
+          return 'the1'
+        case 2:
+          return 'bu'
+        case 3:
+          return 'partner'
+        default:
+          return 'the1'
+      }
+    } else {
+      return 'the1'
+    }
+  }
 
   @Watch('language')
   private setupBreadcrumb(): void {

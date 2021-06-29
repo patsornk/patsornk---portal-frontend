@@ -12,6 +12,7 @@
           type="select"
           :placeholder="$t('userManagement.placeholder.userType').toString()"
           :options="userTypeList"
+          :disable="isTypeSelectDisable"
           :options-reduce="(item) => item.typeId"
           :shouldBeError="false"
           :options-label="language === 'th' ? 'typeNameEn' : 'typeNameEn'"
@@ -53,6 +54,7 @@
             v-model="filterData.companyId"
             class="dropdown"
             type="select"
+            :disable="isCompanySelectDisable"
             :options="companyList"
             :options-label="
               language === 'th' ? 'companyNameTh' : 'companyNameEn'
@@ -65,7 +67,7 @@
             v-model="filterData.brandId"
             class="dropdown"
             type="select"
-            :disable="brandList.length === 0"
+            :disable="brandList.length === 0 || isBrandSelectDisable"
             :options="brandList"
             :options-label="language === 'th' ? 'brandNameTh' : 'brandNameEn'"
             :options-reduce="(item) => item.brandId"
@@ -76,7 +78,7 @@
             v-model="filterData.branchId"
             class="dropdown"
             type="select"
-            :disable="branchList.length === 0"
+            :disable="branchList.length === 0 || isBranchSelectDisable"
             :options="branchList"
             :options-label="language === 'th' ? 'branchNameTh' : 'branchNameEn'"
             :options-reduce="(item) => item.branchId"
@@ -209,9 +211,22 @@ export default class UserList extends Vue {
   @Watch('language')
   changeSerchSelect(): void {}
 
+  get user(): any {
+    return this.$auth.user
+  }
+
   frameworkComponents = {
     agColumnHeader: CustomHeader
   }
+
+  isTypeSelectDisable = false
+  isCompanySelectDisable = false
+  isBrandSelectDisable = false
+  isBranchSelectDisable = false
+
+  defultCompany: any = 0
+  defultBrand: any = 0
+  defultBranch: any = 0
 
   dialogAction = ''
   dialogDisplay = false
@@ -445,12 +460,68 @@ export default class UserList extends Vue {
     }
   }
 
+  async userScope(typeId: any) {
+    if (this.user.userType && this.user.userType.typeId) {
+      this.filterData = {
+        ...this.filterData,
+        userType: typeId
+      }
+      this.isTypeSelectDisable = true
+      switch (this.user.userScope.userScopeLevel.scopeLevelId) {
+        case 2:
+          this.isCompanySelectDisable = true
+          this.defultCompany = this.user.userScope.company.companyId
+          this.filterData = {
+            ...this.filterData,
+            companyId: this.user.userScope.company.companyId
+          }
+          break
+        case 3:
+          this.isCompanySelectDisable = true
+          this.isBrandSelectDisable = true
+          this.defultCompany = this.user.userScope.company.companyId
+          this.defultBrand = this.user.userScope.brand.brandId
+          this.filterData = {
+            ...this.filterData,
+            companyId: this.user.userScope.company.companyId,
+            brandId: this.user.userScope.brand.brandId
+          }
+          break
+        case 4:
+          this.isCompanySelectDisable = true
+          this.isBrandSelectDisable = true
+          this.isBranchSelectDisable = true
+          this.defultCompany = this.user.userScope.company.companyId
+          this.defultBrand = this.user.userScope.brand.brandId
+          this.defultBranch = this.user.userScope.branch.branchId
+          this.filterData = {
+            ...this.filterData,
+            companyId: this.user.userScope.company.companyId,
+            brandId: this.user.userScope.brand.brandId,
+            branchId: this.user.userScope.branch.branchId
+          }
+          break
+        default:
+          break
+      }
+      this.search()
+    }
+  }
+
   async mounted(): Promise<void> {
     await this.getUserType()
     await this.getRole()
     await this.getCompany()
-    await this.getUserList(1, 10)
     this.currentPage = 1
+    if (this.user.userType && this.user.userType.typeId) {
+      if (this.user.userType.typeId == 3) {
+        this.userScope(this.user.userType.typeId)
+      } else if (this.user.userType.typeId == 2) {
+        this.userScope(this.user.userType.typeId)
+      } else {
+        await this.getUserList(1, 10)
+      }
+    }
   }
 
   changePage(page: number): void {
@@ -478,7 +549,7 @@ export default class UserList extends Vue {
     if (this.type === 'the1') {
       userGroup = this.tab === 'cg' ? 1 : 2
     } else if (this.type === 'partner') {
-      userGroup = 1
+      userGroup = 2
     } else {
       userGroup = this.tab === 'cg' ? 1 : 2
     }
@@ -555,9 +626,10 @@ export default class UserList extends Vue {
   @Watch('filterData.userType')
   async getRole(): Promise<void> {
     this.filterData.roleId = 0
-    let endpoint = this.filterData.userType == 0
-      ? `${process.env.PORTAL_ENDPOINT}/list_role`
-      : `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.filterData.userType}`
+    let endpoint =
+      this.filterData.userType == 0
+        ? `${process.env.PORTAL_ENDPOINT}/list_role`
+        : `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.filterData.userType}`
     try {
       const res = await this.$axios.$get(endpoint, { data: null })
       if (res.successful) {
@@ -800,9 +872,9 @@ export default class UserList extends Vue {
       keyword: '',
       userType: 0,
       roleId: 0,
-      companyId: 0,
-      brandId: 0,
-      branchId: 0,
+      companyId: this.defultCompany,
+      brandId: this.defultBrand,
+      branchId: this.defultBranch,
       status: 0
     }
   }

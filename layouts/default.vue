@@ -21,10 +21,12 @@
             <button class="submit-section-btn cancel" @click="cancel">
               {{ $t('common.cancel') }}
             </button>
-            <button class="submit-section-btn draft" ><!-- @click=""> -->
+            <button class="submit-section-btn draft">
+              <!-- @click=""> -->
               {{ $t('contentManagement.saveDraft') }}
             </button>
-            <button class="submit-section-btn preview" ><!-- @click=""> -->
+            <button class="submit-section-btn preview">
+              <!-- @click=""> -->
               <img
                 class="magic-eye"
                 height="12"
@@ -66,6 +68,7 @@ import Breadcrumb from '~/components/atoms/Breadcrumb.vue'
 import CompanyStatus from '~/components/atoms/company-status.vue'
 import { BreadcrumbType } from '~/constants'
 import { getAssetsPath } from '~/helper/images'
+import { error } from '~/locales/en/createBrand'
 
 @Component({
   components: {
@@ -189,6 +192,51 @@ export default class Default extends Vue {
 
   assets(name: string) {
     return getAssetsPath(name)
+  }
+
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.$auth
+        .refreshTokens()
+        .then((res) => {
+          try {
+            this.$axios
+              .$post(`${process.env.PORTAL_ENDPOINT}/verify_user`, {
+                data: null
+              })
+              .then((verify) => {
+                if (verify.successful && verify.data) {
+                  this.$axios
+                    .$get(`${process.env.PORTAL_ENDPOINT}/get_profile`, {
+                      data: null
+                    })
+                    .then((profile) => {
+                      if (profile.successful && profile.data) {
+                        this.$auth.setUser(profile.data)
+                      }
+                    })
+                    .catch((error) => {
+                      throw error
+                    })
+                } else {
+                  // TODO verify error
+                }
+              })
+              .catch((error) => {
+                throw error
+              })
+          } catch (error) {
+            this.$toast.global.error(error.response.data.message)
+            this.$router.push('/login')
+          }
+        })
+        .catch((err) => {
+          const authStrategy: any = this.$auth.strategy
+          const params = new URLSearchParams()
+          params.append('refreshToken', authStrategy.refreshToken.get())
+          this.$auth.logout({ data: params })
+        })
+    }
   }
 }
 </script>
