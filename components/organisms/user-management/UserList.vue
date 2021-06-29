@@ -554,6 +554,7 @@ export default class UserList extends Vue {
 
   @Watch('filterData.userType')
   async getRole(): Promise<void> {
+    this.filterData.roleId = 0
     let endpoint = this.filterData.userType == 0
       ? `${process.env.PORTAL_ENDPOINT}/list_role`
       : `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.filterData.userType}`
