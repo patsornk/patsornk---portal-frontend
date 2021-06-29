@@ -12,9 +12,9 @@
           type="select"
           :placeholder="$t('userManagement.placeholder.userType').toString()"
           :options="userTypeList"
-          :options-reduce="(item) => item.id"
+          :options-reduce="(item) => item.typeId"
           :shouldBeError="false"
-          options-label="id"
+          :options-label="language === 'th' ? 'typeNameEn' : 'typeNameEn'"
           class="search"
         />
         <input-field
@@ -24,7 +24,7 @@
           :options="roleList"
           :options-reduce="(item) => item.id"
           :shouldBeError="false"
-          options-label="id"
+          options-label="name"
           class="search"
         />
       </div>
@@ -106,7 +106,7 @@
     </div>
     <table-component
       v-model="selectData"
-      item-key="companyId"
+      item-key="userId"
       :header-title="$t('userManagement.userList').toString()"
       :raw-data="dataList"
       is-show-paginate
@@ -244,21 +244,7 @@ export default class UserList extends Vue {
 
   private pagination = 10
   private userTypeList = []
-  private roleList = [
-    { id: 'Partner Admin' },
-    { id: 'Organization' },
-    { id: 'Content Manager' },
-    { id: 'Content Staff' },
-    { id: 'Offer Manager' },
-    { id: 'Offer Staff' },
-    { id: 'Mission' },
-    { id: 'Loyalty Mangager' },
-    { id: 'Loyalty' },
-    { id: 'Marketing' },
-    { id: 'CC' },
-    { id: 'Operation' },
-    { id: 'Support' }
-  ]
+  private roleList = []
   private companyList: any = []
   private brandList: any = []
   private branchList: any = []
@@ -456,6 +442,7 @@ export default class UserList extends Vue {
   }
 
   async mounted(): Promise<void> {
+    await this.getUserType()
     await this.getRole()
     await this.getCompany()
     await this.getUserList(1, 10)
@@ -500,6 +487,9 @@ export default class UserList extends Vue {
     }
     if (this.filterData.keyword !== '') {
       path = `${path}&keyword=${this.filterData.keyword}`
+    }
+    if (this.filterData.userType > 0) {
+      path = `${path}&userType=${this.filterData.userType}`
     }
     if (this.filterData.roleId > 0) {
       path = `${path}&userRole=${this.filterData.roleId}`
@@ -558,7 +548,39 @@ export default class UserList extends Vue {
     this.isLoading = false
   }
 
-  async getRole() {}
+  @Watch('filterData.userType')
+  async getRole(): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/list_role?userType=${this.filterData.userType}`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.roleList = res.data.roles.map((item: any) => {
+          return {
+            ...item,
+            role: item.name
+          }
+        })
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
+  
+  async getUserType(): Promise<void> {
+    try {
+      const res = await this.$axios.$get(
+        `${process.env.PORTAL_ENDPOINT}/get_user_type`,
+        { data: null }
+      )
+      if (res.successful) {
+        this.userTypeList = res.data.userType
+      }
+    } catch (error) {
+      this.$toast.global.error(error.response.data.message)
+    }
+  }
 
   async getCompany(): Promise<void> {
     try {
@@ -680,7 +702,7 @@ export default class UserList extends Vue {
         userType: type,
         company: company,
         brand: brand,
-        userRole: item.role,
+        userRole: item.role[0].roleTitle,
         status: statusStr
       }
     })
