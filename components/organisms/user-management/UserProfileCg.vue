@@ -837,10 +837,8 @@ export default class UserProfileNonCg extends Vue {
         try {
           const payload = {
             userId: parseInt(this.userId ?? ''),
-            username: this.username,
             // password: this.password,
             // passwordMode: this.changePasswordMode,
-            userGroupId: 2,
             userTypeId: this.userType,
             role: roles,
             profile: {
@@ -917,7 +915,7 @@ export default class UserProfileNonCg extends Vue {
       return item.id
     })
     const payload = {
-      username: this.username,
+      username: this.username.toLowerCase(),
       userGroupId: 1,
       userTypeId: this.userType,
       roleIds: roles,
