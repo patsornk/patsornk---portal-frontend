@@ -43,7 +43,7 @@
           :options="roleList"
           :options-reduce="(item) => item.id"
           :shouldBeError="false"
-          options-label="id"
+          options-label="name"
           class="search"
         />
       </div>
