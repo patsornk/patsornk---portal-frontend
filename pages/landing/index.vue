@@ -136,7 +136,7 @@ export default class Landing extends Vue {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 460px;
+        width: 100%;
         height: 258px;
 
         color: $white;
