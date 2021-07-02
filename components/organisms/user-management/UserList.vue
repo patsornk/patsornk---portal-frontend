@@ -203,9 +203,18 @@ export default class UserList extends Vue {
   }
 
   @Watch('tab')
-  changeTab(): void {
+  async changeTab(): Promise<void> {
     this.clearFilter()
-    this.getUserList(1, 10)
+    this.currentPage = 1
+    if (this.user.userType && this.typeId) {
+      if (this.typeId == 3) {
+        this.userScope(this.typeId)
+      } else if (this.typeId == 2) {
+        this.userScope(this.typeId)
+      } else {
+        await this.getUserList(1, 10)
+      }
+    }
   }
 
   @Watch('language')
@@ -213,6 +222,14 @@ export default class UserList extends Vue {
 
   get user(): any {
     return this.$auth.user
+  }
+
+  get typeId(): any {
+    return this.user.userType.typeId
+  }
+
+  get scope(): any {
+    return this.user.userScope.userScopeLevel.scopeLevelId
   }
 
   frameworkComponents = {
@@ -461,51 +478,61 @@ export default class UserList extends Vue {
   }
 
   async userScope(typeId: any) {
-    if (this.user.userType && this.user.userType.typeId) {
-      this.filterData = {
-        ...this.filterData,
-        userType: typeId
-      }
-      this.isTypeSelectDisable = true
-      switch (this.user.userScope.userScopeLevel.scopeLevelId) {
-        case 2:
-          this.isCompanySelectDisable = true
-          this.defultCompany = this.user.userScope.company.companyId
-          this.filterData = {
-            ...this.filterData,
-            companyId: this.user.userScope.company.companyId
-          }
-          break
-        case 3:
-          this.isCompanySelectDisable = true
-          this.isBrandSelectDisable = true
-          this.defultCompany = this.user.userScope.company.companyId
-          this.defultBrand = this.user.userScope.brand.brandId
-          this.filterData = {
-            ...this.filterData,
-            companyId: this.user.userScope.company.companyId,
-            brandId: this.user.userScope.brand.brandId
-          }
-          break
-        case 4:
-          this.isCompanySelectDisable = true
-          this.isBrandSelectDisable = true
-          this.isBranchSelectDisable = true
-          this.defultCompany = this.user.userScope.company.companyId
-          this.defultBrand = this.user.userScope.brand.brandId
-          this.defultBranch = this.user.userScope.branch.branchId
-          this.filterData = {
-            ...this.filterData,
-            companyId: this.user.userScope.company.companyId,
-            brandId: this.user.userScope.brand.brandId,
-            branchId: this.user.userScope.branch.branchId
-          }
-          break
-        default:
-          break
-      }
-      this.search()
+    this.filterData = {
+      ...this.filterData,
+      userType: typeId
     }
+    this.isTypeSelectDisable = true
+    switch (this.user.userScope.userScopeLevel.scopeLevelId) {
+      case 2:
+        this.isCompanySelectDisable = true
+        this.defultCompany = this.user.userScope.company.companyId
+        this.filterData = {
+          ...this.filterData,
+          companyId: this.user.userScope.company.companyId
+        }
+        break
+      case 3:
+        this.isCompanySelectDisable = true
+        this.isBrandSelectDisable = true
+        this.defultCompany = this.user.userScope.company.companyId
+        this.defultBrand = this.user.userScope.brand.brandId
+        this.filterData = {
+          ...this.filterData,
+          companyId: this.user.userScope.company.companyId
+        }
+        await this.getBrand()
+        this.filterData = {
+          ...this.filterData,
+          brandId: this.user.userScope.brand.brandId
+        }
+        break
+      case 4:
+        this.isCompanySelectDisable = true
+        this.isBrandSelectDisable = true
+        this.isBranchSelectDisable = true
+        this.defultCompany = this.user.userScope.company.companyId
+        this.defultBrand = this.user.userScope.brand.brandId
+        this.defultBranch = this.user.userScope.branch.branchId
+        this.filterData = {
+          ...this.filterData,
+          companyId: this.user.userScope.company.companyId
+        }
+        await this.getBrand()
+        this.filterData = {
+          ...this.filterData,
+          brandId: this.user.userScope.brand.brandId
+        }
+        await this.getBranch()
+        this.filterData = {
+          ...this.filterData,
+          branchId: this.user.userScope.branch.branchId
+        }
+        break
+      default:
+        break
+    }
+    this.search()
   }
 
   async mounted(): Promise<void> {
@@ -513,11 +540,11 @@ export default class UserList extends Vue {
     await this.getRole()
     await this.getCompany()
     this.currentPage = 1
-    if (this.user.userType && this.user.userType.typeId) {
-      if (this.user.userType.typeId == 3) {
-        this.userScope(this.user.userType.typeId)
-      } else if (this.user.userType.typeId == 2) {
-        this.userScope(this.user.userType.typeId)
+    if (this.user.userType && this.typeId) {
+      if (this.typeId == 3) {
+        this.userScope(this.typeId)
+      } else if (this.typeId == 2) {
+        this.userScope(this.typeId)
       } else {
         await this.getUserList(1, 10)
       }
@@ -608,6 +635,7 @@ export default class UserList extends Vue {
       } else {
         userGroup = this.tab === 'cg' ? 1 : 2
       }
+      this.$nuxt.$loading.start()
       let path = `/list_user?page=${page}&limit=${limit}&userGroup=${userGroup}`
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}${path}`,
@@ -617,7 +645,9 @@ export default class UserList extends Vue {
         this.mappingUser(res.data)
         this.currentPage = page
       }
+      this.$nuxt.$loading.finish()
     } catch (error) {
+      this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
     }
     this.isLoading = false
@@ -645,6 +675,7 @@ export default class UserList extends Vue {
     }
   }
 
+  @Watch('tab')
   async getUserType(): Promise<void> {
     try {
       const res = await this.$axios.$get(
@@ -652,7 +683,11 @@ export default class UserList extends Vue {
         { data: null }
       )
       if (res.successful) {
-        this.userTypeList = res.data.userType
+        if (this.tab == 'cg') {
+          this.userTypeList = res.data.userType.filter((item: any) => item.typeId != 3);
+        } else {
+          this.userTypeList = res.data.userType
+        }
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)

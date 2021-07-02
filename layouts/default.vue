@@ -196,46 +196,51 @@ export default class Default extends Vue {
 
   mounted() {
     if (this.$auth.loggedIn) {
-      this.$auth
-        .refreshTokens()
-        .then((res) => {
-          try {
-            this.$axios
-              .$post(`${process.env.PORTAL_ENDPOINT}/verify_user`, {
-                data: null
+      try {
+        this.$axios
+          .$get(`${process.env.PORTAL_ENDPOINT}/get_profile`, {
+            data: null
+          })
+          .then((profile) => {
+            if (profile.successful && profile.data) {
+              this.$auth.setUser(profile.data)
+            }
+            this.$auth
+              .refreshTokens()
+              .then((res) => {
+                this.$axios
+                  .$post(`${process.env.PORTAL_ENDPOINT}/verify_user`, {
+                    data: null
+                  })
+                  .then((verify) => {
+                    if (!(verify.successful && verify.data)) {
+                      // TODO verify error
+                    }
+                  })
+                  .catch((error) => {
+                    const authStrategy: any = this.$auth.strategy
+                    const params = new URLSearchParams()
+                    params.append(
+                      'refreshToken',
+                      authStrategy.refreshToken.get()
+                    )
+                    this.$auth.logout({ data: params })
+                  })
               })
-              .then((verify) => {
-                if (verify.successful && verify.data) {
-                  this.$axios
-                    .$get(`${process.env.PORTAL_ENDPOINT}/get_profile`, {
-                      data: null
-                    })
-                    .then((profile) => {
-                      if (profile.successful && profile.data) {
-                        this.$auth.setUser(profile.data)
-                      }
-                    })
-                    .catch((error) => {
-                      throw error
-                    })
-                } else {
-                  // TODO verify error
-                }
+              .catch((err) => {
+                const authStrategy: any = this.$auth.strategy
+                const params = new URLSearchParams()
+                params.append('refreshToken', authStrategy.refreshToken.get())
+                this.$auth.logout({ data: params })
               })
-              .catch((error) => {
-                throw error
-              })
-          } catch (error) {
-            this.$toast.global.error(error.response.data.message)
-            this.$router.push('/login')
-          }
-        })
-        .catch((err) => {
-          const authStrategy: any = this.$auth.strategy
-          const params = new URLSearchParams()
-          params.append('refreshToken', authStrategy.refreshToken.get())
-          this.$auth.logout({ data: params })
-        })
+          })
+          .catch((error) => {
+            throw error
+          })
+      } catch (error) {
+        this.$toast.global.error(error.response.data.message)
+        this.$router.push('/login')
+      }
     }
   }
 }

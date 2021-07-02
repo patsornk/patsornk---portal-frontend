@@ -125,7 +125,7 @@
             :options="userTypeList"
             :options-reduce="(item) => item.typeId"
             :options-label="language === 'th' ? 'typeNameTh' : 'typeNameEn'"
-            :disable="mode === 'edit'"
+            :disable="mode === 'edit' || isTypeSelectDisable"
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userType"
           />
@@ -140,6 +140,7 @@
             :options-label="
               language === 'th' ? 'userLevelScopeTh' : 'userLevelScopeEn'
             "
+            :disable="userType == '' || isScopeSelectDisable"
             :placeholder="$t('userManagement.pleaseSelect')"
             :error-message="error.userScope"
           />
@@ -148,7 +149,10 @@
             class="left"
             :title="$t('userManagement.userProfile.company')"
             :disable="
-              mode === 'edit' || companyList.length === 0 || userType == '1'
+              mode === 'edit' ||
+              companyList.length === 0 ||
+              userType == '1' ||
+              isCompanySelectDisable
             "
             required
             type="select"
@@ -176,7 +180,7 @@
             class="left"
             :title="$t('userManagement.userProfile.brand')"
             required
-            :disable="brandList.length === 0"
+            :disable="brandList.length === 0 || isBrandSelectDisable"
             type="select"
             :options="brandList"
             :options-reduce="(item) => item.brandId"
@@ -188,7 +192,7 @@
             v-model="$v.branch.$model"
             class="right"
             :title="$t('userManagement.userProfile.branch')"
-            :disable="branchList.length === 0"
+            :disable="branchList.length === 0 || isBranchSelectDisable"
             type="select"
             :options="branchList"
             :options-reduce="(item) => item.branchId"
@@ -383,8 +387,8 @@ export default class UserProfileNonCg extends Vue {
   username = ''
   firstName = ''
   lastName = ''
-  userType = ''
-  userScope = ''
+  userType: any = ''
+  userScope: any = ''
   company: any = ''
   department = ''
   brand: any = ''
@@ -445,6 +449,12 @@ export default class UserProfileNonCg extends Vue {
 
   dialogCancel = false
 
+  isScopeSelectDisable = false
+  isTypeSelectDisable = false
+  isCompanySelectDisable = false
+  isBrandSelectDisable = false
+  isBranchSelectDisable = false
+
   @Prop({
     required: true,
     type: String
@@ -493,6 +503,26 @@ export default class UserProfileNonCg extends Vue {
     }
   }
 
+  get user(): any {
+    return this.$auth.user
+  }
+
+  get userProfileType(): any {
+    return this.user.userType
+  }
+
+  get typeId(): any {
+    if (this.userProfileType) {
+      return this.userProfileType.typeId
+    } else {
+      return ''
+    }
+  }
+
+  get scopeLevelId(): any {
+    return this.user.userScope.userScopeLevel.scopeLevelId
+  }
+
   @Watch('username')
   checkUsername(): void {
     this.error.username = !this.$v.username.required
@@ -531,7 +561,7 @@ export default class UserProfileNonCg extends Vue {
       : ''
   }
 
-  @Watch('userScope')
+  // @Watch('userScope')
   checkUserScope(): void {
     this.error.userScope = !this.$v.userScope.required
       ? this.$t('userManagement.select').toString() +
@@ -559,7 +589,7 @@ export default class UserProfileNonCg extends Vue {
       : ''
   }
 
-  @Watch('userRole')
+  // @Watch('userRole')
   checkUserRole(): void {
     this.error.userRole = !this.$v.userRole.required
       ? this.$t('userManagement.select').toString() +
@@ -620,13 +650,54 @@ export default class UserProfileNonCg extends Vue {
     this.setupBreadcrumb()
     await this.getUserType()
     await this.getUserScope()
+    await this.getCompany(this.typeId)
+    this.checkUserScopeId()
     if (this.mode == 'edit') {
       await this.getUser()
     }
   }
 
+  async checkUserScopeId(): Promise<void> {
+    if (this.typeId !== 1) {
+      this.userType = this.typeId
+      this.isTypeSelectDisable = true
+      this.isScopeSelectDisable = true
+    }
+    switch (this.user.userScope.userScopeLevel.scopeLevelId) {
+      case 2:
+        this.isCompanySelectDisable = true
+        await this.getCompany(this.typeId)
+        this.company = this.user.userScope.company.companyId
+        break
+      case 3:
+        this.isCompanySelectDisable = true
+        this.isBrandSelectDisable = true
+        await this.getCompany(this.typeId)
+        this.company = this.user.userScope.company.companyId
+        await this.getBrand()
+        this.brand = this.user.userScope.brand.brandId
+        break
+      case 4:
+        this.isCompanySelectDisable = true
+        this.isBrandSelectDisable = true
+        this.isBranchSelectDisable = true
+        this.isScopeSelectDisable = true
+        await this.getCompany(this.typeId)
+        this.company = this.user.userScope.company.companyId
+        await this.getBrand()
+        this.brand = this.user.userScope.brand.brandId
+        await this.getBranch()
+        this.branch = this.user.userScope.branch.branchId
+        this.userScope = 4
+        break
+      default:
+        break
+    }
+  }
+
   async getUser(): Promise<void> {
     try {
+      this.$nuxt.$loading.start()
       const res = await this.$axios.$get(
         `${process.env.PORTAL_ENDPOINT}/get_user?userId=${this.userId}`,
         { data: null }
@@ -667,8 +738,11 @@ export default class UserProfileNonCg extends Vue {
         this.previewUrl = data.userProfile.profileImg
           ? getImagePath(data.userProfile.profileImg)
           : null
+        this.$nuxt.$loading.finish()
       }
+      this.$nuxt.$loading.finish()
     } catch (error) {
+      this.$nuxt.$loading.finish()
       this.$toast.global.error(error.response.data.message)
     }
   }
@@ -697,10 +771,13 @@ export default class UserProfileNonCg extends Vue {
         { data: null }
       )
       if (res.successful) {
+        const userLevelScope = res.data.userLevelScope.filter(
+          (item: any) => item.userLevelScopeId >= this.scopeLevelId
+        )
         if (this.userType == '1') {
-          this.userScopeList = res.data.userLevelScope
+          this.userScopeList = userLevelScope
         } else {
-          this.userScopeList = res.data.userLevelScope.filter(
+          this.userScopeList = userLevelScope.filter(
             (item: any) => item.userLevelScopeId !== 1
           )
         }
@@ -712,9 +789,6 @@ export default class UserProfileNonCg extends Vue {
 
   @Watch('userType')
   async getCompanyByType(): Promise<void> {
-    this.company = ''
-    this.brand = ''
-    this.branch = ''
     if (this.userType == '1') {
       await this.getCompany('')
       this.company = 1
@@ -740,6 +814,22 @@ export default class UserProfileNonCg extends Vue {
       }
     } catch (error) {
       this.$toast.global.error(error.response.data.message)
+    }
+  }
+
+  @Watch('userType')
+  clearWhenChangeType() {
+    this.company = ''
+    this.brand = ''
+    this.branch = ''
+    this.userScope = ''
+    this.userRole = []
+    this.error = {
+      ...this.error,
+      userScope: '',
+      company: '',
+      brand: '',
+      userRole: ''
     }
   }
 
