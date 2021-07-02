@@ -180,7 +180,7 @@
             class="left"
             :title="$t('userManagement.userProfile.brand')"
             required
-            :disable="brandList.length === 0 || isBrandSelectDisable"
+            :disable="brandList.length === 0 || isBrandSelectDisable || company == ''"
             type="select"
             :options="brandList"
             :options-reduce="(item) => item.brandId"
@@ -192,7 +192,7 @@
             v-model="$v.branch.$model"
             class="right"
             :title="$t('userManagement.userProfile.branch')"
-            :disable="branchList.length === 0 || isBranchSelectDisable"
+            :disable="branchList.length === 0 || isBranchSelectDisable || brand == ''"
             type="select"
             :options="branchList"
             :options-reduce="(item) => item.branchId"

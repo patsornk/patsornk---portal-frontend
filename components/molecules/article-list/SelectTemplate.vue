@@ -138,6 +138,7 @@ export default class SelectTemplate extends Vue {
 
   private cancel(): void {
     this.article = ''
+    this.$router.push('/article')
   }
 
   private next(): void {
@@ -145,6 +146,7 @@ export default class SelectTemplate extends Vue {
     } else if (this.article === 'normal') {
       this.$router.push('/article/create/normal')
     } else {
+      this.$router.push('/article/create/video')
     }
   }
 
