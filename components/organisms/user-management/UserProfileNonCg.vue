@@ -305,7 +305,7 @@
       :title="$t('userManagement.dialog.clickCancelTitle')"
       :description="$t('userManagement.dialog.clickCancel')"
       :left-button-title="$t('userManagement.dialog.cancel')"
-      :right-button-title="$t('userManagement.dialog.confirm')"
+      :right-button-title="$t('userManagement.dialog.discardChanges')"
       @onLeftButtonClick="dialogCancelCancelAction"
       @onRightButtonClick="dialogCancelAction"
     />
