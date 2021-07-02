@@ -1,42 +1,13 @@
 <template>
   <div class="central-login">
     <div class="login-input w-full">
-      <input-field
-        :title="$t('login.titleUserName')"
-        v-model="$v.username.$model"
-        :errorMessage="error.username"
-        :placeholder="$t('login.usernamePlaceHolder')"
-        required
-      />
-      <input-field
-        class="relative"
-        :title="$t('login.titlePassword')"
-        :type="stateMagicEyeType"
-        v-model="formData.password"
-        :errorMessage="error.password"
-        :placeholder="$t('login.passwordPlaceHolder')"
-        required
-      >
-        <img
-          :class="`magic-${imageName}`"
-          height="18"
-          width="18"
-          :src="imageIcon(imageName)"
-          @click="toggleMagicEye"
-        />
-      </input-field>
+      <span class="cgTitle"> {{ $t('login.logInCgTitle') }}</span>
+      <span class="cgDesc"> {{ $t('login.logInCgDesc') }}</span>
     </div>
     <div class="btn-section">
       <t1-button class="btn-login" @click.native="submit">
         {{ $t('login.submitText') }}
       </t1-button>
-      <div class="btn-forget">
-        <a
-          class="cursor-pointer"
-          href="https://myaccess.central.co.th/m/home"
-          >{{ $t('login.urlText') }}</a
-        >
-      </div>
     </div>
   </div>
 </template>
@@ -185,6 +156,19 @@ export default class CentarlLogin extends Vue {
 
     ::v-deep .magic-close-eye {
       top: 46px;
+    }
+
+    .cgTitle {
+      margin-top: 40px;
+      font-size: 18px;
+      text-align: center;
+      color: $gray-disable;
+    }
+
+    .cgDesc {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 24px;
     }
   }
 

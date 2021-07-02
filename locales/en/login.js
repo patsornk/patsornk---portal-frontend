@@ -17,6 +17,9 @@ module.exports = {
   inputInvalidEmailFormat: 'Input invalid email format',
   emptyUsernameToast: 'Please input username or password',
 
+  logInCgTitle: 'Sign in with your',
+  logInCgDesc: 'CG Passport Account',
+
   systemErrorMessage: 'System Error',
   systemError:
     'The server has encountered an error and could not complete your request.\n' +

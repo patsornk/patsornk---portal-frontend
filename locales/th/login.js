@@ -17,6 +17,9 @@ module.exports = {
   inputInvalidEmailFormat: 'ระบุรูปแบบของอีเมลไม่ถูกต้อง',
   emptyUsernameToast: 'Please input username or password (TH)',
 
+  logInCgTitle: 'Sign in with your',
+  logInCgDesc: 'CG Passport Account',
+
   systemErrorMessage: 'พบข้อผิดพลาดของเซิร์ฟเวอร์',
   systemError:
     'พบปัญหาบางอย่างที่เซิร์ฟเวอร์ ซึ่งเรากำลังเร่งแก้ไขอย่างเร็วที่สุด กรุณาลองใหม่อีกครั้งในภายหลัง',
