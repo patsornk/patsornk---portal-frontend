@@ -162,6 +162,7 @@ import CustomHeader from '~/components/atoms/AgCustomHeader'
 import InputSearch from '~/components/atoms/InputSearch.vue'
 import DialogPopup from '~/components/molecules/DialogPopup.vue'
 import { OrganizationManagementStatus } from '~/constants'
+import { forEach } from 'lodash'
 
 enum UserTableCol {
   firstName = 'firstName',
@@ -807,6 +808,9 @@ export default class UserList extends Vue {
           : item.userScope.brand.brandNameEn
       const statusStr = this.statusList.filter((e) => e.id === item.status)[0]
         .status
+
+      const userRoleName = item.role.map((e:any)=> e.roleTitle)
+      const userRoleNameStr = userRoleName.join().replaceAll(',',', ')
       return {
         ...item,
         firstName: item.userProfile.firstName,
@@ -814,7 +818,7 @@ export default class UserList extends Vue {
         userType: type,
         company: company,
         brand: brand,
-        userRole: item.role[0] ? item.role[0].roleTitle : '',
+        userRole: userRoleNameStr ? userRoleNameStr : '',
         status: statusStr
       }
     })
