@@ -39,4 +39,14 @@ export interface TopicTag {
   isSelected?: boolean
 }
 
+export interface ErrorNormalArticlePublish {
+  publish: string
+  expire: string
+}
+
+export interface NormalArticleAuthorData {
+  author: number
+  thumbnailUrl: string
+}
+
 

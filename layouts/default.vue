@@ -25,16 +25,9 @@
               <!-- @click=""> -->
               {{ $t('contentManagement.saveDraft') }}
             </button>
-            <button class="submit-section-btn preview">
+            <button class="submit-section-btn preview" :class="isDisabled">
               <!-- @click=""> -->
-              <img
-                class="magic-eye"
-                height="12"
-                width="17"
-                :src="assets('login/eye-white.png')"
-                alt="magic-eye"
-              />
-              <p class="preview-text">{{ $t('contentManagement.preview') }}</p>
+              {{ $t('contentManagement.preview') }}
             </button>
             <button
               class="submit-section-btn publish"
@@ -105,10 +98,6 @@ export default class Default extends Vue {
     return this.$store.getters['article/isCreateNewArticle']
   }
 
-  get isError(): string {
-    return this.$store.getters['article/isError']
-  }
-
   get isDisabled(): string {
     return this.$store.getters['article/isDisabled']
   }
@@ -166,7 +155,7 @@ export default class Default extends Vue {
   cancel() {
     switch (this.pageTitle) {
       case `${this.$t('contentManagement.createNewArticle').toString()}`:
-        this.$router.push('/contentManagement/articlelist/create')
+        this.$router.push('/article/create')
         break
       default:
         return
@@ -350,12 +339,6 @@ html {
       .preview {
         background: $black;
         margin-right: 15px;
-        position: relative;
-
-        .preview-text {
-          display: inline-flex;
-          margin-right: 2px;
-        }
       }
 
       .publish {

@@ -12,7 +12,7 @@
   twoOfTwoStep: 'ขั้นตอนที่ 2 จาก 2',
   saveDraft: 'บันทึกแบบร่าง',
   preview: 'ดูตัวอย่าง',
-  publish: 'เผยแพร่',
+  publish: 'บันทึกและเผยแพร่',
   titleTh: 'หัวข้อ (ไทย)',
   subTitleTh: 'หัวข้อย่อย (ไทย)',
   titleEn: 'หัวข้อ (อังกฤษ)',
@@ -23,8 +23,23 @@
     emptyTitleTh: 'ระบุหัวข้อ (ไทย)',
     emptyTitleEn: 'ระบุหัวข้อ (อังกฤษ)',
     emptySubTitleTh: 'ระบุหัวข้อย่อย (ไทย)',
-    emptySubTitleEn: 'ระบุหัวข้อย่อย (อังกฤษ)'
+    emptySubTitleEn: 'ระบุหัวข้อย่อย (อังกฤษ)',
+    publishDate: 'วันที่และเวลาต้องไม่เร็วกว่าหรือเท่ากับวันและเวลาปัจจุบัน',
+    expireDate: 'วันที่และเวลาหมดอายุของบทความต้องไม่เร็วกว่าหรือเท่ากับวันและเวลาที่ต้องการเผยแพร่ล่วงหน้า',
+    inputAuthor: 'Select Author(TH)',
+    inputThumbnail : 'Input Thumbnail(TH)',
+    thumbnailType : 'File should input in .png, .jpg or .gif file (TH)'
   },
   searchForCategoryPlaceholder: 'Search for category tag...(TH)',
-  searchForTopicPlaceholder: 'Search for topic...(TH)'
+  searchForTopicPlaceholder: 'Search for topic...(TH)',
+  articlePublishDate: 'Article Publish Date(TH)',
+  publishNow: 'Publish now(TH)',
+  publishSchedule: 'Schedule(TH)',
+  articlePublishDatePlaceholder: 'Select Publish Date(TH)',
+  articleExpireDate: 'Article Expire Date(TH)',
+  noExpireDate: 'No Expire Date(TH)',
+  articleExpireDatePlaceholder: 'Select Expire Date(TH)',
+  authorTitle: 'Author(TH)',
+  thumbnailTitle: 'Thumbnail Image(TH)',
+  thumbnailSubTitle: '(.png, .jpg or .gif file)(TH)'
 }

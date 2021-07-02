@@ -25,7 +25,7 @@ html {
 }
 
 .vs--disabled .vs__clear, .vs--disabled .vs__dropdown-toggle, .vs--disabled .vs__open-indicator, .vs--disabled .vs__search, .vs--disabled .vs__selected {
-  background: $disabled-for-textbox  !important;
+  background: $disabled-for-textbox !important;
   color: $mid-black !important;
 }
 
@@ -33,7 +33,7 @@ html {
   color: $mid-black !important;
 }
 
-.toasted{
+.toasted {
   width: 440px !important;
   height: 56px !important;
   font-size: 16px;
@@ -41,7 +41,7 @@ html {
   border-radius: 4px !important;
 }
 
-.toasted-container .toasted{
+.toasted-container .toasted {
   justify-content: left !important;
 }
 
@@ -50,27 +50,27 @@ html {
   right: 34px !important;
 }
 
-.toasted .primary.success, .toasted.toasted-primary.success{
+.toasted .primary.success, .toasted.toasted-primary.success {
   background-color: $success !important;
 
-  .material-icons{
+  .material-icons {
     color: $white;
   }
 }
 
-.toasted .primary.error, .toasted.toasted-primary.error{  
+.toasted .primary.error, .toasted.toasted-primary.error {
   background-color: $primary !important;
 
-  .material-icons{
+  .material-icons {
     color: $white;
   }
 }
 
-.toasted .primary, .toasted.toasted-primary .material-icons{
+.toasted .primary, .toasted.toasted-primary .material-icons {
   color: $success;
 }
 
-body.modal-open{
+body.modal-open {
   overflow: hidden;
 }
 
@@ -83,7 +83,8 @@ body.modal-open{
       .mx-icon-clear {
         display: none !important;
       }
-      .mx-icon-clear+.mx-icon-calendar {
+
+      .mx-icon-clear + .mx-icon-calendar {
         display: block;
       }
     }
@@ -93,14 +94,15 @@ body.modal-open{
     height: 100%;
     color: $mid-black;
     border: 1px solid $gray-disable;
+    cursor: pointer;
 
     &:hover, &:focus {
       border: 1px solid $gray-disable;
-  }
+    }
   }
 }
 
-.mx-datepicker-main.mx-datepicker-popup{
+.mx-datepicker-main.mx-datepicker-popup {
   font-family: "The1Official";
 
   thead .mx-table-date td, .mx-table-date th {
@@ -110,11 +112,11 @@ body.modal-open{
     font-weight: 700;
   }
 
-  .cell{
+  .cell {
     color: $mid-black;
     font-size: 16px;
 
-    &.not-current-month{
+    &.not-current-month {
       color: $grey3;
     }
   }
@@ -125,61 +127,75 @@ body.modal-open{
         .cell.active {
           color: $white;
           background-color: $primary;
-    
+
           &:hover {
             color: $white;
             background-color: $primary;
           }
         }
+
         .cell:hover {
           color: $mid-black;
           background-color: $gray-bg-fade;
         }
       }
+
       &.mx-table-month {
         .cell.active {
           color: $white;
           background-color: $primary;
-    
+
           &:hover {
             color: $white;
             background-color: $primary;
           }
         }
+
         .cell:hover {
           color: $mid-black;
           background-color: $gray-bg-fade;
         }
       }
+
       &.mx-table-date {
         .cell.active {
           color: $white;
           border-radius: 100%;
           background-color: $primary;
-    
+
           &:hover {
             color: $white;
             background-color: $primary;
           }
         }
+
         .cell:hover {
           color: $mid-black;
           border-radius: 100%;
           background-color: $gray-bg-fade;
         }
-    
+
+        .cell.disabled {
+          border-radius: 0;
+          background: none;
+
+          &:hover {
+            color: #ccc;
+          }
+        }
       }
     }
   }
 
-  .mx-calendar-header{
+  .mx-calendar-header {
     button:focus {
       outline: none;
-  }
+    }
   }
 
-  .mx-datepicker-content{
+  .mx-datepicker-content {
     padding: 20px;
+    width: 300px;
   }
 
   .mx-datepicker-header {
@@ -195,24 +211,24 @@ body.modal-open{
     text-align: center !important;
   }
 
-  .mx-icon-left{
+  .mx-icon-left {
     color: $mid-black !important;
   }
 
-  .mx-icon-right{
+  .mx-icon-right {
     color: $mid-black !important;
   }
 
-  .mx-btn-icon-double-left{
+  .mx-btn-icon-double-left {
     display: none !important;
   }
 
-  .mx-btn-icon-double-right{
+  .mx-btn-icon-double-right {
     display: none !important;
   }
 
-  .mx-calendar-header-label{
-    .mx-btn{
+  .mx-calendar-header-label {
+    .mx-btn {
       color: $mid-black;
       font-weight: 700;
     }

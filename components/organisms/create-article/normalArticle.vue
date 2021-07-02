@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="normal-article-container">
     <div class="selection-header">
-      <div class="header-mark" />
+      <div class="header-mark"/>
       <div class="header-container">
         <div class="header-title">
           {{ $t('contentManagement.normalArticleCreation') }}
@@ -50,20 +50,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {
   BreadcrumbType,
   TitleArticleData,
   ErrorTitleArticleData
 } from '~/constants'
-import { getAssetsPath } from '~/helper/images'
+import {getAssetsPath} from '~/helper/images'
 import SwitchLang from '~/components/atoms/SwitchLang.vue'
 import InputField from '~/components/atoms/InputField.vue'
 import InputTagCategory from '~/components/atoms/InputTagCategory.vue'
 import InputTopic from '~/components/atoms/InputTopic.vue'
-import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
-import { validateError } from '~/helper'
+import {validationMixin} from 'vuelidate'
+import {required} from 'vuelidate/lib/validators'
+import {validateError} from '~/helper'
 
 const validations = {
   titleTh: {
@@ -177,7 +177,6 @@ export default class NormalArticle extends Vue {
 
   beforeDestroy() {
     this.$store.dispatch('article/setIsError', false)
-    this.$store.dispatch('article/setIsCreateNewArticle', false)
     this.$store.dispatch('article/setIsHaveNormalTitle', false)
   }
 
@@ -226,7 +225,7 @@ export default class NormalArticle extends Vue {
     this.onChangedTitleEn()
 
     if (validateError(this.error)) {
-      this.$router.push('/contentManagement/articlelist/create')
+      this.$store.dispatch('article/setIsError', false)
     }
   }
 }

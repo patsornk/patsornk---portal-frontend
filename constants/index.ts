@@ -6,6 +6,7 @@ export * from './Stepbar'
 export * from './CreateStep'
 export * from './CreateBranch'
 export * from './CreateEditPartnerCode'
+export * from './DateTime'
 
 //types
 export * from './types/ArticleType'

@@ -16,12 +16,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue , Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import InputTagCategory from '~/components/atoms/InputTagCategory.vue'
-import InputTopic  from "~/components/atoms/InputTopic.vue";
-import { validationMixin } from 'vuelidate'
+import InputTopic from "~/components/atoms/InputTopic.vue";
+import {validationMixin} from 'vuelidate'
 import {required} from "vuelidate/lib/validators";
-import { ErrorNormalArticleTagData, CategoryTag, TopicTag} from '~/constants'
+import {ErrorNormalArticleTagData, CategoryTag, TopicTag} from '~/constants'
 
 const validations = {
   category: {
@@ -59,7 +59,7 @@ export default class NormalArticleTag extends Vue {
   @Watch('category')
   checkCategory(): void {
     let haveCategorySelected = this.$v.category.$model.length > 0
-    this.isCategorySelected = !!this.$v.category.$model.find((category:CategoryTag) => category.isSelected)
+    this.isCategorySelected = !!this.$v.category.$model.find((category: CategoryTag) => category.isSelected)
     this.error.category = !this.isCategorySelected && !haveCategorySelected
       ? this.$t('common.pleaseSelect').toString()
       : ''
@@ -68,7 +68,7 @@ export default class NormalArticleTag extends Vue {
   @Watch('topic')
   checkTopic(): void {
     let haveTopicSelected = this.$v.topic.$model.length > 0
-    this.isTopicSelected = !!this.$v.topic.$model.find((topic:TopicTag) => topic.isSelected)
+    this.isTopicSelected = !!this.$v.topic.$model.find((topic: TopicTag) => topic.isSelected)
     this.error.topic = !this.isTopicSelected && !haveTopicSelected
       ? this.$t('common.pleaseSelect').toString()
       : ''
@@ -187,7 +187,13 @@ export default class NormalArticleTag extends Vue {
       isSelected: false
     }
   ]
+
+  beforeDestroy() {
+    this.$store.dispatch('article/setIsCategorySelected', false)
+    this.$store.dispatch('article/setIsTopicSelected', false)
+  }
 }
+
 </script>
 
 <style lang="scss" scoped>

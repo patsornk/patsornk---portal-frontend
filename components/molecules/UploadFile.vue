@@ -31,7 +31,7 @@
             <div class="icon-box" :class="{ 'circle-style': circleStyle }">
               <div class="icon-padding" @click="viewFile">
                 <div class="icon-container">
-                  <img class="view-file" :src="assets('login/eye-white.png')" />
+                  <img class="view-file" :src="assets('login/eye-white.png')"/>
                 </div>
                 <span class="view-file-text" @click="viewFile">
                   {{ $t('common.viewFile') }}
@@ -57,7 +57,7 @@
             <div>
               <div class="drop-text">{{ $t('common.dragAndDrop') }}</div>
               <div class="btn-upload">{{ $t('common.upload') }}</div>
-              <div class="drop-text-description">
+              <div class="drop-text-description" :class="isHaveDescriptionText">
                 {{ $t('common.fileType') }}
               </div>
             </div>
@@ -72,8 +72,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { getAssetsPath } from '~/helper/images'
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import {getAssetsPath} from '~/helper/images'
 
 @Component
 export default class UploadImage extends Vue {
@@ -107,8 +107,22 @@ export default class UploadImage extends Vue {
   })
   private circleStyle?: boolean
 
+  @Prop({
+    type: Boolean,
+    default: true
+  })
+  private isHaveDescription?: boolean
+
   private file: any = null
   private filelist: any[] = []
+
+  get isHaveDescriptionText() {
+    if (this.isHaveDescription) {
+      return ''
+    } else {
+      return 'disabled'
+    }
+  }
 
   assets(name: string) {
     return getAssetsPath(name)
@@ -119,17 +133,20 @@ export default class UploadImage extends Vue {
     this.filelist = [...file.files]
     this.fileChange(false)
   }
+
   viewFile() {
     this.$emit('viewFile', this.imageUrl)
   }
+
   remove() {
     this.filelist = []
     this.imageUrl = ''
     this.file = undefined
     this.$emit('input', this.file)
-    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
+    this.$emit('onBlur', {file: this.file, imageUrl: this.imageUrl})
     this.$emit('removeUrl', this.file)
   }
+
   dragover(event: any) {
     event.preventDefault()
     // Add some visual fluff to show the user can drop its files
@@ -138,11 +155,13 @@ export default class UploadImage extends Vue {
       event.currentTarget.classList.add('bg-gray-300')
     }
   }
+
   dragleave(event: any) {
     // Clean up
     event.currentTarget.classList.add('bg-gray-300')
     event.currentTarget.classList.remove('bg-gray-300')
   }
+
   drop(event: any) {
     event.preventDefault()
     const file: any = this.$refs.file
@@ -182,7 +201,7 @@ export default class UploadImage extends Vue {
 
     this.file && (this.imageUrl = URL.createObjectURL(this.file))
     this.$emit('input', this.file)
-    this.$emit('onBlur', { file: this.file, imageUrl: this.imageUrl })
+    this.$emit('onBlur', {file: this.file, imageUrl: this.imageUrl})
   }
 }
 </script>
@@ -257,10 +276,15 @@ export default class UploadImage extends Vue {
           font-size: 14px;
           color: $mid-black;
         }
+
         .drop-text-description {
           font-size: 14px;
           color: $gray-disable;
           margin-top: 12px;
+        }
+
+        .drop-text-description.disabled {
+          display: none;
         }
       }
     }
@@ -269,17 +293,20 @@ export default class UploadImage extends Vue {
       width: 100%;
       height: 100%;
       padding-left: 0px !important;
+
       .show-image {
         width: 100%;
         height: 100%;
         position: relative;
         color: $white;
       }
+
       .show-image:hover .icon-box {
         display: flex;
         align-items: center;
         justify-content: center;
       }
+
       .show-image .icon-box {
         display: none;
         align-items: center;
@@ -288,20 +315,24 @@ export default class UploadImage extends Vue {
         width: 100%;
         height: 100%;
       }
+
       .show-image .view-file {
         cursor: pointer;
         width: 36px;
         height: 27px;
       }
+
       .show-image .delete-file {
         cursor: pointer;
         width: 30px;
         height: 33px;
       }
+
       .show-image .view-file-text {
         cursor: pointer;
         font-size: 14px;
       }
+
       .show-image .delete-file-text {
         cursor: pointer;
         font-size: 14px;
@@ -309,6 +340,7 @@ export default class UploadImage extends Vue {
     }
   }
 }
+
 .circle-style {
   border-radius: 50%;
 }
@@ -320,6 +352,7 @@ export default class UploadImage extends Vue {
   padding-left: 20px;
   padding-right: 20px;
 }
+
 .icon-container {
   height: 35px;
   display: flex;

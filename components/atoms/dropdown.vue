@@ -1,10 +1,10 @@
 <template>
-  <div class="dropdown" style="float: left">
+  <div class="dropdown" :class="isError" style="float: left">
     <button class="dropbtn">
       <span>{{ value ? value : placeholder }}</span>
       <span class="material-icons"> expand_more </span>
     </button>
-    <div class="dropdown-content" style="left: 0">
+    <div id="dropdown-content" class="dropdown-content" style="left: 0">
       <a
         v-for="item in lists"
         :key="item.value"
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Prop, Component, Emit } from 'vue-property-decorator'
+import {Vue, Prop, Component, Emit} from 'vue-property-decorator'
 
 @Component({})
 export default class T1Dropdown extends Vue {
@@ -55,13 +55,19 @@ export default class T1Dropdown extends Vue {
     return value
   }
 
+  get isError() {
+    if (this.error) {
+      return 'error'
+    } else return ''
+  }
+
   selectDropdownItem(item: string): void {
     this.emitOnSelect(item)
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
 
 .dropdown {
@@ -93,11 +99,17 @@ export default class T1Dropdown extends Vue {
     position: absolute;
     right: 0;
     background-color: #f9f9f9;
-    min-width: 160px;
+    min-width: 110px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     text-align: left;
+    overflow: auto;
+    height: 180px;
   }
+}
+
+.error {
+  border: 1px solid $primary;
 }
 
 .dropdown-content a {
@@ -105,13 +117,17 @@ export default class T1Dropdown extends Vue {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  cursor: pointer;
 }
 
 .dropdown-content a:hover {
   background-color: #f1f1f1;
 }
 
-.dropdown:hover .dropdown-content {
-  display: block;
+.dropdown:hover {
+  .dropdown-content {
+    display: block;
+  }
 }
+
 </style>

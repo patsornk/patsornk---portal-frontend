@@ -6,7 +6,7 @@
       :active="activeMenu"
       @click.native="onClickMenu(menu.link)"
     >
-      <img :src="assets('navbar/arrow-right.png')" v-if="menu.subMenu" />
+      <img :src="assets('navbar/arrow-right.png')" v-if="menu.subMenu"/>
     </nav-menu-item>
     <ul
       class="sub-menu"
@@ -24,9 +24,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import NavMenuItem from '~/components/atoms/navbar/NavMenuItem.vue'
-import { getAssetsPath } from '~/helper/images'
+import {getAssetsPath} from '~/helper/images'
 
 @Component({
   name: 'nav-menu',
@@ -35,7 +35,7 @@ import { getAssetsPath } from '~/helper/images'
   }
 })
 export default class NavMenu extends Vue {
-  private activeSubMenu: number = -1
+  private activeSubMenu: number = 0
 
   @Prop({
     type: Boolean,
@@ -64,7 +64,7 @@ export default class NavMenu extends Vue {
 
   @Watch('activeMenu')
   onChangedActiveMenu() {
-    this.activeSubMenu = -1
+    this.activeSubMenu = 0
   }
 }
 </script>
@@ -79,17 +79,21 @@ export default class NavMenu extends Vue {
     ::v-deep .content-active {
       border: 4px solid $primary;
       border-image: linear-gradient(
-        to bottom,
-        rgba(108, 219, 141, 0) 25%,
-        $primary 25%,
-        $primary 75%,
-        rgba(108, 219, 141, 0) 75%
+          to bottom,
+          rgba(108, 219, 141, 0) 25%,
+          $primary 25%,
+          $primary 75%,
+          rgba(108, 219, 141, 0) 75%
       ) !important;
       border-image-slice: 1 !important;
       border-right: none;
       border-bottom: none;
       border-top: none;
       background-color: $white;
+
+      .title-active {
+        color: $grey-text;
+      }
     }
 
     ::v-deep img {

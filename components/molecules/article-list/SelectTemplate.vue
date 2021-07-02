@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="template-selection-container">
     <div class="selection-header">
-      <div class="header-mark" />
+      <div class="header-mark"/>
       <div class="header-container">
         <div class="header-title">
           {{ $t('contentManagement.templateSelection') }}
@@ -99,8 +99,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { getAssetsPath } from '~/helper/images'
+import {Component, Vue} from 'vue-property-decorator'
+import {getAssetsPath} from '~/helper/images'
 
 @Component({
   components: {}
@@ -143,7 +143,7 @@ export default class SelectTemplate extends Vue {
   private next(): void {
     if (this.article === '') {
     } else if (this.article === 'normal') {
-      this.$router.push('/contentManagement/articlelist/create/normal')
+      this.$router.push('/article/create/normal')
     } else {
     }
   }
@@ -298,10 +298,12 @@ export default class SelectTemplate extends Vue {
       width: 157px;
       height: 40px;
     }
+
     .disabled {
       opacity: 0.3;
       pointer-events: none;
     }
+
     button:focus {
       outline: none;
     }
@@ -312,6 +314,7 @@ export default class SelectTemplate extends Vue {
   .template-selection-container {
     .content-container {
       justify-content: space-between;
+
       .article-btn {
         margin: 0;
       }

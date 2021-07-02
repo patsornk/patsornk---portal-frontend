@@ -12,7 +12,7 @@
   twoOfTwoStep: '2 of 2 steps',
   saveDraft: 'Save draft',
   preview: 'Preview',
-  publish: 'Publish',
+  publish: 'Save & Publish',
   titleTh: 'Title (TH)',
   subTitleTh: 'Sub-Title (TH)',
   titleEn: 'Title (EN)',
@@ -23,8 +23,23 @@
     emptyTitleTh: 'Input Title (TH)',
     emptyTitleEn: 'Input Title (EN)',
     emptySubTitleTh: 'Input Sub-Title (TH)',
-    emptySubTitleEn: 'Input Sub-Title (EN)'
+    emptySubTitleEn: 'Input Sub-Title (EN)',
+    publishDate: 'The date time must be no earlier or equal to current date time.',
+    expireDate: 'The Article Expire date time must be no earlier or equal to Schedule date time.',
+    inputAuthor: 'Select Author',
+    inputThumbnail : 'Input Thumbnail Image',
+    thumbnailType : 'File should input in .png, .jpg or .gif file'
   },
   searchForCategoryPlaceholder: 'Search for category tag...',
-  searchForTopicPlaceholder: 'Search for topic...'
+  searchForTopicPlaceholder: 'Search for topic...',
+  articlePublishDate: 'Article Publish Date',
+  publishNow: 'Publish now',
+  publishSchedule: 'Schedule',
+  articlePublishDatePlaceholder: 'Select Publish Date',
+  articleExpireDate: 'Article Expire Date',
+  noExpireDate: 'No Expire Date',
+  articleExpireDatePlaceholder: 'Select Expire Date',
+  authorTitle: 'Author',
+  thumbnailTitle: 'Thumbnail Image',
+  thumbnailSubTitle: '(.png, .jpg or .gif file)'
 }
